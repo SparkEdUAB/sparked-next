@@ -1,15 +1,26 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import Image from "next/image";
+import styles from "./page.module.css";
+import counterStore from "@/state/mobx/intlStore";
+import { observer } from "mobx-react-lite";
+import React from "react";
 
-export default function Home() {
+
+  const newCounter = new counterStore();
+
+const Home: React.FC = observer(props => {
+  console.log("props", props);
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
-        <p>
+        <p onClick={newCounter.increment}>
           Get started by editing&nbsp;
           <code className={styles.code}>src/app/page.tsx</code>
         </p>
-        <h1 className="text-3xl font-bold underline">Hello world!</h1>
+        <h1 className="text-3xl font-bold underline">
+          Hello world! {newCounter.count}
+        </h1>
         <div>
           <a
             href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
@@ -93,4 +104,6 @@ export default function Home() {
       </div>
     </main>
   );
-}
+});
+
+export default Home;
