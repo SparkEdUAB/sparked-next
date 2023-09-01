@@ -1,0 +1,69 @@
+.logo{
+    margin-top:-20px !important;
+}
+
+.landing-page-container{
+    background-color:#FAF8F4 !important;
+    background-image:url('/landing-page-feature-image.png') ;
+    /* background-size: cover; */
+  background-position: right;
+  background-repeat: no-repeat;
+}
+
+.guest-layout{
+  
+}
+
+.nav-bar{
+    background-image:url('https://cdn.pixabay.com/photo/2015/11/15/07/47/geometry-1044090_1280.jpg');
+  background-position: left;
+  background-repeat: no-repeat;
+    background-size: cover;
+  
+
+
+}
+
+.nav-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100 %;
+  background-color: rgba(0, 0, 0, 0.034); 
+}
+
+
+.landing-page-plain-card{
+}
+
+.landing-page-main-card-container{
+  margin-top:110px;
+
+
+}
+
+
+.project-card {
+  margin: 1em;
+  height: 50px;
+  width: 300px;
+  background-color:#EC975F;
+  position: relative;
+  overflow: hidden;
+}
+
+.achievement-label {
+  position: absolute;
+  width: 300px;
+  padding: 0.3rem 90px;
+  box-sizing: border-box;
+  background-color: #7471F0;
+  transform: rotateZ(-45deg);
+  top: 0;
+  left: 0;
+  transform-origin: 150px 150px;
+  text-align: center;
+  color:white
+}

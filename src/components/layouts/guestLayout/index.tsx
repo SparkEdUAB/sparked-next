@@ -1,17 +1,15 @@
-import {  ReactNode,FC} from "react";
+"use client";
+
+import { ReactNode, FC } from "react";
 import { Navbar } from "flowbite-react";
 import AppLogo from "@/components/logo";
 
-
 const GuestLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
-    <main>
-      <Navbar fluid={true} rounded={true}>
+    <main className="">
+      <Navbar className="nav-bar " fluid={true} rounded={true}>
         <Navbar.Brand href="#">
           <AppLogo />
-          <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-            SparkEd
-          </span>
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>
