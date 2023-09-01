@@ -5,7 +5,6 @@
 .landing-page-container{
     background-color:#FAF8F4 !important;
     background-image:url('/landing-page-feature-image.png') ;
-    /* background-size: cover; */
   background-position: right;
   background-repeat: no-repeat;
 }
