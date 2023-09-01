@@ -1,9 +1,8 @@
 "use client";
 
-import GuestLayout from "../layouts/guestLayout";
-import { Player, Controls } from "@lottiefiles/react-lottie-player";
+import { Controls, Player } from "@lottiefiles/react-lottie-player";
 import { Button, Card } from "flowbite-react";
-import Image from "next/image";
+import GuestLayout from "../layouts/guestLayout";
 
 export default function StaticCarousel() {
   return (
