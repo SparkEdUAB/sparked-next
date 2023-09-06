@@ -1,8 +1,11 @@
 "use client";
 
-import { Controls, Player } from "@lottiefiles/react-lottie-player";
+import React from "react";
 import { Button, Card } from "flowbite-react";
 import GuestLayout from "../layouts/guestLayout";
+import { CourseBasedSvgImage, EducationSvgImage, UniversitySvgImage } from "@components/svgs";
+
+
 
 export default function StaticCarousel() {
   return (
@@ -22,34 +25,23 @@ export default function StaticCarousel() {
 
         <div className="flex justify-between landing-page-main-card-container">
           <Card className="max-w-sm bg-blue-200  " href="#">
-            <Player
-              autoplay
-              loop
-              src="https://lottie.host/48a149fd-a98b-4065-8cb8-5121e3ef1195/IOzWTMvfAt.json"
-              style={{ height: "300px", width: "300px" }}
-            >
-              <Card className="max-w-sm " href="#">
-                <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  <p>Course Based</p>
-                </h5>
-                <p className="font-normal text-gray-700 dark:text-gray-400">
-                  <p>Organize Contents for Colleges with Different Courses</p>
-                </p>
-              </Card>
-              <Controls
-                visible={false}
-                buttons={["play", "repeat", "frame", "debug"]}
-              />
-            </Player>
+            {CourseBasedSvgImage}
+            <Card className="max-w-sm " href="#">
+              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                <p>Course Based</p>
+              </h5>
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                <p>Organize Contents for Colleges with Different Courses</p>
+              </p>
+            </Card>
           </Card>
 
           <Card
             className="max-w-sm landing-page-plain-card bg-orange-100"
             href="#"
           >
-            <div className="project-card bg-blue-200">
-              <marquee className="achievement-label">University Based</marquee>
-            </div>
+            {UniversitySvgImage}
+            <div className="project-card bg-blue-200"></div>
             <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               <p className="text-center">University Based</p>
             </h5>
@@ -64,28 +56,18 @@ export default function StaticCarousel() {
           </Card>
 
           <Card horizontal>
-            <Player
-              autoplay
-              loop
-              src="https://lottie.host/a64924ec-d937-4de8-a6bd-358ed1e03e20/ryI7CcbNGU.json"
-              style={{ height: "300px", width: "300px" }}
-            >
-              <Card className="max-w-sm bg-green-400 " href="#">
-                <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  <p>High School</p>
-                </h5>
-                <p className="font-normal text-gray-700 dark:text-gray-400">
-                  <p>
-                    Contents can also be arranged as High Schools to help small
-                    schools manage their contents
-                  </p>
+            {EducationSvgImage}
+            <Card className="max-w-sm bg-green-400 " href="#">
+              <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                <p>High School</p>
+              </h5>
+              <p className="font-normal text-gray-700 dark:text-gray-400">
+                <p>
+                  Contents can also be arranged as High Schools to help small
+                  schools manage their contents
                 </p>
-              </Card>
-              <Controls
-                visible={false}
-                buttons={["play", "repeat", "frame", "debug"]}
-              />
-            </Player>
+              </p>
+            </Card>
           </Card>
         </div>
       </div>
