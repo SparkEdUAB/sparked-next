@@ -25,7 +25,7 @@ export default function StaticCarousel() {
 
         <div className="flex justify-between landing-page-main-card-container">
           <Card className="max-w-sm bg-blue-200  " href="#">
-            {CourseBasedSvgImage}
+            <CourseBasedSvgImage />
             <Card className="max-w-sm " href="#">
               <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 <p>Course Based</p>
@@ -40,7 +40,7 @@ export default function StaticCarousel() {
             className="max-w-sm landing-page-plain-card bg-orange-100"
             href="#"
           >
-            {UniversitySvgImage}
+            <UniversitySvgImage />
             <div className="project-card bg-blue-200"></div>
             <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
               <p className="text-center">University Based</p>
@@ -56,7 +56,7 @@ export default function StaticCarousel() {
           </Card>
 
           <Card horizontal>
-            {EducationSvgImage}
+            <EducationSvgImage />
             <Card className="max-w-sm bg-green-400 " href="#">
               <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
                 <p>High School</p>
