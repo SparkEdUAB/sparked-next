@@ -7,7 +7,7 @@ import { CourseBasedSvgImage, EducationSvgImage, UniversitySvgImage } from "@com
 
 
 
-export default function StaticCarousel() {
+const  LandingPage:React.FC = ()=> {
   return (
     <GuestLayout>
       <div className="landing-page-container">
@@ -74,3 +74,6 @@ export default function StaticCarousel() {
     </GuestLayout>
   );
 }
+
+
+export default LandingPage;
