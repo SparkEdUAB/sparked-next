@@ -1,10 +1,14 @@
 "use client";
 
-import LandingPage from "@components/LandingPage";
+import PortalLayout from "@components/layouts/portalLayout";
 import React from "react";
 
 const Home: React.FC = (props) => {
-  return <LandingPage />;
+  return <PortalLayout >
+    <h1>Login</h1>
+  </PortalLayout>;
 };
 
 export default Home;
+
+
