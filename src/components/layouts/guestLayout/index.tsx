@@ -1,10 +1,16 @@
 "use client";
 
-import { ReactNode, FC } from "react";
-import { Navbar } from "flowbite-react";
 import AppLogo from "@components/logo";
+import { Navbar } from "flowbite-react";
+import { FC, ReactNode } from "react";
 
-const GuestLayout: FC<{ children: ReactNode }> = ({ children }) => {
+import useAuth from "@hooks/useAuth";
+
+const GuestLayout: FC<{
+  children: ReactNode;
+}> = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+
   return (
     <main className="">
       <Navbar className="nav-bar " fluid={true} rounded={true}>
@@ -17,9 +23,8 @@ const GuestLayout: FC<{ children: ReactNode }> = ({ children }) => {
             Home
           </Navbar.Link>
           <Navbar.Link href="/navbars">About</Navbar.Link>
-          <Navbar.Link href="/navbars">Services</Navbar.Link>
-          <Navbar.Link href="/navbars">Pricing</Navbar.Link>
-          <Navbar.Link href="/navbars">Contact</Navbar.Link>
+          <Navbar.Link href="/navbars">Resources</Navbar.Link>
+          {!isAuthenticated && <Navbar.Link href="/navbars">Login</Navbar.Link>}
         </Navbar.Collapse>
       </Navbar>
       {children}
