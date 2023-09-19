@@ -24,7 +24,7 @@ const GuestLayout: FC<{
           </Navbar.Link>
           <Navbar.Link href="/navbars">About</Navbar.Link>
           <Navbar.Link href="/navbars">Resources</Navbar.Link>
-          {!isAuthenticated && <Navbar.Link href="/navbars">Login</Navbar.Link>}
+          {!isAuthenticated && <Navbar.Link href="/navbars">Login | Sign up</Navbar.Link>}
         </Navbar.Collapse>
       </Navbar>
       {children}
