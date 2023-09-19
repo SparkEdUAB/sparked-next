@@ -1,6 +1,10 @@
-import { Button, Checkbox, Form, Input } from "antd";
+import { Checkbox, Col, Form, Input, Row } from "antd";
 import { translate } from "utils/intl";
 import { WORDS } from "utils/intl/data/constants";
+
+import { Card } from "antd";
+import { CourseBasedSvgImage } from "@components/svgs";
+import { Button } from "flowbite-react";
 
 const onFinish = (values: any) => {
   console.log("Success:", values);
@@ -18,46 +22,60 @@ type FieldType = {
 
 const Signup: React.FC = () => {
   return (
-    <Form
-      name="Sign up"
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
-      style={{ maxWidth: 600 }}
-      initialValues={{ remember: true }}
-      onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
-      autoComplete="off"
-    >
-      <Form.Item<FieldType>
-        label={translate(WORDS.home)}
-        name="username"
-        rules={[{ required: true, message: "Please input your username!" }]}
-      >
-        <Input />
-      </Form.Item>
+    <Row>
+      <Col span={12}>
+        <CourseBasedSvgImage height={1000} width={1000} />
+      </Col>
 
-      <Form.Item<FieldType>
-        label="Password"
-        name="password"
-        rules={[{ required: true, message: "Please input your password!" }]}
-      >
-        <Input.Password />
-      </Form.Item>
+      <Col span={12}>
+        <Card className="auth-card" title="Sign up" bordered={false}>
+          <Form
+            name="Sign up"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            style={{ maxWidth: 600 }}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+          >
+            <Form.Item<FieldType>
+              label={translate(WORDS.home)}
+              name="username"
+              rules={[
+                { required: true, message: "Please input your username!" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
 
-      <Form.Item<FieldType>
-        name="remember"
-        valuePropName="checked"
-        wrapperCol={{ offset: 8, span: 16 }}
-      >
-        <Checkbox>Remember me</Checkbox>
-      </Form.Item>
+            <Form.Item<FieldType>
+              label="Password"
+              name="password"
+              rules={[
+                { required: true, message: "Please input your password!" },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
 
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
+            <Form.Item<FieldType>
+              name="remember"
+              valuePropName="checked"
+              wrapperCol={{ offset: 8, span: 16 }}
+            >
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
+      </Col>
+    </Row>
   );
 };
 
