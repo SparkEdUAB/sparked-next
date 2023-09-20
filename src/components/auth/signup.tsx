@@ -1,26 +1,24 @@
-import { Checkbox, Col, Form, Input, Row } from "antd";
+import { Col, Form, Input, Row } from "antd";
 import { translate } from "utils/intl";
 import { WORDS } from "utils/intl/data/constants";
 
-import { Card } from "antd";
 import { CourseBasedSvgImage } from "@components/svgs";
+import { Card } from "antd";
 import { Button } from "flowbite-react";
+import { SIGNUP_FORM_FIELDS } from "./constants";
+import useAuth from "@hooks/useAuth";
 
-const onFinish = (values: any) => {
-  console.log("Success:", values);
-};
+// const onFinish = (values: TsignupFields) => {
+//   console.log("Success:", values);
+// };
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
 };
 
-type FieldType = {
-  username?: string;
-  password?: string;
-  remember?: string;
-};
-
 const Signup: React.FC = () => {
+  const { handleSignup } = useAuth();
+
   return (
     <Row>
       <Col span={12}>
@@ -28,48 +26,49 @@ const Signup: React.FC = () => {
       </Col>
 
       <Col span={12}>
-        <Card className="auth-card" title="Sign up" bordered={false}>
+        <Card
+          className="auth-card"
+          title={translate(WORDS.signp)}
+          bordered={false}
+        >
           <Form
-            name="Sign up"
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             style={{ maxWidth: 600 }}
             initialValues={{ remember: true }}
-            onFinish={onFinish}
+            onFinish={handleSignup}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            <Form.Item<FieldType>
-              label={translate(WORDS.home)}
-              name="username"
+            <Form.Item
+              label={SIGNUP_FORM_FIELDS.email.label}
+              name={SIGNUP_FORM_FIELDS.email.key}
               rules={[
-                { required: true, message: "Please input your username!" },
+                {
+                  required: true,
+                  message: SIGNUP_FORM_FIELDS.email.errorMsg,
+                },
               ]}
             >
               <Input />
             </Form.Item>
 
-            <Form.Item<FieldType>
-              label="Password"
-              name="password"
+            <Form.Item
+              label={SIGNUP_FORM_FIELDS.password.label}
+              name={SIGNUP_FORM_FIELDS.password.key}
               rules={[
-                { required: true, message: "Please input your password!" },
+                {
+                  required: true,
+                  message: SIGNUP_FORM_FIELDS.password.errorMsg,
+                },
               ]}
             >
               <Input.Password />
             </Form.Item>
 
-            <Form.Item<FieldType>
-              name="remember"
-              valuePropName="checked"
-              wrapperCol={{ offset: 8, span: 16 }}
-            >
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                Submit
+                {translate(WORDS.submit)}
               </Button>
             </Form.Item>
           </Form>
