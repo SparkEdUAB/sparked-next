@@ -1,6 +1,6 @@
 "use client";
 
-import LandingPage from "@components/landingPage";
+import LandingPage from "components/landingPage";
 import React from "react";
 
 const Home: React.FC = (props) => {
