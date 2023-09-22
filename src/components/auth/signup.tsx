@@ -8,11 +8,7 @@ import { Button } from "flowbite-react";
 import { SIGNUP_FORM_FIELDS } from "./constants";
 import useAuth from "@hooks/useAuth";
 
-
-
-const onFinishFailed = (errorInfo: any) => {
-  console.log("Failed:", errorInfo);
-};
+const onFinishFailed = (errorInfo: any) => {};
 
 const Signup: React.FC = () => {
   const { handleSignup } = useAuth();

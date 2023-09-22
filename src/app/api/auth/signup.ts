@@ -18,8 +18,6 @@ export default async function signup_(request: Request) {
     const db = await dbClient();
 
     if (!db) {
-      console.log("signup_:error", "db error", db);
-
       const response = {
         isError: true,
         msg: translate(WORDS.unknown_error),
@@ -65,7 +63,6 @@ export default async function signup_(request: Request) {
       status: 200,
     });
   } catch (error) {
-    console.log("signup_:error", error);
     const errorCodeIndex = `${JSON.stringify(error)}`.lastIndexOf("code");
 
     const code =

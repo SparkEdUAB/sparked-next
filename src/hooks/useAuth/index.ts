@@ -23,25 +23,22 @@ const useAuth = () => {
     try {
       const resp = await fetch(url, formData);
 
-
       if (!resp.ok) {
         message.warning(translate(WORDS.unknown_error));
         return false;
       }
 
-
       const responseData = await resp.json();
 
-    if (responseData.isError) {
-      message.warning(responseData.msg);
-      return false;
-    }
+      if (responseData.isError) {
+        message.warning(responseData.msg);
+        return false;
+      }
       message.success(responseData.msg);
-
-
-      console.log(responseData);
     } catch (err: any) {
-      message.error(`${translate(WORDS.unknown_error)}. ${err.msg ? err.msg : ""}`);
+      message.error(
+        `${translate(WORDS.unknown_error)}. ${err.msg ? err.msg : ""}`
+      );
       return false;
     }
   };

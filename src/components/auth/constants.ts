@@ -2,8 +2,6 @@ import { translate } from "utils/intl";
 import { WORDS } from "utils/intl/data/constants";
 import { IsignupFormFields } from "./types";
 
-
-
 export const SIGNUP_FORM_FIELDS: IsignupFormFields = {
   [WORDS.email]: {
     label: translate(WORDS.email),
