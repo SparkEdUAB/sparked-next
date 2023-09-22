@@ -27,10 +27,22 @@ module.exports = {
   },
   [WORDS.email_error]: {
     word: "Please input your email",
-    word2: "Please input your email",
+    word2: "Email address is already taken",
   },
   [WORDS.password_error]: {
     word: "Please input your password!",
     word2: "Please input your password!",
+  },
+  [WORDS.unknown_error]: {
+    word: "Sorry something went wrong",
+    word2: "Sorry something went wrong",
+  },
+  [WORDS.user_created]: {
+    word: "Account successfully created",
+    word2: "Account successfully created",
+  },
+  [WORDS.user_exist]: {
+    word: "Sorry account already exits",
+    word2: "Sorry account already exits. Please sign in",
   },
 };

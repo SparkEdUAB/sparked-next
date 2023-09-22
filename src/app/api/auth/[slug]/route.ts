@@ -6,12 +6,12 @@ const authApiHandler_ = async function GET(
 ) {
   const slug = params.slug;
 
-  const authFunctions: { [key: string]: () => {} } = {
+  const authFunctions: { [key: string]: (request: Request) => {} } = {
     signup: signup_,
   };
 
   if (authFunctions[slug]) {
-    return authFunctions[slug]();
+    return authFunctions[slug](request);
   } else {
     const response = { isError: true };
 

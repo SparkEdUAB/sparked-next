@@ -8,9 +8,7 @@ import { Button } from "flowbite-react";
 import { SIGNUP_FORM_FIELDS } from "./constants";
 import useAuth from "@hooks/useAuth";
 
-// const onFinish = (values: TsignupFields) => {
-//   console.log("Success:", values);
-// };
+
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -20,7 +18,7 @@ const Signup: React.FC = () => {
   const { handleSignup } = useAuth();
 
   return (
-    <Row>
+    <Row className="auth-container">
       <Col span={12}>
         <CourseBasedSvgImage height={1000} width={1000} />
       </Col>

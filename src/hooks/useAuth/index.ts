@@ -2,6 +2,8 @@ import { message } from "antd";
 import { API_LINKS } from "app/links";
 import { useSession } from "next-auth/react";
 import { TsignupFields } from "./types";
+import { translate } from "utils/intl";
+import { WORDS } from "utils/intl/data/constants";
 
 const useAuth = () => {
   const { data: session, status } = useSession();
@@ -21,15 +23,25 @@ const useAuth = () => {
     try {
       const resp = await fetch(url, formData);
 
+
       if (!resp.ok) {
-        message.warning(`Sorry something went wrong `);
+        message.warning(translate(WORDS.unknown_error));
         return false;
       }
 
+
       const responseData = await resp.json();
+
+    if (responseData.isError) {
+      message.warning(responseData.msg);
+      return false;
+    }
+      message.success(responseData.msg);
+
+
       console.log(responseData);
     } catch (err: any) {
-      message.error(`Sorry an error occured. ${err.msg ? err.msg : ""}`);
+      message.error(`${translate(WORDS.unknown_error)}. ${err.msg ? err.msg : ""}`);
       return false;
     }
   };

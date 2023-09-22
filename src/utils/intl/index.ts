@@ -1,6 +1,6 @@
 import { DEFAULT_LANGAUGE } from "./constants";
 
-export const translate = (word: string, word2?: string) => {
+export const translate = (word: string, word2?: boolean ) => {
   let appLang = DEFAULT_LANGAUGE;
   const data = require("./data");
   const text = word2 ? "word2" : "word";
