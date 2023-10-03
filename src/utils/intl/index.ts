@@ -1,16 +1,24 @@
-import { DEFAULT_LANGAUGE } from "./constants";
+import i18next from "i18next";
 
-export const translate = (word: string, word2?: boolean ) => {
-  let appLang = DEFAULT_LANGAUGE;
-  const data = require("./data");
-  const text = word2 ? "word2" : "word";
-  //NOTE: when word does not exit we return the word back as it is
+ i18next.init({
+  lng: "en", // if you're using a language detector, do not define the lng option
+  debug: true,
+  resources: {
+    en: {
+      translation: {
+        home: "Home",
+        signup: "Sign Up",
+        email: "Email",
+        password: "Password",
+        form: "Form",
+        email_error: "Please input your email",
+        password_error: "Please input your password!",
+        unknown_error: "Sorry something went wrong",
+        user_created: "Account successfully created",
+        user_exist: "Sorry account already exits",
+        user_exist2: "Sorry account already exits. Please sign in",
+      },
+    },
+  },
+});
 
-  return data[appLang]
-    ? data[appLang][word]
-      ? data[appLang][word][text]
-      : word
-    : data[DEFAULT_LANGAUGE][word]
-    ? data[DEFAULT_LANGAUGE][word][text]
-    : word;
-};

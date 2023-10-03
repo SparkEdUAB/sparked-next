@@ -1,17 +1,16 @@
-import { translate } from "utils/intl";
-import { WORDS } from "utils/intl/data/constants";
 import { IsignupFormFields } from "./types";
+import i18next from "i18next";
 
 export const SIGNUP_FORM_FIELDS: IsignupFormFields = {
-  [WORDS.email]: {
-    label: translate(WORDS.email),
+  ["email"]: {
+    label: i18next.t("email"),
     key: "email",
-    errorMsg: translate(WORDS.email_error),
+    errorMsg: i18next.t("email_error"),
   },
 
-  [WORDS.password]: {
-    label: translate(WORDS.password),
+  ["password"]: {
+    label: i18next.t("password"),
     key: "password",
-    errorMsg: translate(WORDS.password_error),
+    errorMsg: i18next.t("password_error"),
   },
 };

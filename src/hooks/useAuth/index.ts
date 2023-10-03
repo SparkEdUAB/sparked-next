@@ -2,8 +2,7 @@ import { message } from "antd";
 import { API_LINKS } from "app/links";
 import { useSession } from "next-auth/react";
 import { TsignupFields } from "./types";
-import { translate } from "utils/intl";
-import { WORDS } from "utils/intl/data/constants";
+import i18next from "i18next";
 
 const useAuth = () => {
   const { data: session, status } = useSession();
@@ -24,7 +23,7 @@ const useAuth = () => {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(translate(WORDS.unknown_error));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -36,9 +35,7 @@ const useAuth = () => {
       }
       message.success(responseData.msg);
     } catch (err: any) {
-      message.error(
-        `${translate(WORDS.unknown_error)}. ${err.msg ? err.msg : ""}`
-      );
+      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
   };

@@ -1,9 +1,9 @@
 import { zfd } from "zod-form-data";
 import { realmApp } from "../lib/db/realm";
-import { translate } from "utils/intl";
 import { WORDS } from "utils/intl/data/constants";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
+import i18next from "i18next";
 
 export default async function signup_(request: Request) {
   const schema = zfd.formData({
@@ -20,7 +20,7 @@ export default async function signup_(request: Request) {
     if (!db) {
       const response = {
         isError: true,
-        msg: translate(WORDS.unknown_error),
+        msg: i18next.t("home"),
       };
       return new Response(JSON.stringify(response), {
         status: 200,
@@ -34,7 +34,7 @@ export default async function signup_(request: Request) {
     if (user) {
       const response = {
         isError: true,
-        msg: translate(WORDS.user_exist),
+        msg: i18next.t("user_exist"),
       };
       return new Response(JSON.stringify(response), {
         status: 200,
@@ -55,7 +55,7 @@ export default async function signup_(request: Request) {
 
     const response = {
       isError: false,
-      msg: translate(WORDS.user_created),
+      msg: i18next.t('user_created'),
       email,
     };
 
@@ -74,8 +74,8 @@ export default async function signup_(request: Request) {
       isError: true,
       msg:
         code === 4348
-          ? translate(WORDS.email_error, true)
-          : translate(WORDS.unknown_error),
+          ? i18next.t("email_error")
+          : i18next.t('unknown_error'),
     };
 
     return new Response(JSON.stringify(resp), {

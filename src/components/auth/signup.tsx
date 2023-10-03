@@ -1,7 +1,5 @@
 import { Col, Form, Input, Row } from "antd";
-import { translate } from "utils/intl";
-import { WORDS } from "utils/intl/data/constants";
-
+import i18next from "i18next";
 import { CourseBasedSvgImage } from "@components/svgs";
 import { Card } from "antd";
 import { Button } from "flowbite-react";
@@ -22,7 +20,7 @@ const Signup: React.FC = () => {
       <Col span={12}>
         <Card
           className="auth-card"
-          title={translate(WORDS.signp)}
+          title={i18next.t('signp')}
           bordered={false}
         >
           <Form
@@ -62,7 +60,7 @@ const Signup: React.FC = () => {
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                {translate(WORDS.submit)}
+                {i18next.t('submit')}
               </Button>
             </Form.Item>
           </Form>
