@@ -1,6 +1,5 @@
 import { zfd } from "zod-form-data";
 import { realmApp } from "../lib/db/realm";
-import { WORDS } from "utils/intl/data/constants";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
 import i18next from "i18next";
