@@ -1,24 +1,27 @@
-import './globals.css'
+"use client";
+
+import { SessionProvider } from "next-auth/react";
+import { Inter } from "next/font/google";
 import "./custom.css";
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import "./globals.css";
+import "utils/intl";
 
-const inter = Inter({ subsets: ['latin'] })
-
-export const metadata: Metadata = {
-  title: "SparkEd",
-  description:
-    "Software for organizing and presenting educational and training content for delivery on most platforms",
-};
+const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
+  pageProps,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
+  pageProps?: any;
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <SessionProvider session={pageProps?.session}>
+          {children}
+        </SessionProvider>
+      </body>
     </html>
-  )
+  );
 }

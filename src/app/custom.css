@@ -1,54 +1,46 @@
-.logo{
-    margin-top:-20px !important;
+.logo {
+  margin-top: -20px !important;
 }
 
-.landing-page-container{
-    background-color:#FAF8F4 !important;
-    background-image:url('/landing-page-feature-image.png') ;
+.landing-page-container {
+  background-color: #faf8f4 !important;
+  background-image: url("/landing-page-feature-image.png");
   background-position: right;
   background-repeat: no-repeat;
 }
 
-.guest-layout{
-  
+.guest-layout {
 }
 
-.nav-bar{
-    background-image:url('https://media.istockphoto.com/id/1085039192/vector/abstract-background-of-engineering-drawing-technological-wallpaper-made-with-circles-and.webp?b=1&s=612x612&w=0&k=20&c=GopWlnZX4z5n_DG5Sdx2iIouMZ-eSNbTjb462paNlFM=');
+.nav-bar {
+  background-image: url("https://media.istockphoto.com/id/1085039192/vector/abstract-background-of-engineering-drawing-technological-wallpaper-made-with-circles-and.webp?b=1&s=612x612&w=0&k=20&c=GopWlnZX4z5n_DG5Sdx2iIouMZ-eSNbTjb462paNlFM=");
   background-position: left;
   background-repeat: no-repeat;
-    background-size: cover;
-  
-
-
+  background-size: cover;
 }
 
 .nav-bar::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100 %;
-  background-color: rgba(0, 0, 0, 0.034); 
+  background-color: rgba(0, 0, 0, 0.034);
 }
 
-
-.landing-page-plain-card{
+.landing-page-plain-card {
 }
 
-.landing-page-main-card-container{
-  margin-top:110px;
-
-
+.landing-page-main-card-container {
+  margin-top: 110px;
 }
-
 
 .project-card {
   margin: 1em;
   height: 50px;
   width: 300px;
-  background-color:#EC975F;
+  background-color: #ec975f;
   position: relative;
   overflow: hidden;
 }
@@ -58,11 +50,22 @@
   width: 300px;
   padding: 0.3rem 90px;
   box-sizing: border-box;
-  background-color: #7471F0;
+  background-color: #7471f0;
   transform: rotateZ(-45deg);
   top: 0;
   left: 0;
   transform-origin: 150px 150px;
   text-align: center;
-  color:white
+  color: white;
+}
+
+.auth-card {
+  background-color: #f0f0f0;
+  margin: 30px;
+  min-height: 80%;
+  max-width: 80%;
+}
+
+.auth-container {
+  margin: 0 auto;
 }

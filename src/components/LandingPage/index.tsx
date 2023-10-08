@@ -5,16 +5,15 @@ import { Button, Card } from "flowbite-react";
 import GuestLayout from "../layouts/guestLayout";
 import { CourseBasedSvgImage, EducationSvgImage, UniversitySvgImage } from "@components/svgs";
 
-
-
 const  LandingPage:React.FC = ()=> {
+
   return (
     <GuestLayout>
       <div className="landing-page-container">
         <h5 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
           <Card>
             <p>
-              Presenting Educational And Training Content With Passion And AI.
+              Presenting Educational And Training Content With Passion And AI.{" "}
             </p>
           </Card>
         </h5>

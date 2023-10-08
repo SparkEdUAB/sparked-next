@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  env: {
-    REALM_APP_ID: "sparked-next-vbuim",
-    NEXTAUTH_URL: "https://example.com",
+  env: {},
+  webpack: (config) => {
+    config.externals = [...config.externals, { realm: "realm" }]; // required to make realm
+    return config;
   },
 };
 
