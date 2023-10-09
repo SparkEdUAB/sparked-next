@@ -1,3 +1,5 @@
+import SPARKED_PROCESS_CODES from "app/shared/processCodes";
+import Login_ from "../login";
 import signup_ from "../signup";
 
 const authApiHandler_ = async function GET(
@@ -8,12 +10,16 @@ const authApiHandler_ = async function GET(
 
   const authFunctions: { [key: string]: (request: Request) => {} } = {
     signup: signup_,
+    login: Login_,
   };
 
   if (authFunctions[slug]) {
     return authFunctions[slug](request);
   } else {
-    const response = { isError: true };
+    const response = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+    };
 
     return new Response(JSON.stringify(response), {
       status: 200,

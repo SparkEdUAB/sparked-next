@@ -8,8 +8,8 @@ import useAuth from "@hooks/useAuth";
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const Signup: React.FC = () => {
-  const { handleSignup } = useAuth();
+const Login: React.FC = () => {
+  const { handleLogin } = useAuth();
 
   return (
     <Row className="auth-container">
@@ -20,7 +20,7 @@ const Signup: React.FC = () => {
       <Col span={12}>
         <Card
           className="auth-card"
-          title={i18next.t("signup")}
+          title={i18next.t("login")}
           bordered={false}
         >
           <Form
@@ -28,7 +28,7 @@ const Signup: React.FC = () => {
             wrapperCol={{ span: 16 }}
             style={{ maxWidth: 600 }}
             initialValues={{ remember: true }}
-            onFinish={handleSignup}
+            onFinish={handleLogin}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
@@ -70,4 +70,4 @@ const Signup: React.FC = () => {
   );
 };
 
-export default Signup;
+export default Login;

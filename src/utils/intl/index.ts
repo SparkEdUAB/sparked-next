@@ -17,6 +17,7 @@ import i18next from "i18next";
         user_created: "Account successfully created",
         user_exist: "Sorry account already exits",
         user_exist2: "Sorry account already exits. Please sign in",
+        logged_in: "You are now logged in",
       },
     },
   },
