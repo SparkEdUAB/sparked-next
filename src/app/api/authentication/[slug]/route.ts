@@ -1,6 +1,6 @@
 import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import Login_ from "../login";
-import signup_ from "../signup";
+import Login_ from "../../auth/login";
+import signup_ from "../../auth/signup";
 
 const authApiHandler_ = async function GET(
   request: Request,

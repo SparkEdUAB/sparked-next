@@ -3,6 +3,7 @@ import { API_LINKS } from "app/links";
 import { useSession } from "next-auth/react";
 import { TloginFields, TsignupFields } from "./types";
 import i18next from "i18next";
+import { signIn } from "next-auth/react";
 
 const useAuth = () => {
   const { data: session, status } = useSession();
@@ -51,6 +52,15 @@ const useAuth = () => {
     };
 
     try {
+      const respd = await signIn("credentials", {
+        redirect: false,
+        password: "password",
+      });
+
+      console.log("respd", respd);
+
+      return;
+
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
@@ -66,6 +76,8 @@ const useAuth = () => {
       }
       message.success(i18next.t("logged_in"));
     } catch (err: any) {
+      console.log(err);
+
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
