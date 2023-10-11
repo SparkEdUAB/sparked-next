@@ -5,16 +5,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import mongoClientPromise from "../lib/db";
 
 export const authOptions: NextAuthOptions = {
-  // adapter: MongoDBAdapter(mongoClientPromise),
-
-  // pages: {
-  //   // signIn: "/auth/signin",
-  //   // signOut: "/auth/signout",
-  //   error: "/auth/error", // Error code passed in query string as ?error=
-  //   verifyRequest: "/auth/verify-request", // (used for check email message)
-  //   newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
-  // },
-
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -28,17 +18,7 @@ export const authOptions: NextAuthOptions = {
         // Add logic here to look up the user from the credentials supplied
         const user = { id: "1", name: "J Smith", email: "jsmith@example.com" };
 
-            // return new Response(JSON.stringify({ isError: false }), {
-            //   status: 200,
-            // });
-       
-       
-        // if (1) {
-        //   return { error: "my custom error" };
-        // }
-
         if (user) {
-          // Any object returned will be saved in `user` property of the JWT
           return user;
         } else {
           // If you return null then an error will be displayed advising the user to check their details.
@@ -58,10 +38,7 @@ export const authOptions: NextAuthOptions = {
     //   return token;
     // },
     // async signIn({ user, account, profile, email, credentials }) {
-  
-
     //   console.log("signIn", user);
-
     //   if (user?.error === "my custom error") {
     //     throw new Error("custom error to the client");
     //   }
