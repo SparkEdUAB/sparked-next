@@ -1,3 +1,5 @@
+"use client";
+
 import { message } from "antd";
 import { API_LINKS } from "app/links";
 import { useSession } from "next-auth/react";
@@ -5,9 +7,11 @@ import { TloginFields, TsignupFields } from "./types";
 import i18next from "i18next";
 import { signIn, signOut } from "next-auth/react";
 import AUTH_PROCESS_CODES from "@app/api/auth/processCodes";
+import { useRouter } from "next/navigation";
 
 const useAuth = () => {
   const { data: session, status } = useSession();
+  const router = useRouter();
 
   const isAuthenticated = status === "authenticated";
 
@@ -32,10 +36,19 @@ const useAuth = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.msg);
+        message.warning(
+          responseData.code === AUTH_PROCESS_CODES.USER_ALREADY_EXIST
+            ? i18next.t("user_already_exist")
+            : i18next.t("unknown_error")
+        );
         return false;
       }
-      message.success(responseData.msg);
+      message.success(
+        responseData.code === AUTH_PROCESS_CODES.USER_CREATED
+          ? i18next.t("account_created")
+          : i18next.t("unknown_error")
+      );
+      router.replace('/');
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
@@ -63,7 +76,7 @@ const useAuth = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.msg);
+        message.warning(responseData.code);
         return false;
       }
 
@@ -74,9 +87,13 @@ const useAuth = () => {
         user: JSON.stringify(user),
       });
 
+      router.replace("/");
+
       message.success(i18next.t("logged_in"));
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(
+        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : "mmm"}`
+      );
       return false;
     }
   };
