@@ -3,7 +3,8 @@ import { API_LINKS } from "app/links";
 import { useSession } from "next-auth/react";
 import { TloginFields, TsignupFields } from "./types";
 import i18next from "i18next";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
+import AUTH_PROCESS_CODES from "@app/api/auth/processCodes";
 
 const useAuth = () => {
   const { data: session, status } = useSession();
@@ -70,14 +71,48 @@ const useAuth = () => {
 
       const respd = await signIn("credentials", {
         redirect: false,
-        muks: "muks",
         user: JSON.stringify(user),
       });
 
       message.success(i18next.t("logged_in"));
     } catch (err: any) {
-      console.log(err);
+      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      return false;
+    }
+  };
 
+  const handleLogout = async () => {
+    const url = API_LINKS.LOGOUT;
+    const formData = {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const resp = await fetch(url, formData);
+
+      if (!resp.ok) {
+        message.warning(i18next.t("unknown_error"));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(
+          responseData.code === AUTH_PROCESS_CODES.FAILED_TO_LOGOUT_USER
+            ? i18next.t("logout_failed")
+            : i18next.t("unknown_error")
+        );
+        return false;
+      }
+
+      const respd = await signOut({ redirect: false, callbackUrl: "/" });
+
+      message.success(i18next.t("logout_ok"));
+    } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
@@ -87,6 +122,7 @@ const useAuth = () => {
     isAuthenticated,
     handleSignup,
     handleLogin,
+    handleLogout,
   };
 };
 

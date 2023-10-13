@@ -5,7 +5,7 @@ import { dbCollections } from "../lib/db/collections";
 import { realmApp } from "../lib/db/realm";
 import AUTH_PROCESS_CODES from "./processCodes";
 
-export default async function Login_(request: Request) {
+export default async function login_(request: Request) {
   const schema = zfd.formData({
     email: zfd.text(),
     password: zfd.text(),

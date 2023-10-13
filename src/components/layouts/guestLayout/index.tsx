@@ -10,7 +10,7 @@ import useAuth from "@hooks/useAuth";
 const GuestLayout: FC<{
   children: ReactNode;
 }> = ({ children }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, handleLogout } = useAuth();
 
   return (
     <main className="">
@@ -23,14 +23,16 @@ const GuestLayout: FC<{
           <Navbar.Link href="/navbars" active={true}>
             {i18next.t("home")}
           </Navbar.Link>
-          <Navbar.Link href="/navbars">{i18next.t("aboutUs")}</Navbar.Link>
+          <Navbar.Link href="/navbars">{i18next.t("about_us")}</Navbar.Link>
           <Navbar.Link href="/navbars">{i18next.t("resources")}</Navbar.Link>
           {!isAuthenticated ? (
             <Navbar.Link href="/auth/signup">
-              {i18next.t("loginSignup")}
+              {i18next.t("login_signup")}
             </Navbar.Link>
           ) : (
-            <Navbar.Link onClick={()=>alert('coming soon')} href="#">{i18next.t("logout")}</Navbar.Link>
+            <Navbar.Link onClick={handleLogout} href="#">
+              {i18next.t("logout")}
+            </Navbar.Link>
           )}
         </Navbar.Collapse>
       </Navbar>
