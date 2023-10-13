@@ -52,15 +52,6 @@ const useAuth = () => {
     };
 
     try {
-      const respd = await signIn("credentials", {
-        redirect: false,
-        password: "password",
-      });
-
-      console.log("respd", respd);
-
-      return;
-
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
@@ -74,6 +65,15 @@ const useAuth = () => {
         message.warning(responseData.msg);
         return false;
       }
+
+      const { user } = responseData;
+
+      const respd = await signIn("credentials", {
+        redirect: false,
+        muks: "muks",
+        user: JSON.stringify(user),
+      });
+
       message.success(i18next.t("logged_in"));
     } catch (err: any) {
       console.log(err);
