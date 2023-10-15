@@ -1,6 +1,7 @@
 "use client";
 
 import AppLogo from "@components/logo";
+import useSideBarNav from "@hooks/useSideBarNav";
 import { Badge, Sidebar } from "flowbite-react";
 import i18next from "i18next";
 import {
@@ -14,22 +15,21 @@ import {
 } from "react-icons/hi";
 
 const AdminSidebar = () => {
+  const { fetchAdminMenuItems } = useSideBarNav();
+
+  const menuItems = fetchAdminMenuItems();
+
   return (
     <Sidebar aria-label="Sidebar with logo branding">
       <AppLogo />
       <Sidebar.Items className="admin-menu">
         <Sidebar.ItemGroup>
-          <Sidebar.Item href="#" icon={HiChartPie}>
-            <p >{i18next.t("dashboard")}</p>
-          </Sidebar.Item>
-          <Sidebar.Item
-            href="#"
-            icon={HiViewBoards}
-            label="Pro"
-            labelColor="dark"
-          >
-            <p>{i18next.t("users")}</p>
-          </Sidebar.Item>
+          {menuItems.map((i) => (
+            <Sidebar.Item key={i.key} href={i.link} icon={i.icon}>
+              <p>{i.label}</p>
+            </Sidebar.Item>
+          ))}
+       
           <Sidebar.Item href="#" icon={HiInbox} label="3">
             <p>{i18next.t("courses")}</p>
           </Sidebar.Item>
@@ -44,7 +44,7 @@ const AdminSidebar = () => {
           </Sidebar.Item>
           <Sidebar.Item href="#" icon={HiTable}>
             <p>{i18next.t("feedback")}</p>
-          </Sidebar.Item>
+          </Sidebar.Item> 
         </Sidebar.ItemGroup>
       </Sidebar.Items>
       <Sidebar.CTA className="admin-menu">

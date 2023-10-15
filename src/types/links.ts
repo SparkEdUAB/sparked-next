@@ -7,5 +7,9 @@ export type TmenuItemLink = {
     label: string;
     key: string;
     icon: ReactNode;
+    index: number;
+    hasDivider?: string;
+    hasBadge?: boolean;
+    badgeLabel?:String
   };
 };
