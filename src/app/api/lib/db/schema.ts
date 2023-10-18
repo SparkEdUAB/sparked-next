@@ -55,7 +55,7 @@ export type courses = {
   code: string;
   created_at: Date;
   created_by_id: Realm.BSON.ObjectId;
-  institutions_id?: Realm.BSON.ObjectId;
+  institution_id?: Realm.BSON.ObjectId;
   is_visible?: boolean;
   languages: Realm.List<courses_languages>;
   name: string;
