@@ -6,7 +6,7 @@ import { Badge, Sidebar } from "flowbite-react";
 import i18next from "i18next";
 
 const AdminSidebar = () => {
-  const { fetchAdminMenuItems, pathname } = useSideBarNav();
+  const { fetchAdminMenuItems, pathname, isActiveMenuItem } = useSideBarNav();
 
   const menuItems = fetchAdminMenuItems();
 
@@ -19,7 +19,7 @@ const AdminSidebar = () => {
             .sort((a, b) => a.index - b.index)
             .map((i) => (
               <Sidebar.Item
-                className={pathname === i.link ? "active-menu-item" : ""}
+                className={isActiveMenuItem(i) ? "active-menu-item" : ""}
                 key={i.key}
                 href={i.link}
                 icon={i.icon}

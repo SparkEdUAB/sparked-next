@@ -3,10 +3,12 @@ import {
   HiChartPie,
   HiFilm,
   HiUserGroup,
-  HiOutlineBookOpen,
-  HiOutlineBookmarkAlt,
+  HiBookOpen,
+  HiBookmarkAlt,
   HiTrendingUp,
   HiChatAlt,
+  HiLibrary,
+  HiDocumentReport,
 } from "react-icons/hi";
 import i18next from "i18next";
 
@@ -32,7 +34,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ["admin"],
     label: i18next.t("courses"),
     key: "admin_home",
-    icon: HiOutlineBookOpen,
+    icon: HiBookOpen,
     index: 2,
   },
   topics: {
@@ -40,7 +42,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ["admin"],
     label: i18next.t("topics"),
     key: "admin_home",
-    icon: HiOutlineBookmarkAlt,
+    icon: HiBookmarkAlt,
     index: 3,
   },
   library: {
@@ -66,5 +68,28 @@ export const ADMIN_LINKS: TmenuItemLink = {
     key: "admin_home",
     icon: HiChatAlt,
     index: 6,
+  },
+  schools: {
+    link: "/admin/schools",
+    roles: ["admin"],
+    label: i18next.t("schools"),
+    key: "admin_home",
+    icon: HiLibrary,
+    index: 7,
+    children: [
+      {
+        name: "create",
+        link: "/admin/schools/create",
+        roles: ["admin"],
+      },
+    ],
+  },
+  programs: {
+    link: "/programs",
+    roles: ["admin"],
+    label: i18next.t("programs"),
+    key: "admin_home",
+    icon: HiDocumentReport,
+    index: 8,
   },
 };
