@@ -1,7 +1,10 @@
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
 import i18next from "i18next";
+import { usePathname } from "next/navigation";
 
 const useSideBarNav = () => {
+  const pathname = usePathname();
+
   const fetchAdminMenuItems = () => {
     const menuItems = [];
 
@@ -15,6 +18,7 @@ const useSideBarNav = () => {
 
   return {
     fetchAdminMenuItems,
+    pathname,
   };
 };
 

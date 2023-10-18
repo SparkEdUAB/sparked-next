@@ -69,6 +69,8 @@
 .auth-container {
   margin: 0 auto;
 }
-.admin-menu {
+.active-menu-item {
+  background-color: #ff914b29;
+
 }
 
