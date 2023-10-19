@@ -1,12 +1,12 @@
 "use client";
 
 import AppLogo from "@components/logo";
-import useSideBarNav from "@hooks/useSideBarNav";
+import useNavigation from "@hooks/useNavigation";
 import { Badge, Sidebar } from "flowbite-react";
 import i18next from "i18next";
 
 const AdminSidebar = () => {
-  const { fetchAdminMenuItems, pathname, isActiveMenuItem } = useSideBarNav();
+  const { fetchAdminMenuItems, isActiveMenuItem } = useNavigation();
 
   const menuItems = fetchAdminMenuItems();
 

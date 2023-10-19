@@ -3,6 +3,13 @@ import { ReactNode } from "react";
 export type TmenuItemLink = {
   [key: string]: TmenuItemLinkParams;
 };
+
+export type TchildMenuItemLinkParams = {
+  label: string;
+  link: string;
+  roles: Array<string>;
+};
+
 export type TmenuItemLinkParams = {
   link: string;
   roles: Array<string>;
@@ -13,5 +20,10 @@ export type TmenuItemLinkParams = {
   hasDivider?: string;
   hasBadge?: boolean;
   badgeLabel?: String;
-  children?: Array<{ name: string; link: string; roles: Array<string> }>;
+  children?: Array<TchildMenuItemLinkParams>;
 };
+
+export type TbreadcrumbItems = Array<{
+  link: string;
+  label: string;
+}>;

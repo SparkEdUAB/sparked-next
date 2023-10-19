@@ -1,17 +1,15 @@
 "use client";
 
-import AppLogo from "@components/logo";
 import { Navbar } from "flowbite-react";
-import { FC, ReactNode } from "react";
 import i18next from "i18next";
-import { Sidebar } from "flowbite-react";
+import { FC } from "react";
 
 import useAuth from "@hooks/useAuth";
+import { observer } from "mobx-react-lite";
 import AdminSidebar from "./sidebar";
+import { TadminLayout } from "./types";
 
-const AdminLayout: FC<{
-  children: ReactNode;
-}> = ({ children }) => {
+const AdminLayout: FC<TadminLayout> = observer(({ children }) => {
   const { isAuthenticated, handleLogout } = useAuth();
 
   return (
@@ -42,12 +40,10 @@ const AdminLayout: FC<{
           <AdminSidebar />
         </div>
 
-        <div className="col-span-4" >
-          {children}
-        </div>
+        <div className="col-span-4">{children}</div>
       </div>
     </main>
   );
-};
+});
 
 export default AdminLayout;

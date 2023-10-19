@@ -1,16 +1,16 @@
-import { TmenuItemLink } from "types/links";
+import i18next from "i18next";
 import {
-  HiChartPie,
-  HiFilm,
-  HiUserGroup,
   HiBookOpen,
   HiBookmarkAlt,
-  HiTrendingUp,
+  HiChartPie,
   HiChatAlt,
-  HiLibrary,
   HiDocumentReport,
+  HiFilm,
+  HiLibrary,
+  HiTrendingUp,
+  HiUserGroup,
 } from "react-icons/hi";
-import i18next from "i18next";
+import { TmenuItemLink } from "types/links";
 
 export const ADMIN_LINKS: TmenuItemLink = {
   home: {
@@ -25,7 +25,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     link: "/users",
     roles: ["admin"],
     label: i18next.t("users"),
-    key: "admin_home",
+    key: "admin_users",
     icon: HiUserGroup,
     index: 1,
   },
@@ -33,7 +33,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     link: "/courses",
     roles: ["admin"],
     label: i18next.t("courses"),
-    key: "admin_home",
+    key: "admin_courses",
     icon: HiBookOpen,
     index: 2,
   },
@@ -41,15 +41,15 @@ export const ADMIN_LINKS: TmenuItemLink = {
     link: "/topics",
     roles: ["admin"],
     label: i18next.t("topics"),
-    key: "admin_home",
+    key: "admin_topics",
     icon: HiBookmarkAlt,
     index: 3,
   },
   library: {
-    link: "/users",
+    link: "/library",
     roles: ["admin"],
     label: i18next.t("library"),
-    key: "admin_home",
+    key: "admin_library",
     icon: HiFilm,
     index: 4,
   },
@@ -57,7 +57,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     link: "/statistics",
     roles: ["admin"],
     label: i18next.t("statistics"),
-    key: "admin_home",
+    key: "admin_statistics",
     icon: HiTrendingUp,
     index: 5,
   },
@@ -65,7 +65,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     link: "/feedback",
     roles: ["admin"],
     label: i18next.t("feedback"),
-    key: "admin_home",
+    key: "admin_feedback",
     icon: HiChatAlt,
     index: 6,
   },
@@ -73,12 +73,12 @@ export const ADMIN_LINKS: TmenuItemLink = {
     link: "/admin/schools",
     roles: ["admin"],
     label: i18next.t("schools"),
-    key: "admin_home",
+    key: "admin_schools",
     icon: HiLibrary,
     index: 7,
     children: [
       {
-        name: "create",
+        label: "create",
         link: "/admin/schools/create",
         roles: ["admin"],
       },
@@ -88,7 +88,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     link: "/programs",
     roles: ["admin"],
     label: i18next.t("programs"),
-    key: "admin_home",
+    key: "admin_programs",
     icon: HiDocumentReport,
     index: 8,
   },
