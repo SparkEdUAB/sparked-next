@@ -19,7 +19,7 @@ const AdminLayout: FC<TadminLayout> = observer(
 
     return (
       <main className="">
-        <Navbar className="nav-bar " fluid={true} rounded={true}>
+        <Navbar className="nav-bar" fluid={true} rounded={true}>
           <Navbar.Brand href="#"></Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse>

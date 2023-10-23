@@ -12,6 +12,7 @@ const useSchool = () => {
   const router = useRouter();
 
   const [schools, setSchools] = useState<Array<TschoolTableView>>([]);
+  const [selecetedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
 
   const createSchool = async (fields: TcreateSchoolFields) => {
     const url = API_LINKS.CREATE_SCHOOL;
@@ -93,11 +94,19 @@ const useSchool = () => {
     }
   };
 
+  const triggerDelete = () => {
+    if (!selecetedSchoolIds.length)
+      return message.warning(i18next.t("select_items"));
+  };
+
   return {
     createSchool,
     fetchSchools,
     schools,
     setSchools,
+    setSelectedSchoolIds,
+    selecetedSchoolIds,
+    triggerDelete,
   };
 };
 

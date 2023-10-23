@@ -19,7 +19,9 @@ const AdminSidebar = () => {
             .sort((a, b) => a.index - b.index)
             .map((i) => (
               <Sidebar.Item
-                className={isActiveMenuItem(i) ? "active-menu-item" : ""}
+                className={
+                  isActiveMenuItem(i) ? "active-menu-item" : "sidebar-menu-item"
+                }
                 key={i.key}
                 href={i.link}
                 icon={i.icon}
