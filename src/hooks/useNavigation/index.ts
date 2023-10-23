@@ -1,6 +1,6 @@
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
 import NavigationStore from "@state/mobx/navigationStore";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   TbreadcrumbItems,
   TmenuItemLink,
@@ -9,6 +9,7 @@ import {
 
 const useNavigation = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   const { activeMenuItem } = NavigationStore;
 
@@ -70,6 +71,7 @@ const useNavigation = () => {
     pathname,
     activeMenuItem,
     generateBreadcrumbItems,
+    router,
   };
 };
 

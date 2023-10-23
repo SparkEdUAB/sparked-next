@@ -79,6 +79,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     children: [
       {
         label: "create",
+        key: "create",
         link: "/admin/schools/create",
         roles: ["admin"],
       },

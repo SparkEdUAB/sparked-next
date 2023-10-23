@@ -7,6 +7,7 @@ export type TmenuItemLink = {
 export type TchildMenuItemLinkParams = {
   label: string;
   link: string;
+  key?: string;
   roles: Array<string>;
 };
 

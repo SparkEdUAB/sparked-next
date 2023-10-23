@@ -71,12 +71,22 @@
 }
 .active-menu-item {
   background-color: #ff914b29;
-
 }
 .table-action-item {
-  margin:10px
+  margin: 10px;
 }
 .table-search-box {
-  margin-top:20px !important;
+  margin: 20px 0 20px 0 !important;
 }
 
+.ant-table-thead > tr > th {
+  background-color: black !important ;
+  color: white !important ;
+}
+
+.table-action-buttons {
+  margin:0 10px 10px 0;
+  background-color: black !important ;
+color:white
+
+}
