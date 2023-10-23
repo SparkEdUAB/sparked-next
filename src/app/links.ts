@@ -5,4 +5,5 @@ export const API_LINKS: Tlink = {
   LOGIN: "/api/authentication/login",
   LOGOUT: "/api/authentication/logout",
   NEXT_AUTH_CREDENTIAL_LOGIN: "/api/auth/signin/credentials",
+  CREATE_SCHOOL: "/api/school/createSchool",
 };

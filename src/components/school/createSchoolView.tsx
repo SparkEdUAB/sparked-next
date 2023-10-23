@@ -1,27 +1,22 @@
-import { Col, Form, Input, Row } from "antd";
-import i18next from "i18next";
-import { CourseBasedSvgImage } from "@components/svgs";
-import { Card } from "antd";
+"use client";
+
+import useSchool from "@hooks/useSchool";
+import { Card, Col, Form, Input, Row } from "antd";
 import { Button } from "flowbite-react";
-// @todo use login form fields 
-import { SIGNUP_FORM_FIELDS } from "./constants";
-import useAuth from "@hooks/useAuth";
+import i18next from "i18next";
+import { CREATE_SCHOOL_FORM_FIELDS } from "./constants";
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const Login: React.FC = () => {
-  const { handleLogin } = useAuth();
+const CreateSchoolView: React.FC = () => {
+  const { createSchool } = useSchool();
 
   return (
     <Row className="auth-container">
-      <Col span={12}>
-        <CourseBasedSvgImage height={1000} width={1000} />
-      </Col>
-
-      <Col span={12}>
+      <Col span={24}>
         <Card
           className="auth-card"
-          title={i18next.t("login")}
+          title={i18next.t("create_school")}
           bordered={false}
         >
           <Form
@@ -29,17 +24,17 @@ const Login: React.FC = () => {
             wrapperCol={{ span: 16 }}
             style={{ maxWidth: 600 }}
             initialValues={{ remember: true }}
-            onFinish={handleLogin}
+            onFinish={createSchool}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
             <Form.Item
-              label={SIGNUP_FORM_FIELDS.email.label}
-              name={SIGNUP_FORM_FIELDS.email.key}
+              label={CREATE_SCHOOL_FORM_FIELDS.name.label}
+              name={CREATE_SCHOOL_FORM_FIELDS.name.key}
               rules={[
                 {
                   required: true,
-                  message: SIGNUP_FORM_FIELDS.email.errorMsg,
+                  message: CREATE_SCHOOL_FORM_FIELDS.name.errorMsg,
                 },
               ]}
             >
@@ -47,16 +42,16 @@ const Login: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              label={SIGNUP_FORM_FIELDS.password.label}
-              name={SIGNUP_FORM_FIELDS.password.key}
+              label={CREATE_SCHOOL_FORM_FIELDS.description.label}
+              name={CREATE_SCHOOL_FORM_FIELDS.description.key}
               rules={[
                 {
                   required: true,
-                  message: SIGNUP_FORM_FIELDS.password.errorMsg,
+                  message: CREATE_SCHOOL_FORM_FIELDS.description.errorMsg,
                 },
               ]}
             >
-              <Input.Password />
+              <Input />
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
@@ -71,4 +66,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default CreateSchoolView;
