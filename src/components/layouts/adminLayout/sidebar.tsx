@@ -42,14 +42,16 @@ const AdminSidebar = () => {
             type="button"
           ></button>
         </div>
-        <div className="mb-3 text-sm text-cyan-900 dark:text-gray-400">
+        <div className="mb-3 text-sm text-gray-300 dark:text-indigo-400">
           <p>{i18next.t("app_beta_note")}</p>
         </div>
         <a
           className="text-sm text-cyan-900 underline hover:text-cyan-800 dark:text-gray-400 dark:hover:text-gray-300"
           href="#"
         >
-          <p>Got it !</p>
+          <p className="mb-3 text-sm text-gray-300 dark:text-indigo-400">
+            Got it !
+          </p>
         </a>
       </Sidebar.CTA>
     </Sidebar>

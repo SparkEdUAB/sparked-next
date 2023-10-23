@@ -109,3 +109,12 @@ color:white
   background-color: gray !important ;
 
 }
+
+.navbar-menu-item{
+  color:white !important;
+
+}
+
+.admin-breadcrumbs{
+  margin:10px
+}
