@@ -2,6 +2,7 @@ import SPARKED_PROCESS_CODES from "app/shared/processCodes";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
+import { p_fetchSchoolsWithCreator } from "./pipelines";
 
 export default async function fetchSchools_(request: Request) {
   const schema = zfd.formData({
@@ -27,14 +28,7 @@ export default async function fetchSchools_(request: Request) {
 
     const schools = await db
       .collection(dbCollections.schools.name)
-      .find(
-        {},
-        {
-          limit,
-          skip,
-        }
-      )
-      .toArray();
+      .aggregate(p_fetchSchoolsWithCreator()).toArray()
 
     const response = {
       isError: false,

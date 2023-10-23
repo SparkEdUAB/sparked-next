@@ -1,20 +1,17 @@
 "use client";
 
-import {
-  TschoolTableFields,
-  TcreateSchoolFields,
-  TfetchSchools,
-} from "./types";
+import { TschoolTableView } from "@components/school/types";
+import { message } from "antd";
 import { API_LINKS } from "app/links";
 import i18next from "i18next";
-import { message } from "antd";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { TcreateSchoolFields, TfetchSchools } from "./types";
 
 const useSchool = () => {
   const router = useRouter();
 
-  const [schools, setSchools] = useState<Array<TschoolTableFields>>([]);
+  const [schools, setSchools] = useState<Array<TschoolTableView>>([]);
 
   const createSchool = async (fields: TcreateSchoolFields) => {
     const url = API_LINKS.CREATE_SCHOOL;
@@ -76,9 +73,11 @@ const useSchool = () => {
         return false;
       }
 
-      const _schools = responseData.schools?.map((i: TschoolTableFields) => ({
+      const _schools = responseData.schools?.map((i: TschoolTableView) => ({
         key: i._id,
         name: i.name,
+        created_by: i.user.email,
+        created_at: new Date(i.created_at).toDateString(),
       }));
 
       setSchools(_schools);

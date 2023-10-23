@@ -1,7 +1,11 @@
 export type TschoolTableView = {
   key: string;
+  _id: string;
   name: string;
-  age: number;
-  address: string;
-  tags: string[];
+  created_by: string;
+  created_at: string;
+  user: {
+    name: string;
+    email: string;
+  };
 };
