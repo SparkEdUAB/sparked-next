@@ -19,8 +19,6 @@ export default async function createSchool_(
   });
   const formBody = await request.json();
 
-  console.log("formBody", formBody);
-
   const { name, description } = schema.parse(formBody);
 
   try {
@@ -35,9 +33,10 @@ export default async function createSchool_(
         status: 200,
       });
     }
+    const regexPattern = new RegExp(name, "i");
 
     const user = await db.collection(dbCollections.schools.name).findOne({
-      name,
+      name: { $regex: regexPattern },
     });
 
     if (user) {
@@ -50,8 +49,6 @@ export default async function createSchool_(
         status: 200,
       });
     }
-
-    console.log("session?.user?.id", session?.user?.id);
 
     await db.collection(dbCollections.schools.name).insertOne({
       name,
