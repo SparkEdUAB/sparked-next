@@ -73,12 +73,15 @@ const useSchool = () => {
         return false;
       }
 
-      const _schools = responseData.schools?.map((i: TschoolTableView) => ({
-        key: i._id,
-        name: i.name,
-        created_by: i.user.email,
-        created_at: new Date(i.created_at).toDateString(),
-      }));
+      const _schools = responseData.schools?.map(
+        (i: TschoolTableView, index: number) => ({
+          index: index + 1,
+          key: i._id,
+          name: i.name,
+          created_by: i.user.email,
+          created_at: new Date(i.created_at).toDateString(),
+        })
+      );
 
       setSchools(_schools);
       return _schools;

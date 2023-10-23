@@ -1,14 +1,13 @@
 "use client";
 
+import { AdminPageTitle } from "@components/layouts";
 import useSchool from "@hooks/useSchool";
-import { Row } from "antd";
-import { useEffect } from "react";
-import { Input } from "antd";
+import { Input, Table } from "antd";
+import i18next from "i18next";
+import React, { useEffect } from "react";
+import { schoolTableColumns } from ".";
 
 const { Search } = Input;
-import { Table } from "antd";
-import React from "react";
-import { schoolTableColumns } from ".";
 
 const SchoolsListView: React.FC = () => {
   const { fetchSchools, schools } = useSchool();
@@ -19,6 +18,7 @@ const SchoolsListView: React.FC = () => {
 
   return (
     <>
+      <AdminPageTitle title={i18next.t("schools")} />
       <Search
         className="table-search-box"
         placeholder="Seach for schools"

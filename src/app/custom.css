@@ -74,11 +74,9 @@
 
 }
 .table-action-item {
-  background-color: cyan;
   margin:10px
 }
 .table-search-box {
-  margin:20px;
-  width:80%
+  margin-top:20px !important;
 }
 

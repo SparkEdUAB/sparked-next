@@ -4,6 +4,12 @@ import { TschoolTableView } from "./types";
 
 export const schoolTableColumns: ColumnsType<TschoolTableView> = [
   {
+    title: "#",
+    dataIndex: "index",
+    key: "index",
+    render: (text) => <a>{text}</a>,
+  },
+  {
     title: "Name",
     dataIndex: "name",
     key: "name",
