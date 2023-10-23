@@ -16,9 +16,9 @@ const AdminHeader: FC<{ menuItems: TmenuItemLink; targetLink: string }> = ({
   return (
     <Breadcrumb
       items={[
-        ...breadcrumbItems.map((i) => ({
+        ...breadcrumbItems.map((i) => (activeMenuItem?.label !== i.label ?{
           title: <a href={i.link}>{i.label}</a>,
-        })),
+        }:{})),
         {
           title: activeMenuItem?.label,
         },
