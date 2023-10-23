@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/constants";
 import createSchool_ from "../create";
 import { Session } from "next-auth";
+import fetchSchools_ from "..";
 
 const schoolApiHandler_ = async function POST(
   req: Request,
@@ -17,6 +18,7 @@ const schoolApiHandler_ = async function POST(
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createSchool: createSchool_,
+    fetchSchools: fetchSchools_,
   };
 
   if (schoolFunctions[slug] && session) {

@@ -1,5 +1,5 @@
-import { IformFields } from "types/form";
 import i18next from "i18next";
+import { IformFields } from "types/form";
 
 export const CREATE_SCHOOL_FORM_FIELDS: IformFields = {
   ["name"]: {

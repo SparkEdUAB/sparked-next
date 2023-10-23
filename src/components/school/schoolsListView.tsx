@@ -2,11 +2,24 @@
 
 import useSchool from "@hooks/useSchool";
 import { Row } from "antd";
+import { useEffect } from "react";
+
+import React from "react";
+import { Space, Table, Tag } from "antd";
+import { schoolTableColumns } from ".";
 
 const SchoolsListView: React.FC = () => {
-  const {} = useSchool();
+  const { fetchSchools, schools } = useSchool();
 
-  return <Row className="auth-container"></Row>;
+  useEffect(() => {
+    fetchSchools({});
+  }, []);
+
+  return (
+    <Row className="">
+      <Table columns={schoolTableColumns} dataSource={schools} />
+    </Row>
+  );
 };
 
 export default SchoolsListView;
