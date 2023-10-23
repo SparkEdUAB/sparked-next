@@ -6,21 +6,22 @@ import {
   default as AUTH_PROCESS_CODES,
   default as SCHOOL_PROCESS_CODES,
 } from "./processCodes";
+import { Session } from "next-auth";
+import { BSON } from "mongodb";
 
-export default async function createSchool_(request: Request) {
+export default async function createSchool_(
+  request: Request,
+  session?: Session
+) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
   });
   const formBody = await request.json();
 
-
   console.log("formBody", formBody);
 
   const { name, description } = schema.parse(formBody);
-
-
-
 
   try {
     const db = await dbClient();
@@ -50,11 +51,15 @@ export default async function createSchool_(request: Request) {
       });
     }
 
+    console.log("session?.user?.id", session?.user?.id);
+
     await db.collection(dbCollections.schools.name).insertOne({
       name,
       description,
       created_at: new Date(),
       updated_at: new Date(),
+      //@ts-ignore
+      created_by_id: new BSON.ObjectId(session?.user?.id),
     });
 
     const response = {

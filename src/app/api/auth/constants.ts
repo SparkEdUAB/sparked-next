@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
         const { user } = credentials;
 
         if (user) {
-          return user;
+          return JSON.parse(user);
         } else {
           return null;
         }
@@ -25,7 +25,20 @@ export const authOptions: NextAuthOptions = {
   theme: {
     colorScheme: "light",
   },
-  callbacks: {},
+  callbacks: {
+    async session({ session, token, user }) {
+      if (!session || !session.user) return session;
+      //@ts-ignore
+      session.user.id = token.id;
+      return session;
+    },
+    async jwt({ token, user, account, profile }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    },
+  },
 };
 
 export default NextAuth(authOptions);

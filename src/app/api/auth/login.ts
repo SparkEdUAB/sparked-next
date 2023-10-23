@@ -56,7 +56,7 @@ export default async function login_(request: Request) {
     const response = {
       isError: false,
       code: AUTH_PROCESS_CODES.USER_LOGGED_IN_OK,
-      user,
+      user: { ...user ,id:user._id},
     };
 
     return new Response(JSON.stringify(response), {

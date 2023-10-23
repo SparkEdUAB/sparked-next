@@ -10,7 +10,7 @@ import AUTH_PROCESS_CODES from "@app/api/auth/processCodes";
 import { useRouter } from "next/navigation";
 
 const useAuth = () => {
-  const { data: session, status } = useSession();
+  const { data:session, status } = useSession();
   const router = useRouter();
 
   const isAuthenticated = status === "authenticated";
@@ -48,7 +48,7 @@ const useAuth = () => {
           ? i18next.t("account_created")
           : i18next.t("unknown_error")
       );
-      router.replace('/');
+      router.replace("/");
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
@@ -87,7 +87,9 @@ const useAuth = () => {
         user: JSON.stringify(user),
       });
 
-      router.replace("/");
+      console.log("session:", session);
+
+      // router.replace("/");
 
       message.success(i18next.t("logged_in"));
     } catch (err: any) {
