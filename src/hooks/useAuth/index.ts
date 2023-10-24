@@ -92,7 +92,7 @@ const useAuth = () => {
       message.success(i18next.t("logged_in"));
     } catch (err: any) {
       message.error(
-        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : "mmm"}`
+        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`
       );
       return false;
     }

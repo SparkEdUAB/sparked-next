@@ -5,13 +5,14 @@ import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
 import useNavigation from "@hooks/useNavigation";
 import useSchool from "@hooks/useSchool";
 import { Input, Table } from "antd";
-import { Button } from "flowbite-react";
+import { Button, TextInput } from "flowbite-react";
 import i18next from "i18next";
 import React, { useEffect } from "react";
 import {
   HiOutlineNewspaper,
   HiOutlinePencilSquare,
   HiTrash,
+  HiMagnifyingGlass,
 } from "react-icons/hi2";
 import { schoolTableColumns } from ".";
 import { TschoolFields } from "./types";
@@ -26,6 +27,8 @@ const SchoolsListView: React.FC = () => {
     setSelectedSchoolIds,
     triggerDelete,
     triggerEdit,
+    findSchoolsByName,
+    onSearchQueryChange,
   } = useSchool();
   const { router, getChildLinkByKey } = useNavigation();
 
@@ -43,10 +46,17 @@ const SchoolsListView: React.FC = () => {
   return (
     <>
       <AdminPageTitle title={i18next.t("schools")} />
-      <Search
+
+      <TextInput
+        onChange={(e) => onSearchQueryChange(e.target.value)}
+        icon={HiMagnifyingGlass}
         className="table-search-box"
         placeholder={i18next.t("search_schools")}
-        enterButton
+        required
+        type="text"
+        onKeyDown={(e) => {
+          e.keyCode === 13 ? findSchoolsByName() : null;
+        }}
       />
       <Button.Group>
         <Button

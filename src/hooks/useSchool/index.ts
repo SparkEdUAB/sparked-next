@@ -15,7 +15,9 @@ const useSchool = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [schools, setSchools] = useState<Array<TschoolFields>>([]);
+  const [tempSchools, setTempSchools] = useState<Array<TschoolFields>>([]);
   const [school, setSchool] = useState<TschoolFields | null>(null);
   const [selecetedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
 
@@ -52,9 +54,7 @@ const useSchool = (form?: any) => {
 
       message.success(i18next.t("school_created"));
     } catch (err: any) {
-      message.error(
-        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : "mmm"}`
-      );
+      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
   };
@@ -88,9 +88,7 @@ const useSchool = (form?: any) => {
 
       message.success(i18next.t("success"));
     } catch (err: any) {
-      message.error(
-        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : "mmm"}`
-      );
+      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
   };
@@ -132,11 +130,10 @@ const useSchool = (form?: any) => {
       );
 
       setSchools(_schools);
+       setTempSchools(_schools);
       return _schools;
     } catch (err: any) {
-      message.error(
-        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : "mmm"}`
-      );
+      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
   };
@@ -178,9 +175,7 @@ const useSchool = (form?: any) => {
       form && form.setFieldsValue(_school);
       return _school;
     } catch (err: any) {
-      message.error(
-        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : "mmm"}`
-      );
+      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
   };
@@ -233,10 +228,68 @@ const useSchool = (form?: any) => {
     } catch (err: any) {
       UiStore.setLoaderStatus(false);
 
-      message.error(
-        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : "mmm"}`
-      );
+      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
+    }
+  };
+  const findSchoolsByName = async () => {
+    if (isLoading) {
+      return message.warning(i18next.t("wait"));
+    } else if (!searchQuery.trim().length) {
+      return message.warning(i18next.t("search_empty"));
+    }
+
+    const url = API_LINKS.FIND_SCHOOLS_BY_NAME;
+    const formData = {
+      body: JSON.stringify({
+        name: searchQuery.trim(),
+        limit: 1000,
+        skip:0,
+      }),
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      setLoaderStatus(true);
+      const resp = await fetch(url, formData);
+      setLoaderStatus(false);
+
+      if (!resp.ok) {
+        message.warning(i18next.t("unknown_error"));
+        return false;
+      }
+
+      const responseData = await resp.json();
+      console.log(responseData);
+
+      if (responseData.isError) {
+        message.warning(responseData.code);
+        return false;
+      }
+      console.log(responseData.schools);
+      message.success(
+        responseData.schools.length + " " + i18next.t("schools_found")
+      );
+
+     
+      setSchools(responseData.schools);
+
+      return responseData.schools;
+    } catch (err: any) {
+      setLoaderStatus(false);
+      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      return false;
+    }
+  };
+
+  const onSearchQueryChange = (text: string) => {
+    setSearchQuery(text);
+
+    if (!text.trim().length) {
+      setSchools(tempSchools);
     }
   };
 
@@ -267,6 +320,10 @@ const useSchool = (form?: any) => {
     school,
     isLoading,
     editSchool,
+    findSchoolsByName,
+    onSearchQueryChange,
+    searchQuery,
+    tempSchools,
   };
 };
 

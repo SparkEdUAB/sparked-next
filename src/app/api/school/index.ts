@@ -133,7 +133,60 @@ export async function deleteSchools_(request: Request) {
       status: 200,
     });
   } catch (error) {
+    const resp = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+    };
 
+    return new Response(JSON.stringify(resp), {
+      status: 200,
+    });
+  }
+}
+
+export async function findSchoolsByName_(request: Request) {
+  const schema = zfd.formData({
+    name: zfd.text(),
+    skip: zfd.numeric(),
+    limit: zfd.numeric(),
+  });
+  const formBody = await request.json();
+
+  const { name,limit,skip } = schema.parse(formBody);
+
+  try {
+    const db = await dbClient();
+
+    if (!db) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+      };
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+    const regexPattern = new RegExp(name, "i");
+
+    const schools = await db
+      .collection(dbCollections.schools.name)
+      .find(
+        {
+          name: { $regex: regexPattern },
+        },
+        { limit, skip }
+      )
+      .toArray();
+
+    const response = {
+      isError: false,
+      schools,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  } catch (error) {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,

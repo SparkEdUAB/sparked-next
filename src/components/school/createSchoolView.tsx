@@ -16,7 +16,6 @@ const CreateSchoolView: React.FC = () => {
 
   const { selectedSchool } = SchoolStore;
 
-
   const [form] = Form.useForm();
 
   return (
@@ -36,10 +35,7 @@ const CreateSchoolView: React.FC = () => {
               style={{ maxWidth: 600 }}
               initialValues={selectedSchool || {}}
               onFinish={createSchool}
-              onFinishFailed={() => {
-                alert();
-                form.setFieldsValue({ name: "Briabn" });
-              }}
+              onFinishFailed={() => {}}
               autoComplete="off"
             >
               <Form.Item

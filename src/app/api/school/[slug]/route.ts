@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../auth/constants";
 import createSchool_ from "../create";
 import { Session } from "next-auth";
-import fetchSchools_, { deleteSchools_, fetchSchool_ } from "..";
+import fetchSchools_, { deleteSchools_, fetchSchool_, findSchoolsByName_ } from "..";
 import editSchool_ from "../edit";
 
 const schoolApiHandler_ = async function POST(
@@ -23,6 +23,7 @@ const schoolApiHandler_ = async function POST(
     fetchSchool: fetchSchool_,
     editSchool: editSchool_,
     deleteSchools: deleteSchools_,
+    findSchoolsByName: findSchoolsByName_,
   };
 
   if (schoolFunctions[slug] && session) {
