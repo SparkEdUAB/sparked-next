@@ -263,13 +263,11 @@ const useProgram = (form?: any) => {
       }
 
       const responseData = await resp.json();
-      console.log(responseData);
 
       if (responseData.isError) {
         message.warning(responseData.code);
         return false;
       }
-      console.log(responseData.schools);
       message.success(
         responseData.schools.length + " " + i18next.t("schools_found")
       );
