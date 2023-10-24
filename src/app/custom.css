@@ -14,8 +14,7 @@
 
 .nav-bar {
   background-color: black !important;
-  color:white;
-
+  color: white;
 }
 
 .nav-bar::before {
@@ -84,37 +83,46 @@
 }
 
 .table-action-buttons {
-  margin:0 10px 10px 0;
+  margin: 0 10px 10px 0;
   background-color: black !important ;
-color:white
-
+  color: white;
 }
 
-.admin-table{
-  margin:0 10px 10px 0;
-
+.admin-table {
+  margin: 0 10px 10px 0;
 }
-.admin-menu{
+.admin-menu {
   background-color: black !important ;
-  padding:10px
-
+  padding: 10px;
 }
 
-.sidebar-menu-item{
-  color:white !important;
+.sidebar-menu-item {
+  color: white !important;
 }
 
-.sidebar-menu-item:hover{
-  color:black !important;
+.sidebar-menu-item:hover {
+  color: black !important;
   background-color: gray !important ;
-
 }
 
-.navbar-menu-item{
-  color:white !important;
-
+.navbar-menu-item {
+  color: white !important;
 }
 
-.admin-breadcrumbs{
-  margin:10px
+.admin-breadcrumbs {
+  margin: 10px;
+}
+.form-card {
+  background-color: #020101ba !important ;
+  color: white !important;
+  margin: 10px;
+}
+.form-label {
+  color: white !important;
+}
+
+.form-submit-btn {
+  background-color: #020101ba !important ;
+  width: 100%;
+  color: white !important;
 }

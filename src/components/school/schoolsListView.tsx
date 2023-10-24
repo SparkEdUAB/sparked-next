@@ -1,16 +1,20 @@
 "use client";
 
 import { AdminPageTitle } from "@components/layouts";
+import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
+import useNavigation from "@hooks/useNavigation";
 import useSchool from "@hooks/useSchool";
 import { Input, Table } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
 import React, { useEffect } from "react";
-import { HiTrendingUp } from "react-icons/hi";
+import {
+  HiOutlineNewspaper,
+  HiOutlinePencilSquare,
+  HiTrash,
+} from "react-icons/hi2";
 import { schoolTableColumns } from ".";
-import useNavigation from "@hooks/useNavigation";
-import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
-import { TschoolTableView } from "./types";
+import { TschoolFields } from "./types";
 const { Search } = Input;
 
 const SchoolsListView: React.FC = () => {
@@ -20,8 +24,9 @@ const SchoolsListView: React.FC = () => {
     selecetedSchoolIds,
     setSelectedSchoolIds,
     triggerDelete,
+    triggerEdit,
   } = useSchool();
-  const { router } = useNavigation();
+  const { router, getChildLinkByKey } = useNavigation();
 
   useEffect(() => {
     fetchSchools({});
@@ -29,10 +34,7 @@ const SchoolsListView: React.FC = () => {
 
   const rowSelection = {
     selectedRowKeys: selecetedSchoolIds,
-    onChange: (
-      selectedRowKeys: React.Key[],
-      selectedRows: TschoolTableView[]
-    ) => {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: TschoolFields[]) => {
       setSelectedSchoolIds(selectedRows.map((i) => i.key));
     },
   };
@@ -48,25 +50,19 @@ const SchoolsListView: React.FC = () => {
       <Button.Group>
         <Button
           onClick={() =>
-            router.replace(
-              ADMIN_LINKS.schools.children?.filter((i) => i.key === "create")[0]
-                .link as string
-            )
+            router.replace(getChildLinkByKey("create", ADMIN_LINKS.schools))
           }
           className={"table-action-buttons"}
         >
-          <HiTrendingUp className="mr-3 h-4 w-4" />
+          <HiOutlinePencilSquare className="mr-3 h-4 w-4" />
           New
         </Button>
-        <Button
-          onClick={triggerDelete}
-          className={"table-action-buttons"}
-        >
-          <HiTrendingUp className="mr-3 h-4 w-4" />
+        <Button onClick={triggerDelete} className={"table-action-buttons"}>
+          <HiTrash className="mr-3 h-4 w-4" />
           Delete
         </Button>
-        <Button className={"table-action-buttons"}>
-          <HiTrendingUp className="mr-3 h-4 w-4" />
+        <Button onClick={triggerEdit} className={"table-action-buttons"}>
+          <HiOutlineNewspaper className="mr-3 h-4 w-4" />
           Edit
         </Button>
       </Button.Group>

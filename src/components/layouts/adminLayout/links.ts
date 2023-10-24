@@ -83,6 +83,12 @@ export const ADMIN_LINKS: TmenuItemLink = {
         link: "/admin/schools/create",
         roles: ["admin"],
       },
+      {
+        label: "edit",
+        key: "edit",
+        link: "/admin/schools/edit",
+        roles: ["admin"],
+      },
     ],
   },
   programs: {

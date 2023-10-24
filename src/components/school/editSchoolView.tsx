@@ -1,46 +1,46 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
+import { AdminPageTitle } from "@components/layouts";
 import useSchool from "@hooks/useSchool";
-import { Card, Col, Form, Input, Row, Skeleton } from "antd";
+import { Card, Col, Form, Input, Row } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import { CREATE_SCHOOL_FORM_FIELDS } from "./constants";
-import { AdminPageTitle } from "@components/layouts";
-import SchoolStore from "@state/mobx/scholStore";
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const CreateSchoolView: React.FC = () => {
-  const { createSchool, fetchSchool, school } = useSchool();
-
-  const { selectedSchool } = SchoolStore;
-
-  console.log("selectedSchool", selectedSchool);
-
+const EditSchoolView: React.FC = () => {
   const [form] = Form.useForm();
+  const { editSchool, fetchSchool, school } = useSchool(form);
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    fetchSchool(searchParams.get("schoolId") as string);
+  }, []);
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("create_school")} />
+      <AdminPageTitle title={i18next.t("edit_school")} />
 
       <Row className="form-container">
         <Col span={24}>
           <Card
             className="form-card"
-            title={<p className="form-label">{i18next.t("new_school")}</p>}
+            title={<p className="form-label">{school?.name}</p>}
             bordered={false}
           >
             <Form
+              form={form}
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
-              initialValues={selectedSchool || {}}
-              onFinish={createSchool}
-              onFinishFailed={() => {
-                alert();
-                form.setFieldsValue({ name: "Briabn" });
-              }}
+              initialValues={school || {}}
+              onFinish={editSchool}
+              onFinishFailed={() => {}}
               autoComplete="off"
             >
               <Form.Item
@@ -94,4 +94,4 @@ const CreateSchoolView: React.FC = () => {
   );
 };
 
-export default CreateSchoolView;
+export default EditSchoolView;

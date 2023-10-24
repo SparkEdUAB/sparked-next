@@ -1,7 +1,8 @@
-export type TschoolTableView = {
+export type TschoolFields = {
   key: string;
   _id: string;
   name: string;
+  description: string;
   created_by: string;
   created_at: string;
   user: {

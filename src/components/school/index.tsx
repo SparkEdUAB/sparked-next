@@ -1,8 +1,8 @@
 import { Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { TschoolTableView } from "./types";
+import { TschoolFields } from "./types";
 
-export const schoolTableColumns: ColumnsType<TschoolTableView> = [
+export const schoolTableColumns: ColumnsType<TschoolFields> = [
   {
     title: "#",
     dataIndex: "index",

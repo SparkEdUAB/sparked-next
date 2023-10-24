@@ -146,6 +146,22 @@ export const schoolSchema = {
   primaryKey: "_id",
 };
 
+
+export const schoolsSchema = {
+  name: "schools",
+  properties: {
+    _id: "objectId",
+    created_at: "date",
+    created_by_id: "objectId",
+    description: "string",
+    name: "string",
+    updated_at: "date?",
+    updated_by_id: "objectId?",
+  },
+  primaryKey: "_id",
+};
+
+
 export type preferences = {
   _id: Realm.BSON.ObjectId;
   created_at?: Date;
@@ -249,15 +265,3 @@ export const user_rolesSchema = {
 };
 
 
-export const schoolsSchema = {
-  name: "schools",
-  properties: {
-    _id: "objectId",
-    created_at: "date",
-    created_by_id: "objectId",
-    description: "string",
-    name: "string",
-    updated_at: "date?",
-  },
-  primaryKey: "_id",
-};

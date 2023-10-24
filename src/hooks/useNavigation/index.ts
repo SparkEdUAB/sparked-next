@@ -6,6 +6,7 @@ import {
   TmenuItemLink,
   TmenuItemLinkParams,
 } from "types/links";
+import { useParams } from "next/navigation";
 
 const useNavigation = () => {
   const pathname = usePathname();
@@ -65,6 +66,16 @@ const useNavigation = () => {
     return breadcrumbItems;
   };
 
+  const getChildLinkByKey = (key: string, parentLink: TmenuItemLinkParams) => {
+    const links = parentLink.children?.filter((i) => i.key === key);
+
+    if (links?.length) {
+      return links[0].link;
+    } else {
+      return '';
+    }
+  };
+
   return {
     fetchAdminMenuItems,
     isActiveMenuItem,
@@ -72,6 +83,8 @@ const useNavigation = () => {
     activeMenuItem,
     generateBreadcrumbItems,
     router,
+    getChildLinkByKey,
+    useParams
   };
 };
 
