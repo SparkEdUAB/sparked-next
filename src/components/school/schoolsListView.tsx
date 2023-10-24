@@ -15,6 +15,7 @@ import {
 } from "react-icons/hi2";
 import { schoolTableColumns } from ".";
 import { TschoolFields } from "./types";
+import { observer } from "mobx-react-lite";
 const { Search } = Input;
 
 const SchoolsListView: React.FC = () => {
@@ -73,8 +74,9 @@ const SchoolsListView: React.FC = () => {
         columns={schoolTableColumns}
         dataSource={schools}
       />
+      
     </>
   );
 };
 
-export default SchoolsListView;
+export default observer(SchoolsListView);

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
@@ -6,8 +7,9 @@ import useNavigation from "@hooks/useNavigation";
 import { message } from "antd";
 import { API_LINKS } from "app/links";
 import i18next from "i18next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TcreateSchoolFields, TfetchSchools } from "./types";
+import UiStore from "@state/mobx/uiStore";
 
 const useSchool = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -16,6 +18,10 @@ const useSchool = (form?: any) => {
   const [schools, setSchools] = useState<Array<TschoolFields>>([]);
   const [school, setSchool] = useState<TschoolFields | null>(null);
   const [selecetedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
+
+  useEffect(() => {
+    UiStore.confirmDialogStatus && selecetedSchoolIds.length && deleteSchools();
+  }, [UiStore.confirmDialogStatus]);
 
   const createSchool = async (fields: TcreateSchoolFields) => {
     const url = API_LINKS.CREATE_SCHOOL;
@@ -180,9 +186,14 @@ const useSchool = (form?: any) => {
   };
 
   const triggerDelete = async () => {
-    if (!selecetedSchoolIds.length)
+    if (!selecetedSchoolIds.length) {
       return message.warning(i18next.t("select_items"));
+    }
 
+    UiStore.setConfirmDialogVisibility(true);
+  };
+
+  const deleteSchools = async () => {
     const url = API_LINKS.DELETE_SCHOOLS;
     const formData = {
       body: JSON.stringify({ schoolIds: selecetedSchoolIds }),
@@ -206,7 +217,9 @@ const useSchool = (form?: any) => {
         message.warning(responseData.code);
         return false;
       }
-        message.success(i18next.t("success"));
+
+      UiStore.setConfirmDialogVisibility(false)
+      message.success(i18next.t("success"));
 
       setSchools(
         schools.filter((i) => selecetedSchoolIds.indexOf(i._id) == -1)

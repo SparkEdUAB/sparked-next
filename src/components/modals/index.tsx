@@ -1,33 +1,37 @@
-import React, { useState } from "react";
-import { Modal } from "antd";
+"use client";
 
-const App: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+import UiStore from "@state/mobx/uiStore";
+import { Button, Modal } from "flowbite-react";
+import i18next from "i18next";
+import { observer } from "mobx-react-lite";
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+export const ConfirmDialog = observer(() => {
+  const {
+    confirmDialogVisibility,
+    setConfirmDialogVisibility,
+    setConfirmDialogStatus,
+    confirmDialogTitle,
+  } = UiStore;
 
   return (
-    <Modal
-      title="Basic Modal"
-      open={isModalOpen}
-      onOk={handleOk}
-      onCancel={handleCancel}
-    >
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-      <p>Some contents...</p>
-    </Modal>
+    <>
+      <Modal
+        show={confirmDialogVisibility}
+        onClose={() => setConfirmDialogVisibility(false)}
+      >
+        <Modal.Header>{confirmDialogTitle}</Modal.Header>
+        <Modal.Footer>
+          <Button onClick={() => setConfirmDialogStatus(true)}>
+            {i18next.t("yes")}
+          </Button>
+          <Button
+            color="gray"
+            onClick={() => setConfirmDialogVisibility(false)}
+          >
+            {i18next.t("cancel")}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
-};
-
-export default App;
+});
