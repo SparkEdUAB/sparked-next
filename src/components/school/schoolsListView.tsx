@@ -45,7 +45,7 @@ const SchoolsListView: React.FC = () => {
       <AdminPageTitle title={i18next.t("schools")} />
       <Search
         className="table-search-box"
-        placeholder="Seach for schools"
+        placeholder={i18next.t("search_schools")}
         enterButton
       />
       <Button.Group>
@@ -56,15 +56,15 @@ const SchoolsListView: React.FC = () => {
           className={"table-action-buttons"}
         >
           <HiOutlinePencilSquare className="mr-3 h-4 w-4" />
-          New
+          {i18next.t("new")}
         </Button>
         <Button onClick={triggerDelete} className={"table-action-buttons"}>
           <HiTrash className="mr-3 h-4 w-4" />
-          Delete
+          {i18next.t("delete")}
         </Button>
         <Button onClick={triggerEdit} className={"table-action-buttons"}>
           <HiOutlineNewspaper className="mr-3 h-4 w-4" />
-          Edit
+          {i18next.t("edit")}
         </Button>
       </Button.Group>
       <Table
@@ -74,7 +74,6 @@ const SchoolsListView: React.FC = () => {
         columns={schoolTableColumns}
         dataSource={schools}
       />
-      
     </>
   );
 };

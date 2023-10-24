@@ -194,6 +194,8 @@ const useSchool = (form?: any) => {
   };
 
   const deleteSchools = async () => {
+    if (UiStore.isLoading) return;
+
     const url = API_LINKS.DELETE_SCHOOLS;
     const formData = {
       body: JSON.stringify({ schoolIds: selecetedSchoolIds }),
@@ -204,7 +206,9 @@ const useSchool = (form?: any) => {
     };
 
     try {
+      UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t("unknown_error"));
@@ -218,7 +222,7 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false)
+      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
       setSchools(
@@ -227,6 +231,8 @@ const useSchool = (form?: any) => {
 
       return responseData.results;
     } catch (err: any) {
+      UiStore.setLoaderStatus(false);
+
       message.error(
         `${i18next.t("unknown_error")}. ${err.msg ? err.msg : "mmm"}`
       );

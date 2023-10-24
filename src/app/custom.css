@@ -126,3 +126,8 @@
   width: 100%;
   color: white !important;
 }
+
+.confirm-dialog-y-btn {
+  background-color: black !important ;
+  color: white !important;
+}
