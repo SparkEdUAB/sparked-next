@@ -9,4 +9,5 @@ export const API_LINKS: Tlink = {
   FETCH_SCHOOLS: "/api/school/fetchSchools",
   FETCH_SCHOOL: "/api/school/fetchSchool",
   EDIT_SCHOOL: "/api/school/editSchool",
+  DELETE_SCHOOLS: "/api/school/deleteSchools",
 };

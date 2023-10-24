@@ -118,6 +118,7 @@ const useSchool = (form?: any) => {
         (i: TschoolFields, index: number) => ({
           index: index + 1,
           key: i._id,
+          _id: i._id,
           name: i.name,
           created_by: i.user.email,
           created_at: new Date(i.created_at).toDateString(),
@@ -178,9 +179,46 @@ const useSchool = (form?: any) => {
     }
   };
 
-  const triggerDelete = () => {
+  const triggerDelete = async () => {
     if (!selecetedSchoolIds.length)
       return message.warning(i18next.t("select_items"));
+
+    const url = API_LINKS.DELETE_SCHOOLS;
+    const formData = {
+      body: JSON.stringify({ schoolIds: selecetedSchoolIds }),
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+
+    try {
+      const resp = await fetch(url, formData);
+
+      if (!resp.ok) {
+        message.warning(i18next.t("unknown_error"));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(responseData.code);
+        return false;
+      }
+        message.success(i18next.t("success"));
+
+      setSchools(
+        schools.filter((i) => selecetedSchoolIds.indexOf(i._id) == -1)
+      );
+
+      return responseData.results;
+    } catch (err: any) {
+      message.error(
+        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : "mmm"}`
+      );
+      return false;
+    }
   };
 
   const triggerEdit = async () => {

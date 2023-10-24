@@ -16,7 +16,6 @@ const CreateSchoolView: React.FC = () => {
 
   const { selectedSchool } = SchoolStore;
 
-  console.log("selectedSchool", selectedSchool);
 
   const [form] = Form.useForm();
 

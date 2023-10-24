@@ -29,7 +29,8 @@ export default async function fetchSchools_(request: Request) {
 
     const schools = await db
       .collection(dbCollections.schools.name)
-      .aggregate(p_fetchSchoolsWithCreator()).toArray()
+      .aggregate(p_fetchSchoolsWithCreator())
+      .toArray();
 
     const response = {
       isError: false,
@@ -51,9 +52,7 @@ export default async function fetchSchools_(request: Request) {
   }
 }
 
-
-
-export  async function fetchSchool_(request: Request) {
+export async function fetchSchool_(request: Request) {
   const schema = zfd.formData({
     schoolId: zfd.text(),
   });
@@ -76,7 +75,7 @@ export  async function fetchSchool_(request: Request) {
 
     const school = await db
       .collection(dbCollections.schools.name)
-      .findOne({_id:new BSON.ObjectId(schoolId)})
+      .findOne({ _id: new BSON.ObjectId(schoolId) });
 
     const response = {
       isError: false,
@@ -87,6 +86,54 @@ export  async function fetchSchool_(request: Request) {
       status: 200,
     });
   } catch (error) {
+    const resp = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+    };
+
+    return new Response(JSON.stringify(resp), {
+      status: 200,
+    });
+  }
+}
+
+export async function deleteSchools_(request: Request) {
+  const schema = zfd.formData({
+    schoolIds: zfd.repeatableOfType(zfd.text()),
+  });
+  const formBody = await request.json();
+
+  const { schoolIds } = schema.parse(formBody);
+
+  try {
+    const db = await dbClient();
+
+    if (!db) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+      };
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
+    const results = await db.collection(dbCollections.schools.name).deleteMany({
+      _id: {
+        $in: schoolIds.map((i) => new BSON.ObjectId(i)),
+      },
+    });
+
+    const response = {
+      isError: false,
+      results,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  } catch (error) {
+
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
