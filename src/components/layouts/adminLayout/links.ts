@@ -92,11 +92,25 @@ export const ADMIN_LINKS: TmenuItemLink = {
     ],
   },
   programs: {
-    link: "/programs",
+    link: "/admin/programs",
     roles: ["admin"],
     label: i18next.t("programs"),
     key: "admin_programs",
     icon: HiDocumentReport,
     index: 8,
+    children: [
+      {
+        label: "create",
+        key: "create",
+        link: "/admin/programs/create",
+        roles: ["admin"],
+      },
+      {
+        label: "edit",
+        key: "edit",
+        link: "/admin/programs/edit",
+        roles: ["admin"],
+      },
+    ],
   },
 };

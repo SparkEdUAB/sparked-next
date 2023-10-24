@@ -264,4 +264,17 @@ export const user_rolesSchema = {
   primaryKey: "_id",
 };
 
-
+export const programsSchema = {
+  name: "programs",
+  properties: {
+    _id: "objectId",
+    created_at: "date",
+    created_by_id: "objectId",
+    description: "string",
+    name: "string",
+    school_id: "objectId",
+    updated_at: "date?",
+    updated_by_id: "objectId?",
+  },
+  primaryKey: "_id",
+};

@@ -19,7 +19,7 @@ import { TschoolFields } from "./types";
 import { observer } from "mobx-react-lite";
 const { Search } = Input;
 
-const SchoolsListView: React.FC = () => {
+const ProgramsListView: React.FC = observer(() => {
   const {
     fetchSchools,
     schools,
@@ -61,7 +61,7 @@ const SchoolsListView: React.FC = () => {
       <Button.Group>
         <Button
           onClick={() =>
-            router.push(getChildLinkByKey("create", ADMIN_LINKS.schools))
+            router.push(getChildLinkByKey("create", ADMIN_LINKS.programs))
           }
           className={"table-action-buttons"}
         >
@@ -86,6 +86,6 @@ const SchoolsListView: React.FC = () => {
       />
     </>
   );
-};
+})
 
-export default observer(SchoolsListView);
+export default ProgramsListView;

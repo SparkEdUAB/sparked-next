@@ -9,4 +9,8 @@ export const dbCollections: TdbCollection = {
     name: "schools",
     label: "Schools",
   },
+  programs: {
+    name: "programs",
+    label: "Programs",
+  },
 };
