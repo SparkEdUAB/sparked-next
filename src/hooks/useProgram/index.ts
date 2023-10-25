@@ -19,16 +19,20 @@ const useProgram = (form?: any) => {
   const [programs, setPrograms] = useState<Array<TschoolFields>>([]);
   const [tempPrograms, setTempPrograms] = useState<Array<TschoolFields>>([]);
   const [program, setSProgram] = useState<TProgramFields | null>(null);
-  const [selecetedProgramIds, setSelectedProgramIds] = useState<React.Key[]>([]);
+  const [selecetedProgramIds, setSelectedProgramIds] = useState<React.Key[]>(
+    []
+  );
 
   useEffect(() => {
-    UiStore.confirmDialogStatus && selecetedProgramIds.length && deleteSchools();
+    UiStore.confirmDialogStatus &&
+      selecetedProgramIds.length &&
+      deleteSchools();
   }, [UiStore.confirmDialogStatus]);
 
   const createProgram = async (fields: TcreateProgramFields) => {
     const url = API_LINKS.CREATE_PROGRAM;
     const formData = {
-      body: JSON.stringify({ ...fields,  }),
+      body: JSON.stringify({ ...fields }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -59,8 +63,8 @@ const useProgram = (form?: any) => {
     }
   };
 
-  const editSchool = async (fields: TschoolFields) => {
-    const url = API_LINKS.EDIT_SCHOOL;
+  const editProgram = async (fields: TschoolFields) => {
+    const url = API_LINKS.EDIT_PROGRAM;
     const formData = {
       body: JSON.stringify({ ...fields, _id: program?._id }),
       method: "post",
@@ -84,7 +88,7 @@ const useProgram = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.schools.link);
+      router.push(ADMIN_LINKS.programs.link);
 
       message.success(i18next.t("success"));
     } catch (err: any) {
@@ -141,10 +145,16 @@ const useProgram = (form?: any) => {
     }
   };
 
-  const fetchProgramById = async (programId: string) => {
-    const url = API_LINKS.FETCH_PROGRAM;
+  const fetchProgramById = async ({
+    programId,
+    withMetaData = false,
+  }: {
+    programId: string;
+    withMetaData: boolean;
+  }) => {
+    const url = API_LINKS.FETCH_PROGRAM_BY_ID;
     const formData = {
-      body: JSON.stringify({ programId }),
+      body: JSON.stringify({ programId, withMetaData }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -166,19 +176,23 @@ const useProgram = (form?: any) => {
         return false;
       }
 
-      const { _id, name, description, school } =
-        responseData.school as TProgramFields;
+      if (responseData.program) {
+        const { _id, name, description, school } =
+          responseData.program as TProgramFields;
 
-      const _program = {
-        _id,
-        name,
-        description,
-        school,
-      };
+        const _program = {
+          _id,
+          name,
+          description,
+          schoolId: school?._id,
+        };
 
-      setSProgram(_program as TProgramFields);
-      form && form.setFieldsValue(_program);
-      return _program;
+        setSProgram(_program as TProgramFields);
+        form && form.setFieldsValue(_program);
+        return _program;
+      } else {
+        return null;
+      }
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
@@ -321,7 +335,7 @@ const useProgram = (form?: any) => {
     router,
     program,
     isLoading,
-    editSchool,
+    editProgram,
     findSchoolsByName,
     onSearchQueryChange,
     searchQuery,

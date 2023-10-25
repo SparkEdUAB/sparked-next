@@ -5,7 +5,7 @@ import { Button, Card } from "flowbite-react";
 import GuestLayout from "../layouts/guestLayout";
 import { CourseBasedSvgImage, EducationSvgImage, UniversitySvgImage } from "@components/svgs";
 
-const  LandingPage:React.FC = ()=> {
+const  WelcomePage:React.FC = ()=> {
 
   return (
     <GuestLayout>
@@ -75,4 +75,4 @@ const  LandingPage:React.FC = ()=> {
 }
 
 
-export default LandingPage;
+export default WelcomePage;

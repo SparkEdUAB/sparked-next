@@ -9,6 +9,7 @@ import fetchPrograms_, {
 import { authOptions } from "../../auth/constants";
 import createProgram_ from "../create";
 import editSchool_ from "../edit";
+import editProgram_ from "../edit";
 
 const schoolApiHandler_ = async function POST(
   req: Request,
@@ -25,7 +26,7 @@ const schoolApiHandler_ = async function POST(
     createProgram: createProgram_,
     fetchPrograms: fetchPrograms_,
     fetchProgramById: fetchProgramById_,
-    editSchool: editSchool_,
+    editProgram: editProgram_,
     deleteSchools: deleteSchools_,
     findSchoolsByName: findSchoolsByName_,
   };

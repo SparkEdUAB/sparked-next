@@ -2,25 +2,29 @@
 "use client";
 
 import { AdminPageTitle } from "@components/layouts";
-import useSchool from "@hooks/useSchool";
-import { Card, Col, Form, Input, Row } from "antd";
+import useProgram from "@hooks/useProgram";
+import { Card, Col, Form, Input, Row, Select } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { CREATE_PROGRAM_FORM_FIELDS } from "./constants";
-import useProgram from "@hooks/useProgram";
-
-const onFinishFailed = (errorInfo: any) => {};
+import useSchool from "@hooks/useSchool";
 
 const EditProgramView: React.FC = () => {
   const [form] = Form.useForm();
-  const { editSchool, fetchProgramById, program } = useProgram(form);
+  const { editProgram, fetchProgramById, program } = useProgram(form);
+  const { fetchSchools, schools } = useSchool();
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    fetchProgramById(searchParams.get("programId") as string);
+    fetchProgramById({
+      programId: searchParams.get("programId") as string,
+      withMetaData: true,
+    });
+
+    fetchSchools({});
   }, []);
 
   return (
@@ -40,7 +44,7 @@ const EditProgramView: React.FC = () => {
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={program || {}}
-              onFinish={editSchool}
+              onFinish={editProgram}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
@@ -76,6 +80,28 @@ const EditProgramView: React.FC = () => {
                 ]}
               >
                 <Input />
+              </Form.Item>
+
+              <Form.Item
+                label={
+                  <p className="form-label">
+                    {CREATE_PROGRAM_FORM_FIELDS.school.label}
+                  </p>
+                }
+                name={CREATE_PROGRAM_FORM_FIELDS.school.key}
+                rules={[
+                  {
+                    required: true,
+                    message: CREATE_PROGRAM_FORM_FIELDS.school.errorMsg,
+                  },
+                ]}
+              >
+                <Select
+                  options={schools.map((i) => ({
+                    value: i._id,
+                    label: i.name,
+                  }))}
+                />
               </Form.Item>
 
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

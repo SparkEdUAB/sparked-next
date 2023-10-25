@@ -7,6 +7,7 @@ import {
   p_fetchProgramsWithCreator,
 } from "./pipelines";
 import { BSON } from "mongodb";
+import { z } from "zod";
 
 export default async function fetchPrograms_(request: Request) {
   const schema = zfd.formData({
@@ -58,7 +59,7 @@ export default async function fetchPrograms_(request: Request) {
 export async function fetchProgramById_(request: Request) {
   const schema = zfd.formData({
     programId: zfd.text(),
-    withMetaData: zfd.numeric(),
+    withMetaData: z.boolean(),
   });
   const formBody = await request.json();
 
@@ -80,10 +81,13 @@ export async function fetchProgramById_(request: Request) {
     let program;
 
     if (withMetaData) {
+
       program = await db
         .collection(dbCollections.programs.name)
         .aggregate(p_fetchProgramWithMetaData({ programId }))
         .toArray();
+
+      program = program.length ? program[0] : null;
     } else {
       program = await db
         .collection(dbCollections.programs.name)

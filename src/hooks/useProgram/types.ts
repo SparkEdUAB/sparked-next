@@ -14,6 +14,7 @@ export type TProgramFields = {
   _id: string;
   created_by: string;
   description: string;
+  schoolId: string;
 
   created_at: string;
   user?: {
