@@ -1,7 +1,7 @@
 "use client";
 
 import AdminLayout from "@components/layouts/adminLayout";
-import ProgramsListView from "@components/programs/schoolsListView";
+import ProgramsListView from "@components/programs/programListView";
 import React from "react";
 
 const AdminSchools: React.FC = (props) => {

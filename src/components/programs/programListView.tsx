@@ -3,37 +3,36 @@
 import { AdminPageTitle } from "@components/layouts";
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
 import useNavigation from "@hooks/useNavigation";
-import useSchool from "@hooks/useSchool";
-import { Input, Table } from "antd";
+import useProgram from "@hooks/useProgram";
+import { Table } from "antd";
 import { Button, TextInput } from "flowbite-react";
 import i18next from "i18next";
+import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import {
+  HiMagnifyingGlass,
   HiOutlineNewspaper,
   HiOutlinePencilSquare,
   HiTrash,
-  HiMagnifyingGlass,
 } from "react-icons/hi2";
-import { schoolTableColumns } from ".";
+import { programTableColumns } from ".";
 import { TschoolFields } from "./types";
-import { observer } from "mobx-react-lite";
-const { Search } = Input;
 
 const ProgramsListView: React.FC = observer(() => {
   const {
-    fetchSchools,
-    schools,
+    fetchPrograms,
+    programs,
     selecetedSchoolIds,
     setSelectedSchoolIds,
     triggerDelete,
     triggerEdit,
     findSchoolsByName,
     onSearchQueryChange,
-  } = useSchool();
+  } = useProgram();
   const { router, getChildLinkByKey } = useNavigation();
 
   useEffect(() => {
-    fetchSchools({});
+    fetchPrograms({});
   }, []);
 
   const rowSelection = {
@@ -45,7 +44,7 @@ const ProgramsListView: React.FC = observer(() => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("schools")} />
+      <AdminPageTitle title={i18next.t("programs")} />
 
       <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
@@ -81,11 +80,11 @@ const ProgramsListView: React.FC = observer(() => {
         className="admin-table"
         bordered
         rowSelection={rowSelection}
-        columns={schoolTableColumns}
-        dataSource={schools}
+        columns={programTableColumns}
+        dataSource={programs}
       />
     </>
   );
-})
+});
 
 export default ProgramsListView;

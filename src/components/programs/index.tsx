@@ -2,7 +2,7 @@ import { Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { TschoolFields } from "./types";
 
-export const schoolTableColumns: ColumnsType<TschoolFields> = [
+export const programTableColumns: ColumnsType<TschoolFields> = [
   {
     title: "#",
     dataIndex: "index",
@@ -13,6 +13,12 @@ export const schoolTableColumns: ColumnsType<TschoolFields> = [
     title: "Name",
     dataIndex: "name",
     key: "name",
+    render: (text) => <a>{text}</a>,
+  },
+  {
+    title: "School",
+    dataIndex: "schoolName",
+    key: "school",
     render: (text) => <a>{text}</a>,
   },
   {

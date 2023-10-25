@@ -14,4 +14,5 @@ export const API_LINKS: Tlink = {
   FIND_SCHOOLS_BY_NAME: "/api/school/findSchoolsByName",
   // program links
   CREATE_PROGRAM: "/api/program/createProgram",
+  FETCH_PROGRAMS: "/api/program/fetchPrograms",
 };

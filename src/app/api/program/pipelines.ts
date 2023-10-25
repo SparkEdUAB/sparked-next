@@ -1,4 +1,4 @@
-export const p_fetchSchoolsWithCreator = (limit?: number, skip?: number) => [
+export const p_fetchProgramsWithCreator = (limit?: number, skip?: number) => [
   {
     $lookup: {
       from: "users",
@@ -11,6 +11,18 @@ export const p_fetchSchoolsWithCreator = (limit?: number, skip?: number) => [
     $unwind: "$user",
   },
   {
+    $lookup: {
+      from: "schools",
+      localField: "school_id",
+      foreignField: "_id",
+      as: "school",
+    },
+  },
+  {
+    $unwind: "$school",
+  },
+
+  {
     $project: {
       updated_at: 1,
       name: 1,
@@ -20,6 +32,8 @@ export const p_fetchSchoolsWithCreator = (limit?: number, skip?: number) => [
       "user._id": 1,
       "user.name": 1,
       "user.email": 1,
+      "school.name": 1,
+      "school._id": 1,
     },
   },
 ];

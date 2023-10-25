@@ -8,8 +8,18 @@ export type TfetchPrograms = {
   skip?: number;
 };
 
-export type TProgramTableFields = {
+export type TProgramFields = {
   key: string;
   name: string;
   _id: string;
+  created_by: string;
+  created_at: string;
+  user?: {
+    name: string;
+    email: string;
+  };
+  school?: {
+    name: string;
+    _id: string;
+  };
 };

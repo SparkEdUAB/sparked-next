@@ -48,12 +48,14 @@ export default async function createProgram_(
       });
     }
 
-    const school = await db.collection(dbCollections.programs.name).findOne(
+
+    const school = await db.collection(dbCollections.schools.name).findOne(
       {
-        school_id: new BSON.ObjectId(schoolId),
+        _id: new BSON.ObjectId(schoolId),
       },
       { projection: { _id: 1 } }
     );
+
 
        if (!school) {
          const response = {

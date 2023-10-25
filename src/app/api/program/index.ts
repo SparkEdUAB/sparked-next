@@ -2,10 +2,10 @@ import SPARKED_PROCESS_CODES from "app/shared/processCodes";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import { p_fetchSchoolsWithCreator } from "./pipelines";
+import { p_fetchProgramsWithCreator } from "./pipelines";
 import { BSON } from "mongodb";
 
-export default async function fetchSchools_(request: Request) {
+export default async function fetchPrograms_(request: Request) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
@@ -27,14 +27,14 @@ export default async function fetchSchools_(request: Request) {
       });
     }
 
-    const schools = await db
-      .collection(dbCollections.schools.name)
-      .aggregate(p_fetchSchoolsWithCreator())
+    const programs = await db
+      .collection(dbCollections.programs.name)
+      .aggregate(p_fetchProgramsWithCreator())
       .toArray();
 
     const response = {
       isError: false,
-      schools,
+      programs,
     };
 
     return new Response(JSON.stringify(response), {

@@ -9,15 +9,15 @@ import { API_LINKS } from "app/links";
 import i18next from "i18next";
 import { useEffect, useState } from "react";
 import UiStore from "@state/mobx/uiStore";
-import { TcreateProgramFields, TfetchPrograms } from "./types";
+import { TcreateProgramFields, TfetchPrograms, TProgramFields } from "./types";
 
 const useProgram = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [schools, setSchools] = useState<Array<TschoolFields>>([]);
-  const [tempSchools, setTempSchools] = useState<Array<TschoolFields>>([]);
+  const [programs, setPrograms] = useState<Array<TschoolFields>>([]);
+  const [tempPrograms, setTempPrograms] = useState<Array<TschoolFields>>([]);
   const [school, setSchool] = useState<TschoolFields | null>(null);
   const [selecetedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
 
@@ -93,8 +93,8 @@ const useProgram = (form?: any) => {
     }
   };
 
-  const fetchSchools = async ({ limit = 1000, skip = 0 }: TfetchPrograms) => {
-    const url = API_LINKS.FETCH_SCHOOLS;
+  const fetchPrograms = async ({ limit = 1000, skip = 0 }: TfetchPrograms) => {
+    const url = API_LINKS.FETCH_PROGRAMS;
     const formData = {
       body: JSON.stringify({ limit, skip }),
       method: "post",
@@ -118,20 +118,23 @@ const useProgram = (form?: any) => {
         return false;
       }
 
-      const _schools = responseData.schools?.map(
-        (i: TschoolFields, index: number) => ({
+      const _programs = responseData.programs?.map(
+        (i: TProgramFields, index: number) => ({
           index: index + 1,
           key: i._id,
           _id: i._id,
           name: i.name,
-          created_by: i.user.email,
+          school: i.school,
+          schoolId: i.school?._id,
+          schoolName: i.school?.name,
+          created_by: i.user?.email,
           created_at: new Date(i.created_at).toDateString(),
         })
       );
 
-      setSchools(_schools);
-      setTempSchools(_schools);
-      return _schools;
+      setPrograms(_programs);
+      setTempPrograms(_programs);
+      return _programs;
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
@@ -191,7 +194,7 @@ const useProgram = (form?: any) => {
   const deleteSchools = async () => {
     if (UiStore.isLoading) return;
 
-    const url = API_LINKS.DELETE_SCHOOLS;
+    const url = API_LINKS.DELETE_programs;
     const formData = {
       body: JSON.stringify({ schoolIds: selecetedSchoolIds }),
       method: "post",
@@ -220,8 +223,8 @@ const useProgram = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setSchools(
-        schools.filter((i) => selecetedSchoolIds.indexOf(i._id) == -1)
+      setPrograms(
+        programs.filter((i) => selecetedSchoolIds.indexOf(i._id) == -1)
       );
 
       return responseData.results;
@@ -239,7 +242,7 @@ const useProgram = (form?: any) => {
       return message.warning(i18next.t("search_empty"));
     }
 
-    const url = API_LINKS.FIND_SCHOOLS_BY_NAME;
+    const url = API_LINKS.FIND_programs_BY_NAME;
     const formData = {
       body: JSON.stringify({
         name: searchQuery.trim(),
@@ -272,7 +275,7 @@ const useProgram = (form?: any) => {
         responseData.schools.length + " " + i18next.t("schools_found")
       );
 
-      setSchools(responseData.schools);
+      setPrograms(responseData.schools);
 
       return responseData.schools;
     } catch (err: any) {
@@ -286,7 +289,7 @@ const useProgram = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setSchools(tempSchools);
+      setPrograms(tempPrograms);
     }
   };
 
@@ -305,9 +308,9 @@ const useProgram = (form?: any) => {
 
   return {
     createProgram,
-    fetchSchools,
-    schools,
-    setSchools,
+    fetchPrograms,
+    programs,
+    setPrograms,
     setSelectedSchoolIds,
     selecetedSchoolIds,
     triggerDelete,
@@ -320,7 +323,7 @@ const useProgram = (form?: any) => {
     findSchoolsByName,
     onSearchQueryChange,
     searchQuery,
-    tempSchools,
+    tempPrograms,
   };
 };
 
