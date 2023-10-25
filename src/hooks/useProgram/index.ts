@@ -26,7 +26,7 @@ const useProgram = (form?: any) => {
   useEffect(() => {
     UiStore.confirmDialogStatus &&
       selecetedProgramIds.length &&
-      deleteSchools();
+      deletePrograms();
   }, [UiStore.confirmDialogStatus]);
 
   const createProgram = async (fields: TcreateProgramFields) => {
@@ -207,12 +207,12 @@ const useProgram = (form?: any) => {
     UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deleteSchools = async () => {
+  const deletePrograms = async () => {
     if (UiStore.isLoading) return;
 
-    const url = API_LINKS.DELETE_programs;
+    const url = API_LINKS.DELETE_PROGRAMS;
     const formData = {
-      body: JSON.stringify({ schoolIds: selecetedProgramIds }),
+      body: JSON.stringify({ programIds: selecetedProgramIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
