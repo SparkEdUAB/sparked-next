@@ -8,7 +8,7 @@ import { Button } from "flowbite-react";
 import i18next from "i18next";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { CREATE_SCHOOL_FORM_FIELDS } from "./constants";
+import { CREATE_PROGRAM_FORM_FIELDS } from "./constants";
 
 const onFinishFailed = (errorInfo: any) => {};
 
@@ -46,14 +46,14 @@ const EditSchoolView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {CREATE_SCHOOL_FORM_FIELDS.name.label}
+                    {CREATE_PROGRAM_FORM_FIELDS.name.label}
                   </p>
                 }
-                name={CREATE_SCHOOL_FORM_FIELDS.name.key}
+                name={CREATE_PROGRAM_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: CREATE_SCHOOL_FORM_FIELDS.name.errorMsg,
+                    message: CREATE_PROGRAM_FORM_FIELDS.name.errorMsg,
                   },
                 ]}
               >
@@ -63,14 +63,14 @@ const EditSchoolView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {CREATE_SCHOOL_FORM_FIELDS.description.label}
+                    {CREATE_PROGRAM_FORM_FIELDS.description.label}
                   </p>
                 }
-                name={CREATE_SCHOOL_FORM_FIELDS.description.key}
+                name={CREATE_PROGRAM_FORM_FIELDS.description.key}
                 rules={[
                   {
                     required: true,
-                    message: CREATE_SCHOOL_FORM_FIELDS.description.errorMsg,
+                    message: CREATE_PROGRAM_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >

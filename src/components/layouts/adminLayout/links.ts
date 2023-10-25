@@ -113,4 +113,26 @@ export const ADMIN_LINKS: TmenuItemLink = {
       },
     ],
   },
+  units: {
+    link: "/admin/units",
+    roles: ["admin"],
+    label: i18next.t("units"),
+    key: "admin_units",
+    icon: HiDocumentReport,
+    index: 9,
+    children: [
+      {
+        label: "create",
+        key: "create",
+        link: "/admin/units/create",
+        roles: ["admin"],
+      },
+      {
+        label: "edit",
+        key: "edit",
+        link: "/admin/units/edit",
+        roles: ["admin"],
+      },
+    ],
+  },
 };
