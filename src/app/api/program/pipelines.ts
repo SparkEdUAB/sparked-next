@@ -39,11 +39,9 @@ export const p_fetchProgramsWithCreator = (limit?: number, skip?: number) => [
     },
   },
 ];
-export const p_fetchProgramWithMetaData = ({ programId }: { programId: string }) => [
+export const p_fetchProgramWithMetaData = ({ query }: { query: object }) => [
   {
-    $match: {
-      _id: new BSON.ObjectId(programId),
-    },
+    $match:query,
   },
 
   {

@@ -251,19 +251,24 @@ const useProgram = (form?: any) => {
       return false;
     }
   };
-  const findSchoolsByName = async () => {
+  const findProgramsByName = async ({
+    withMetaData=false,
+  }: {
+    withMetaData: boolean;
+  }) => {
     if (isLoading) {
       return message.warning(i18next.t("wait"));
     } else if (!searchQuery.trim().length) {
       return message.warning(i18next.t("search_empty"));
     }
 
-    const url = API_LINKS.FIND_programs_BY_NAME;
+    const url = API_LINKS.FIND_PROGRAMS_BY_NAME;
     const formData = {
       body: JSON.stringify({
         name: searchQuery.trim(),
         limit: 1000,
         skip: 0,
+        withMetaData,
       }),
       method: "post",
       headers: {
@@ -288,12 +293,12 @@ const useProgram = (form?: any) => {
         return false;
       }
       message.success(
-        responseData.schools.length + " " + i18next.t("schools_found")
+        responseData.programs.length + " " + i18next.t("programs_found")
       );
 
-      setPrograms(responseData.schools);
+      setPrograms(responseData.programs);
 
-      return responseData.schools;
+      return responseData.programs;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
@@ -336,7 +341,7 @@ const useProgram = (form?: any) => {
     program,
     isLoading,
     editProgram,
-    findSchoolsByName,
+    findProgramsByName,
     onSearchQueryChange,
     searchQuery,
     tempPrograms,

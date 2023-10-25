@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth/next";
 import fetchPrograms_, {
   deletePrograms_,
   fetchProgramById_,
-  findSchoolsByName_,
+  findProgramsByName_
 } from "..";
 import { authOptions } from "../../auth/constants";
 import createProgram_ from "../create";
@@ -27,7 +27,7 @@ const schoolApiHandler_ = async function POST(
     fetchProgramById: fetchProgramById_,
     editProgram: editProgram_,
     deletePrograms: deletePrograms_,
-    findSchoolsByName: findSchoolsByName_,
+    findProgramsByName: findProgramsByName_,
   };
 
   if (schoolFunctions[slug] && session) {

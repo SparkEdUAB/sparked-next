@@ -81,10 +81,15 @@ export async function fetchProgramById_(request: Request) {
     let program;
 
     if (withMetaData) {
-
       program = await db
         .collection(dbCollections.programs.name)
-        .aggregate(p_fetchProgramWithMetaData({ programId }))
+        .aggregate(
+          p_fetchProgramWithMetaData({
+            query: {
+              _id: new BSON.ObjectId(programId),
+            },
+          })
+        )
         .toArray();
 
       program = program.length ? program[0] : null;
@@ -135,11 +140,13 @@ export async function deletePrograms_(request: Request) {
       });
     }
 
-    const results = await db.collection(dbCollections.programs.name).deleteMany({
-      _id: {
-        $in: programIds.map((i) => new BSON.ObjectId(i)),
-      },
-    });
+    const results = await db
+      .collection(dbCollections.programs.name)
+      .deleteMany({
+        _id: {
+          $in: programIds.map((i) => new BSON.ObjectId(i)),
+        },
+      });
 
     const response = {
       isError: false,
@@ -161,15 +168,16 @@ export async function deletePrograms_(request: Request) {
   }
 }
 
-export async function findSchoolsByName_(request: Request) {
+export async function findProgramsByName_(request: Request) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
     limit: zfd.numeric(),
+    withMetaData: z.boolean(),
   });
   const formBody = await request.json();
 
-  const { name, limit, skip } = schema.parse(formBody);
+  const { name, limit, skip, withMetaData } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -185,19 +193,31 @@ export async function findSchoolsByName_(request: Request) {
     }
     const regexPattern = new RegExp(name, "i");
 
-    const schools = await db
-      .collection(dbCollections.schools.name)
-      .find(
-        {
+    let programs = null;
+
+    if (withMetaData) {
+      programs = await db
+        .collection(dbCollections.programs.name)
+        .aggregate(
+          p_fetchProgramWithMetaData({
+            query: {
+              name: { $regex: regexPattern },
+            },
+          })
+        )
+        .toArray();
+    } else {
+      programs = await db
+        .collection(dbCollections.programs.name)
+        .find({
           name: { $regex: regexPattern },
-        },
-        { limit, skip }
-      )
-      .toArray();
+        })
+        .toArray();
+    }
 
     const response = {
       isError: false,
-      schools,
+      programs,
     };
 
     return new Response(JSON.stringify(response), {

@@ -26,7 +26,7 @@ const ProgramsListView: React.FC = observer(() => {
     setSelectedProgramIds,
     triggerDelete,
     triggerEdit,
-    findSchoolsByName,
+    findProgramsByName,
     onSearchQueryChange,
   } = useProgram();
   const { router, getChildLinkByKey } = useNavigation();
@@ -54,7 +54,7 @@ const ProgramsListView: React.FC = observer(() => {
         required
         type="text"
         onKeyDown={(e) => {
-          e.keyCode === 13 ? findSchoolsByName() : null;
+          e.keyCode === 13 ? findProgramsByName({ withMetaData: true }) : null;
         }}
       />
       <Button.Group>
