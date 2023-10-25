@@ -7,7 +7,7 @@ import React from "react";
 const Home: React.FC = (props) => {
   return (
     <AdminLayout>
-      <Login />
+     <h1>Admin</h1>
     </AdminLayout>
   );
 };

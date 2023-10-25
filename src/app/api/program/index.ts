@@ -2,7 +2,10 @@ import SPARKED_PROCESS_CODES from "app/shared/processCodes";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import { p_fetchProgramsWithCreator } from "./pipelines";
+import {
+  p_fetchProgramWithMetaData,
+  p_fetchProgramsWithCreator,
+} from "./pipelines";
 import { BSON } from "mongodb";
 
 export default async function fetchPrograms_(request: Request) {
@@ -52,13 +55,14 @@ export default async function fetchPrograms_(request: Request) {
   }
 }
 
-export async function fetchSchool_(request: Request) {
+export async function fetchProgramById_(request: Request) {
   const schema = zfd.formData({
-    schoolId: zfd.text(),
+    programId: zfd.text(),
+    withMetaData: zfd.numeric(),
   });
   const formBody = await request.json();
 
-  const { schoolId } = schema.parse(formBody);
+  const { programId, withMetaData } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -73,13 +77,22 @@ export async function fetchSchool_(request: Request) {
       });
     }
 
-    const school = await db
-      .collection(dbCollections.schools.name)
-      .findOne({ _id: new BSON.ObjectId(schoolId) });
+    let program;
+
+    if (withMetaData) {
+      program = await db
+        .collection(dbCollections.programs.name)
+        .aggregate(p_fetchProgramWithMetaData({ programId }))
+        .toArray();
+    } else {
+      program = await db
+        .collection(dbCollections.programs.name)
+        .findOne({ _id: new BSON.ObjectId(programId) });
+    }
 
     const response = {
       isError: false,
-      school,
+      program,
     };
 
     return new Response(JSON.stringify(response), {
@@ -152,7 +165,7 @@ export async function findSchoolsByName_(request: Request) {
   });
   const formBody = await request.json();
 
-  const { name,limit,skip } = schema.parse(formBody);
+  const { name, limit, skip } = schema.parse(formBody);
 
   try {
     const db = await dbClient();

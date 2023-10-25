@@ -23,31 +23,32 @@ const AdminLayout: FC<TadminLayout> = observer(
           <Navbar.Brand href="#"></Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse>
-            <Navbar.Link
-              style={{ color: "wheat" }}
-              href="/navbars"
-              active={true}
-            >
+            <Navbar.Link style={{ color: "wheat" }} href="/" active={true}>
               {i18next.t("home")}
             </Navbar.Link>
-            <Navbar.Link className="navbar-menu-item" href="/navbars">
-              {i18next.t("about_us")}
-            </Navbar.Link>
-            <Navbar.Link className="navbar-menu-item" href="/navbars">
-              {i18next.t("resources")}
-            </Navbar.Link>
+
             {!isAuthenticated ? (
-              <Navbar.Link className="navbar-menu-item" href="/auth/signup">
-                {i18next.t("login_signup")}
-              </Navbar.Link>
+              <>
+                <Navbar.Link className="navbar-menu-item" href="/auth/signup">
+                  {i18next.t("login_signup")}
+                </Navbar.Link>
+              </>
             ) : (
-              <Navbar.Link
-                className="navbar-menu-item"
-                onClick={handleLogout}
-                href="#"
-              >
-                {i18next.t("logout")}
-              </Navbar.Link>
+              <>
+                <Navbar.Link
+                  className="navbar-menu-item"
+                  href={ADMIN_LINKS.home.link}
+                >
+                  {i18next.t("admin")}
+                </Navbar.Link>
+                <Navbar.Link
+                  className="navbar-menu-item"
+                  onClick={handleLogout}
+                  href="#"
+                >
+                  {i18next.t("logout")}
+                </Navbar.Link>
+              </>
             )}
           </Navbar.Collapse>
         </Navbar>

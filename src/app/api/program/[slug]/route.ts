@@ -3,7 +3,7 @@ import { Session } from "next-auth";
 import { getServerSession } from "next-auth/next";
 import fetchPrograms_, {
   deleteSchools_,
-  fetchSchool_,
+  fetchProgramById_,
   findSchoolsByName_,
 } from "..";
 import { authOptions } from "../../auth/constants";
@@ -24,7 +24,7 @@ const schoolApiHandler_ = async function POST(
   } = {
     createProgram: createProgram_,
     fetchPrograms: fetchPrograms_,
-    fetchSchool: fetchSchool_,
+    fetchProgramById: fetchProgramById_,
     editSchool: editSchool_,
     deleteSchools: deleteSchools_,
     findSchoolsByName: findSchoolsByName_,

@@ -15,4 +15,5 @@ export const API_LINKS: Tlink = {
   // program links
   CREATE_PROGRAM: "/api/program/createProgram",
   FETCH_PROGRAMS: "/api/program/fetchPrograms",
+  FETCH_PROGRAM: "/api/program/fetchProgram",
 };

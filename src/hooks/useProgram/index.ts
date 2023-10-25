@@ -18,11 +18,11 @@ const useProgram = (form?: any) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [programs, setPrograms] = useState<Array<TschoolFields>>([]);
   const [tempPrograms, setTempPrograms] = useState<Array<TschoolFields>>([]);
-  const [school, setSchool] = useState<TschoolFields | null>(null);
-  const [selecetedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
+  const [program, setSProgram] = useState<TProgramFields | null>(null);
+  const [selecetedProgramIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
-    UiStore.confirmDialogStatus && selecetedSchoolIds.length && deleteSchools();
+    UiStore.confirmDialogStatus && selecetedProgramIds.length && deleteSchools();
   }, [UiStore.confirmDialogStatus]);
 
   const createProgram = async (fields: TcreateProgramFields) => {
@@ -62,7 +62,7 @@ const useProgram = (form?: any) => {
   const editSchool = async (fields: TschoolFields) => {
     const url = API_LINKS.EDIT_SCHOOL;
     const formData = {
-      body: JSON.stringify({ ...fields, _id: school?._id }),
+      body: JSON.stringify({ ...fields, _id: program?._id }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -141,10 +141,10 @@ const useProgram = (form?: any) => {
     }
   };
 
-  const fetchSchool = async (schoolId: string) => {
-    const url = API_LINKS.FETCH_SCHOOL;
+  const fetchProgramById = async (programId: string) => {
+    const url = API_LINKS.FETCH_PROGRAM;
     const formData = {
-      body: JSON.stringify({ schoolId }),
+      body: JSON.stringify({ programId }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -166,17 +166,19 @@ const useProgram = (form?: any) => {
         return false;
       }
 
-      const { _id, name, description } = responseData.school as TschoolFields;
+      const { _id, name, description, school } =
+        responseData.school as TProgramFields;
 
-      const _school = {
+      const _program = {
         _id,
         name,
         description,
+        school,
       };
 
-      setSchool(_school as TschoolFields);
-      form && form.setFieldsValue(_school);
-      return _school;
+      setSProgram(_program as TProgramFields);
+      form && form.setFieldsValue(_program);
+      return _program;
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
@@ -184,7 +186,7 @@ const useProgram = (form?: any) => {
   };
 
   const triggerDelete = async () => {
-    if (!selecetedSchoolIds.length) {
+    if (!selecetedProgramIds.length) {
       return message.warning(i18next.t("select_items"));
     }
 
@@ -196,7 +198,7 @@ const useProgram = (form?: any) => {
 
     const url = API_LINKS.DELETE_programs;
     const formData = {
-      body: JSON.stringify({ schoolIds: selecetedSchoolIds }),
+      body: JSON.stringify({ schoolIds: selecetedProgramIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -224,7 +226,7 @@ const useProgram = (form?: any) => {
       message.success(i18next.t("success"));
 
       setPrograms(
-        programs.filter((i) => selecetedSchoolIds.indexOf(i._id) == -1)
+        programs.filter((i) => selecetedProgramIds.indexOf(i._id) == -1)
       );
 
       return responseData.results;
@@ -294,15 +296,15 @@ const useProgram = (form?: any) => {
   };
 
   const triggerEdit = async () => {
-    if (!selecetedSchoolIds.length) {
+    if (!selecetedProgramIds.length) {
       return message.warning(i18next.t("select_item"));
-    } else if (selecetedSchoolIds.length > 1) {
+    } else if (selecetedProgramIds.length > 1) {
       return message.warning(i18next.t("select_one_item"));
     }
 
     router.push(
-      getChildLinkByKey("edit", ADMIN_LINKS.schools) +
-        `?schoolId=${selecetedSchoolIds[0]}`
+      getChildLinkByKey("edit", ADMIN_LINKS.programs) +
+        `?programId=${selecetedProgramIds[0]}`
     );
   };
 
@@ -311,13 +313,13 @@ const useProgram = (form?: any) => {
     fetchPrograms,
     programs,
     setPrograms,
-    setSelectedSchoolIds,
-    selecetedSchoolIds,
+    setSelectedProgramIds,
+    selecetedProgramIds,
     triggerDelete,
     triggerEdit,
-    fetchSchool,
+    fetchProgramById,
     router,
-    school,
+    program,
     isLoading,
     editSchool,
     findSchoolsByName,

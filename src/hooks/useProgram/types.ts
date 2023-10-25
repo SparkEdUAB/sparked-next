@@ -13,6 +13,8 @@ export type TProgramFields = {
   name: string;
   _id: string;
   created_by: string;
+  description: string;
+
   created_at: string;
   user?: {
     name: string;

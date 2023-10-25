@@ -9,28 +9,29 @@ import i18next from "i18next";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { CREATE_PROGRAM_FORM_FIELDS } from "./constants";
+import useProgram from "@hooks/useProgram";
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const EditSchoolView: React.FC = () => {
+const EditProgramView: React.FC = () => {
   const [form] = Form.useForm();
-  const { editSchool, fetchSchool, school } = useSchool(form);
+  const { editSchool, fetchProgramById, program } = useProgram(form);
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    fetchSchool(searchParams.get("schoolId") as string);
+    fetchProgramById(searchParams.get("programId") as string);
   }, []);
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("edit_school")} />
+      <AdminPageTitle title={i18next.t("edit_program")} />
 
       <Row className="form-container">
         <Col span={24}>
           <Card
             className="form-card"
-            title={<p className="form-label">{school?.name}</p>}
+            title={<p className="form-label">{program?.name}</p>}
             bordered={false}
           >
             <Form
@@ -38,7 +39,7 @@ const EditSchoolView: React.FC = () => {
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
-              initialValues={school || {}}
+              initialValues={program || {}}
               onFinish={editSchool}
               onFinishFailed={() => {}}
               autoComplete="off"
@@ -57,7 +58,7 @@ const EditSchoolView: React.FC = () => {
                   },
                 ]}
               >
-                <Input defaultValue={school?.name} />
+                <Input defaultValue={program?.name} />
               </Form.Item>
 
               <Form.Item
@@ -94,4 +95,4 @@ const EditSchoolView: React.FC = () => {
   );
 };
 
-export default EditSchoolView;
+export default EditProgramView;

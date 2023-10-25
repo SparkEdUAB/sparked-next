@@ -22,8 +22,8 @@ const ProgramsListView: React.FC = observer(() => {
   const {
     fetchPrograms,
     programs,
-    selecetedSchoolIds,
-    setSelectedSchoolIds,
+    selecetedProgramIds,
+    setSelectedProgramIds,
     triggerDelete,
     triggerEdit,
     findSchoolsByName,
@@ -36,9 +36,9 @@ const ProgramsListView: React.FC = observer(() => {
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedSchoolIds,
+    selectedRowKeys: selecetedProgramIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: TschoolFields[]) => {
-      setSelectedSchoolIds(selectedRows.map((i) => i.key));
+      setSelectedProgramIds(selectedRows.map((i) => i.key));
     },
   };
 
@@ -50,7 +50,7 @@ const ProgramsListView: React.FC = observer(() => {
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t("search_schools")}
+        placeholder={i18next.t("search_programs")}
         required
         type="text"
         onKeyDown={(e) => {
