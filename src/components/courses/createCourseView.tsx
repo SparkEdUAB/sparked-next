@@ -1,39 +1,42 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import useSchool from "@hooks/useSchool";
-import { Card, Col, Form, Input, Row, Select, Skeleton } from "antd";
-import { Button, Label } from "flowbite-react";
-import i18next from "i18next";
-import { CREATE_PROGRAM_FORM_FIELDS } from "./constants";
 import { AdminPageTitle } from "@components/layouts";
+import useCourse from "@hooks/useCourse";
+import useSchool from "@hooks/useSchool";
 import SchoolStore from "@state/mobx/scholStore";
+import { Card, Col, Form, Input, Row, Select } from "antd";
+import { Button } from "flowbite-react";
+import i18next from "i18next";
 import { useEffect } from "react";
+import { CREATE_COURSE_FORM_FIELDS } from "./constants";
 import useProgram from "@hooks/useProgram";
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const CreateProgramView: React.FC = () => {
-  const { createProgram } = useProgram();
+const CreateCourseView: React.FC = () => {
+  const { createCourse } = useCourse();
   const { fetchSchools, schools } = useSchool();
+  const { fetchPrograms, programs } = useProgram();
 
   const { selectedSchool } = SchoolStore;
 
   useEffect(() => {
     fetchSchools({});
+    fetchPrograms({});
   }, []);
 
   const [form] = Form.useForm();
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("create_program")} />
+      <AdminPageTitle title={i18next.t("create_course")} />
 
       <Row className="form-container">
         <Col span={24}>
           <Card
             className="form-card"
-            title={<p className="form-label">{i18next.t("new_program")}</p>}
+            title={<p className="form-label">{i18next.t("new_course")}</p>}
             bordered={false}
           >
             <Form
@@ -41,21 +44,21 @@ const CreateProgramView: React.FC = () => {
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={selectedSchool || {}}
-              onFinish={createProgram}
+              onFinish={createCourse}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
               <Form.Item
                 label={
                   <p className="form-label">
-                    {CREATE_PROGRAM_FORM_FIELDS.name.label}
+                    {CREATE_COURSE_FORM_FIELDS.name.label}
                   </p>
                 }
-                name={CREATE_PROGRAM_FORM_FIELDS.name.key}
+                name={CREATE_COURSE_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: CREATE_PROGRAM_FORM_FIELDS.name.errorMsg,
+                    message: CREATE_COURSE_FORM_FIELDS.name.errorMsg,
                   },
                 ]}
               >
@@ -65,14 +68,14 @@ const CreateProgramView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {CREATE_PROGRAM_FORM_FIELDS.description.label}
+                    {CREATE_COURSE_FORM_FIELDS.description.label}
                   </p>
                 }
-                name={CREATE_PROGRAM_FORM_FIELDS.description.key}
+                name={CREATE_COURSE_FORM_FIELDS.description.key}
                 rules={[
                   {
                     required: true,
-                    message: CREATE_PROGRAM_FORM_FIELDS.description.errorMsg,
+                    message: CREATE_COURSE_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >
@@ -82,20 +85,38 @@ const CreateProgramView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {CREATE_PROGRAM_FORM_FIELDS.school.label}
+                    {CREATE_COURSE_FORM_FIELDS.school.label}
                   </p>
                 }
-                name={CREATE_PROGRAM_FORM_FIELDS.school.key}
+                name={CREATE_COURSE_FORM_FIELDS.school.key}
                 rules={[
                   {
-                    required: true,
-                    message: CREATE_PROGRAM_FORM_FIELDS.school.errorMsg,
+                    message: CREATE_COURSE_FORM_FIELDS.school.errorMsg,
                   },
                 ]}
               >
                 <Select
-                  // onChange={handleChange}
                   options={schools.map((i) => ({
+                    value: i._id,
+                    label: i.name,
+                  }))}
+                />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <p className="form-label">
+                    {CREATE_COURSE_FORM_FIELDS.program.label}
+                  </p>
+                }
+                name={CREATE_COURSE_FORM_FIELDS.program.key}
+                rules={[
+                  {
+                    message: CREATE_COURSE_FORM_FIELDS.program.errorMsg,
+                  },
+                ]}
+              >
+                <Select
+                  options={programs.map((i) => ({
                     value: i._id,
                     label: i.name,
                   }))}
@@ -119,4 +140,4 @@ const CreateProgramView: React.FC = () => {
   );
 };
 
-export default CreateProgramView;
+export default CreateCourseView;

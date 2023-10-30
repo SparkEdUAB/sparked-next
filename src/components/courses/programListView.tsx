@@ -17,8 +17,9 @@ import {
 } from "react-icons/hi2";
 import { programTableColumns } from ".";
 import { TschoolFields } from "./types";
+import useCourse from "@hooks/useCourse";
 
-const ProgramsListView: React.FC = observer(() => {
+const CourseListView: React.FC = observer(() => {
   const {
     fetchPrograms,
     programs,
@@ -28,7 +29,7 @@ const ProgramsListView: React.FC = observer(() => {
     triggerEdit,
     findProgramsByName,
     onSearchQueryChange,
-  } = useProgram();
+  } = useCourse();
   const { router, getChildLinkByKey } = useNavigation();
 
   useEffect(() => {
@@ -44,13 +45,13 @@ const ProgramsListView: React.FC = observer(() => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("programs")} />
+      <AdminPageTitle title={i18next.t("courses")} />
 
       <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t("search_programs")}
+        placeholder={i18next.t("search_courses")}
         required
         type="text"
         onKeyDown={(e) => {
@@ -60,7 +61,7 @@ const ProgramsListView: React.FC = observer(() => {
       <Button.Group>
         <Button
           onClick={() =>
-            router.push(getChildLinkByKey("create", ADMIN_LINKS.programs))
+            router.push(getChildLinkByKey("create", ADMIN_LINKS.courses))
           }
           className={"table-action-buttons"}
         >
@@ -87,4 +88,4 @@ const ProgramsListView: React.FC = observer(() => {
   );
 });
 
-export default ProgramsListView;
+export default CourseListView;
