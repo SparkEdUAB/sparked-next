@@ -19,4 +19,10 @@ export const API_LINKS: Tlink = {
   EDIT_PROGRAM: "/api/program/editProgram",
   DELETE_PROGRAMS: "/api/program/deletePrograms",
   FIND_PROGRAMS_BY_NAME: "/api/program/findProgramsByName",
+  // course  links
+  CREATE_COURSE: "/api/course/createCourse",
+  FETCH_COURSES: "/api/course/fetchCourses",
+  FETCH_COURSE_BY_ID: "/api/course/fetchCourseById",
+  EDIT_COURSE: "/api/course/editCourse",
+  DELETE_COURSES: "/api/course/deleteCourse",
 };

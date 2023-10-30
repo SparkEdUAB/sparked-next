@@ -2,8 +2,8 @@
 
 import { AdminPageTitle } from "@components/layouts";
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
+import useCourse from "@hooks/useCourse";
 import useNavigation from "@hooks/useNavigation";
-import useProgram from "@hooks/useProgram";
 import { Table } from "antd";
 import { Button, TextInput } from "flowbite-react";
 import i18next from "i18next";
@@ -15,28 +15,28 @@ import {
   HiOutlinePencilSquare,
   HiTrash,
 } from "react-icons/hi2";
-import { programTableColumns } from ".";
+import { courseTableColumns } from ".";
 import { TschoolFields } from "./types";
 
-const ProgramsListView: React.FC = observer(() => {
+const CourseListView: React.FC = observer(() => {
   const {
-    fetchPrograms,
-    programs,
-    selecetedProgramIds,
+    fetchCourses,
+    courses,
+    selecetedCourseIds,
     setSelectedProgramIds,
     triggerDelete,
     triggerEdit,
-    findProgramsByName,
+    findCourseByName,
     onSearchQueryChange,
-  } = useProgram();
+  } = useCourse();
   const { router, getChildLinkByKey } = useNavigation();
 
   useEffect(() => {
-    fetchPrograms({});
+    fetchCourses({});
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedProgramIds,
+    selectedRowKeys: selecetedCourseIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: TschoolFields[]) => {
       setSelectedProgramIds(selectedRows.map((i) => i.key));
     },
@@ -44,23 +44,23 @@ const ProgramsListView: React.FC = observer(() => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("programs")} />
+      <AdminPageTitle title={i18next.t("courses")} />
 
       <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t("search_programs")}
+        placeholder={i18next.t("search_courses")}
         required
         type="text"
         onKeyDown={(e) => {
-          e.keyCode === 13 ? findProgramsByName({ withMetaData: true }) : null;
+          e.keyCode === 13 ? findCourseByName({ withMetaData: true }) : null;
         }}
       />
       <Button.Group>
         <Button
           onClick={() =>
-            router.push(getChildLinkByKey("create", ADMIN_LINKS.programs))
+            router.push(getChildLinkByKey("create", ADMIN_LINKS.courses))
           }
           className={"table-action-buttons"}
         >
@@ -80,11 +80,11 @@ const ProgramsListView: React.FC = observer(() => {
         className="admin-table"
         bordered
         rowSelection={rowSelection}
-        columns={programTableColumns}
-        dataSource={programs}
+        columns={courseTableColumns}
+        dataSource={courses}
       />
     </>
   );
 });
 
-export default ProgramsListView;
+export default CourseListView;
