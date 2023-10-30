@@ -1,6 +1,7 @@
 import { Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { TschoolFields } from "./types";
+import i18next from "i18next";
 
 export const courseTableColumns: ColumnsType<TschoolFields> = [
   {
@@ -19,13 +20,13 @@ export const courseTableColumns: ColumnsType<TschoolFields> = [
     title: "School",
     dataIndex: "schoolName",
     key: "school",
-    render: (text) => <a>{text}</a>,
+    render: (text) => <a>{text || i18next.t("not_linked")}</a>,
   },
   {
     title: "Program",
     dataIndex: "programName",
     key: "school",
-    render: (text) => <a>{text}</a>,
+    render: (text) => <a>{text || i18next.t("not_linked")}</a>,
   },
   {
     title: "Create By",
