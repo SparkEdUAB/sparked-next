@@ -2,8 +2,8 @@
 
 import { AdminPageTitle } from "@components/layouts";
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
-import useCourse from "@hooks/useCourse";
 import useNavigation from "@hooks/useNavigation";
+import useProgram from "@hooks/useProgram";
 import { Table } from "antd";
 import { Button, TextInput } from "flowbite-react";
 import i18next from "i18next";
@@ -15,28 +15,28 @@ import {
   HiOutlinePencilSquare,
   HiTrash,
 } from "react-icons/hi2";
-import { courseTableColumns } from ".";
+import { programTableColumns } from ".";
 import { TschoolFields } from "./types";
 
-const CourseListView: React.FC = observer(() => {
+const ProgramsListView: React.FC = observer(() => {
   const {
-    fetchCourses,
-    courses,
-    selecetedCourseIds,
+    fetchPrograms,
+    programs,
+    selecetedProgramIds,
     setSelectedProgramIds,
     triggerDelete,
     triggerEdit,
     findProgramsByName,
     onSearchQueryChange,
-  } = useCourse();
+  } = useProgram();
   const { router, getChildLinkByKey } = useNavigation();
 
   useEffect(() => {
-    fetchCourses({});
+    fetchPrograms({});
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedCourseIds,
+    selectedRowKeys: selecetedProgramIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: TschoolFields[]) => {
       setSelectedProgramIds(selectedRows.map((i) => i.key));
     },
@@ -44,13 +44,13 @@ const CourseListView: React.FC = observer(() => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("courses")} />
+      <AdminPageTitle title={i18next.t("programs")} />
 
       <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t("search_courses")}
+        placeholder={i18next.t("search_programs")}
         required
         type="text"
         onKeyDown={(e) => {
@@ -60,7 +60,7 @@ const CourseListView: React.FC = observer(() => {
       <Button.Group>
         <Button
           onClick={() =>
-            router.push(getChildLinkByKey("create", ADMIN_LINKS.courses))
+            router.push(getChildLinkByKey("create", ADMIN_LINKS.programs))
           }
           className={"table-action-buttons"}
         >
@@ -80,11 +80,11 @@ const CourseListView: React.FC = observer(() => {
         className="admin-table"
         bordered
         rowSelection={rowSelection}
-        columns={courseTableColumns}
-        dataSource={courses}
+        columns={programTableColumns}
+        dataSource={programs}
       />
     </>
   );
 });
 
-export default CourseListView;
+export default ProgramsListView;

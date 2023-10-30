@@ -8,38 +8,34 @@ import { Button } from "flowbite-react";
 import i18next from "i18next";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { COURSE_FORM_FIELDS } from "./constants";
+import { CREATE_PROGRAM_FORM_FIELDS } from "./constants";
 import useSchool from "@hooks/useSchool";
-import useCourse from "@hooks/useCourse";
 
-const EditCourseView: React.FC = () => {
+const EditProgramView: React.FC = () => {
   const [form] = Form.useForm();
-  const { editCourse, fetchCourseById, course } = useCourse(form);
+  const { editProgram, fetchProgramById, program } = useProgram(form);
   const { fetchSchools, schools } = useSchool();
-  const { fetchPrograms, programs } = useProgram();
 
   const searchParams = useSearchParams();
 
-
   useEffect(() => {
-    fetchCourseById({
-      courseId: searchParams.get("courseId") as string,
+    fetchProgramById({
+      programId: searchParams.get("programId") as string,
       withMetaData: true,
     });
 
-    fetchPrograms({});
     fetchSchools({});
   }, []);
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("edit_course")} />
+      <AdminPageTitle title={i18next.t("edit_program")} />
 
       <Row className="form-container">
         <Col span={24}>
           <Card
             className="form-card"
-            title={<p className="form-label">{course?.name}</p>}
+            title={<p className="form-label">{program?.name}</p>}
             bordered={false}
           >
             <Form
@@ -47,20 +43,39 @@ const EditCourseView: React.FC = () => {
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
-              initialValues={course || {}}
-              onFinish={editCourse}
+              initialValues={program || {}}
+              onFinish={editProgram}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
               <Form.Item
                 label={
-                  <p className="form-label">{COURSE_FORM_FIELDS.name.label}</p>
+                  <p className="form-label">
+                    {CREATE_PROGRAM_FORM_FIELDS.name.label}
+                  </p>
                 }
-                name={COURSE_FORM_FIELDS.name.key}
+                name={CREATE_PROGRAM_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: COURSE_FORM_FIELDS.name.errorMsg,
+                    message: CREATE_PROGRAM_FORM_FIELDS.name.errorMsg,
+                  },
+                ]}
+              >
+                <Input defaultValue={program?.name} />
+              </Form.Item>
+
+              <Form.Item
+                label={
+                  <p className="form-label">
+                    {CREATE_PROGRAM_FORM_FIELDS.description.label}
+                  </p>
+                }
+                name={CREATE_PROGRAM_FORM_FIELDS.description.key}
+                rules={[
+                  {
+                    required: true,
+                    message: CREATE_PROGRAM_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >
@@ -70,55 +85,19 @@ const EditCourseView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {COURSE_FORM_FIELDS.description.label}
+                    {CREATE_PROGRAM_FORM_FIELDS.school.label}
                   </p>
                 }
-                name={COURSE_FORM_FIELDS.description.key}
+                name={CREATE_PROGRAM_FORM_FIELDS.school.key}
                 rules={[
                   {
                     required: true,
-                    message: COURSE_FORM_FIELDS.description.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {COURSE_FORM_FIELDS.school.label}
-                  </p>
-                }
-                name={COURSE_FORM_FIELDS.school.key}
-                rules={[
-                  {
-                    message: COURSE_FORM_FIELDS.school.errorMsg,
+                    message: CREATE_PROGRAM_FORM_FIELDS.school.errorMsg,
                   },
                 ]}
               >
                 <Select
                   options={schools.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {COURSE_FORM_FIELDS.program.label}
-                  </p>
-                }
-                name={COURSE_FORM_FIELDS.program.key}
-                rules={[
-                  {
-                    message: COURSE_FORM_FIELDS.program.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  options={programs.map((i) => ({
                     value: i._id,
                     label: i.name,
                   }))}
@@ -142,4 +121,4 @@ const EditCourseView: React.FC = () => {
   );
 };
 
-export default EditCourseView;
+export default EditProgramView;
