@@ -24,7 +24,7 @@ const useCourse = (form?: any) => {
   useEffect(() => {
     UiStore.confirmDialogStatus &&
       selecetedCourseIds.length &&
-      deletePrograms();
+      deleteCourse();
   }, [UiStore.confirmDialogStatus]);
 
   const createCourse = async (fields: TcreateCourseFields) => {
@@ -210,7 +210,7 @@ const useCourse = (form?: any) => {
     UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deletePrograms = async () => {
+  const deleteCourse = async () => {
     if (UiStore.isLoading) return;
 
     const url = API_LINKS.DELETE_courses;
