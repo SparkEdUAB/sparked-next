@@ -1,10 +1,10 @@
 "use client";
 
-import LandingPage from "@components/LandingPage";
+import WelcomePage from "@components/welcomePage";
 import React from "react";
 
 const Home: React.FC = (props) => {
-  return <LandingPage />;
+  return <WelcomePage />;
 };
 
 export default Home;

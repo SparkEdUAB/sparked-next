@@ -1,23 +1,15 @@
-// src/stores/CounterStore.ts
-
-import { makeAutoObservable } from "mobx";
-
 class CounterStore {
   count = 0;
 
-  constructor() {
-    makeAutoObservable(this);
-  }
+  constructor() {}
 
-   increment = () => {
+  increment = () => {
     this.count++;
   };
 
-   decrement = () => {
+  decrement = () => {
     this.count--;
   };
-
-
 }
 
 export default CounterStore;

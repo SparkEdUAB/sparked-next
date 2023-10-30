@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.2.6",
     "@auth/mongodb-adapter": "^2.0.0",
     "@headlessui/react": "^1.7.17",
     "@types/node": "20.5.0",

@@ -1,8 +1,9 @@
+import SPARKED_PROCESS_CODES from "app/shared/processCodes";
 import { zfd } from "zod-form-data";
-import { realmApp } from "../lib/db/realm";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import i18next from "i18next";
+import { realmApp } from "../lib/db/realm";
+import AUTH_PROCESS_CODES from "./processCodes";
 
 export default async function signup_(request: Request) {
   const schema = zfd.formData({
@@ -19,7 +20,7 @@ export default async function signup_(request: Request) {
     if (!db) {
       const response = {
         isError: true,
-        msg: i18next.t("home"),
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
         status: 200,
@@ -33,8 +34,9 @@ export default async function signup_(request: Request) {
     if (user) {
       const response = {
         isError: true,
-        msg: i18next.t("user_exist"),
+        code: AUTH_PROCESS_CODES.USER_ALREADY_EXIST,
       };
+
       return new Response(JSON.stringify(response), {
         status: 200,
       });
@@ -54,7 +56,7 @@ export default async function signup_(request: Request) {
 
     const response = {
       isError: false,
-      msg: i18next.t('user_created'),
+      code: AUTH_PROCESS_CODES.USER_CREATED,
       email,
     };
 
@@ -71,10 +73,7 @@ export default async function signup_(request: Request) {
 
     const resp = {
       isError: true,
-      msg:
-        code === 4348
-          ? i18next.t("email_error")
-          : i18next.t('unknown_error'),
+      code,
     };
 
     return new Response(JSON.stringify(resp), {

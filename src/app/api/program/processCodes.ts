@@ -1,0 +1,12 @@
+import { TProcessCode } from "app/types";
+
+//1000 - 1199
+const PROGRAM_PROCESS_CODES: TProcessCode = {
+  PROGRAM_EXIST: 1000,
+  PROGRAM_NOT_FOUND: 1001,
+  PROGRAM_EDITED: 1002,
+  PROGRAM_CREATED: 1003,
+  SCHOOL_NOT_FOUND: 1004,
+};
+
+export default PROGRAM_PROCESS_CODES;

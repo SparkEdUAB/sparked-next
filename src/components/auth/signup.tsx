@@ -20,7 +20,7 @@ const Signup: React.FC = () => {
       <Col span={12}>
         <Card
           className="auth-card"
-          title={i18next.t('signp')}
+          title={i18next.t("signup")}
           bordered={false}
         >
           <Form
@@ -60,7 +60,7 @@ const Signup: React.FC = () => {
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
               <Button type="primary" htmlType="submit">
-                {i18next.t('submit')}
+                {i18next.t("submit")}
               </Button>
             </Form.Item>
           </Form>

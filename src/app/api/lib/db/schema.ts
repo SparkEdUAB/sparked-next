@@ -55,7 +55,7 @@ export type courses = {
   code: string;
   created_at: Date;
   created_by_id: Realm.BSON.ObjectId;
-  institutions_id?: Realm.BSON.ObjectId;
+  institution_id?: Realm.BSON.ObjectId;
   is_visible?: boolean;
   languages: Realm.List<courses_languages>;
   name: string;
@@ -135,6 +135,32 @@ export const languagesSchema = {
   },
   primaryKey: "_id",
 };
+
+export const schoolSchema = {
+  name: "school",
+  properties: {
+    _id: "objectId?",
+    description: "string?",
+    name: "string?",
+  },
+  primaryKey: "_id",
+};
+
+
+export const schoolsSchema = {
+  name: "schools",
+  properties: {
+    _id: "objectId",
+    created_at: "date",
+    created_by_id: "objectId",
+    description: "string",
+    name: "string",
+    updated_at: "date?",
+    updated_by_id: "objectId?",
+  },
+  primaryKey: "_id",
+};
+
 
 export type preferences = {
   _id: Realm.BSON.ObjectId;
@@ -232,6 +258,21 @@ export const user_rolesSchema = {
     label: "string?",
     name: "string?",
     permission_ids: "user_permissions[]",
+    updated_at: "date?",
+    updated_by_id: "objectId?",
+  },
+  primaryKey: "_id",
+};
+
+export const programsSchema = {
+  name: "programs",
+  properties: {
+    _id: "objectId",
+    created_at: "date",
+    created_by_id: "objectId",
+    description: "string",
+    name: "string",
+    school_id: "objectId",
     updated_at: "date?",
     updated_by_id: "objectId?",
   },

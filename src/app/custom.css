@@ -13,10 +13,8 @@
 }
 
 .nav-bar {
-  background-image: url("https://media.istockphoto.com/id/1085039192/vector/abstract-background-of-engineering-drawing-technological-wallpaper-made-with-circles-and.webp?b=1&s=612x612&w=0&k=20&c=GopWlnZX4z5n_DG5Sdx2iIouMZ-eSNbTjb462paNlFM=");
-  background-position: left;
-  background-repeat: no-repeat;
-  background-size: cover;
+  background-color: black !important;
+  color: white;
 }
 
 .nav-bar::before {
@@ -68,4 +66,69 @@
 
 .auth-container {
   margin: 0 auto;
+}
+.active-menu-item {
+  background-color: white;
+}
+.table-action-item {
+  margin: 10px;
+}
+.table-search-box {
+  margin: 20px 0 20px 0 !important;
+  width:99%
+}
+
+.ant-table-thead > tr > th {
+  background-color: black !important ;
+  color: white !important ;
+}
+
+.table-action-buttons {
+  margin: 0 10px 10px 0;
+  background-color: black !important ;
+  color: white;
+}
+
+.admin-table {
+  margin: 0 10px 10px 0;
+}
+.admin-menu {
+  background-color: black !important ;
+  padding: 10px;
+}
+
+.sidebar-menu-item {
+  color: white !important;
+}
+
+.sidebar-menu-item:hover {
+  color: black !important;
+  background-color: gray !important ;
+}
+
+.navbar-menu-item {
+  color: white !important;
+}
+
+.admin-breadcrumbs {
+  margin: 10px;
+}
+.form-card {
+  background-color: #020101ba !important ;
+  color: white !important;
+  margin: 10px;
+}
+.form-label {
+  color: white !important;
+}
+
+.form-submit-btn {
+  background-color: #020101ba !important ;
+  width: 100%;
+  color: white !important;
+}
+
+.confirm-dialog-y-btn {
+  background-color: black !important ;
+  color: white !important;
 }
