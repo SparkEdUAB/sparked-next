@@ -1,15 +1,15 @@
 "use client";
 
+import EditCourseView from "@components/courses/editCourseView";
 import AdminLayout from "@components/layouts/adminLayout";
-import EditProgramView from "@components/programs/editProgramView";
 import React from "react";
 
-const CreateSchool: React.FC = (props) => {
+const EditSchool: React.FC = (props) => {
   return (
     <AdminLayout>
-      <EditProgramView />
+      <EditCourseView />
     </AdminLayout>
   );
 };
 
-export default CreateSchool;
+export default EditSchool;

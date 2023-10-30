@@ -46,7 +46,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
       {
         label: "edit",
         key: "edit",
-        link: "/admin/units/edit",
+        link: "/admin/courses/edit",
         roles: ["admin"],
       },
     ],

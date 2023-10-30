@@ -9,7 +9,7 @@ import { Card, Col, Form, Input, Row, Select } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
 import { useEffect } from "react";
-import { CREATE_COURSE_FORM_FIELDS } from "./constants";
+import { COURSE_FORM_FIELDS } from "./constants";
 import useProgram from "@hooks/useProgram";
 
 const onFinishFailed = (errorInfo: any) => {};
@@ -51,14 +51,14 @@ const CreateCourseView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {CREATE_COURSE_FORM_FIELDS.name.label}
+                    {COURSE_FORM_FIELDS.name.label}
                   </p>
                 }
-                name={CREATE_COURSE_FORM_FIELDS.name.key}
+                name={COURSE_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: CREATE_COURSE_FORM_FIELDS.name.errorMsg,
+                    message: COURSE_FORM_FIELDS.name.errorMsg,
                   },
                 ]}
               >
@@ -68,14 +68,14 @@ const CreateCourseView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {CREATE_COURSE_FORM_FIELDS.description.label}
+                    {COURSE_FORM_FIELDS.description.label}
                   </p>
                 }
-                name={CREATE_COURSE_FORM_FIELDS.description.key}
+                name={COURSE_FORM_FIELDS.description.key}
                 rules={[
                   {
                     required: true,
-                    message: CREATE_COURSE_FORM_FIELDS.description.errorMsg,
+                    message: COURSE_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >
@@ -85,13 +85,13 @@ const CreateCourseView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {CREATE_COURSE_FORM_FIELDS.school.label}
+                    {COURSE_FORM_FIELDS.school.label}
                   </p>
                 }
-                name={CREATE_COURSE_FORM_FIELDS.school.key}
+                name={COURSE_FORM_FIELDS.school.key}
                 rules={[
                   {
-                    message: CREATE_COURSE_FORM_FIELDS.school.errorMsg,
+                    message: COURSE_FORM_FIELDS.school.errorMsg,
                   },
                 ]}
               >
@@ -105,13 +105,13 @@ const CreateCourseView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {CREATE_COURSE_FORM_FIELDS.program.label}
+                    {COURSE_FORM_FIELDS.program.label}
                   </p>
                 }
-                name={CREATE_COURSE_FORM_FIELDS.program.key}
+                name={COURSE_FORM_FIELDS.program.key}
                 rules={[
                   {
-                    message: CREATE_COURSE_FORM_FIELDS.program.errorMsg,
+                    message: COURSE_FORM_FIELDS.program.errorMsg,
                   },
                 ]}
               >

@@ -69,14 +69,14 @@ export default async function fetchCourses_(request: Request) {
   }
 }
 
-export async function fetchProgramById_(request: Request) {
+export async function fetchCourseById_(request: Request) {
   const schema = zfd.formData({
-    programId: zfd.text(),
+    courseId: zfd.text(),
     withMetaData: z.boolean(),
   });
   const formBody = await request.json();
 
-  const { programId, withMetaData } = schema.parse(formBody);
+  const { courseId, withMetaData } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -91,30 +91,30 @@ export async function fetchProgramById_(request: Request) {
       });
     }
 
-    let program;
+    let course;
 
     if (withMetaData) {
-      program = await db
-        .collection(dbCollections.programs.name)
+      course = await db
+        .collection(dbCollections.courses.name)
         .aggregate(
           p_fetchCoursesWithMetaData({
             query: {
-              _id: new BSON.ObjectId(programId),
+              _id: new BSON.ObjectId(courseId),
             },
           })
         )
         .toArray();
 
-      program = program.length ? program[0] : null;
+      course = course.length ? course[0] : null;
     } else {
-      program = await db
-        .collection(dbCollections.programs.name)
-        .findOne({ _id: new BSON.ObjectId(programId) });
+      course = await db
+        .collection(dbCollections.courses.name)
+        .findOne({ _id: new BSON.ObjectId(courseId) });
     }
 
     const response = {
       isError: false,
-      program,
+      course,
     };
 
     return new Response(JSON.stringify(response), {

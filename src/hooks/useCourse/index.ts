@@ -16,16 +16,14 @@ const useCourse = (form?: any) => {
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [programs, setCourses] = useState<Array<TschoolFields>>([]);
+  const [courses, setCourses] = useState<Array<TschoolFields>>([]);
   const [tempPrograms, setTempCourses] = useState<Array<TschoolFields>>([]);
-  const [program, setSProgram] = useState<TcourseFields | null>(null);
-  const [selecetedProgramIds, setSelectedProgramIds] = useState<React.Key[]>(
-    []
-  );
+  const [course, setCourse] = useState<TcourseFields | null>(null);
+  const [selecetedCourseIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
     UiStore.confirmDialogStatus &&
-      selecetedProgramIds.length &&
+      selecetedCourseIds.length &&
       deletePrograms();
   }, [UiStore.confirmDialogStatus]);
 
@@ -63,10 +61,11 @@ const useCourse = (form?: any) => {
     }
   };
 
-  const editProgram = async (fields: TschoolFields) => {
-    const url = API_LINKS.EDIT_PROGRAM;
+  const editCourse = async (fields: TschoolFields) => {
+    const url = API_LINKS.EDIT_COURSE;
     const formData = {
-      body: JSON.stringify({ ...fields, _id: program?._id }),
+      //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
+      body: JSON.stringify({...course, ...fields, courseId: course?._id }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -83,12 +82,13 @@ const useCourse = (form?: any) => {
 
       const responseData = await resp.json();
 
+
       if (responseData.isError) {
         message.warning(responseData.code);
         return false;
       }
 
-      router.push(ADMIN_LINKS.programs.link);
+      router.push(ADMIN_LINKS.courses.link);
 
       message.success(i18next.t("success"));
     } catch (err: any) {
@@ -147,16 +147,16 @@ const useCourse = (form?: any) => {
     }
   };
 
-  const fetchProgramById = async ({
-    programId,
+  const fetchCourseById = async ({
+    courseId,
     withMetaData = false,
   }: {
-    programId: string;
+    courseId: string;
     withMetaData: boolean;
   }) => {
-    const url = API_LINKS.FETCH_PROGRAM_BY_ID;
+    const url = API_LINKS.FETCH_COURSE_BY_ID;
     const formData = {
-      body: JSON.stringify({ programId, withMetaData }),
+      body: JSON.stringify({ courseId, withMetaData }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -178,20 +178,21 @@ const useCourse = (form?: any) => {
         return false;
       }
 
-      if (responseData.program) {
-        const { _id, name, description, school } =
-          responseData.program as TcourseFields;
+      if (responseData.course) {
+        const { _id, name, description, school, program } =
+          responseData.course as TcourseFields;
 
-        const _program = {
+        const _course = {
           _id,
           name,
           description,
           schoolId: school?._id,
+          programId: program?._id,
         };
 
-        setSProgram(_program as TcourseFields);
-        form && form.setFieldsValue(_program);
-        return _program;
+        setCourse(_course as TcourseFields);
+        form && form.setFieldsValue(_course);
+        return _course;
       } else {
         return null;
       }
@@ -202,7 +203,7 @@ const useCourse = (form?: any) => {
   };
 
   const triggerDelete = async () => {
-    if (!selecetedProgramIds.length) {
+    if (!selecetedCourseIds.length) {
       return message.warning(i18next.t("select_items"));
     }
 
@@ -214,7 +215,7 @@ const useCourse = (form?: any) => {
 
     const url = API_LINKS.DELETE_courses;
     const formData = {
-      body: JSON.stringify({ programIds: selecetedProgramIds }),
+      body: JSON.stringify({ programIds: selecetedCourseIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -242,7 +243,7 @@ const useCourse = (form?: any) => {
       message.success(i18next.t("success"));
 
       setCourses(
-        programs.filter((i) => selecetedProgramIds.indexOf(i._id) == -1)
+        courses.filter((i) => selecetedCourseIds.indexOf(i._id) == -1)
       );
 
       return responseData.results;
@@ -317,32 +318,32 @@ const useCourse = (form?: any) => {
   };
 
   const triggerEdit = async () => {
-    if (!selecetedProgramIds.length) {
+    if (!selecetedCourseIds.length) {
       return message.warning(i18next.t("select_item"));
-    } else if (selecetedProgramIds.length > 1) {
+    } else if (selecetedCourseIds.length > 1) {
       return message.warning(i18next.t("select_one_item"));
     }
 
     router.push(
-      getChildLinkByKey("edit", ADMIN_LINKS.programs) +
-        `?programId=${selecetedProgramIds[0]}`
+      getChildLinkByKey("edit", ADMIN_LINKS.courses) +
+        `?courseId=${selecetedCourseIds[0]}`
     );
   };
 
   return {
     createCourse,
     fetchCourses,
-    programs,
+    courses,
     setCourses,
     setSelectedProgramIds,
-    selecetedProgramIds,
+    selecetedCourseIds,
     triggerDelete,
     triggerEdit,
-    fetchProgramById,
+    fetchCourseById,
     router,
-    program,
+    course,
     isLoading,
-    editProgram,
+    editCourse,
     findProgramsByName,
     onSearchQueryChange,
     searchQuery,

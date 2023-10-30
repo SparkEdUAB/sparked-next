@@ -21,8 +21,8 @@ import { TschoolFields } from "./types";
 const CourseListView: React.FC = observer(() => {
   const {
     fetchCourses,
-    programs,
-    selecetedProgramIds,
+    courses,
+    selecetedCourseIds,
     setSelectedProgramIds,
     triggerDelete,
     triggerEdit,
@@ -36,7 +36,7 @@ const CourseListView: React.FC = observer(() => {
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedProgramIds,
+    selectedRowKeys: selecetedCourseIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: TschoolFields[]) => {
       setSelectedProgramIds(selectedRows.map((i) => i.key));
     },
@@ -81,7 +81,7 @@ const CourseListView: React.FC = observer(() => {
         bordered
         rowSelection={rowSelection}
         columns={courseTableColumns}
-        dataSource={programs}
+        dataSource={courses}
       />
     </>
   );
