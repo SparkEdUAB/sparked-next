@@ -15,6 +15,7 @@ export type TcourseFields = {
   created_by: string;
   description: string;
   schoolId: string;
+  programId: string;
 
   created_at: string;
   user?: {
@@ -22,6 +23,10 @@ export type TcourseFields = {
     email: string;
   };
   school?: {
+    name: string;
+    _id: string;
+  };
+  program?: {
     name: string;
     _id: string;
   };

@@ -39,9 +39,18 @@ export const p_fetchProgramsWithCreator = (limit?: number, skip?: number) => [
     },
   },
 ];
-export const p_fetchProgramWithMetaData = ({ query }: { query: object }) => [
+
+export const p_fetchCoursesWithMetaData = ({
+  query={},
+  skip = 0,
+  limit = 1000,
+}: {
+  query?: object;
+  limit?: number;
+  skip?: number;
+}) => [
   {
-    $match:query,
+    $match: query,
   },
 
   {
@@ -66,6 +75,17 @@ export const p_fetchProgramWithMetaData = ({ query }: { query: object }) => [
   {
     $unwind: "$school",
   },
+  {
+    $lookup: {
+      from: "programs",
+      localField: "program_id",
+      foreignField: "_id",
+      as: "program",
+    },
+  },
+  {
+    $unwind: "$program",
+  },
 
   {
     $project: {
@@ -79,6 +99,14 @@ export const p_fetchProgramWithMetaData = ({ query }: { query: object }) => [
       "user.email": 1,
       "school.name": 1,
       "school._id": 1,
+      "program.name": 1,
+      "program._id": 1,
     },
+  },
+  {
+    $skip: skip,
+  },
+  {
+    $limit: limit,
   },
 ];

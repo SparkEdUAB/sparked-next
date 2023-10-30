@@ -1,22 +1,20 @@
 import SPARKED_PROCESS_CODES from "app/shared/processCodes";
+import { BSON } from "mongodb";
+import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import {
-  p_fetchProgramWithMetaData,
-  p_fetchProgramsWithCreator,
-} from "./pipelines";
-import { BSON } from "mongodb";
-import { z } from "zod";
+import { p_fetchCoursesWithMetaData } from "./pipelines";
 
-export default async function fetchPrograms_(request: Request) {
+export default async function fetchCourses_(request: Request) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
+    withMetaData: z.boolean().optional(),
   });
   const formBody = await request.json();
 
-  const { limit, skip } = schema.parse(formBody);
+  const { limit, skip, withMetaData } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -31,14 +29,29 @@ export default async function fetchPrograms_(request: Request) {
       });
     }
 
-    const programs = await db
-      .collection(dbCollections.programs.name)
-      .aggregate(p_fetchProgramsWithCreator())
-      .toArray();
+    let courses = [];
+
+    if (withMetaData) {
+      courses = await db
+        .collection(dbCollections.courses.name)
+        .aggregate(p_fetchCoursesWithMetaData({ query: {} }))
+        .toArray();
+    } else {
+      courses = await db
+        .collection(dbCollections.courses.name)
+        .find(
+          {},
+          {
+            limit,
+            skip,
+          }
+        )
+        .toArray();
+    }
 
     const response = {
       isError: false,
-      programs,
+      courses,
     };
 
     return new Response(JSON.stringify(response), {
@@ -84,7 +97,7 @@ export async function fetchProgramById_(request: Request) {
       program = await db
         .collection(dbCollections.programs.name)
         .aggregate(
-          p_fetchProgramWithMetaData({
+          p_fetchCoursesWithMetaData({
             query: {
               _id: new BSON.ObjectId(programId),
             },
@@ -199,7 +212,7 @@ export async function findProgramsByName_(request: Request) {
       programs = await db
         .collection(dbCollections.programs.name)
         .aggregate(
-          p_fetchProgramWithMetaData({
+          p_fetchCoursesWithMetaData({
             query: {
               name: { $regex: regexPattern },
             },

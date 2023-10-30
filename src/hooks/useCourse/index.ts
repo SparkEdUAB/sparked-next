@@ -16,8 +16,8 @@ const useCourse = (form?: any) => {
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [programs, setPrograms] = useState<Array<TschoolFields>>([]);
-  const [tempPrograms, setTempPrograms] = useState<Array<TschoolFields>>([]);
+  const [programs, setCourses] = useState<Array<TschoolFields>>([]);
+  const [tempPrograms, setTempCourses] = useState<Array<TschoolFields>>([]);
   const [program, setSProgram] = useState<TcourseFields | null>(null);
   const [selecetedProgramIds, setSelectedProgramIds] = useState<React.Key[]>(
     []
@@ -97,10 +97,10 @@ const useCourse = (form?: any) => {
     }
   };
 
-  const fetchPrograms = async ({ limit = 1000, skip = 0 }: TfetchCourses) =>{
-   const url = API_LINKS.FETCH_PROGRAMS;
+  const fetchCourses = async ({ limit = 1000, skip = 0 }: TfetchCourses) => {
+    const url = API_LINKS.FETCH_COURSES;
     const formData = {
-      body: JSON.stringify({ limit, skip }),
+      body: JSON.stringify({ limit, skip, withMetaData: true }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +122,7 @@ const useCourse = (form?: any) => {
         return false;
       }
 
-      const _programs = responseData.programs?.map(
+      const _courses = responseData.courses?.map(
         (i: TcourseFields, index: number) => ({
           index: index + 1,
           key: i._id,
@@ -131,14 +131,16 @@ const useCourse = (form?: any) => {
           school: i.school,
           schoolId: i.school?._id,
           schoolName: i.school?.name,
+          programName: i.program?.name,
+          programId: i.program?._id,
           created_by: i.user?.email,
           created_at: new Date(i.created_at).toDateString(),
         })
       );
 
-      setPrograms(_programs);
-      setTempPrograms(_programs);
-      return _programs;
+      setCourses(_courses);
+      setTempCourses(_courses);
+      return _courses;
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
@@ -210,7 +212,7 @@ const useCourse = (form?: any) => {
   const deletePrograms = async () => {
     if (UiStore.isLoading) return;
 
-    const url = API_LINKS.DELETE_PROGRAMS;
+    const url = API_LINKS.DELETE_courses;
     const formData = {
       body: JSON.stringify({ programIds: selecetedProgramIds }),
       method: "post",
@@ -239,7 +241,7 @@ const useCourse = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setPrograms(
+      setCourses(
         programs.filter((i) => selecetedProgramIds.indexOf(i._id) == -1)
       );
 
@@ -252,7 +254,7 @@ const useCourse = (form?: any) => {
     }
   };
   const findProgramsByName = async ({
-    withMetaData=false,
+    withMetaData = false,
   }: {
     withMetaData: boolean;
   }) => {
@@ -262,7 +264,7 @@ const useCourse = (form?: any) => {
       return message.warning(i18next.t("search_empty"));
     }
 
-    const url = API_LINKS.FIND_PROGRAMS_BY_NAME;
+    const url = API_LINKS.FIND_courses_BY_NAME;
     const formData = {
       body: JSON.stringify({
         name: searchQuery.trim(),
@@ -296,7 +298,7 @@ const useCourse = (form?: any) => {
         responseData.programs.length + " " + i18next.t("programs_found")
       );
 
-      setPrograms(responseData.programs);
+      setCourses(responseData.programs);
 
       return responseData.programs;
     } catch (err: any) {
@@ -310,7 +312,7 @@ const useCourse = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setPrograms(tempPrograms);
+      setCourses(tempPrograms);
     }
   };
 
@@ -329,9 +331,9 @@ const useCourse = (form?: any) => {
 
   return {
     createCourse,
-    fetchPrograms,
+    fetchCourses,
     programs,
-    setPrograms,
+    setCourses,
     setSelectedProgramIds,
     selecetedProgramIds,
     triggerDelete,

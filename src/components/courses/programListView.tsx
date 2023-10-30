@@ -2,8 +2,8 @@
 
 import { AdminPageTitle } from "@components/layouts";
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
+import useCourse from "@hooks/useCourse";
 import useNavigation from "@hooks/useNavigation";
-import useProgram from "@hooks/useProgram";
 import { Table } from "antd";
 import { Button, TextInput } from "flowbite-react";
 import i18next from "i18next";
@@ -15,13 +15,12 @@ import {
   HiOutlinePencilSquare,
   HiTrash,
 } from "react-icons/hi2";
-import { programTableColumns } from ".";
+import { courseTableColumns } from ".";
 import { TschoolFields } from "./types";
-import useCourse from "@hooks/useCourse";
 
 const CourseListView: React.FC = observer(() => {
   const {
-    fetchPrograms,
+    fetchCourses,
     programs,
     selecetedProgramIds,
     setSelectedProgramIds,
@@ -33,7 +32,7 @@ const CourseListView: React.FC = observer(() => {
   const { router, getChildLinkByKey } = useNavigation();
 
   useEffect(() => {
-    fetchPrograms({});
+    fetchCourses({});
   }, []);
 
   const rowSelection = {
@@ -81,7 +80,7 @@ const CourseListView: React.FC = observer(() => {
         className="admin-table"
         bordered
         rowSelection={rowSelection}
-        columns={programTableColumns}
+        columns={courseTableColumns}
         dataSource={programs}
       />
     </>
