@@ -17,14 +17,14 @@ const useCourse = (form?: any) => {
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [courses, setCourses] = useState<Array<TschoolFields>>([]);
-  const [tempPrograms, setTempCourses] = useState<Array<TschoolFields>>([]);
+  const [tempCourse, setTempCourses] = useState<Array<TschoolFields>>([]);
   const [course, setCourse] = useState<TcourseFields | null>(null);
   const [selecetedCourseIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
     UiStore.confirmDialogStatus &&
       selecetedCourseIds.length &&
-      deletePrograms();
+      deleteCourse();
   }, [UiStore.confirmDialogStatus]);
 
   const createCourse = async (fields: TcreateCourseFields) => {
@@ -210,12 +210,12 @@ const useCourse = (form?: any) => {
     UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deletePrograms = async () => {
+  const deleteCourse = async () => {
     if (UiStore.isLoading) return;
 
-    const url = API_LINKS.DELETE_courses;
+    const url = API_LINKS.DELETE_COURSES;
     const formData = {
-      body: JSON.stringify({ programIds: selecetedCourseIds }),
+      body: JSON.stringify({ courseIds: selecetedCourseIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -313,7 +313,7 @@ const useCourse = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setCourses(tempPrograms);
+      setCourses(tempCourse);
     }
   };
 
@@ -347,7 +347,7 @@ const useCourse = (form?: any) => {
     findProgramsByName,
     onSearchQueryChange,
     searchQuery,
-    tempPrograms,
+    tempCourse,
   };
 };
 

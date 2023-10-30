@@ -132,13 +132,13 @@ export async function fetchCourseById_(request: Request) {
   }
 }
 
-export async function deletePrograms_(request: Request) {
+export async function deleteCourse_(request: Request) {
   const schema = zfd.formData({
-    programIds: zfd.repeatableOfType(zfd.text()),
+    courseIds: zfd.repeatableOfType(zfd.text()),
   });
   const formBody = await request.json();
 
-  const { programIds } = schema.parse(formBody);
+  const { courseIds } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -154,10 +154,10 @@ export async function deletePrograms_(request: Request) {
     }
 
     const results = await db
-      .collection(dbCollections.programs.name)
+      .collection(dbCollections.courses.name)
       .deleteMany({
         _id: {
-          $in: programIds.map((i) => new BSON.ObjectId(i)),
+          $in: courseIds.map((i) => new BSON.ObjectId(i)),
         },
       });
 
