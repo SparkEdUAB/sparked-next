@@ -17,7 +17,7 @@ const useCourse = (form?: any) => {
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [courses, setCourses] = useState<Array<TschoolFields>>([]);
-  const [tempPrograms, setTempCourses] = useState<Array<TschoolFields>>([]);
+  const [tempCourse, setTempCourses] = useState<Array<TschoolFields>>([]);
   const [course, setCourse] = useState<TcourseFields | null>(null);
   const [selecetedCourseIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
@@ -213,9 +213,9 @@ const useCourse = (form?: any) => {
   const deleteCourse = async () => {
     if (UiStore.isLoading) return;
 
-    const url = API_LINKS.DELETE_courses;
+    const url = API_LINKS.DELETE_COURSES;
     const formData = {
-      body: JSON.stringify({ programIds: selecetedCourseIds }),
+      body: JSON.stringify({ courseIds: selecetedCourseIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -254,7 +254,7 @@ const useCourse = (form?: any) => {
       return false;
     }
   };
-  const findProgramsByName = async ({
+  const findCourseByName = async ({
     withMetaData = false,
   }: {
     withMetaData: boolean;
@@ -265,7 +265,7 @@ const useCourse = (form?: any) => {
       return message.warning(i18next.t("search_empty"));
     }
 
-    const url = API_LINKS.FIND_courses_BY_NAME;
+    const url = API_LINKS.FIND_COURSE_BY_NAME;
     const formData = {
       body: JSON.stringify({
         name: searchQuery.trim(),
@@ -296,12 +296,12 @@ const useCourse = (form?: any) => {
         return false;
       }
       message.success(
-        responseData.programs.length + " " + i18next.t("programs_found")
+        responseData.courses.length + " " + i18next.t("courses_found")
       );
 
-      setCourses(responseData.programs);
+      setCourses(responseData.courses);
 
-      return responseData.programs;
+      return responseData.courses;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
@@ -313,7 +313,7 @@ const useCourse = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setCourses(tempPrograms);
+      setCourses(tempCourse);
     }
   };
 
@@ -344,10 +344,10 @@ const useCourse = (form?: any) => {
     course,
     isLoading,
     editCourse,
-    findProgramsByName,
+    findCourseByName,
     onSearchQueryChange,
     searchQuery,
-    tempPrograms,
+    tempCourse,
   };
 };
 

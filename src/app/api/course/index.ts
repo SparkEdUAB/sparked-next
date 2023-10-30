@@ -132,13 +132,13 @@ export async function fetchCourseById_(request: Request) {
   }
 }
 
-export async function deletePrograms_(request: Request) {
+export async function deleteCourse_(request: Request) {
   const schema = zfd.formData({
-    programIds: zfd.repeatableOfType(zfd.text()),
+    courseIds: zfd.repeatableOfType(zfd.text()),
   });
   const formBody = await request.json();
 
-  const { programIds } = schema.parse(formBody);
+  const { courseIds } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -154,10 +154,10 @@ export async function deletePrograms_(request: Request) {
     }
 
     const results = await db
-      .collection(dbCollections.programs.name)
+      .collection(dbCollections.courses.name)
       .deleteMany({
         _id: {
-          $in: programIds.map((i) => new BSON.ObjectId(i)),
+          $in: courseIds.map((i) => new BSON.ObjectId(i)),
         },
       });
 
@@ -181,7 +181,7 @@ export async function deletePrograms_(request: Request) {
   }
 }
 
-export async function findProgramsByName_(request: Request) {
+export async function findCourseByName_(request: Request) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
@@ -206,11 +206,11 @@ export async function findProgramsByName_(request: Request) {
     }
     const regexPattern = new RegExp(name, "i");
 
-    let programs = null;
+    let courses = null;
 
     if (withMetaData) {
-      programs = await db
-        .collection(dbCollections.programs.name)
+      courses = await db
+        .collection(dbCollections.courses.name)
         .aggregate(
           p_fetchCoursesWithMetaData({
             query: {
@@ -220,8 +220,8 @@ export async function findProgramsByName_(request: Request) {
         )
         .toArray();
     } else {
-      programs = await db
-        .collection(dbCollections.programs.name)
+      courses = await db
+        .collection(dbCollections.courses.name)
         .find({
           name: { $regex: regexPattern },
         })
@@ -230,7 +230,7 @@ export async function findProgramsByName_(request: Request) {
 
     const response = {
       isError: false,
-      programs,
+      courses,
     };
 
     return new Response(JSON.stringify(response), {

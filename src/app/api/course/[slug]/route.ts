@@ -2,13 +2,13 @@ import SPARKED_PROCESS_CODES from "app/shared/processCodes";
 import { Session } from "next-auth";
 import { getServerSession } from "next-auth/next";
 import fetchCourses_, {
-  deletePrograms_,
+  deleteCourse_,
   fetchCourseById_,
-  findProgramsByName_,
+  findCourseByName_,
 } from "..";
 import { authOptions } from "../../auth/constants";
-import editCourse_ from "../edit";
 import createCourse_ from "../create";
+import editCourse_ from "../edit";
 
 const schoolApiHandler_ = async function POST(
   req: Request,
@@ -26,8 +26,8 @@ const schoolApiHandler_ = async function POST(
     fetchCourses: fetchCourses_,
     fetchCourseById: fetchCourseById_,
     editCourse: editCourse_,
-    deletePrograms: deletePrograms_,
-    findProgramsByName: findProgramsByName_,
+    deleteCourse: deleteCourse_,
+    findCourseByName: findCourseByName_,
   };
 
   if (schoolFunctions[slug] && session) {

@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { AdminPageTitle } from "@components/layouts";
-import useProgram from "@hooks/useProgram";
 import useSchool from "@hooks/useSchool";
-import SchoolStore from "@state/mobx/scholStore";
-import { Card, Col, Form, Input, Row, Select } from "antd";
-import { Button } from "flowbite-react";
+import { Card, Col, Form, Input, Row, Select, Skeleton } from "antd";
+import { Button, Label } from "flowbite-react";
 import i18next from "i18next";
-import { useEffect } from "react";
 import { CREATE_PROGRAM_FORM_FIELDS } from "./constants";
+import { AdminPageTitle } from "@components/layouts";
+import SchoolStore from "@state/mobx/scholStore";
+import { useEffect } from "react";
+import useProgram from "@hooks/useProgram";
 
 const onFinishFailed = (errorInfo: any) => {};
 
