@@ -41,7 +41,7 @@ export const p_fetchProgramsWithCreator = (limit?: number, skip?: number) => [
 ];
 
 export const p_fetchCoursesWithMetaData = ({
-  query={},
+  query = {},
   skip = 0,
   limit = 1000,
 }: {
@@ -73,7 +73,10 @@ export const p_fetchCoursesWithMetaData = ({
     },
   },
   {
-    $unwind: "$school",
+    $unwind: {
+      path: "$school",
+      preserveNullAndEmptyArrays: true,
+    },
   },
   {
     $lookup: {
@@ -84,7 +87,10 @@ export const p_fetchCoursesWithMetaData = ({
     },
   },
   {
-    $unwind: "$program",
+    $unwind: {
+      path: "$program",
+      preserveNullAndEmptyArrays: true,
+    },
   },
 
   {
