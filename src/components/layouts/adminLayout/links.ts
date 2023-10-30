@@ -30,26 +30,12 @@ export const ADMIN_LINKS: TmenuItemLink = {
     index: 1,
   },
   courses: {
-    link: "/admin/courses",
+    link: "/courses",
     roles: ["admin"],
     label: i18next.t("courses"),
     key: "admin_courses",
     icon: HiBookOpen,
     index: 2,
-    children: [
-      {
-        label: "create",
-        key: "create",
-        link: "/admin/courses/create",
-        roles: ["admin"],
-      },
-      {
-        label: "edit",
-        key: "edit",
-        link: "/admin/courses/edit",
-        roles: ["admin"],
-      },
-    ],
   },
   topics: {
     link: "/topics",

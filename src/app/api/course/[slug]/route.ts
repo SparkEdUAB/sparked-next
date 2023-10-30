@@ -4,11 +4,11 @@ import { getServerSession } from "next-auth/next";
 import fetchCourses_, {
   deleteCourse_,
   fetchCourseById_,
-  findProgramsByName_,
+  findCourseByName_,
 } from "..";
 import { authOptions } from "../../auth/constants";
-import editCourse_ from "../edit";
 import createCourse_ from "../create";
+import editCourse_ from "../edit";
 
 const schoolApiHandler_ = async function POST(
   req: Request,
@@ -27,7 +27,7 @@ const schoolApiHandler_ = async function POST(
     fetchCourseById: fetchCourseById_,
     editCourse: editCourse_,
     deleteCourse: deleteCourse_,
-    findProgramsByName: findProgramsByName_,
+    findCourseByName: findCourseByName_,
   };
 
   if (schoolFunctions[slug] && session) {
