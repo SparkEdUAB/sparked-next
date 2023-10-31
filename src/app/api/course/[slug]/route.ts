@@ -7,8 +7,8 @@ import fetchCourses_, {
   findCourseByName_,
 } from "..";
 import { authOptions } from "../../auth/constants";
-import createCourse_ from "../create";
 import editCourse_ from "../edit";
+import createCourse_ from "../create";
 
 const schoolApiHandler_ = async function POST(
   req: Request,
