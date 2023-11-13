@@ -108,7 +108,7 @@ export default async function createUnit_(request: Request, session?: Session) {
       });
     }
 
-    await db.collection(dbCollections.courses.name).insertOne({
+    await db.collection(dbCollections.units.name).insertOne({
       name,
       description,
       created_at: new Date(),
@@ -122,7 +122,7 @@ export default async function createUnit_(request: Request, session?: Session) {
 
     const response = {
       isError: false,
-      code: UNIT_PROCESS_CODES.COURSE_CREATED,
+      code: UNIT_PROCESS_CODES.UNIT_CREATED,
     };
 
     return new Response(JSON.stringify(response), {

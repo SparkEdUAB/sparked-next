@@ -3,6 +3,7 @@
 import { AdminPageTitle } from "@components/layouts";
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
 import useNavigation from "@hooks/useNavigation";
+import useUnit from "@hooks/useUnit";
 import { Table } from "antd";
 import { Button, TextInput } from "flowbite-react";
 import i18next from "i18next";
@@ -14,13 +15,12 @@ import {
   HiOutlinePencilSquare,
   HiTrash,
 } from "react-icons/hi2";
-import { courseTableColumns } from ".";
-import { TschoolFields } from "./types";
-import useCourse from "@hooks/useCourse";
+import { unitTableColumns } from ".";
+import { TunitFields } from "./types";
 
 const UnitListView: React.FC = observer(() => {
   const {
-    fetchCourses,
+    fetchUnits,
     courses,
     selecetedCourseIds,
     setSelectedProgramIds,
@@ -28,16 +28,16 @@ const UnitListView: React.FC = observer(() => {
     triggerEdit,
     findCourseByName,
     onSearchQueryChange,
-  } = useCourse();
+  } = useUnit();
   const { router, getChildLinkByKey } = useNavigation();
 
   useEffect(() => {
-    fetchCourses({});
+    fetchUnits({});
   }, []);
 
   const rowSelection = {
     selectedRowKeys: selecetedCourseIds,
-    onChange: (selectedRowKeys: React.Key[], selectedRows: TschoolFields[]) => {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: TunitFields[]) => {
       setSelectedProgramIds(selectedRows.map((i) => i.key));
     },
   };
@@ -80,7 +80,7 @@ const UnitListView: React.FC = observer(() => {
         className="admin-table"
         bordered
         rowSelection={rowSelection}
-        columns={courseTableColumns}
+        columns={unitTableColumns}
         dataSource={courses}
       />
     </>

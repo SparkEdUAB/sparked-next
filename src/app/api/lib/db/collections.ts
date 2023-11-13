@@ -18,8 +18,8 @@ export const dbCollections: TdbCollection = {
     label: "Courses",
   },
   units: {
-    name: "courses",
-    label: "Courses",
+    name: "units",
+    label: "Units ",
   },
   topics: {
     name: "courses",

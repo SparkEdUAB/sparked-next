@@ -1,46 +1,6 @@
-import { BSON } from "mongodb";
+import { dbCollections } from "../lib/db/collections";
 
-export const p_fetchProgramsWithCreator = (limit?: number, skip?: number) => [
-  {
-    $lookup: {
-      from: "users",
-      localField: "created_by_id",
-      foreignField: "_id",
-      as: "user",
-    },
-  },
-  {
-    $unwind: "$user",
-  },
-  {
-    $lookup: {
-      from: "schools",
-      localField: "school_id",
-      foreignField: "_id",
-      as: "school",
-    },
-  },
-  {
-    $unwind: "$school",
-  },
-
-  {
-    $project: {
-      updated_at: 1,
-      name: 1,
-      description: 1,
-      created_at: 1,
-      _id: 1,
-      "user._id": 1,
-      "user.name": 1,
-      "user.email": 1,
-      "school.name": 1,
-      "school._id": 1,
-    },
-  },
-];
-
-export const p_fetchCoursesWithMetaData = ({
+export const p_fetchUnitsWithMetaData = ({
   query = {},
   skip = 0,
   limit = 1000,
@@ -55,7 +15,7 @@ export const p_fetchCoursesWithMetaData = ({
 
   {
     $lookup: {
-      from: "users",
+      from: dbCollections.users.name,
       localField: "created_by_id",
       foreignField: "_id",
       as: "user",
@@ -66,7 +26,7 @@ export const p_fetchCoursesWithMetaData = ({
   },
   {
     $lookup: {
-      from: "schools",
+      from: dbCollections.schools.name,
       localField: "school_id",
       foreignField: "_id",
       as: "school",
@@ -80,7 +40,7 @@ export const p_fetchCoursesWithMetaData = ({
   },
   {
     $lookup: {
-      from: "programs",
+      from: dbCollections.programs.name,
       localField: "program_id",
       foreignField: "_id",
       as: "program",
@@ -89,6 +49,20 @@ export const p_fetchCoursesWithMetaData = ({
   {
     $unwind: {
       path: "$program",
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  {
+    $lookup: {
+      from: dbCollections.courses.name,
+      localField: "course_id",
+      foreignField: "_id",
+      as: "course",
+    },
+  },
+  {
+    $unwind: {
+      path: "$course",
       preserveNullAndEmptyArrays: true,
     },
   },
@@ -107,6 +81,8 @@ export const p_fetchCoursesWithMetaData = ({
       "school._id": 1,
       "program.name": 1,
       "program._id": 1,
+      "course._id": 1,
+      "course.name": 1,
     },
   },
   {

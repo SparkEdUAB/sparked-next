@@ -1,9 +1,9 @@
 import { Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { TschoolFields } from "./types";
+import { TunitFields } from "./types";
 import i18next from "i18next";
 
-export const courseTableColumns: ColumnsType<TschoolFields> = [
+export const unitTableColumns: ColumnsType<TunitFields> = [
   {
     title: "#",
     dataIndex: "index",
@@ -25,6 +25,12 @@ export const courseTableColumns: ColumnsType<TschoolFields> = [
   {
     title: "Program",
     dataIndex: "programName",
+    key: "school",
+    render: (text) => <a>{text || i18next.t("not_linked")}</a>,
+  },
+  {
+    title: "Course",
+    dataIndex: "courseName",
     key: "school",
     render: (text) => <a>{text || i18next.t("not_linked")}</a>,
   },

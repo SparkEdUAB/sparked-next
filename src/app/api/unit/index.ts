@@ -4,9 +4,11 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import { p_fetchCoursesWithMetaData } from "./pipelines";
+import {
+   p_fetchUnitsWithMetaData,
+} from "./pipelines";
 
-export default async function fetchCourses_(request: Request) {
+export default async function fetchUnits_(request: Request) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
@@ -29,16 +31,16 @@ export default async function fetchCourses_(request: Request) {
       });
     }
 
-    let courses = [];
+    let units = [];
 
     if (withMetaData) {
-      courses = await db
-        .collection(dbCollections.courses.name)
-        .aggregate(p_fetchCoursesWithMetaData({ query: {} }))
+      units = await db
+        .collection(dbCollections.units.name)
+        .aggregate(p_fetchUnitsWithMetaData({ query: {} }))
         .toArray();
     } else {
-      courses = await db
-        .collection(dbCollections.courses.name)
+      units = await db
+        .collection(dbCollections.units.name)
         .find(
           {},
           {
@@ -49,9 +51,11 @@ export default async function fetchCourses_(request: Request) {
         .toArray();
     }
 
+
+
     const response = {
       isError: false,
-      courses,
+      units,
     };
 
     return new Response(JSON.stringify(response), {
@@ -95,9 +99,9 @@ export async function fetchCourseById_(request: Request) {
 
     if (withMetaData) {
       course = await db
-        .collection(dbCollections.courses.name)
+        .collection(dbCollections.units.name)
         .aggregate(
-          p_fetchCoursesWithMetaData({
+          p_fetchUnitsWithMetaData({
             query: {
               _id: new BSON.ObjectId(courseId),
             },
@@ -108,7 +112,7 @@ export async function fetchCourseById_(request: Request) {
       course = course.length ? course[0] : null;
     } else {
       course = await db
-        .collection(dbCollections.courses.name)
+        .collection(dbCollections.units.name)
         .findOne({ _id: new BSON.ObjectId(courseId) });
     }
 
@@ -153,13 +157,11 @@ export async function deleteCourse_(request: Request) {
       });
     }
 
-    const results = await db
-      .collection(dbCollections.courses.name)
-      .deleteMany({
-        _id: {
-          $in: courseIds.map((i) => new BSON.ObjectId(i)),
-        },
-      });
+    const results = await db.collection(dbCollections.units.name).deleteMany({
+      _id: {
+        $in: courseIds.map((i) => new BSON.ObjectId(i)),
+      },
+    });
 
     const response = {
       isError: false,
@@ -210,9 +212,9 @@ export async function findCourseByName_(request: Request) {
 
     if (withMetaData) {
       courses = await db
-        .collection(dbCollections.courses.name)
+        .collection(dbCollections.units.name)
         .aggregate(
-          p_fetchCoursesWithMetaData({
+          p_fetchUnitsWithMetaData({
             query: {
               name: { $regex: regexPattern },
             },
@@ -221,7 +223,7 @@ export async function findCourseByName_(request: Request) {
         .toArray();
     } else {
       courses = await db
-        .collection(dbCollections.courses.name)
+        .collection(dbCollections.units.name)
         .find({
           name: { $regex: regexPattern },
         })

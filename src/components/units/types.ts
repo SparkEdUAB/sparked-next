@@ -1,4 +1,4 @@
-export type TschoolFields = {
+export type TunitFields = {
   key: string;
   _id: string;
   name: string;

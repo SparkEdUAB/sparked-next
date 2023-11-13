@@ -9,25 +9,23 @@ import { API_LINKS } from "app/links";
 import i18next from "i18next";
 import { useEffect, useState } from "react";
 import UiStore from "@state/mobx/uiStore";
-import { TcreateCourseFields, TfetchCourses, TcourseFields } from "./types";
+import { TcreateUnitFields, TfetchUnits, TUnitFields } from "./types";
 
 const useUnit = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [courses, setCourses] = useState<Array<TschoolFields>>([]);
-  const [tempCourse, setTempCourses] = useState<Array<TschoolFields>>([]);
-  const [course, setCourse] = useState<TcourseFields | null>(null);
+  const [courses, setUnits] = useState<Array<TschoolFields>>([]);
+  const [tempCourse, setTempUnit] = useState<Array<TschoolFields>>([]);
+  const [course, setCourse] = useState<TUnitFields | null>(null);
   const [selecetedCourseIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
-    UiStore.confirmDialogStatus &&
-      selecetedCourseIds.length &&
-      deleteCourse();
+    UiStore.confirmDialogStatus && selecetedCourseIds.length && deleteCourse();
   }, [UiStore.confirmDialogStatus]);
 
-  const createUnit = async (fields: TcreateCourseFields) => {
+  const createUnit = async (fields: TcreateUnitFields) => {
     const url = API_LINKS.CREATE_UNIT;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -65,7 +63,7 @@ const useUnit = (form?: any) => {
     const url = API_LINKS.EDIT_COURSE;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({...course, ...fields, courseId: course?._id }),
+      body: JSON.stringify({ ...course, ...fields, courseId: course?._id }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -82,7 +80,6 @@ const useUnit = (form?: any) => {
 
       const responseData = await resp.json();
 
-
       if (responseData.isError) {
         message.warning(responseData.code);
         return false;
@@ -97,8 +94,8 @@ const useUnit = (form?: any) => {
     }
   };
 
-  const fetchCourses = async ({ limit = 1000, skip = 0 }: TfetchCourses) => {
-    const url = API_LINKS.FETCH_COURSES;
+  const fetchUnits = async ({ limit = 1000, skip = 0 }: TfetchUnits) => {
+    const url = API_LINKS.FETCH_UNIT;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
       method: "post",
@@ -122,25 +119,29 @@ const useUnit = (form?: any) => {
         return false;
       }
 
-      const _courses = responseData.courses?.map(
-        (i: TcourseFields, index: number) => ({
+      console.log("responseData.units", responseData.units);
+
+      const _units = responseData.units?.map(
+        (i: TUnitFields, index: number) => ({
           index: index + 1,
           key: i._id,
           _id: i._id,
           name: i.name,
           school: i.school,
           schoolId: i.school?._id,
+          courseId: i.course?._id,
           schoolName: i.school?.name,
           programName: i.program?.name,
+          courseName: i.course?.name,
           programId: i.program?._id,
           created_by: i.user?.email,
           created_at: new Date(i.created_at).toDateString(),
         })
       );
 
-      setCourses(_courses);
-      setTempCourses(_courses);
-      return _courses;
+      setUnits(_units);
+      setTempUnit(_units);
+      return _units;
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
@@ -180,7 +181,7 @@ const useUnit = (form?: any) => {
 
       if (responseData.course) {
         const { _id, name, description, school, program } =
-          responseData.course as TcourseFields;
+          responseData.course as TUnitFields;
 
         const _course = {
           _id,
@@ -190,7 +191,7 @@ const useUnit = (form?: any) => {
           programId: program?._id,
         };
 
-        setCourse(_course as TcourseFields);
+        setCourse(_course as TUnitFields);
         form && form.setFieldsValue(_course);
         return _course;
       } else {
@@ -242,9 +243,7 @@ const useUnit = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setCourses(
-        courses.filter((i) => selecetedCourseIds.indexOf(i._id) == -1)
-      );
+      setUnits(courses.filter((i) => selecetedCourseIds.indexOf(i._id) == -1));
 
       return responseData.results;
     } catch (err: any) {
@@ -299,7 +298,7 @@ const useUnit = (form?: any) => {
         responseData.courses.length + " " + i18next.t("courses_found")
       );
 
-      setCourses(responseData.courses);
+      setUnits(responseData.courses);
 
       return responseData.courses;
     } catch (err: any) {
@@ -313,7 +312,7 @@ const useUnit = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setCourses(tempCourse);
+      setUnits(tempCourse);
     }
   };
 
@@ -332,9 +331,9 @@ const useUnit = (form?: any) => {
 
   return {
     createUnit,
-    fetchCourses,
+    fetchUnits,
     courses,
-    setCourses,
+    setUnits,
     setSelectedProgramIds,
     selecetedCourseIds,
     triggerDelete,
