@@ -52,9 +52,9 @@ const useUnit = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.courses.link);
+      router.push(ADMIN_LINKS.units.link);
 
-      message.success(i18next.t("course_created"));
+      message.success(i18next.t("unit_created"));
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
