@@ -1,10 +1,40 @@
 export type Tlink = {
-    [key:string]:string
-}
+  SIGNUP: string;
+  LOGIN: string;
+  LOGOUT: string;
+  NEXT_AUTH_CREDENTIAL_LOGIN: string;
+  FETCH_SCHOOLS: string;
+  CREATE_SCHOOL: string;
+  FETCH_SCHOOL: string;
+  EDIT_SCHOOL: string;
+  DELETE_SCHOOLS: string;
+  FIND_SCHOOLS_BY_NAME: string;
+  CREATE_PROGRAM: string;
+  FETCH_PROGRAMS: string;
+  FETCH_PROGRAM_BY_ID: string;
+  EDIT_PROGRAM: string;
+  DELETE_PROGRAMS: string;
+  FIND_PROGRAMS_BY_NAME: string;
+  CREATE_COURSE: string;
+  FETCH_COURSES: string;
+  FETCH_COURSE_BY_ID: string;
+  EDIT_COURSE: string;
+  DELETE_COURSES: string;
+  FIND_COURSE_BY_NAME: string;
+  CREATE_UNIT: string;
+  FETCH_UNIT: string;
+  DELETE_UNITS: string;
+  FETCH_UNIT_BY_ID: string;
+  EDIT_UNIT: string;
+  FIND_UNITS_BY_NAME: string;
+  CREATE_TOPIC: string;
+  FETCH_TOPICS: string;
+  DELETE_TOPICS: string;
+  FETCH_TOPIC_BY_ID: string;
+  EDIT_TOPIC: string;
+  FIND_TOPIC_BY_NAME: string;
+};
 
 export type TProcessCode = {
   [key: string]: number;
 };
-
-
-

@@ -52,12 +52,26 @@ export const ADMIN_LINKS: TmenuItemLink = {
     ],
   },
   topics: {
-    link: "/topics",
+    link: "/admin/topics",
     roles: ["admin"],
     label: i18next.t("topics"),
     key: "admin_topics",
     icon: HiBookmarkAlt,
     index: 3,
+    children: [
+      {
+        label: "create",
+        key: "create",
+        link: "/admin/topics/create",
+        roles: ["admin"],
+      },
+      {
+        label: "edit",
+        key: "edit",
+        link: "/admin/topics/edit",
+        roles: ["admin"],
+      },
+    ],
   },
   library: {
     link: "/library",
