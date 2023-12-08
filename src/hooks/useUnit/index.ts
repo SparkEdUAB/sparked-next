@@ -119,8 +119,6 @@ const useUnit = (form?: any) => {
         return false;
       }
 
-      console.log("responseData.units", responseData.units);
-
       const _units = responseData.units?.map(
         (i: TUnitFields, index: number) => ({
           index: index + 1,
