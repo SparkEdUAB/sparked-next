@@ -21,12 +21,12 @@ import { TunitFields } from "./types";
 const UnitListView: React.FC = observer(() => {
   const {
     fetchUnits,
-    courses,
-    selecetedCourseIds,
+    units,
+    selecetedUnitIds,
     setSelectedProgramIds,
     triggerDelete,
     triggerEdit,
-    findCourseByName,
+    findUnitsByName,
     onSearchQueryChange,
   } = useUnit();
   const { router, getChildLinkByKey } = useNavigation();
@@ -36,7 +36,7 @@ const UnitListView: React.FC = observer(() => {
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedCourseIds,
+    selectedRowKeys: selecetedUnitIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: TunitFields[]) => {
       setSelectedProgramIds(selectedRows.map((i) => i.key));
     },
@@ -54,7 +54,7 @@ const UnitListView: React.FC = observer(() => {
         required
         type="text"
         onKeyDown={(e) => {
-          e.keyCode === 13 ? findCourseByName({ withMetaData: true }) : null;
+          e.keyCode === 13 ? findUnitsByName({ withMetaData: true }) : null;
         }}
       />
       <Button.Group>
@@ -81,7 +81,8 @@ const UnitListView: React.FC = observer(() => {
         bordered
         rowSelection={rowSelection}
         columns={unitTableColumns}
-        dataSource={courses}
+        //@ts-ignore
+        dataSource={units || []}
       />
     </>
   );

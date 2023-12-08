@@ -29,4 +29,8 @@ export const API_LINKS: Tlink = {
   // unit  links
   CREATE_UNIT: "/api/unit/createUnit",
   FETCH_UNIT: "/api/unit/fetchUnits",
+  DELETE_UNITS: "/api/unit/deleteUnits",
+  FETCH_UNIT_BY_ID: "/api/unit/fetchUnitById",
+  EDIT_UNIT: "/api/unit/editUnit",
+  FIND_UNITS_BY_NAME: "/api/unit/findUnitsByName",
 };
