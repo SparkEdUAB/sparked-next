@@ -21,8 +21,8 @@ import { TunitFields } from "./types";
 const UnitListView: React.FC = observer(() => {
   const {
     fetchUnits,
-    courses,
-    selecetedCourseIds,
+    units,
+    selecetedUnitIds,
     setSelectedProgramIds,
     triggerDelete,
     triggerEdit,
@@ -36,7 +36,7 @@ const UnitListView: React.FC = observer(() => {
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedCourseIds,
+    selectedRowKeys: selecetedUnitIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: TunitFields[]) => {
       setSelectedProgramIds(selectedRows.map((i) => i.key));
     },
@@ -81,7 +81,7 @@ const UnitListView: React.FC = observer(() => {
         bordered
         rowSelection={rowSelection}
         columns={unitTableColumns}
-        dataSource={courses}
+        dataSource={units}
       />
     </>
   );

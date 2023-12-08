@@ -16,13 +16,13 @@ const useUnit = (form?: any) => {
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [courses, setUnits] = useState<Array<TschoolFields>>([]);
-  const [tempCourse, setTempUnit] = useState<Array<TschoolFields>>([]);
-  const [course, setCourse] = useState<TUnitFields | null>(null);
-  const [selecetedCourseIds, setSelectedProgramIds] = useState<React.Key[]>([]);
+  const [units, setUnits] = useState<Array<TschoolFields>>([]);
+  const [tempUnits, setTempUnits] = useState<Array<TschoolFields>>([]);
+  const [course, setUnit] = useState<TUnitFields | null>(null);
+  const [selecetedUnitIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
-    UiStore.confirmDialogStatus && selecetedCourseIds.length && deleteCourse();
+    UiStore.confirmDialogStatus && selecetedUnitIds.length && deleteUnits();
   }, [UiStore.confirmDialogStatus]);
 
   const createUnit = async (fields: TcreateUnitFields) => {
@@ -85,7 +85,7 @@ const useUnit = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.courses.link);
+      router.push(ADMIN_LINKS.unit.link);
 
       message.success(i18next.t("success"));
     } catch (err: any) {
@@ -138,7 +138,7 @@ const useUnit = (form?: any) => {
       );
 
       setUnits(_units);
-      setTempUnit(_units);
+      setTempUnits(_units);
       return _units;
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
@@ -189,7 +189,7 @@ const useUnit = (form?: any) => {
           programId: program?._id,
         };
 
-        setCourse(_course as TUnitFields);
+        setUnit(_course as TUnitFields);
         form && form.setFieldsValue(_course);
         return _course;
       } else {
@@ -202,19 +202,19 @@ const useUnit = (form?: any) => {
   };
 
   const triggerDelete = async () => {
-    if (!selecetedCourseIds.length) {
+    if (!selecetedUnitIds.length) {
       return message.warning(i18next.t("select_items"));
     }
 
     UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deleteCourse = async () => {
+  const deleteUnits = async () => {
     if (UiStore.isLoading) return;
 
-    const url = API_LINKS.DELETE_COURSES;
+    const url = API_LINKS.DELETE_UNITS;
     const formData = {
-      body: JSON.stringify({ courseIds: selecetedCourseIds }),
+      body: JSON.stringify({ unitIds: selecetedUnitIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -241,7 +241,7 @@ const useUnit = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setUnits(courses.filter((i) => selecetedCourseIds.indexOf(i._id) == -1));
+      setUnits(units.filter((i) => selecetedUnitIds.indexOf(i._id) == -1));
 
       return responseData.results;
     } catch (err: any) {
@@ -310,30 +310,30 @@ const useUnit = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setUnits(tempCourse);
+      setUnits(tempUnits);
     }
   };
 
   const triggerEdit = async () => {
-    if (!selecetedCourseIds.length) {
+    if (!selecetedUnitIds.length) {
       return message.warning(i18next.t("select_item"));
-    } else if (selecetedCourseIds.length > 1) {
+    } else if (selecetedUnitIds.length > 1) {
       return message.warning(i18next.t("select_one_item"));
     }
 
     router.push(
       getChildLinkByKey("edit", ADMIN_LINKS.courses) +
-        `?courseId=${selecetedCourseIds[0]}`
+        `?courseId=${selecetedUnitIds[0]}`
     );
   };
 
   return {
     createUnit,
     fetchUnits,
-    courses,
+    units,
     setUnits,
     setSelectedProgramIds,
-    selecetedCourseIds,
+    selecetedUnitIds,
     triggerDelete,
     triggerEdit,
     fetchCourseById,
@@ -344,7 +344,7 @@ const useUnit = (form?: any) => {
     findCourseByName,
     onSearchQueryChange,
     searchQuery,
-    tempCourse,
+    tempUnits,
   };
 };
 
