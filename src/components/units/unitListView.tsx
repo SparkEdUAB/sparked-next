@@ -26,7 +26,7 @@ const UnitListView: React.FC = observer(() => {
     setSelectedProgramIds,
     triggerDelete,
     triggerEdit,
-    findCourseByName,
+    findUnitsByName,
     onSearchQueryChange,
   } = useUnit();
   const { router, getChildLinkByKey } = useNavigation();
@@ -54,7 +54,7 @@ const UnitListView: React.FC = observer(() => {
         required
         type="text"
         onKeyDown={(e) => {
-          e.keyCode === 13 ? findCourseByName({ withMetaData: true }) : null;
+          e.keyCode === 13 ? findUnitsByName({ withMetaData: true }) : null;
         }}
       />
       <Button.Group>
@@ -81,7 +81,8 @@ const UnitListView: React.FC = observer(() => {
         bordered
         rowSelection={rowSelection}
         columns={unitTableColumns}
-        dataSource={units}
+        //@ts-ignore
+        dataSource={units || []}
       />
     </>
   );

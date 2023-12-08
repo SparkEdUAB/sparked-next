@@ -253,7 +253,7 @@ const useUnit = (form?: any) => {
       return false;
     }
   };
-  const findCourseByName = async ({
+  const findUnitsByName = async ({
     withMetaData = false,
   }: {
     withMetaData: boolean;
@@ -264,7 +264,7 @@ const useUnit = (form?: any) => {
       return message.warning(i18next.t("search_empty"));
     }
 
-    const url = API_LINKS.FIND_COURSE_BY_NAME;
+    const url = API_LINKS.FIND_UNITS_BY_NAME;
     const formData = {
       body: JSON.stringify({
         name: searchQuery.trim(),
@@ -343,7 +343,7 @@ const useUnit = (form?: any) => {
     unit,
     isLoading,
     editUnit,
-    findCourseByName,
+    findUnitsByName,
     onSearchQueryChange,
     searchQuery,
     tempUnits,

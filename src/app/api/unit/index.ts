@@ -180,7 +180,7 @@ export async function deleteUnits_(request: Request) {
   }
 }
 
-export async function findCourseByName_(request: Request) {
+export async function findUnitsByName_(request: Request) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
