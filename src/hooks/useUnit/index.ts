@@ -2,7 +2,6 @@
 "use client";
 
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
-import { TschoolFields } from "@components/school/types";
 import useNavigation from "@hooks/useNavigation";
 import { message } from "antd";
 import { API_LINKS } from "app/links";
@@ -16,9 +15,9 @@ const useUnit = (form?: any) => {
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [units, setUnits] = useState<Array<TschoolFields>>([]);
-  const [tempUnits, setTempUnits] = useState<Array<TschoolFields>>([]);
-  const [course, setUnit] = useState<TUnitFields | null>(null);
+  const [units, setUnits] = useState<Array<TUnitFields>>([]);
+  const [tempUnits, setTempUnits] = useState<Array<TUnitFields>>([]);
+  const [unit, setUnit] = useState<TUnitFields | null>(null);
   const [selecetedUnitIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
@@ -59,11 +58,11 @@ const useUnit = (form?: any) => {
     }
   };
 
-  const editCourse = async (fields: TschoolFields) => {
-    const url = API_LINKS.EDIT_COURSE;
+  const editUnit = async (fields: TUnitFields) => {
+    const url = API_LINKS.EDIT_UNIT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...course, ...fields, courseId: course?._id }),
+      body: JSON.stringify({ ...unit, ...fields, unitId: unit?._id }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +84,7 @@ const useUnit = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.unit.link);
+      router.push(ADMIN_LINKS.units.link);
 
       message.success(i18next.t("success"));
     } catch (err: any) {
@@ -127,7 +126,7 @@ const useUnit = (form?: any) => {
           name: i.name,
           school: i.school,
           schoolId: i.school?._id,
-          courseId: i.course?._id,
+          unitId: i.course?._id,
           schoolName: i.school?.name,
           programName: i.program?.name,
           courseName: i.course?.name,
@@ -146,16 +145,16 @@ const useUnit = (form?: any) => {
     }
   };
 
-  const fetchCourseById = async ({
-    courseId,
+  const fetchUnitById = async ({
+    unitId,
     withMetaData = false,
   }: {
-    courseId: string;
+    unitId: string;
     withMetaData: boolean;
   }) => {
-    const url = API_LINKS.FETCH_COURSE_BY_ID;
+    const url = API_LINKS.FETCH_UNIT_BY_ID;
     const formData = {
-      body: JSON.stringify({ courseId, withMetaData }),
+      body: JSON.stringify({ unitId, withMetaData }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -177,25 +176,28 @@ const useUnit = (form?: any) => {
         return false;
       }
 
-      if (responseData.course) {
-        const { _id, name, description, school, program } =
-          responseData.course as TUnitFields;
+      if (responseData.unit) {
+        const { _id, name, description, school, program, course } =
+          responseData.unit as TUnitFields;
 
-        const _course = {
+        const _unit = {
           _id,
           name,
           description,
           schoolId: school?._id,
           programId: program?._id,
+          courseId: course?._id,
         };
 
-        setUnit(_course as TUnitFields);
-        form && form.setFieldsValue(_course);
-        return _course;
+
+        setUnit(_unit as TUnitFields);
+        form && form.setFieldsValue(_unit);
+        return _unit;
       } else {
         return null;
       }
     } catch (err: any) {
+
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
@@ -322,8 +324,8 @@ const useUnit = (form?: any) => {
     }
 
     router.push(
-      getChildLinkByKey("edit", ADMIN_LINKS.courses) +
-        `?courseId=${selecetedUnitIds[0]}`
+      getChildLinkByKey("edit", ADMIN_LINKS.units) +
+        `?unitId=${selecetedUnitIds[0]}`
     );
   };
 
@@ -336,11 +338,11 @@ const useUnit = (form?: any) => {
     selecetedUnitIds,
     triggerDelete,
     triggerEdit,
-    fetchCourseById,
+    fetchUnitById,
     router,
-    course,
+    unit,
     isLoading,
-    editCourse,
+    editUnit,
     findCourseByName,
     onSearchQueryChange,
     searchQuery,

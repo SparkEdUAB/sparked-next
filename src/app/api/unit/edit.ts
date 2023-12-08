@@ -4,20 +4,20 @@ import { Session } from "next-auth";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import COURSE_PROCESS_CODES from "./processCodes";
+import UNIT_PROCESS_CODES from "./processCodes";
 
-export default async function editCourse_(request: Request, session?: Session) {
+export default async function editUnit_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text(),
+    unitId: zfd.text(),
   });
   const formBody = await request.json();
 
-
-  const { name, description, schoolId, programId, courseId } =
+  const { name, description, schoolId, programId, courseId, unitId } =
     schema.parse(formBody);
   try {
     const db = await dbClient();
@@ -32,58 +32,19 @@ export default async function editCourse_(request: Request, session?: Session) {
       });
     }
 
+    const school = schoolId
+      ? await db.collection(dbCollections.schools.name).findOne(
+          {
+            _id: new BSON.ObjectId(schoolId),
+          },
+          { projection: { _id: 1 } }
+        )
+      : null;
 
-      const school = schoolId
-        ? await db.collection(dbCollections.schools.name).findOne(
-            {
-              _id: new BSON.ObjectId(schoolId),
-            },
-            { projection: { _id: 1 } }
-          )
-        : null;
-
-      if (!school && schoolId) {
-        const response = {
-          isError: true,
-          code: COURSE_PROCESS_CODES.SCHOOL_NOT_FOUND,
-        };
-
-        return new Response(JSON.stringify(response), {
-          status: 200,
-        });
-      }
-
-      const program = programId
-        ? await db.collection(dbCollections.programs.name).findOne(
-            {
-              _id: new BSON.ObjectId(programId),
-            },
-            { projection: { _id: 1 } }
-          )
-        : null;
-
-      if (!program && programId) {
-        const response = {
-          isError: true,
-          code: COURSE_PROCESS_CODES.PROGRAM_NOT_FOUND,
-        };
-
-        return new Response(JSON.stringify(response), {
-          status: 200,
-        });
-      }
-
-    const regexPattern = new RegExp(name, "i");
-
-    const course = await db.collection(dbCollections.courses.name).findOne({
-      name: { $regex: regexPattern },
-      _id: { $ne: new BSON.ObjectId(courseId) },
-    });
-
-    if (course) {
+    if (!school && schoolId) {
       const response = {
         isError: true,
-        code: COURSE_PROCESS_CODES.PROGRAM_EXIST,
+        code: UNIT_PROCESS_CODES.SCHOOL_NOT_FOUND,
       };
 
       return new Response(JSON.stringify(response), {
@@ -91,30 +52,86 @@ export default async function editCourse_(request: Request, session?: Session) {
       });
     }
 
+    const program = programId
+      ? await db.collection(dbCollections.programs.name).findOne(
+          {
+            _id: new BSON.ObjectId(programId),
+          },
+          { projection: { _id: 1 } }
+        )
+      : null;
+
+    if (!program && programId) {
+      const response = {
+        isError: true,
+        code: UNIT_PROCESS_CODES.PROGRAM_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
+    const course = courseId
+      ? await db.collection(dbCollections.courses.name).findOne(
+          {
+            _id: new BSON.ObjectId(courseId),
+          },
+          { projection: { _id: 1 } }
+        )
+      : null;
+
+    if (!course && courseId) {
+      const response = {
+        isError: true,
+        code: UNIT_PROCESS_CODES.COURSE_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
+    const regexPattern = new RegExp(name, "i");
+
+    const unit = await db.collection(dbCollections.units.name).findOne({
+      name: { $regex: regexPattern },
+      _id: { $ne: new BSON.ObjectId(unitId) },
+    });
+
+    if (unit) {
+      const response = {
+        isError: true,
+        code: UNIT_PROCESS_CODES.UNIT_EXIST,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
 
     const query = {
-      _id: new BSON.ObjectId(courseId),
+      _id: new BSON.ObjectId(unitId),
     };
-
-
 
     const updateQuery = {
       name,
       description,
       updated_at: new Date(),
       school_id: new BSON.ObjectId(schoolId),
-
+      course_id: new BSON.ObjectId(courseId),
+      program_id: new BSON.ObjectId(programId),
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };
 
-    await db.collection(dbCollections.courses.name).updateOne(query, {
+    await db.collection(dbCollections.units.name).updateOne(query, {
       $set: updateQuery,
     });
 
     const response = {
       isError: false,
-      code: COURSE_PROCESS_CODES.PROGRAM_EDITED,
+      code: UNIT_PROCESS_CODES.UNIT_EDITED,
     };
 
     return new Response(JSON.stringify(response), {

@@ -4,9 +4,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import {
-   p_fetchUnitsWithMetaData,
-} from "./pipelines";
+import { p_fetchUnitsWithMetaData } from "./pipelines";
 
 export default async function fetchUnits_(request: Request) {
   const schema = zfd.formData({
@@ -51,8 +49,6 @@ export default async function fetchUnits_(request: Request) {
         .toArray();
     }
 
-
-
     const response = {
       isError: false,
       units,
@@ -73,14 +69,14 @@ export default async function fetchUnits_(request: Request) {
   }
 }
 
-export async function fetchCourseById_(request: Request) {
+export async function fetchUnitById_(request: Request) {
   const schema = zfd.formData({
-    courseId: zfd.text(),
+    unitId: zfd.text(),
     withMetaData: z.boolean(),
   });
   const formBody = await request.json();
 
-  const { courseId, withMetaData } = schema.parse(formBody);
+  const { unitId, withMetaData } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -95,30 +91,31 @@ export async function fetchCourseById_(request: Request) {
       });
     }
 
-    let course;
+    let unit: { [key: string]: string } | null;
 
     if (withMetaData) {
-      course = await db
+      const units = await db
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
             query: {
-              _id: new BSON.ObjectId(courseId),
+              _id: new BSON.ObjectId(unitId),
             },
           })
         )
         .toArray();
 
-      course = course.length ? course[0] : null;
+      unit = units.length ? units[0] : {};
     } else {
-      course = await db
+      unit = await db
         .collection(dbCollections.units.name)
-        .findOne({ _id: new BSON.ObjectId(courseId) });
+        .findOne({ _id: new BSON.ObjectId(unitId) });
     }
+
 
     const response = {
       isError: false,
-      course,
+      unit,
     };
 
     return new Response(JSON.stringify(response), {
