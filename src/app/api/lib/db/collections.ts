@@ -22,7 +22,7 @@ export const dbCollections: TdbCollection = {
     label: "Units ",
   },
   topics: {
-    name: "courses",
-    label: "Courses",
+    name: "topics",
+    label: "Topics",
   },
 };

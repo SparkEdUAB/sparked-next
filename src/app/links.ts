@@ -33,4 +33,13 @@ export const API_LINKS: Tlink = {
   FETCH_UNIT_BY_ID: "/api/unit/fetchUnitById",
   EDIT_UNIT: "/api/unit/editUnit",
   FIND_UNITS_BY_NAME: "/api/unit/findUnitsByName",
+
+  //
+  // unit  topics
+  CREATE_TOPIC: "/api/topic/createTopic",
+  FETCH_TOPICS: "/api/topic/fetchTopics",
+  DELETE_TOPICS: "/api/topic/deleteTopics",
+  FETCH_TOPIC_BY_ID: "/api/topic/fetchTopicById",
+  EDIT_TOPIC: "/api/topic/editTopic",
+  FIND_TOPIC_BY_NAME: "/api/topic/findTopicsByName",
 };
