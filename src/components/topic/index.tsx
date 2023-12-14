@@ -1,9 +1,8 @@
-import { Space } from "antd";
+import { T_topicFields } from "@hooks/use-topic/types";
 import type { ColumnsType } from "antd/es/table";
-import { TunitFields } from "./types";
 import i18next from "i18next";
 
-export const unitTableColumns: ColumnsType<TunitFields> = [
+export const topicTableColumns: ColumnsType<T_topicFields> = [
   {
     title: "#",
     dataIndex: "index",
@@ -31,6 +30,12 @@ export const unitTableColumns: ColumnsType<TunitFields> = [
   {
     title: "Course",
     dataIndex: "courseName",
+    key: "school",
+    render: (text) => <a>{text || i18next.t("not_linked")}</a>,
+  },
+  {
+    title: "Unit",
+    dataIndex: "unitName",
     key: "school",
     render: (text) => <a>{text || i18next.t("not_linked")}</a>,
   },

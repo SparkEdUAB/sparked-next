@@ -15,7 +15,7 @@ import {
   HiOutlinePencilSquare,
   HiTrash,
 } from "react-icons/hi2";
-import { unitTableColumns } from ".";
+import { topicTableColumns } from ".";
 import { TunitFields } from "./types";
 
 const TopicsListView: React.FC = observer(() => {
@@ -80,7 +80,8 @@ const TopicsListView: React.FC = observer(() => {
         className="admin-table"
         bordered
         rowSelection={rowSelection}
-        columns={unitTableColumns}
+        //@ts-ignore
+        columns={topicTableColumns}
         //@ts-ignore
         dataSource={topics || []}
       />

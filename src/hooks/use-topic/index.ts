@@ -86,7 +86,7 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.units.link);
+      router.push(ADMIN_LINKS.topics.link);
 
       message.success(i18next.t("success"));
     } catch (err: any) {
@@ -132,6 +132,7 @@ const useTopic = (form?: any) => {
           schoolName: i.school?.name,
           programName: i.program?.name,
           courseName: i.course?.name,
+          unitName: i.unit?.name,
           programId: i.program?._id,
           created_by: i.user?.email,
           created_at: new Date(i.created_at).toDateString(),

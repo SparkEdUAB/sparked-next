@@ -130,7 +130,7 @@ export default async function editTopic_(request: Request, session?: Session) {
     }
 
     const query = {
-      _id: new BSON.ObjectId(unitId),
+      _id: new BSON.ObjectId(topicId),
     };
 
     const updateQuery = {
