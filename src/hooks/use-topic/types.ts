@@ -11,7 +11,7 @@ export type T_fetchTopic = {
   skip?: number;
 };
 
-export type T_unitFields = {
+export type T_topicFields = {
   key: string;
   name: string;
   _id: string;

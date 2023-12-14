@@ -4,9 +4,9 @@ import { Session } from "next-auth";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import UNIT_PROCESS_CODES from "./processCodes";
+import TOPIC_PROCESS_CODES from "./processCodes";
 
-export default async function editUnit_(request: Request, session?: Session) {
+export default async function editTopic_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
@@ -14,10 +14,11 @@ export default async function editUnit_(request: Request, session?: Session) {
     programId: zfd.text().optional(),
     courseId: zfd.text(),
     unitId: zfd.text(),
+    topicId: zfd.text(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId } =
+  const { name, description, schoolId, programId, courseId, unitId, topicId } =
     schema.parse(formBody);
   try {
     const db = await dbClient();
@@ -44,7 +45,7 @@ export default async function editUnit_(request: Request, session?: Session) {
     if (!school && schoolId) {
       const response = {
         isError: true,
-        code: UNIT_PROCESS_CODES.SCHOOL_NOT_FOUND,
+        code: TOPIC_PROCESS_CODES.SCHOOL_NOT_FOUND,
       };
 
       return new Response(JSON.stringify(response), {
@@ -64,7 +65,7 @@ export default async function editUnit_(request: Request, session?: Session) {
     if (!program && programId) {
       const response = {
         isError: true,
-        code: UNIT_PROCESS_CODES.PROGRAM_NOT_FOUND,
+        code: TOPIC_PROCESS_CODES.PROGRAM_NOT_FOUND,
       };
 
       return new Response(JSON.stringify(response), {
@@ -84,7 +85,7 @@ export default async function editUnit_(request: Request, session?: Session) {
     if (!course && courseId) {
       const response = {
         isError: true,
-        code: UNIT_PROCESS_CODES.COURSE_NOT_FOUND,
+        code: TOPIC_PROCESS_CODES.COURSE_NOT_FOUND,
       };
 
       return new Response(JSON.stringify(response), {
@@ -92,17 +93,35 @@ export default async function editUnit_(request: Request, session?: Session) {
       });
     }
 
+            const unit = await db.collection(dbCollections.units.name).findOne(
+              {
+                _id: new BSON.ObjectId(unitId),
+              },
+              { projection: { _id: 1 } }
+            );
+
+            if (!unit) {
+              const response = {
+                isError: true,
+                code: TOPIC_PROCESS_CODES.UNIT_NOT_FOUND,
+              };
+
+              return new Response(JSON.stringify(response), {
+                status: 200,
+              });
+            }
+
     const regexPattern = new RegExp(name, "i");
 
-    const unit = await db.collection(dbCollections.units.name).findOne({
+    const topic = await db.collection(dbCollections.topics.name).findOne({
       name: { $regex: regexPattern },
-      _id: { $ne: new BSON.ObjectId(unitId) },
+      _id: { $ne: new BSON.ObjectId(topicId) },
     });
 
-    if (unit) {
+    if (topic) {
       const response = {
         isError: true,
-        code: UNIT_PROCESS_CODES.UNIT_EXIST,
+        code: TOPIC_PROCESS_CODES.TOPIC_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
@@ -121,17 +140,18 @@ export default async function editUnit_(request: Request, session?: Session) {
       school_id: new BSON.ObjectId(schoolId),
       course_id: new BSON.ObjectId(courseId),
       program_id: new BSON.ObjectId(programId),
+      unit_id: new BSON.ObjectId(unitId),
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };
 
-    await db.collection(dbCollections.units.name).updateOne(query, {
+    await db.collection(dbCollections.topics.name).updateOne(query, {
       $set: updateQuery,
     });
 
     const response = {
       isError: false,
-      code: UNIT_PROCESS_CODES.UNIT_EDITED,
+      code: TOPIC_PROCESS_CODES.TOPIC_EDITED,
     };
 
     return new Response(JSON.stringify(response), {

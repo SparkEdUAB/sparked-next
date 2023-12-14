@@ -21,7 +21,7 @@ import { TunitFields } from "./types";
 const TopicsListView: React.FC = observer(() => {
   const {
     fetchTopics,
-    units,
+    topics,
     selecetedUnitIds,
     setSelectedProgramIds,
     triggerDelete,
@@ -82,7 +82,7 @@ const TopicsListView: React.FC = observer(() => {
         rowSelection={rowSelection}
         columns={unitTableColumns}
         //@ts-ignore
-        dataSource={units || []}
+        dataSource={topics || []}
       />
     </>
   );

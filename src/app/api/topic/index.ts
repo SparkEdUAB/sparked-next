@@ -69,14 +69,14 @@ export default async function fetchTopics_(request: Request) {
   }
 }
 
-export async function fetchUnitById_(request: Request) {
+export async function fetchTopicById_(request: Request) {
   const schema = zfd.formData({
-    unitId: zfd.text(),
+    topicId: zfd.text(),
     withMetaData: z.boolean(),
   });
   const formBody = await request.json();
 
-  const { unitId, withMetaData } = schema.parse(formBody);
+  const { topicId, withMetaData } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -91,31 +91,31 @@ export async function fetchUnitById_(request: Request) {
       });
     }
 
-    let unit: { [key: string]: string } | null;
+    let topic: { [key: string]: string } | null;
 
     if (withMetaData) {
-      const units = await db
-        .collection(dbCollections.units.name)
+      const topics = await db
+        .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
             query: {
-              _id: new BSON.ObjectId(unitId),
+              _id: new BSON.ObjectId(topicId),
             },
           })
         )
         .toArray();
 
-      unit = units.length ? units[0] : {};
+      topic = topics.length ? topics[0] : {};
     } else {
-      unit = await db
-        .collection(dbCollections.units.name)
-        .findOne({ _id: new BSON.ObjectId(unitId) });
+      topic = await db
+        .collection(dbCollections.topics.name)
+        .findOne({ _id: new BSON.ObjectId(topicId) });
     }
 
 
     const response = {
       isError: false,
-      unit,
+      topic,
     };
 
     return new Response(JSON.stringify(response), {

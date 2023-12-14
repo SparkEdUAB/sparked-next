@@ -1,7 +1,16 @@
 import { ReactNode } from "react";
 
 export type TmenuItemLink = {
-  [key: string]: TmenuItemLinkParams;
+  home: TmenuItemLinkParams;
+  users: TmenuItemLinkParams;
+  courses: TmenuItemLinkParams;
+  topics: TmenuItemLinkParams;
+  library: TmenuItemLinkParams;
+  statistics: TmenuItemLinkParams;
+  feedback: TmenuItemLinkParams;
+  schools: TmenuItemLinkParams;
+  programs: TmenuItemLinkParams;
+  units: TmenuItemLinkParams;
 };
 
 export type TchildMenuItemLinkParams = {

@@ -12,10 +12,12 @@ import { TOPIC_FORM_FIELDS } from "./constants";
 import useSchool from "@hooks/useSchool";
 import useUnit from "@hooks/useUnit";
 import useCourse from "@hooks/useCourse";
+import useTopic from "@hooks/use-topic";
 
 const EditTopicView: React.FC = () => {
   const [form] = Form.useForm();
-  const { editUnit, fetchUnitById, unit } = useUnit(form);
+  const { editTopic, fetchTopicById, topic } = useTopic(form);
+  const {  units,fetchUnits } = useUnit(form);
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();
@@ -24,25 +26,26 @@ const EditTopicView: React.FC = () => {
 
 
   useEffect(() => {
-    fetchUnitById({
-      unitId: searchParams.get("unitId") as string,
+    fetchTopicById({
+      topicId: searchParams.get("topicId") as string,
       withMetaData: true,
     });
 
     fetchPrograms({});
     fetchSchools({});
     fetchCourses({});
+    fetchUnits({});
   }, []);
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("edit_unit")} />
+      <AdminPageTitle title={i18next.t("edit_topic")} />
 
       <Row className="form-container">
         <Col span={24}>
           <Card
             className="form-card"
-            title={<p className="form-label">{unit?.name}</p>}
+            title={<p className="form-label">{topic?.name}</p>}
             bordered={false}
           >
             <Form
@@ -50,8 +53,8 @@ const EditTopicView: React.FC = () => {
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
-              initialValues={unit || {}}
-              onFinish={editUnit}
+              initialValues={topic || {}}
+              onFinish={editTopic}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
@@ -107,7 +110,9 @@ const EditTopicView: React.FC = () => {
               </Form.Item>
               <Form.Item
                 label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.program.label}</p>
+                  <p className="form-label">
+                    {TOPIC_FORM_FIELDS.program.label}
+                  </p>
                 }
                 name={TOPIC_FORM_FIELDS.program.key}
                 rules={[
@@ -137,6 +142,24 @@ const EditTopicView: React.FC = () => {
               >
                 <Select
                   options={courses.map((i) => ({
+                    value: i._id,
+                    label: i.name,
+                  }))}
+                />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <p className="form-label">{TOPIC_FORM_FIELDS.unit.label}</p>
+                }
+                name={TOPIC_FORM_FIELDS.unit.key}
+                rules={[
+                  {
+                    message: TOPIC_FORM_FIELDS.unit.errorMsg,
+                  },
+                ]}
+              >
+                <Select
+                  options={units.map((i) => ({
                     value: i._id,
                     label: i.name,
                   }))}

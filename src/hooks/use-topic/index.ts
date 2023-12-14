@@ -8,16 +8,16 @@ import { API_LINKS } from "app/links";
 import i18next from "i18next";
 import { useEffect, useState } from "react";
 import UiStore from "@state/mobx/uiStore";
-import { TcreateTopicFields, T_fetchTopic, T_unitFields } from "./types";
+import { TcreateTopicFields, T_fetchTopic, T_topicFields } from "./types";
 
 const useTopic = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [units, setUnits] = useState<Array<T_unitFields>>([]);
-  const [tempUnits, setTempUnits] = useState<Array<T_unitFields>>([]);
-  const [unit, setUnit] = useState<T_unitFields | null>(null);
+  const [topics, setTopics] = useState<Array<T_topicFields>>([]);
+  const [tempUnits, setTempUnits] = useState<Array<T_topicFields>>([]);
+  const [topic, setTopic] = useState<T_topicFields | null>(null);
   const [selecetedUnitIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
@@ -53,18 +53,18 @@ const useTopic = (form?: any) => {
 
       message.success(i18next.t("topic_created"));
     } catch (err: any) {
-      console.log('createTopic:errr',err);
-      
+      console.log("createTopic:errr", err);
+
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
   };
 
-  const editUnit = async (fields: T_unitFields) => {
-    const url = API_LINKS.EDIT_UNIT;
+  const editTopic = async (fields: T_topicFields) => {
+    const url = API_LINKS.EDIT_TOPIC;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...unit, ...fields, unitId: unit?._id }),
+      body: JSON.stringify({ ...topic, ...fields, topicId: topic?._id }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -121,7 +121,7 @@ const useTopic = (form?: any) => {
       }
 
       const _units = responseData.units?.map(
-        (i: T_unitFields, index: number) => ({
+        (i: T_topicFields, index: number) => ({
           index: index + 1,
           key: i._id,
           _id: i._id,
@@ -138,7 +138,7 @@ const useTopic = (form?: any) => {
         })
       );
 
-      setUnits(_units);
+      setTopics(_units);
       setTempUnits(_units);
       return _units;
     } catch (err: any) {
@@ -147,16 +147,16 @@ const useTopic = (form?: any) => {
     }
   };
 
-  const fetchUnitById = async ({
-    unitId,
+  const fetchTopicById = async ({
+    topicId,
     withMetaData = false,
   }: {
-    unitId: string;
+    topicId: string;
     withMetaData: boolean;
   }) => {
-    const url = API_LINKS.FETCH_UNIT_BY_ID;
+    const url = API_LINKS.FETCH_TOPIC_BY_ID;
     const formData = {
-      body: JSON.stringify({ unitId, withMetaData }),
+      body: JSON.stringify({ topicId, withMetaData }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -178,28 +178,27 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      if (responseData.unit) {
-        const { _id, name, description, school, program, course } =
-          responseData.unit as T_unitFields;
+      if (responseData.topic) {
+        const { _id, name, description, school, program, course, unit } =
+          responseData.topic as T_topicFields;
 
-        const _unit = {
+        const _topic = {
           _id,
           name,
           description,
           schoolId: school?._id,
           programId: program?._id,
           courseId: course?._id,
+          unitId: unit?._id,
         };
 
-
-        setUnit(_unit as T_unitFields);
-        form && form.setFieldsValue(_unit);
-        return _unit;
+        setTopic(_topic as T_topicFields);
+        form && form.setFieldsValue(_topic);
+        return _topic;
       } else {
         return null;
       }
     } catch (err: any) {
-
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
@@ -245,7 +244,7 @@ const useTopic = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setUnits(units.filter((i) => selecetedUnitIds.indexOf(i._id) == -1));
+      setTopics(topics.filter((i) => selecetedUnitIds.indexOf(i._id) == -1));
 
       return responseData.results;
     } catch (err: any) {
@@ -300,7 +299,7 @@ const useTopic = (form?: any) => {
         responseData.courses.length + " " + i18next.t("courses_found")
       );
 
-      setUnits(responseData.courses);
+      setTopics(responseData.courses);
 
       return responseData.courses;
     } catch (err: any) {
@@ -314,7 +313,7 @@ const useTopic = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setUnits(tempUnits);
+      setTopics(tempUnits);
     }
   };
 
@@ -326,25 +325,25 @@ const useTopic = (form?: any) => {
     }
 
     router.push(
-      getChildLinkByKey("edit", ADMIN_LINKS.units) +
-        `?unitId=${selecetedUnitIds[0]}`
+      getChildLinkByKey("edit", ADMIN_LINKS.topics) +
+        `?topicId=${selecetedUnitIds[0]}`
     );
   };
 
   return {
     createTopic,
     fetchTopics,
-    units,
-    setUnits,
+    topics,
+    setTopics,
     setSelectedProgramIds,
     selecetedUnitIds,
     triggerDelete,
     triggerEdit,
-    fetchUnitById,
+    fetchTopicById,
     router,
-    unit,
+    topic,
     isLoading,
-    editUnit,
+    editTopic,
     findUnitsByName,
     onSearchQueryChange,
     searchQuery,

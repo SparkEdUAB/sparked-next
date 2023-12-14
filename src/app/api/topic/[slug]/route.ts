@@ -3,12 +3,12 @@ import { Session } from "next-auth";
 import { getServerSession } from "next-auth/next";
 import fetchTopics_, {
   deleteUnits_,
-  fetchUnitById_,
+  fetchTopicById_,
   findUnitsByName_,
 } from "..";
 import { authOptions } from "../../auth/constants";
 import createTopic_ from "../create";
-import editUnit_ from "../edit";
+import editTopic_ from "../edit";
 
 const schoolApiHandler_ = async function POST(
   req: Request,
@@ -24,8 +24,8 @@ const schoolApiHandler_ = async function POST(
   } = {
     createTopic: createTopic_,
     fetchTopics: fetchTopics_,
-    fetchUnitById: fetchUnitById_,
-    editUnit: editUnit_,
+    fetchTopicById: fetchTopicById_,
+    editTopic: editTopic_,
     deleteUnits: deleteUnits_,
     findUnitsByName: findUnitsByName_,
   };
