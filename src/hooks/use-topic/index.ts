@@ -18,10 +18,10 @@ const useTopic = (form?: any) => {
   const [topics, setTopics] = useState<Array<T_topicFields>>([]);
   const [tempUnits, setTempUnits] = useState<Array<T_topicFields>>([]);
   const [topic, setTopic] = useState<T_topicFields | null>(null);
-  const [selecetedUnitIds, setSelectedProgramIds] = useState<React.Key[]>([]);
+  const [selecetedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
-    UiStore.confirmDialogStatus && selecetedUnitIds.length && deleteUnits();
+    UiStore.confirmDialogStatus && selecetedTopicIds.length && deleteTopics();
   }, [UiStore.confirmDialogStatus]);
 
   const createTopic = async (fields: TcreateTopicFields) => {
@@ -206,19 +206,19 @@ const useTopic = (form?: any) => {
   };
 
   const triggerDelete = async () => {
-    if (!selecetedUnitIds.length) {
+    if (!selecetedTopicIds.length) {
       return message.warning(i18next.t("select_items"));
     }
 
     UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deleteUnits = async () => {
+  const deleteTopics = async () => {
     if (UiStore.isLoading) return;
 
-    const url = API_LINKS.DELETE_UNITS;
+    const url = API_LINKS.DELETE_TOPICS;
     const formData = {
-      body: JSON.stringify({ unitIds: selecetedUnitIds }),
+      body: JSON.stringify({ unitIds: selecetedTopicIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -245,7 +245,7 @@ const useTopic = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setTopics(topics.filter((i) => selecetedUnitIds.indexOf(i._id) == -1));
+      setTopics(topics.filter((i) => selecetedTopicIds.indexOf(i._id) == -1));
 
       return responseData.results;
     } catch (err: any) {
@@ -319,15 +319,15 @@ const useTopic = (form?: any) => {
   };
 
   const triggerEdit = async () => {
-    if (!selecetedUnitIds.length) {
+    if (!selecetedTopicIds.length) {
       return message.warning(i18next.t("select_item"));
-    } else if (selecetedUnitIds.length > 1) {
+    } else if (selecetedTopicIds.length > 1) {
       return message.warning(i18next.t("select_one_item"));
     }
 
     router.push(
       getChildLinkByKey("edit", ADMIN_LINKS.topics) +
-        `?topicId=${selecetedUnitIds[0]}`
+        `?topicId=${selecetedTopicIds[0]}`
     );
   };
 
@@ -336,8 +336,8 @@ const useTopic = (form?: any) => {
     fetchTopics,
     topics,
     setTopics,
-    setSelectedProgramIds,
-    selecetedUnitIds,
+    setSelectedTopicIds,
+    selecetedTopicIds,
     triggerDelete,
     triggerEdit,
     fetchTopicById,
