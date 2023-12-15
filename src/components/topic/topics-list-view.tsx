@@ -26,7 +26,7 @@ const TopicsListView: React.FC = observer(() => {
     setSelectedTopicIds,
     triggerDelete,
     triggerEdit,
-    findUnitsByName,
+    findTopicsByName,
     onSearchQueryChange,
   } = useTopic();
   const { router, getChildLinkByKey } = useNavigation();
@@ -54,7 +54,7 @@ const TopicsListView: React.FC = observer(() => {
         required
         type="text"
         onKeyDown={(e) => {
-          e.keyCode === 13 ? findUnitsByName({ withMetaData: true }) : null;
+          e.keyCode === 13 ? findTopicsByName({ withMetaData: true }) : null;
         }}
       />
       <Button.Group>

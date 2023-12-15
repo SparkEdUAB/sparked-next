@@ -16,7 +16,7 @@ const useTopic = (form?: any) => {
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [topics, setTopics] = useState<Array<T_topicFields>>([]);
-  const [tempUnits, setTempUnits] = useState<Array<T_topicFields>>([]);
+  const [tempTopics, setTempTopics] = useState<Array<T_topicFields>>([]);
   const [topic, setTopic] = useState<T_topicFields | null>(null);
   const [selecetedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
 
@@ -140,7 +140,7 @@ const useTopic = (form?: any) => {
       );
 
       setTopics(_units);
-      setTempUnits(_units);
+      setTempTopics(_units);
       return _units;
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
@@ -255,7 +255,7 @@ const useTopic = (form?: any) => {
       return false;
     }
   };
-  const findUnitsByName = async ({
+  const findTopicsByName = async ({
     withMetaData = false,
   }: {
     withMetaData: boolean;
@@ -266,7 +266,7 @@ const useTopic = (form?: any) => {
       return message.warning(i18next.t("search_empty"));
     }
 
-    const url = API_LINKS.FIND_UNITS_BY_NAME;
+    const url = API_LINKS.FIND_TOPIC_BY_NAME;
     const formData = {
       body: JSON.stringify({
         name: searchQuery.trim(),
@@ -297,12 +297,12 @@ const useTopic = (form?: any) => {
         return false;
       }
       message.success(
-        responseData.courses.length + " " + i18next.t("courses_found")
+        responseData.topics.length + " " + i18next.t("topics_found")
       );
 
-      setTopics(responseData.courses);
+      setTopics(responseData.topics);
 
-      return responseData.courses;
+      return responseData.topics;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
@@ -314,7 +314,7 @@ const useTopic = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setTopics(tempUnits);
+      setTopics(tempTopics);
     }
   };
 
@@ -345,10 +345,10 @@ const useTopic = (form?: any) => {
     topic,
     isLoading,
     editTopic,
-    findUnitsByName,
+    findTopicsByName,
     onSearchQueryChange,
     searchQuery,
-    tempUnits,
+    tempTopics,
   };
 };
 
