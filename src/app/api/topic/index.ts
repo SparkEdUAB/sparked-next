@@ -133,13 +133,13 @@ export async function fetchTopicById_(request: Request) {
   }
 }
 
-export async function deleteUnits_(request: Request) {
+export async function deleteTopics_(request: Request) {
   const schema = zfd.formData({
-    unitIds: zfd.repeatableOfType(zfd.text()),
+    topicIds: zfd.repeatableOfType(zfd.text()),
   });
   const formBody = await request.json();
 
-  const { unitIds } = schema.parse(formBody);
+  const { topicIds } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -154,9 +154,9 @@ export async function deleteUnits_(request: Request) {
       });
     }
 
-    const results = await db.collection(dbCollections.units.name).deleteMany({
+    const results = await db.collection(dbCollections.topics.name).deleteMany({
       _id: {
-        $in: unitIds.map((i) => new BSON.ObjectId(i)),
+        $in: topicIds.map((i) => new BSON.ObjectId(i)),
       },
     });
 

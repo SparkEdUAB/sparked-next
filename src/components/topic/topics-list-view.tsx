@@ -22,8 +22,8 @@ const TopicsListView: React.FC = observer(() => {
   const {
     fetchTopics,
     topics,
-    selecetedUnitIds,
-    setSelectedProgramIds,
+    selecetedTopicIds,
+    setSelectedTopicIds,
     triggerDelete,
     triggerEdit,
     findUnitsByName,
@@ -36,9 +36,9 @@ const TopicsListView: React.FC = observer(() => {
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedUnitIds,
+    selectedRowKeys: selecetedTopicIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: TunitFields[]) => {
-      setSelectedProgramIds(selectedRows.map((i) => i.key));
+      setSelectedTopicIds(selectedRows.map((i) => i.key));
     },
   };
 
