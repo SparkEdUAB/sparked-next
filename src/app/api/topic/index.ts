@@ -180,7 +180,7 @@ export async function deleteTopics_(request: Request) {
   }
 }
 
-export async function findUnitsByName_(request: Request) {
+export async function findTopicsByName_(request: Request) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
@@ -205,11 +205,11 @@ export async function findUnitsByName_(request: Request) {
     }
     const regexPattern = new RegExp(name, "i");
 
-    let courses = null;
+    let topics = null;
 
     if (withMetaData) {
-      courses = await db
-        .collection(dbCollections.units.name)
+      topics = await db
+        .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
             query: {
@@ -219,7 +219,7 @@ export async function findUnitsByName_(request: Request) {
         )
         .toArray();
     } else {
-      courses = await db
+      topics = await db
         .collection(dbCollections.units.name)
         .find({
           name: { $regex: regexPattern },
@@ -229,7 +229,7 @@ export async function findUnitsByName_(request: Request) {
 
     const response = {
       isError: false,
-      courses,
+      topics,
     };
 
     return new Response(JSON.stringify(response), {
