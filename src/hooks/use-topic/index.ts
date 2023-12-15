@@ -49,7 +49,7 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.units.link);
+      router.push(ADMIN_LINKS.topics.link);
 
       message.success(i18next.t("topic_created"));
     } catch (err: any) {
