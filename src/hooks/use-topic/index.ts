@@ -218,7 +218,7 @@ const useTopic = (form?: any) => {
 
     const url = API_LINKS.DELETE_TOPICS;
     const formData = {
-      body: JSON.stringify({ unitIds: selecetedTopicIds }),
+      body: JSON.stringify({ topicIds: selecetedTopicIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
