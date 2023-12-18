@@ -74,12 +74,26 @@ export const ADMIN_LINKS: TmenuItemLink = {
     ],
   },
   library: {
-    link: "/library",
+    link: "/admin/library",
     roles: ["admin"],
     label: i18next.t("library"),
     key: "admin_library",
     icon: HiFilm,
     index: 4,
+    children: [
+      {
+        label: "create",
+        key: "create",
+        link: "/admin/library/create",
+        roles: ["admin"],
+      },
+      {
+        label: "edit",
+        key: "edit",
+        link: "/admin/library/edit",
+        roles: ["admin"],
+      },
+    ],
   },
   statistics: {
     link: "/statistics",
