@@ -5,12 +5,12 @@ export type TmenuItemLink = {
   users: TmenuItemLinkParams;
   courses: TmenuItemLinkParams;
   topics: TmenuItemLinkParams;
-  library: TmenuItemLinkParams;
   statistics: TmenuItemLinkParams;
   feedback: TmenuItemLinkParams;
   schools: TmenuItemLinkParams;
   programs: TmenuItemLinkParams;
   units: TmenuItemLinkParams;
+  media_content: TmenuItemLinkParams;
 };
 
 export type TchildMenuItemLinkParams = {

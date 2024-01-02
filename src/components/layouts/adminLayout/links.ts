@@ -73,28 +73,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
       },
     ],
   },
-  library: {
-    link: "/admin/library",
-    roles: ["admin"],
-    label: i18next.t("library"),
-    key: "admin_library",
-    icon: HiFilm,
-    index: 4,
-    children: [
-      {
-        label: "create",
-        key: "create",
-        link: "/admin/library/create",
-        roles: ["admin"],
-      },
-      {
-        label: "edit",
-        key: "edit",
-        link: "/admin/library/edit",
-        roles: ["admin"],
-      },
-    ],
-  },
+
   statistics: {
     link: "/statistics",
     roles: ["admin"],
@@ -173,6 +152,28 @@ export const ADMIN_LINKS: TmenuItemLink = {
         label: "edit",
         key: "edit",
         link: "/admin/units/edit",
+        roles: ["admin"],
+      },
+    ],
+  },
+  media_content: {
+    link: "/admin/media-content",
+    roles: ["admin"],
+    label: i18next.t("media-content"),
+    key: "admin_media-content",
+    icon: HiDocumentReport,
+    index: 9,
+    children: [
+      {
+        label: "create",
+        key: "create",
+        link: "/admin/media-content/create",
+        roles: ["admin"],
+      },
+      {
+        label: "edit",
+        key: "edit",
+        link: "/admin/media-content/edit",
         roles: ["admin"],
       },
     ],

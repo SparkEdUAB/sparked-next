@@ -1,8 +1,8 @@
 import i18next from "i18next";
-import { IformFields } from "types/form";
+import { T_ResourceFormFields } from "types/resources";
 
-export const TOPIC_FORM_FIELDS: IformFields = {
-  ["name"]: {
+export const RESOURCE_FORM_FIELDS: T_ResourceFormFields = {
+  name: {
     label: i18next.t("name"),
     key: "name",
   },
@@ -25,5 +25,9 @@ export const TOPIC_FORM_FIELDS: IformFields = {
   ["unit"]: {
     label: i18next.t("units"),
     key: "unitId",
+  },
+  ["topic"]: {
+    label: i18next.t("topic"),
+    key: "topicId",
   },
 };

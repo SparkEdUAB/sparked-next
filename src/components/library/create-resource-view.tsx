@@ -11,16 +11,17 @@ import { Card, Col, Form, Input, Row, Select } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
 import { useEffect } from "react";
-import { TOPIC_FORM_FIELDS } from "./constants";
+import { RESOURCE_FORM_FIELDS } from "./constants";
 import useUnit from "@hooks/useUnit";
+import useResource from "@hooks/use-resource";
 
-
-const CreateTopicView: React.FC = () => {
-  const { createTopic } = useTopic();
+const CreateResourceView: React.FC = () => {
+  const { createResource } = useResource();
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();
   const { fetchUnits,units } = useUnit();
+  const { fetchTopics,topics } = useTopic();
 
   const { selectedSchool } = SchoolStore;
 
@@ -29,13 +30,14 @@ const CreateTopicView: React.FC = () => {
     fetchPrograms({});
     fetchCourses({});
     fetchUnits({});
+    fetchTopics({});
   }, []);
 
   const [form] = Form.useForm();
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("create_topic")} />
+      <AdminPageTitle title={i18next.t("create_resource")} />
 
       <Row className="form-container">
         <Col span={24}>
@@ -49,19 +51,21 @@ const CreateTopicView: React.FC = () => {
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={selectedSchool || {}}
-              onFinish={createTopic}
+              onFinish={createResource}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
               <Form.Item
                 label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.name.label}</p>
+                  <p className="form-label">
+                    {RESOURCE_FORM_FIELDS.name.label}
+                  </p>
                 }
-                name={TOPIC_FORM_FIELDS.name.key}
+                name={RESOURCE_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: TOPIC_FORM_FIELDS.name.errorMsg,
+                    message: RESOURCE_FORM_FIELDS.name.errorMsg,
                   },
                 ]}
               >
@@ -71,14 +75,14 @@ const CreateTopicView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {TOPIC_FORM_FIELDS.description.label}
+                    {RESOURCE_FORM_FIELDS.description.label}
                   </p>
                 }
-                name={TOPIC_FORM_FIELDS.description.key}
+                name={RESOURCE_FORM_FIELDS.description.key}
                 rules={[
                   {
                     required: true,
-                    message: TOPIC_FORM_FIELDS.description.errorMsg,
+                    message: RESOURCE_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >
@@ -87,12 +91,14 @@ const CreateTopicView: React.FC = () => {
 
               <Form.Item
                 label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.school.label}</p>
+                  <p className="form-label">
+                    {RESOURCE_FORM_FIELDS.school.label}
+                  </p>
                 }
-                name={TOPIC_FORM_FIELDS.school.key}
+                name={RESOURCE_FORM_FIELDS.school.key}
                 rules={[
                   {
-                    message: TOPIC_FORM_FIELDS.school.errorMsg,
+                    message: RESOURCE_FORM_FIELDS.school.errorMsg,
                   },
                 ]}
               >
@@ -107,13 +113,13 @@ const CreateTopicView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {TOPIC_FORM_FIELDS.program.label}
+                    {RESOURCE_FORM_FIELDS.program.label}
                   </p>
                 }
-                name={TOPIC_FORM_FIELDS.program.key}
+                name={RESOURCE_FORM_FIELDS.program.key}
                 rules={[
                   {
-                    message: TOPIC_FORM_FIELDS.program.errorMsg,
+                    message: RESOURCE_FORM_FIELDS.program.errorMsg,
                   },
                 ]}
               >
@@ -127,12 +133,14 @@ const CreateTopicView: React.FC = () => {
 
               <Form.Item
                 label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.course.label}</p>
+                  <p className="form-label">
+                    {RESOURCE_FORM_FIELDS.course.label}
+                  </p>
                 }
-                name={TOPIC_FORM_FIELDS.course.key}
+                name={RESOURCE_FORM_FIELDS.course.key}
                 rules={[
                   {
-                    message: TOPIC_FORM_FIELDS.course.errorMsg,
+                    message: RESOURCE_FORM_FIELDS.course.errorMsg,
                   },
                 ]}
               >
@@ -146,17 +154,40 @@ const CreateTopicView: React.FC = () => {
 
               <Form.Item
                 label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.unit.label}</p>
+                  <p className="form-label">
+                    {RESOURCE_FORM_FIELDS.unit.label}
+                  </p>
                 }
-                name={TOPIC_FORM_FIELDS.unit.key}
+                name={RESOURCE_FORM_FIELDS.unit.key}
                 rules={[
                   {
-                    message: TOPIC_FORM_FIELDS.unit.errorMsg,
+                    message: RESOURCE_FORM_FIELDS.unit.errorMsg,
                   },
                 ]}
               >
                 <Select
                   options={units.map((i) => ({
+                    value: i._id,
+                    label: i.name,
+                  }))}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label={
+                  <p className="form-label">
+                    {RESOURCE_FORM_FIELDS.topic.label}
+                  </p>
+                }
+                name={RESOURCE_FORM_FIELDS.topic.key}
+                rules={[
+                  {
+                    message: RESOURCE_FORM_FIELDS.topic.errorMsg,
+                  },
+                ]}
+              >
+                <Select
+                  options={topics.map((i) => ({
                     value: i._id,
                     label: i.name,
                   }))}
@@ -180,4 +211,4 @@ const CreateTopicView: React.FC = () => {
   );
 };
 
-export default CreateTopicView;
+export default CreateResourceView;

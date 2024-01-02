@@ -15,10 +15,10 @@ import {
   HiOutlinePencilSquare,
   HiTrash,
 } from "react-icons/hi2";
-import { topicTableColumns } from ".";
+import { resourceTableColumns } from ".";
 import { TunitFields } from "./types";
 
-const TopicsListView: React.FC = observer(() => {
+const ResourceListView: React.FC = observer(() => {
   const {
     fetchTopics,
     topics,
@@ -44,13 +44,13 @@ const TopicsListView: React.FC = observer(() => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("topics")} />
+      <AdminPageTitle title={i18next.t("resources")} />
 
       <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t("search_units")}
+        placeholder={i18next.t("search_resources")}
         required
         type="text"
         onKeyDown={(e) => {
@@ -60,7 +60,7 @@ const TopicsListView: React.FC = observer(() => {
       <Button.Group>
         <Button
           onClick={() =>
-            router.push(getChildLinkByKey("create", ADMIN_LINKS.topics))
+            router.push(getChildLinkByKey("create", ADMIN_LINKS.library))
           }
           className={"table-action-buttons"}
         >
@@ -81,7 +81,7 @@ const TopicsListView: React.FC = observer(() => {
         bordered
         rowSelection={rowSelection}
         //@ts-ignore
-        columns={topicTableColumns}
+        columns={resourceTableColumns}
         //@ts-ignore
         dataSource={topics || []}
       />
@@ -89,4 +89,4 @@ const TopicsListView: React.FC = observer(() => {
   );
 });
 
-export default TopicsListView;
+export default ResourceListView;

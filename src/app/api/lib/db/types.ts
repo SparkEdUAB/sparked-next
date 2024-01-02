@@ -23,4 +23,8 @@ export type TdbCollection = {
     name: string;
     label: string;
   };
+  media_content: {
+    name: string;
+    label: string;
+  };
 };

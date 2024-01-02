@@ -2,7 +2,7 @@ import { T_topicFields } from "@hooks/use-topic/types";
 import type { ColumnsType } from "antd/es/table";
 import i18next from "i18next";
 
-export const topicTableColumns: ColumnsType<T_topicFields> = [
+export const resourceTableColumns: ColumnsType<T_topicFields> = [
   {
     title: "#",
     dataIndex: "index",
@@ -24,19 +24,25 @@ export const topicTableColumns: ColumnsType<T_topicFields> = [
   {
     title: "Program",
     dataIndex: "programName",
-    key: "school",
+    key: "Program",
     render: (text) => <a>{text || i18next.t("not_linked")}</a>,
   },
   {
     title: "Course",
     dataIndex: "courseName",
-    key: "school",
+    key: "Course",
     render: (text) => <a>{text || i18next.t("not_linked")}</a>,
   },
   {
     title: "Unit",
     dataIndex: "unitName",
-    key: "school",
+    key: "Unit",
+    render: (text) => <a>{text || i18next.t("not_linked")}</a>,
+  },
+  {
+    title: "Topic",
+    dataIndex: "topicName",
+    key: "Topic",
     render: (text) => <a>{text || i18next.t("not_linked")}</a>,
   },
   {

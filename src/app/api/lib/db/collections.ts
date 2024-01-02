@@ -25,4 +25,8 @@ export const dbCollections: TdbCollection = {
     name: "topics",
     label: "Topics",
   },
+  media_content: {
+    name: "media_content",
+    label: "Media Content",
+  },
 };
