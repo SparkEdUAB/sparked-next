@@ -60,7 +60,7 @@ const ResourceListView: React.FC = observer(() => {
       <Button.Group>
         <Button
           onClick={() =>
-            router.push(getChildLinkByKey("create", ADMIN_LINKS.library))
+            router.push(getChildLinkByKey("create", ADMIN_LINKS.media_content))
           }
           className={"table-action-buttons"}
         >

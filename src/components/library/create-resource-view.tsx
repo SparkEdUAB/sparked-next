@@ -14,14 +14,15 @@ import { useEffect } from "react";
 import { RESOURCE_FORM_FIELDS } from "./constants";
 import useUnit from "@hooks/useUnit";
 import useResource from "@hooks/use-resource";
+import UploadView from "@components/molecue/upload-view";
 
 const CreateResourceView: React.FC = () => {
   const { createResource } = useResource();
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();
-  const { fetchUnits,units } = useUnit();
-  const { fetchTopics,topics } = useTopic();
+  const { fetchUnits, units } = useUnit();
+  const { fetchTopics, topics } = useTopic();
 
   const { selectedSchool } = SchoolStore;
 
@@ -40,7 +41,7 @@ const CreateResourceView: React.FC = () => {
       <AdminPageTitle title={i18next.t("create_resource")} />
 
       <Row className="form-container">
-        <Col span={24}>
+        <Col span={12}>
           <Card
             className="form-card"
             title={<p className="form-label">{i18next.t("new_topic")}</p>}
@@ -204,6 +205,24 @@ const CreateResourceView: React.FC = () => {
                 </Button>
               </Form.Item>
             </Form>
+          </Card>
+        </Col>
+
+        <Col span={12}>
+          <Card
+            className="form-card"
+            title={<p className="form-label">{i18next.t("upload_media")}</p>}
+            bordered={false}
+          >
+            <UploadView />
+          </Card>
+          <Card
+          style={{minHeight:265}}
+            className="form-card"
+            title={<p className="form-label">{i18next.t("preview")}</p>}
+            bordered={false}
+          >
+          
           </Card>
         </Col>
       </Row>

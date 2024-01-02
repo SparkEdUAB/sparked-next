@@ -5,10 +5,9 @@ import {
   HiChartPie,
   HiChatAlt,
   HiDocumentReport,
-  HiFilm,
   HiLibrary,
   HiTrendingUp,
-  HiUserGroup,
+  HiUserGroup
 } from "react-icons/hi";
 import { TmenuItemLink } from "types/links";
 
