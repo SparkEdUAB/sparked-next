@@ -1,17 +1,19 @@
 import { InboxOutlined } from "@ant-design/icons";
 import useFileUpload from "@hooks/use-file-upload";
 import { Upload } from "antd";
+import { Button } from "flowbite-react";
 import React from "react";
 
 const { Dragger } = Upload;
 
 const UploadView: React.FC = () => {
-  const { uploadProps, fileList } = useFileUpload();
+  const { uploadProps, fileList, uploadFile } = useFileUpload();
 
   return (
     <Dragger
-        fileList={fileList}
-    {...uploadProps({ name: "file", multiple: false })}>
+      fileList={fileList}
+      {...uploadProps({ name: "file", multiple: false })}
+    >
       <p className="ant-upload-drag-icon">
         <InboxOutlined />
       </p>
@@ -22,6 +24,9 @@ const UploadView: React.FC = () => {
         Support for a single or bulk upload. Strictly prohibited from uploading
         company data or other banned files.
       </p>
+      <Button onClick={uploadFile} color="dark">
+        Upload
+      </Button>
     </Dragger>
   );
 };

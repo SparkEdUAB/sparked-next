@@ -11,7 +11,7 @@ import UiStore from "@state/mobx/uiStore";
 import { T_createResourceFields, T_fetchTopic } from "./types";
 import { T_ResourceFields } from "types/resources";
 
-const useResource = (form?: any) => {
+const useMediaContent = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
@@ -352,4 +352,4 @@ const useResource = (form?: any) => {
   };
 };
 
-export default useResource;
+export default useMediaContent;

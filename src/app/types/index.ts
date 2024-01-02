@@ -39,6 +39,7 @@ export type Tlink = {
   EDIT_RESOURCE: string;
   FIND_RESOURCE_BY_NAME: string;
   FETCH_RESOURCE_BY_ID: string;
+  FILE_UPLOAD: string;
 };
 
 export type TProcessCode = {

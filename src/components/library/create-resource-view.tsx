@@ -2,22 +2,23 @@
 "use client";
 
 import { AdminPageTitle } from "@components/layouts";
+import UploadView from "@components/molecue/upload-view";
+import useMediaContent from "@hooks/use-media-content";
+import useTopic from "@hooks/use-topic";
 import useCourse from "@hooks/useCourse";
 import useProgram from "@hooks/useProgram";
 import useSchool from "@hooks/useSchool";
-import useTopic from "@hooks/use-topic";
+import useUnit from "@hooks/useUnit";
 import SchoolStore from "@state/mobx/scholStore";
 import { Card, Col, Form, Input, Row, Select } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
 import { useEffect } from "react";
 import { RESOURCE_FORM_FIELDS } from "./constants";
-import useUnit from "@hooks/useUnit";
-import useResource from "@hooks/use-resource";
-import UploadView from "@components/molecue/upload-view";
 
 const CreateResourceView: React.FC = () => {
-  const { createResource } = useResource();
+  const { createResource } = useMediaContent();
+
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();
@@ -217,13 +218,11 @@ const CreateResourceView: React.FC = () => {
             <UploadView />
           </Card>
           <Card
-          style={{minHeight:265}}
+            style={{ minHeight: 265 }}
             className="form-card"
             title={<p className="form-label">{i18next.t("preview")}</p>}
             bordered={false}
-          >
-          
-          </Card>
+          ></Card>
         </Col>
       </Row>
     </>

@@ -7,6 +7,7 @@ import {
   TmenuItemLinkParams,
 } from "types/links";
 import { useParams } from "next/navigation";
+import axios from "axios";
 
 const useNavigation = () => {
   const pathname = usePathname();
@@ -18,6 +19,7 @@ const useNavigation = () => {
     const menuItems: Array<TmenuItemLinkParams> = [];
 
     for (const menuItem in ADMIN_LINKS) {
+      //@ts-ignore
       const enrty = ADMIN_LINKS[menuItem];
       menuItems.push(enrty);
     }
@@ -54,9 +56,11 @@ const useNavigation = () => {
       for (const menuItem in menuItems) {
         const targetLinkSegment = linkSegments.slice(0, index + 1).join("/");
 
+        //@ts-ignore
         if (menuItems[menuItem].link === targetLinkSegment) {
           breadcrumbItems.push({
             link: targetLinkSegment,
+            //@ts-ignore
             label: menuItems[menuItem].label,
           });
         }
@@ -72,9 +76,11 @@ const useNavigation = () => {
     if (links?.length) {
       return links[0].link;
     } else {
-      return '';
+      return "";
     }
   };
+
+   const apiNavigator = axios;
 
   return {
     fetchAdminMenuItems,
@@ -84,7 +90,8 @@ const useNavigation = () => {
     generateBreadcrumbItems,
     router,
     getChildLinkByKey,
-    useParams
+    useParams,
+    apiNavigator,
   };
 };
 
