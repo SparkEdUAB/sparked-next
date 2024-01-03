@@ -2,50 +2,49 @@ import SPARKED_PROCESS_CODES from "app/shared/processCodes";
 // import { NextApiRequest } from "next";
 import { Session } from "next-auth";
 import formidable, { errors as formidableErrors } from "formidable";
-import { NextRequest } from "next/server";
+import { s3Upload } from "./s3";
 
 const multer = require("multer");
 
-
-  const storage = multer.memoryStorage();
-  const upload = multer({ storage: storage }).any();
-// import { BSON } from "realm";
-// const fs = require("fs");
-
-
-// const formidableParse = async (req: Request) =>
-//   new Promise((resolve, reject) =>
-//     //@ts-ignore
-//     new formidable.IncomingForm().parse(req, (err, fields, files) =>
-//       err ? reject(err) : resolve([fields, files])
-//     )
-//   );
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage }).any();
 
 export default async function uploadFile_(req: Request, session?: Session) {
-      const form = formidable({});
+  const form = formidable({});
 
-      let fields;
-      let files;
-     
-      // [fields, files] = await form.parse(nextApi);
+  let fields;
+  let files;
 
-          const formData = await req.formData();
+  const formData = await req.formData();
   const file = formData.get("file");
 
-
   console.log("fields =>", file);
+
+   let ext = file.type.split("/")[1];
+
+    let arrayBuffer = await file?.arrayBuffer();
+
+    const buffer = Buffer.from(arrayBuffer);
+
+    
+
+   const url = await s3Upload({
+     file: buffer,
+     name: "sparked-testupload",
+     ext,
+   });
+
 
   const response = {
     isError: true,
     code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+    url,
   };
 
   return new Response(JSON.stringify(response), {
     status: 200,
   });
-  
 }
-
 
 export const config = {
   api: {
