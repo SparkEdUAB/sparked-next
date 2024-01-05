@@ -5,10 +5,9 @@ import {
   HiChartPie,
   HiChatAlt,
   HiDocumentReport,
-  HiFilm,
   HiLibrary,
   HiTrendingUp,
-  HiUserGroup,
+  HiUserGroup
 } from "react-icons/hi";
 import { TmenuItemLink } from "types/links";
 
@@ -73,14 +72,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
       },
     ],
   },
-  library: {
-    link: "/library",
-    roles: ["admin"],
-    label: i18next.t("library"),
-    key: "admin_library",
-    icon: HiFilm,
-    index: 4,
-  },
+
   statistics: {
     link: "/statistics",
     roles: ["admin"],
@@ -159,6 +151,28 @@ export const ADMIN_LINKS: TmenuItemLink = {
         label: "edit",
         key: "edit",
         link: "/admin/units/edit",
+        roles: ["admin"],
+      },
+    ],
+  },
+  media_content: {
+    link: "/admin/media-content",
+    roles: ["admin"],
+    label: i18next.t("media-content"),
+    key: "admin_media-content",
+    icon: HiDocumentReport,
+    index: 9,
+    children: [
+      {
+        label: "create",
+        key: "create",
+        link: "/admin/media-content/create",
+        roles: ["admin"],
+      },
+      {
+        label: "edit",
+        key: "edit",
+        link: "/admin/media-content/edit",
         roles: ["admin"],
       },
     ],

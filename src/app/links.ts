@@ -34,12 +34,21 @@ export const API_LINKS: Tlink = {
   EDIT_UNIT: "/api/unit/editUnit",
   FIND_UNITS_BY_NAME: "/api/unit/findUnitsByName",
 
-  //
-  // unit  topics
+  //   topics
   CREATE_TOPIC: "/api/topic/createTopic",
   FETCH_TOPICS: "/api/topic/fetchTopics",
   DELETE_TOPICS: "/api/topic/deleteTopics",
   FETCH_TOPIC_BY_ID: "/api/topic/fetchTopicById",
   EDIT_TOPIC: "/api/topic/editTopic",
   FIND_TOPIC_BY_NAME: "/api/topic/findTopicsByName",
+  //   resources
+  CREATE_MEDIA_CONTENT: "/api/media-content/createMediaContent",
+  FETCH_RESOURCES: "/api/media-content/fetchResources",
+  DELETE_RESOURCES: "/api/media-content/deleteResources",
+  FETCH_RESOURCE_BY_ID: "/api/media-content/fetchResourceById",
+  EDIT_RESOURCE: "/api/media-content/editResource",
+  FIND_RESOURCE_BY_NAME: "/api/media-content/findResourcesByName",
+
+  //   resources
+  FILE_UPLOAD: "/api/file-upload/uploadFile",
 };

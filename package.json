@@ -16,6 +16,7 @@
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "antd": "^5.9.2",
+    "aws-sdk": "^2.1528.0",
     "axios": "^1.5.0",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.17",
@@ -30,10 +31,12 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "realm": "^12.1.0",
+    "styled-components": "^6.1.6",
     "typescript": "5.1.6",
     "zod-form-data": "^2.0.1"
   },
   "devDependencies": {
+    "@types/formidable": "^3.4.5",
     "autoprefixer": "^10.4.15",
     "nodemailer": "^6.9.5",
     "postcss": "^8.4.28",
