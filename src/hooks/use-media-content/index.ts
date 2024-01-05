@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import UiStore from "@state/mobx/uiStore";
 import { T_createResourceFields, T_fetchTopic } from "./types";
 import { T_ResourceFields } from "types/resources";
+import FileUploadStore from "@state/mobx/fileUploadStore";
 
 const useMediaContent = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -20,6 +21,7 @@ const useMediaContent = (form?: any) => {
   const [tempTopics, setTempTopics] = useState<Array<T_ResourceFields>>([]);
   const [topic, setTopic] = useState<T_ResourceFields | null>(null);
   const [selecetedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
+  const { fileUrl } = FileUploadStore;
 
   useEffect(() => {
     UiStore.confirmDialogStatus && selecetedTopicIds.length && deleteTopics();
@@ -28,12 +30,13 @@ const useMediaContent = (form?: any) => {
   const createResource = async (fields: T_createResourceFields) => {
     const url = API_LINKS.CREATE_MEDIA_CONTENT;
     const formData = {
-      body: JSON.stringify({ ...fields }),
+      body: JSON.stringify({ ...fields, fileUrl }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
     };
+
 
     try {
       const resp = await fetch(url, formData);

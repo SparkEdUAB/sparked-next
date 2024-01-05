@@ -1,27 +1,24 @@
-import AWS from "aws-sdk";
-import fs from "fs";
+import { S3 } from "aws-sdk";
 
-export function s3Upload({ file, name, ext }) {
-  return new Promise((resolve, reject) => {
-    // Create params for putObject call
+type T_s3Upload = {
+  file: Buffer;
+  fileName: string;
+  ext: string;
+};
 
-    // const ext = file.mimetype.split('/')[1];
-    let imageUrl = getkeyName({ name, ext });
+const s3Upload = ({ file, fileName, ext }: T_s3Upload) =>
+  new Promise((resolve, reject) => {
 
-    // var buffer = fs.readFileSync(file);
+    let imageUrl = getkeyName({ name: fileName, ext });
 
-
-
-
-    console.log("imageUrl", imageUrl, "ext", ext);
-    var objectParams = {
+    var objectParams: any = {
       Bucket: process.env.S3_BUCKET,
       Key: imageUrl,
       Body: file,
       ACL: "public-read",
     };
 
-    var uploadPromise = new AWS.S3({
+    var uploadPromise = new S3({
       accessKeyId: process.env.AWS_ACCESS_KEY,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
       apiVersion: "2006-03-01",
@@ -30,14 +27,7 @@ export function s3Upload({ file, name, ext }) {
       .promise();
     uploadPromise
       .then(function (data) {
-        // NOTE:// ?${new Date()} is added to force react-native to load new images
-
-        //https://warma-paperless-registry.s3.us-east-2.amazonaws.com/media-content/sparked-testupload-1704303918946.jpeg
-
-        imageUrl = `https://warma-paperless-registry.s3.us-east-2.amazonaws.com/${imageUrl}`;
-        // imageUrl = `${process.env.S3_BUCKET_NAME_URL}/${imageUrl}`;
-
-        // const imageUrl = "Successfully uploaded data to " + S3_BUCKET_NAME_URL + "/" + keyName;
+        imageUrl = `${process.env.S3_BUCKET_NAME_URL}/${imageUrl}`;
 
         resolve(imageUrl);
         console.log("Successfully uploaded data to " + imageUrl);
@@ -47,8 +37,10 @@ export function s3Upload({ file, name, ext }) {
         reject(err);
       });
   });
-}
 
 const today = new Date().getTime();
 
-const getkeyName = ({ name, ext }) => `media-content/${name}-${today}.${ext}`;
+const getkeyName = ({ name, ext }: { name: string; ext: string }) =>
+  `${process.env.S3_MEDIA_CONTENT_FOLDER}/${name}-${today}.${ext}`;
+
+export default s3Upload;

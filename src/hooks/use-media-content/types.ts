@@ -6,6 +6,7 @@ export type T_createResourceFields = {
   courseId?: string;
   unitId?: string;
   topicId?: string;
+  fileUrl?: string;
 };
 export type T_fetchTopic = {
   limit?: number;

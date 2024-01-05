@@ -2,6 +2,8 @@
 "use client";
 
 import useNavigation from "@hooks/useNavigation";
+import { AXIOS_PROCESS_STATUS } from "@hooks/useNavigation/constants";
+import FileUploadStore from "@state/mobx/fileUploadStore";
 import { UploadProps, message, UploadFile } from "antd";
 import { API_LINKS } from "app/links";
 import i18next from "i18next";
@@ -9,6 +11,8 @@ import { useState } from "react";
 
 const useFileUpload = () => {
   const { getChildLinkByKey, router, apiNavigator } = useNavigation();
+
+  const { fileUrl } = FileUploadStore;
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [fileList, setFileList] = useState<(Blob | UploadFile)[]>([]);
@@ -20,7 +24,7 @@ const useFileUpload = () => {
 
     console.log("fileList[0]", fileList[0]);
 
-    formData.append("file", fileList[0]);
+    formData.append("file", fileList[0] as Blob);
 
     const metaData = {
       body: JSON.stringify({}),
@@ -33,23 +37,26 @@ const useFileUpload = () => {
     try {
       const resp = await apiNavigator.post(url, formData);
 
-      // if (!resp.ok) {
-      //   message.warning(i18next.t("unknown_error"));
-      //   return false;
-      // }
+      if (resp.status !== AXIOS_PROCESS_STATUS.OK.code) {
+        message.warning(i18next.t("unknown_error"));
+        return false;
+      }
 
-      // const responseData = await resp.json();
-
-      // if (responseData.isError) {
-      //   message.warning(responseData.code);
-      //   return false;
-      // }
-
-      // router.push(ADMIN_LINKS.media_content.link);
+      if (resp.data.isError) {
+        message.warning(i18next.t("unknown_error"));
+        return false;
+      }
 
       message.success(i18next.t("media content created"));
+
+      const fileUrl = resp.data.url;
+
+      console.log("fileUrl", fileUrl);
+
+      FileUploadStore.setFileUrl(fileUrl);
+
+      return fileUrl;
     } catch (err: any) {
-      console.log("uploadFile:err", err);
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
@@ -85,8 +92,6 @@ const useFileUpload = () => {
       },
 
       beforeUpload: (file) => {
-        // multiple ? setFileList([...fileList, file]) : setFileList([file]);
-
         return false;
       },
     };
@@ -96,6 +101,7 @@ const useFileUpload = () => {
     uploadProps,
     fileList,
     uploadFile,
+    fileUrl,
   };
 };
 

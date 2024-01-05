@@ -15,6 +15,8 @@ import { Button } from "flowbite-react";
 import i18next from "i18next";
 import { useEffect } from "react";
 import { RESOURCE_FORM_FIELDS } from "./constants";
+import FileUploadStore from "@state/mobx/fileUploadStore";
+import { observer } from "mobx-react-lite";
 
 const CreateResourceView: React.FC = () => {
   const { createResource } = useMediaContent();
@@ -26,6 +28,7 @@ const CreateResourceView: React.FC = () => {
   const { fetchTopics, topics } = useTopic();
 
   const { selectedSchool } = SchoolStore;
+  const { fileUrl } = FileUploadStore;
 
   useEffect(() => {
     fetchSchools({});
@@ -198,6 +201,7 @@ const CreateResourceView: React.FC = () => {
 
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button
+                  disabled={!fileUrl}
                   className={"form-submit-btn"}
                   type="primary"
                   htmlType="submit"
@@ -229,4 +233,4 @@ const CreateResourceView: React.FC = () => {
   );
 };
 
-export default CreateResourceView;
+export default observer(CreateResourceView);
