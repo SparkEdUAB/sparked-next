@@ -139,6 +139,7 @@ const useMediaContent = (form?: any) => {
           unitName: i.unit?.name,
           programId: i.program?._id,
           topicId: i.topic?._id,
+          topicName: i.topic?.name,
           created_by: i.user?.email,
           created_at: new Date(i.created_at).toDateString(),
         })
