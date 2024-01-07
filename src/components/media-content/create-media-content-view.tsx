@@ -9,17 +9,19 @@ import useCourse from "@hooks/useCourse";
 import useProgram from "@hooks/useProgram";
 import useSchool from "@hooks/useSchool";
 import useUnit from "@hooks/useUnit";
-import SchoolStore from "@state/mobx/scholStore";
+import FileUploadStore from "@state/mobx/fileUploadStore";
+import MediaContentStore from "@state/mobx/mediaContentStore";
 import { Card, Col, Form, Input, Row, Select } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
-import { useEffect } from "react";
-import { RESOURCE_FORM_FIELDS } from "./constants";
-import FileUploadStore from "@state/mobx/fileUploadStore";
 import { observer } from "mobx-react-lite";
+import { useEffect } from "react";
+import { MEDIA_CONTENT_FORM_FIELDS } from "./constants";
 
 const CreateMediaContentView: React.FC = () => {
   const { createResource } = useMediaContent();
+
+  
 
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
@@ -27,7 +29,7 @@ const CreateMediaContentView: React.FC = () => {
   const { fetchUnits, units } = useUnit();
   const { fetchTopics, topics } = useTopic();
 
-  const { selectedSchool } = SchoolStore;
+  const { selectedMediaContent } = MediaContentStore;
   const { fileUrl } = FileUploadStore;
 
   useEffect(() => {
@@ -38,7 +40,6 @@ const CreateMediaContentView: React.FC = () => {
     fetchTopics({});
   }, []);
 
-  const [form] = Form.useForm();
 
   return (
     <>
@@ -55,7 +56,7 @@ const CreateMediaContentView: React.FC = () => {
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
-              initialValues={selectedSchool || {}}
+              initialValues={selectedMediaContent || {}}
               onFinish={createResource}
               onFinishFailed={() => {}}
               autoComplete="off"
@@ -63,14 +64,14 @@ const CreateMediaContentView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.name.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.name.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.name.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: RESOURCE_FORM_FIELDS.name.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.name.errorMsg,
                   },
                 ]}
               >
@@ -80,14 +81,14 @@ const CreateMediaContentView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.description.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.description.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.description.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.description.key}
                 rules={[
                   {
                     required: true,
-                    message: RESOURCE_FORM_FIELDS.description.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >
@@ -97,13 +98,13 @@ const CreateMediaContentView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.school.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.school.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.school.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.school.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.school.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.school.errorMsg,
                   },
                 ]}
               >
@@ -118,13 +119,13 @@ const CreateMediaContentView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.program.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.program.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.program.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.program.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.program.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.program.errorMsg,
                   },
                 ]}
               >
@@ -139,13 +140,13 @@ const CreateMediaContentView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.course.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.course.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.course.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.course.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.course.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.course.errorMsg,
                   },
                 ]}
               >
@@ -160,13 +161,13 @@ const CreateMediaContentView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.unit.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.unit.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.unit.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.unit.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.unit.errorMsg,
                   },
                 ]}
               >
@@ -181,13 +182,13 @@ const CreateMediaContentView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.topic.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.topic.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.topic.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.topic.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.topic.errorMsg,
                   },
                 ]}
               >

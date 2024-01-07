@@ -1,6 +1,6 @@
 import type { ColumnsType } from "antd/es/table";
 import i18next from "i18next";
-import { T_MediaContentFields } from "types/resources";
+import { T_MediaContentFields } from "types/media-content";
 import { FileImageOutlined } from "@ant-design/icons";
 ;
 export const mediaContentTableColumns: ColumnsType<T_MediaContentFields> = [

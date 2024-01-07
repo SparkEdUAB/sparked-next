@@ -2,32 +2,41 @@
 "use client";
 
 import { AdminPageTitle } from "@components/layouts";
+import UploadView from "@components/molecue/upload-view";
+import useMediaContent from "@hooks/use-media-content";
+import useCourse from "@hooks/useCourse";
 import useProgram from "@hooks/useProgram";
+import useSchool from "@hooks/useSchool";
+import useUnit from "@hooks/useUnit";
+import FileUploadStore from "@state/mobx/fileUploadStore";
 import { Card, Col, Form, Input, Row, Select } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { TOPIC_FORM_FIELDS } from "./constants";
-import useSchool from "@hooks/useSchool";
-import useUnit from "@hooks/useUnit";
-import useCourse from "@hooks/useCourse";
+import { MEDIA_CONTENT_FORM_FIELDS } from "./constants";
+import MediaContentStore from "@state/mobx/mediaContentStore";
 import useTopic from "@hooks/use-topic";
 
-const EditTopicView: React.FC = () => {
+const EditMediaContentView: React.FC = () => {
   const [form] = Form.useForm();
-  const { editTopic, fetchTopicById, topic } = useTopic(form);
-  const {  units,fetchUnits } = useUnit(form);
+
+  const { fileUrl } = FileUploadStore;
+  const { selectedMediaContent } = MediaContentStore;
+
+
+  const { editTopic, fetchMediaContentById, targetMediaContent } = useMediaContent(form);
+  const {  topics,fetchTopics } = useTopic();
+  const { units, fetchUnits } = useUnit();
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();
 
   const searchParams = useSearchParams();
 
-
   useEffect(() => {
-    fetchTopicById({
-      topicId: searchParams.get("topicId") as string,
+    fetchMediaContentById({
+      mediaContentId: searchParams.get("mediaContentId") as string,
       withMetaData: true,
     });
 
@@ -35,6 +44,7 @@ const EditTopicView: React.FC = () => {
     fetchSchools({});
     fetchCourses({});
     fetchUnits({});
+    fetchTopics({});
   }, []);
 
   return (
@@ -42,31 +52,33 @@ const EditTopicView: React.FC = () => {
       <AdminPageTitle title={i18next.t("edit_topic")} />
 
       <Row className="form-container">
-        <Col span={24}>
+        <Col span={12}>
           <Card
             className="form-card"
-            title={<p className="form-label">{topic?.name}</p>}
+            title={<p className="form-label">{i18next.t("new_topic")}</p>}
             bordered={false}
           >
             <Form
-              form={form}
+            form={form}
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
-              initialValues={topic || {}}
+              initialValues={targetMediaContent || {}}
               onFinish={editTopic}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
               <Form.Item
                 label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.name.label}</p>
+                  <p className="form-label">
+                    {MEDIA_CONTENT_FORM_FIELDS.name.label}
+                  </p>
                 }
-                name={TOPIC_FORM_FIELDS.name.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: TOPIC_FORM_FIELDS.name.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.name.errorMsg,
                   },
                 ]}
               >
@@ -76,14 +88,14 @@ const EditTopicView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {TOPIC_FORM_FIELDS.description.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.description.label}
                   </p>
                 }
-                name={TOPIC_FORM_FIELDS.description.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.description.key}
                 rules={[
                   {
                     required: true,
-                    message: TOPIC_FORM_FIELDS.description.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >
@@ -92,12 +104,14 @@ const EditTopicView: React.FC = () => {
 
               <Form.Item
                 label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.school.label}</p>
+                  <p className="form-label">
+                    {MEDIA_CONTENT_FORM_FIELDS.school.label}
+                  </p>
                 }
-                name={TOPIC_FORM_FIELDS.school.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.school.key}
                 rules={[
                   {
-                    message: TOPIC_FORM_FIELDS.school.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.school.errorMsg,
                   },
                 ]}
               >
@@ -108,16 +122,17 @@ const EditTopicView: React.FC = () => {
                   }))}
                 />
               </Form.Item>
+
               <Form.Item
                 label={
                   <p className="form-label">
-                    {TOPIC_FORM_FIELDS.program.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.program.label}
                   </p>
                 }
-                name={TOPIC_FORM_FIELDS.program.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.program.key}
                 rules={[
                   {
-                    message: TOPIC_FORM_FIELDS.program.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.program.errorMsg,
                   },
                 ]}
               >
@@ -131,12 +146,14 @@ const EditTopicView: React.FC = () => {
 
               <Form.Item
                 label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.course.label}</p>
+                  <p className="form-label">
+                    {MEDIA_CONTENT_FORM_FIELDS.course.label}
+                  </p>
                 }
-                name={TOPIC_FORM_FIELDS.course.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.course.key}
                 rules={[
                   {
-                    message: TOPIC_FORM_FIELDS.course.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.course.errorMsg,
                   },
                 ]}
               >
@@ -147,14 +164,17 @@ const EditTopicView: React.FC = () => {
                   }))}
                 />
               </Form.Item>
+
               <Form.Item
                 label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.unit.label}</p>
+                  <p className="form-label">
+                    {MEDIA_CONTENT_FORM_FIELDS.unit.label}
+                  </p>
                 }
-                name={TOPIC_FORM_FIELDS.unit.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
                 rules={[
                   {
-                    message: TOPIC_FORM_FIELDS.unit.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.unit.errorMsg,
                   },
                 ]}
               >
@@ -166,8 +186,30 @@ const EditTopicView: React.FC = () => {
                 />
               </Form.Item>
 
+              <Form.Item
+                label={
+                  <p className="form-label">
+                    {MEDIA_CONTENT_FORM_FIELDS.topic.label}
+                  </p>
+                }
+                name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
+                rules={[
+                  {
+                    message: MEDIA_CONTENT_FORM_FIELDS.topic.errorMsg,
+                  },
+                ]}
+              >
+                <Select
+                  options={topics?.map((i) => ({
+                    value: i._id,
+                    label: i.name,
+                  }))}
+                />
+              </Form.Item>
+
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button
+                  disabled={!fileUrl}
                   className={"form-submit-btn"}
                   type="primary"
                   htmlType="submit"
@@ -178,9 +220,25 @@ const EditTopicView: React.FC = () => {
             </Form>
           </Card>
         </Col>
+
+        <Col span={12}>
+          <Card
+            className="form-card"
+            title={<p className="form-label">{i18next.t("upload_media")}</p>}
+            bordered={false}
+          >
+            <UploadView />
+          </Card>
+          <Card
+            style={{ minHeight: 265 }}
+            className="form-card"
+            title={<p className="form-label">{i18next.t("preview")}</p>}
+            bordered={false}
+          ></Card>
+        </Col>
       </Row>
     </>
   );
 };
 
-export default EditTopicView;
+export default EditMediaContentView;

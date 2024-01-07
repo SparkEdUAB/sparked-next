@@ -9,7 +9,7 @@ import i18next from "i18next";
 import { useEffect, useState } from "react";
 import UiStore from "@state/mobx/uiStore";
 import { T_createResourceFields, T_fetchTopic } from "./types";
-import { T_MediaContentFields,  } from "types/resources";
+import { T_MediaContentFields,  } from "types/media-content";
 import FileUploadStore from "@state/mobx/fileUploadStore";
 
 const useMediaContent = (form?: any) => {
@@ -17,9 +17,9 @@ const useMediaContent = (form?: any) => {
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [meidaContent, setMeidaContent] = useState<Array<T_MediaContentFields>>([]);
-  const [tempTopics, setTempMeidaContent] = useState<Array<T_MediaContentFields>>([]);
-  const [topic, setTopic] = useState<T_MediaContentFields | null>(null);
+  const [mediaContent, setMediaContent] = useState<Array<T_MediaContentFields>>([]);
+  const [tempTopics, setTempMediaContent] = useState<Array<T_MediaContentFields>>([]);
+  const [targetMediaContent, setTargetMediaContent] = useState<T_MediaContentFields | null>(null);
   const [selecetedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
   const { fileUrl } = FileUploadStore;
 
@@ -67,7 +67,11 @@ const useMediaContent = (form?: any) => {
     const url = API_LINKS.EDIT_TOPIC;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...topic, ...fields, topicId: topic?._id }),
+      body: JSON.stringify({
+        ...targetMediaContent,
+        ...fields,
+        topicId: targetMediaContent?._id,
+      }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -141,12 +145,12 @@ const useMediaContent = (form?: any) => {
           topicId: i.topic?._id,
           topicName: i.topic?.name,
           created_by: i.user?.email,
-          created_at: new Date(i.created_at).toDateString(),
+          created_at: new Date(i.created_at as string).toDateString(),
         })
       );
 
-      setMeidaContent(_mediaContent);
-      setTempMeidaContent(_mediaContent);
+      setMediaContent(_mediaContent);
+      setTempMediaContent(_mediaContent);
       return _mediaContent;
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
@@ -154,16 +158,16 @@ const useMediaContent = (form?: any) => {
     }
   };
 
-  const fetchTopicById = async ({
-    topicId,
+  const fetchMediaContentById = async ({
+    mediaContentId,
     withMetaData = false,
   }: {
-    topicId: string;
+    mediaContentId: string;
     withMetaData: boolean;
   }) => {
-    const url = API_LINKS.FETCH_TOPIC_BY_ID;
+    const url = API_LINKS.FETCH_MEDIA_CONTENT_BY_ID;
     const formData = {
-      body: JSON.stringify({ topicId, withMetaData }),
+      body: JSON.stringify({ mediaContentId, withMetaData }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -180,16 +184,28 @@ const useMediaContent = (form?: any) => {
 
       const responseData = await resp.json();
 
+
+
+
       if (responseData.isError) {
         message.warning(responseData.code);
         return false;
       }
 
-      if (responseData.topic) {
-        const { _id, name, description, school, program, course, unit } =
-          responseData.topic as T_MediaContentFields;
+      if (responseData.mediaContent) {
+        const {
+          _id,
+          name,
+          description,
+          school,
+          program,
+          course,
+          unit,
+          topic,
+          file_url,
+        } = responseData.mediaContent as T_MediaContentFields;
 
-        const _topic = {
+        const _mediaContent = {
           _id,
           name,
           description,
@@ -197,11 +213,15 @@ const useMediaContent = (form?: any) => {
           programId: program?._id,
           courseId: course?._id,
           unitId: unit?._id,
+          topicId: topic?._id,
+          fileUrl: file_url,
         };
 
-        setTopic(_topic as T_MediaContentFields);
-        form && form.setFieldsValue(_topic);
-        return _topic;
+
+
+        setTargetMediaContent(_mediaContent as T_MediaContentFields);
+        form && form.setFieldsValue(_mediaContent);
+        return _mediaContent;
       } else {
         return null;
       }
@@ -251,7 +271,7 @@ const useMediaContent = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setMeidaContent(meidaContent.filter((i) => selecetedTopicIds.indexOf(i._id) == -1));
+      setMediaContent(mediaContent.filter((i) => selecetedTopicIds.indexOf(i._id) == -1));
 
       return responseData.results;
     } catch (err: any) {
@@ -306,7 +326,7 @@ const useMediaContent = (form?: any) => {
         responseData.topics.length + " " + i18next.t("topics_found")
       );
 
-      setMeidaContent(responseData.topics);
+      setMediaContent(responseData.topics);
 
       return responseData.topics;
     } catch (err: any) {
@@ -320,7 +340,7 @@ const useMediaContent = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setMeidaContent(tempTopics);
+      setMediaContent(tempTopics);
     }
   };
 
@@ -332,23 +352,23 @@ const useMediaContent = (form?: any) => {
     }
 
     router.push(
-      getChildLinkByKey("edit", ADMIN_LINKS.topics) +
-        `?topicId=${selecetedTopicIds[0]}`
+      getChildLinkByKey("edit", ADMIN_LINKS.media_content) +
+        `?mediaContentId=${selecetedTopicIds[0]}`
     );
   };
 
   return {
     createResource,
     fetchMediaContent,
-    meidaContent,
-    setMeidaContent,
+    mediaContent,
+    setMediaContent,
     setSelectedTopicIds,
     selecetedTopicIds,
     triggerDelete,
     triggerEdit,
-    fetchTopicById,
+    fetchMediaContentById,
     router,
-    topic,
+    targetMediaContent,
     isLoading,
     editTopic,
     findTopicsByName,

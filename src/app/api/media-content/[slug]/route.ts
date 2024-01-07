@@ -3,7 +3,7 @@ import { Session } from "next-auth";
 import { getServerSession } from "next-auth/next";
 import fetchMediaContent_, {
   deleteTopics_,
-  fetchTopicById_,
+  fetchMediaContentById_,
   findTopicsByName_,
 } from "..";
 import { authOptions } from "../../auth/constants";
@@ -24,7 +24,7 @@ const schoolApiHandler_ = async function POST(
   } = {
     createMediaContent: createMediaContent_,
     fetchMediaContent: fetchMediaContent_,
-    fetchTopicById: fetchTopicById_,
+    fetchMediaContentById: fetchMediaContentById_,
     editTopic: editTopic_,
     deleteTopics: deleteTopics_,
     findTopicsByName: findTopicsByName_,
