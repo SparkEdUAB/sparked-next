@@ -2,8 +2,8 @@
 
 import { AdminPageTitle } from "@components/layouts";
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
+import useMediaContent from "@hooks/use-media-content";
 import useNavigation from "@hooks/useNavigation";
-import useTopic from "@hooks/use-topic";
 import { Table } from "antd";
 import { Button, TextInput } from "flowbite-react";
 import i18next from "i18next";
@@ -15,24 +15,24 @@ import {
   HiOutlinePencilSquare,
   HiTrash,
 } from "react-icons/hi2";
-import { resourceTableColumns } from ".";
+import { mediaContentTableColumns } from ".";
 import { TunitFields } from "./types";
 
-const ResourceListView: React.FC = observer(() => {
+const MediaContentListView: React.FC = observer(() => {
   const {
-    fetchTopics,
-    topics,
+    fetchMediaContent,
+    meidaContent,
     selecetedTopicIds,
     setSelectedTopicIds,
     triggerDelete,
     triggerEdit,
     findTopicsByName,
     onSearchQueryChange,
-  } = useTopic();
+  } = useMediaContent();
   const { router, getChildLinkByKey } = useNavigation();
 
   useEffect(() => {
-    fetchTopics({});
+    fetchMediaContent({});
   }, []);
 
   const rowSelection = {
@@ -44,13 +44,13 @@ const ResourceListView: React.FC = observer(() => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("resources")} />
+      <AdminPageTitle title={i18next.t("media_content")} />
 
       <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t("search_resources")}
+        placeholder={i18next.t("search_media_content")}
         required
         type="text"
         onKeyDown={(e) => {
@@ -81,12 +81,12 @@ const ResourceListView: React.FC = observer(() => {
         bordered
         rowSelection={rowSelection}
         //@ts-ignore
-        columns={resourceTableColumns}
+        columns={mediaContentTableColumns}
         //@ts-ignore
-        dataSource={topics || []}
+        dataSource={meidaContent || []}
       />
     </>
   );
 });
 
-export default ResourceListView;
+export default MediaContentListView;

@@ -18,7 +18,7 @@ import { RESOURCE_FORM_FIELDS } from "./constants";
 import FileUploadStore from "@state/mobx/fileUploadStore";
 import { observer } from "mobx-react-lite";
 
-const CreateResourceView: React.FC = () => {
+const CreateMediaContentView: React.FC = () => {
   const { createResource } = useMediaContent();
 
   const { fetchSchools, schools } = useSchool();
@@ -233,4 +233,4 @@ const CreateResourceView: React.FC = () => {
   );
 };
 
-export default observer(CreateResourceView);
+export default observer(CreateMediaContentView);

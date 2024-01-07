@@ -34,12 +34,12 @@ export type Tlink = {
   FIND_TOPIC_BY_NAME: string;
   EDIT_TOPIC: string;
   CREATE_MEDIA_CONTENT: string;
-  FETCH_RESOURCES: string;
   DELETE_RESOURCES: string;
   EDIT_RESOURCE: string;
   FIND_RESOURCE_BY_NAME: string;
   FETCH_RESOURCE_BY_ID: string;
   FILE_UPLOAD: string;
+  FETCH_MEDIA_CONTENT: string;
 };
 
 export type TProcessCode = {

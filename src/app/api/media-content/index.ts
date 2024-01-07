@@ -4,9 +4,9 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import { p_fetchTopicsWithMetaData } from "./pipelines";
+import { p_fetchMediaContentWithMetaData } from "./pipelines";
 
-export default async function fetchTopics_(request: Request) {
+export default async function fetchMediaContent_(request: Request) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
@@ -29,16 +29,16 @@ export default async function fetchTopics_(request: Request) {
       });
     }
 
-    let units = [];
+    let mediaContent = [];
 
     if (withMetaData) {
-      units = await db
-        .collection(dbCollections.topics.name)
-        .aggregate(p_fetchTopicsWithMetaData({ query: {} }))
+      mediaContent = await db
+        .collection(dbCollections.media_content.name)
+        .aggregate(p_fetchMediaContentWithMetaData({ query: {} }))
         .toArray();
     } else {
-      units = await db
-        .collection(dbCollections.topics.name)
+      mediaContent = await db
+        .collection(dbCollections.media_content.name)
         .find(
           {},
           {
@@ -51,7 +51,7 @@ export default async function fetchTopics_(request: Request) {
 
     const response = {
       isError: false,
-      units,
+      mediaContent,
     };
 
     return new Response(JSON.stringify(response), {
@@ -97,7 +97,7 @@ export async function fetchTopicById_(request: Request) {
       const topics = await db
         .collection(dbCollections.topics.name)
         .aggregate(
-          p_fetchTopicsWithMetaData({
+          p_fetchMediaContentWithMetaData({
             query: {
               _id: new BSON.ObjectId(topicId),
             },
@@ -211,7 +211,7 @@ export async function findTopicsByName_(request: Request) {
       topics = await db
         .collection(dbCollections.topics.name)
         .aggregate(
-          p_fetchTopicsWithMetaData({
+          p_fetchMediaContentWithMetaData({
             query: {
               name: { $regex: regexPattern },
             },

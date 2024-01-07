@@ -1,6 +1,6 @@
 import { IformFields, T_FORM } from "types/form";
 
-export type T_ResourceFields = {
+export type T_MediaContentFields = {
   key: string;
   name: string;
   _id: string;
@@ -11,6 +11,7 @@ export type T_ResourceFields = {
   courseId: string;
   unitId: string;
   topicId: string;
+  file_url: string;
 
   created_at: string;
   user?: {
