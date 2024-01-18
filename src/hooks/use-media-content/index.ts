@@ -9,7 +9,7 @@ import i18next from "i18next";
 import { useEffect, useState } from "react";
 import UiStore from "@state/mobx/uiStore";
 import { T_createResourceFields, T_fetchTopic } from "./types";
-import { T_MediaContentFields,  } from "types/media-content";
+import { T_MediaContentFields } from "types/media-content";
 import FileUploadStore from "@state/mobx/fileUploadStore";
 
 const useMediaContent = (form?: any) => {
@@ -17,14 +17,19 @@ const useMediaContent = (form?: any) => {
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [mediaContent, setMediaContent] = useState<Array<T_MediaContentFields>>([]);
-  const [tempTopics, setTempMediaContent] = useState<Array<T_MediaContentFields>>([]);
-  const [targetMediaContent, setTargetMediaContent] = useState<T_MediaContentFields | null>(null);
-  const [selecetedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
+  const [mediaContent, setMediaContent] = useState<Array<T_MediaContentFields>>(
+    []
+  );
+  const [tempTopics, setTempMediaContent] = useState<
+    Array<T_MediaContentFields>
+  >([]);
+  const [targetMediaContent, setTargetMediaContent] =
+    useState<T_MediaContentFields | null>(null);
+  const [selectedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
   const { fileUrl } = FileUploadStore;
 
   useEffect(() => {
-    UiStore.confirmDialogStatus && selecetedTopicIds.length && deleteTopics();
+    UiStore.confirmDialogStatus && selectedTopicIds.length && deleteTopics();
   }, [UiStore.confirmDialogStatus]);
 
   const createResource = async (fields: T_createResourceFields) => {
@@ -36,7 +41,6 @@ const useMediaContent = (form?: any) => {
         "Content-Type": "application/json",
       },
     };
-
 
     try {
       const resp = await fetch(url, formData);
@@ -57,20 +61,20 @@ const useMediaContent = (form?: any) => {
 
       message.success(i18next.t("media content created"));
     } catch (err: any) {
-
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
     }
   };
 
-  const editTopic = async (fields: T_MediaContentFields) => {
-    const url = API_LINKS.EDIT_TOPIC;
+  const editMediaContent = async (fields: T_MediaContentFields) => {
+    const url = API_LINKS.EDIT_MEDIA_CONTENT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
       body: JSON.stringify({
         ...targetMediaContent,
         ...fields,
-        topicId: targetMediaContent?._id,
+        mediaContentId: targetMediaContent?._id,
+        fileUrl: fileUrl ? fileUrl : targetMediaContent?.file_url,
       }),
       method: "post",
       headers: {
@@ -93,7 +97,7 @@ const useMediaContent = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.topics.link);
+      router.push(ADMIN_LINKS.media_content.link);
 
       message.success(i18next.t("success"));
     } catch (err: any) {
@@ -102,7 +106,10 @@ const useMediaContent = (form?: any) => {
     }
   };
 
-  const fetchMediaContent = async ({ limit = 1000, skip = 0 }: T_fetchTopic) => {
+  const fetchMediaContent = async ({
+    limit = 1000,
+    skip = 0,
+  }: T_fetchTopic) => {
     const url = API_LINKS.FETCH_MEDIA_CONTENT;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
@@ -184,9 +191,6 @@ const useMediaContent = (form?: any) => {
 
       const responseData = await resp.json();
 
-
-
-
       if (responseData.isError) {
         message.warning(responseData.code);
         return false;
@@ -217,8 +221,6 @@ const useMediaContent = (form?: any) => {
           fileUrl: file_url,
         };
 
-
-
         setTargetMediaContent(_mediaContent as T_MediaContentFields);
         form && form.setFieldsValue(_mediaContent);
         return _mediaContent;
@@ -232,7 +234,7 @@ const useMediaContent = (form?: any) => {
   };
 
   const triggerDelete = async () => {
-    if (!selecetedTopicIds.length) {
+    if (!selectedTopicIds.length) {
       return message.warning(i18next.t("select_items"));
     }
 
@@ -244,7 +246,7 @@ const useMediaContent = (form?: any) => {
 
     const url = API_LINKS.DELETE_TOPICS;
     const formData = {
-      body: JSON.stringify({ topicIds: selecetedTopicIds }),
+      body: JSON.stringify({ topicIds: selectedTopicIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -271,7 +273,9 @@ const useMediaContent = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setMediaContent(mediaContent.filter((i) => selecetedTopicIds.indexOf(i._id) == -1));
+      setMediaContent(
+        mediaContent.filter((i) => selectedTopicIds.indexOf(i._id) == -1)
+      );
 
       return responseData.results;
     } catch (err: any) {
@@ -345,15 +349,15 @@ const useMediaContent = (form?: any) => {
   };
 
   const triggerEdit = async () => {
-    if (!selecetedTopicIds.length) {
+    if (!selectedTopicIds.length) {
       return message.warning(i18next.t("select_item"));
-    } else if (selecetedTopicIds.length > 1) {
+    } else if (selectedTopicIds.length > 1) {
       return message.warning(i18next.t("select_one_item"));
     }
 
     router.push(
       getChildLinkByKey("edit", ADMIN_LINKS.media_content) +
-        `?mediaContentId=${selecetedTopicIds[0]}`
+        `?mediaContentId=${selectedTopicIds[0]}`
     );
   };
 
@@ -363,14 +367,14 @@ const useMediaContent = (form?: any) => {
     mediaContent,
     setMediaContent,
     setSelectedTopicIds,
-    selecetedTopicIds,
+    selectedTopicIds,
     triggerDelete,
     triggerEdit,
     fetchMediaContentById,
     router,
     targetMediaContent,
     isLoading,
-    editTopic,
+    editMediaContent,
     findTopicsByName,
     onSearchQueryChange,
     searchQuery,

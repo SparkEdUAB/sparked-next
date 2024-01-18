@@ -1,4 +1,4 @@
-export type Tlink = {
+export type T_link = {
   SIGNUP: string;
   LOGIN: string;
   LOGOUT: string;
@@ -35,11 +35,11 @@ export type Tlink = {
   EDIT_TOPIC: string;
   CREATE_MEDIA_CONTENT: string;
   DELETE_RESOURCES: string;
-  EDIT_RESOURCE: string;
   FIND_RESOURCE_BY_NAME: string;
   FILE_UPLOAD: string;
   FETCH_MEDIA_CONTENT: string;
   FETCH_MEDIA_CONTENT_BY_ID: string;
+  EDIT_MEDIA_CONTENT: string;
 };
 
 export type TProcessCode = {

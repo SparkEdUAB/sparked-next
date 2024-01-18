@@ -16,13 +16,13 @@ import {
   HiTrash,
 } from "react-icons/hi2";
 import { mediaContentTableColumns } from ".";
-import { TunitFields } from "./types";
+import { T_unitFields } from "./types";
 
 const MediaContentListView: React.FC = observer(() => {
   const {
     fetchMediaContent,
-    meidaContent,
-    selecetedTopicIds,
+    mediaContent,
+    selectedTopicIds,
     setSelectedTopicIds,
     triggerDelete,
     triggerEdit,
@@ -36,8 +36,8 @@ const MediaContentListView: React.FC = observer(() => {
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedTopicIds,
-    onChange: (selectedRowKeys: React.Key[], selectedRows: TunitFields[]) => {
+    selectedRowKeys: selectedTopicIds,
+    onChange: (selectedRowKeys: React.Key[], selectedRows: T_unitFields[]) => {
       setSelectedTopicIds(selectedRows.map((i) => i.key));
     },
   };
@@ -83,7 +83,7 @@ const MediaContentListView: React.FC = observer(() => {
         //@ts-ignore
         columns={mediaContentTableColumns}
         //@ts-ignore
-        dataSource={meidaContent || []}
+        dataSource={mediaContent || []}
       />
     </>
   );

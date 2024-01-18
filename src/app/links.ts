@@ -1,6 +1,6 @@
-import { Tlink } from "./types";
+import { T_link } from "./types";
 
-export const API_LINKS: Tlink = {
+export const API_LINKS: T_link = {
   SIGNUP: "/api/authentication/signup",
   LOGIN: "/api/authentication/login",
   LOGOUT: "/api/authentication/logout",
@@ -46,7 +46,7 @@ export const API_LINKS: Tlink = {
   FETCH_MEDIA_CONTENT: "/api/media-content/fetchMediaContent",
   DELETE_RESOURCES: "/api/media-content/deleteResources",
   FETCH_MEDIA_CONTENT_BY_ID: "/api/media-content/fetchMediaContentById",
-  EDIT_RESOURCE: "/api/media-content/editResource",
+  EDIT_MEDIA_CONTENT: "/api/media-content/editMediaContent",
   FIND_RESOURCE_BY_NAME: "/api/media-content/findResourcesByName",
 
   //   resources

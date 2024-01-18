@@ -60,7 +60,7 @@ export default async function fetchMediaContent_(request: Request) {
   } catch (error) {
     const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {
@@ -108,7 +108,7 @@ export async function fetchMediaContentById_(request: Request) {
       mediaContent = mediaContentList.length ? mediaContentList[0] : {};
     } else {
       mediaContent = await db
-        .collection(dbCollections.topics.name)
+        .collection(dbCollections.media_content.name)
         .findOne({ _id: new BSON.ObjectId(mediaContentId) });
     }
 
@@ -123,7 +123,7 @@ export async function fetchMediaContentById_(request: Request) {
   } catch (error) {
     const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {
@@ -170,7 +170,7 @@ export async function deleteTopics_(request: Request) {
   } catch (error) {
     const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {
@@ -237,7 +237,7 @@ export async function findTopicsByName_(request: Request) {
   } catch (error) {
     const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {

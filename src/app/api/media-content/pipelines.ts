@@ -115,6 +115,7 @@ export const p_fetchMediaContentWithMetaData = ({
       "unit._id": 1,
       "topic.name": 1,
       "topic._id": 1,
+      "file_url": 1,
     },
   },
   {

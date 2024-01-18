@@ -25,7 +25,7 @@ const EditMediaContentView: React.FC = () => {
   const { selectedMediaContent } = MediaContentStore;
 
 
-  const { editTopic, fetchMediaContentById, targetMediaContent } = useMediaContent(form);
+  const { editMediaContent, fetchMediaContentById, targetMediaContent } = useMediaContent(form);
   const {  topics,fetchTopics } = useTopic();
   const { units, fetchUnits } = useUnit();
   const { fetchSchools, schools } = useSchool();
@@ -47,24 +47,28 @@ const EditMediaContentView: React.FC = () => {
     fetchTopics({});
   }, []);
 
+
+
+  
+
   return (
     <>
-      <AdminPageTitle title={i18next.t("edit_topic")} />
+      <AdminPageTitle title={i18next.t("edit_media_content")} />
 
       <Row className="form-container">
         <Col span={12}>
           <Card
             className="form-card"
-            title={<p className="form-label">{i18next.t("new_topic")}</p>}
+            title={<p className="form-label">{targetMediaContent?.name}</p>}
             bordered={false}
           >
             <Form
-            form={form}
+              form={form}
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={targetMediaContent || {}}
-              onFinish={editTopic}
+              onFinish={editMediaContent}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
@@ -209,7 +213,7 @@ const EditMediaContentView: React.FC = () => {
 
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button
-                  disabled={!fileUrl}
+                  
                   className={"form-submit-btn"}
                   type="primary"
                   htmlType="submit"

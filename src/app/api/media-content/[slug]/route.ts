@@ -8,7 +8,7 @@ import fetchMediaContent_, {
 } from "..";
 import { authOptions } from "../../auth/constants";
 import createMediaContent_ from "../create";
-import editTopic_ from "../edit";
+import editMediaContent_ from "../edit";
 
 const schoolApiHandler_ = async function POST(
   req: Request,
@@ -25,7 +25,7 @@ const schoolApiHandler_ = async function POST(
     createMediaContent: createMediaContent_,
     fetchMediaContent: fetchMediaContent_,
     fetchMediaContentById: fetchMediaContentById_,
-    editTopic: editTopic_,
+    editMediaContent: editMediaContent_,
     deleteTopics: deleteTopics_,
     findTopicsByName: findTopicsByName_,
   };
