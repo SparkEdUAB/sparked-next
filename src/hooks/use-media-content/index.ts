@@ -81,7 +81,7 @@ const useMediaContent = (form?: any) => {
         "Content-Type": "application/json",
       },
     };
-
+    
     try {
       const resp = await fetch(url, formData);
 
