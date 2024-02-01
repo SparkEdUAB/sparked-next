@@ -1,8 +1,9 @@
-import { T_topicFields } from "@hooks/use-topic/types";
 import type { ColumnsType } from "antd/es/table";
 import i18next from "i18next";
-
-export const resourceTableColumns: ColumnsType<T_topicFields> = [
+import { T_MediaContentFields } from "types/media-content";
+import { FileImageOutlined } from "@ant-design/icons";
+;
+export const mediaContentTableColumns: ColumnsType<T_MediaContentFields> = [
   {
     title: "#",
     dataIndex: "index",
@@ -46,13 +47,19 @@ export const resourceTableColumns: ColumnsType<T_topicFields> = [
     render: (text) => <a>{text || i18next.t("not_linked")}</a>,
   },
   {
+    title: "Media",
+    dataIndex: "fileUrl",
+    key: "Topic",
+    render: (text) => <FileImageOutlined />,
+  },
+  {
     title: "Create By",
     dataIndex: "created_by",
     key: "created_by",
     render: (text) => <a>{text}</a>,
   },
   {
-    title: "Create At",
+    title: "Created At",
     dataIndex: "created_at",
     key: "created_by",
     render: (text) => <a>{text}</a>,

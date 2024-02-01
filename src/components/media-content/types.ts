@@ -1,4 +1,4 @@
-export type TunitFields = {
+export type T_unitFields = {
   key: string;
   _id: string;
   name: string;

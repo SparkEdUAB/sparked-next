@@ -20,7 +20,7 @@ export default async function login_(request: Request) {
     if (!db) {
       const response = {
         isError: true,
-        code: AUTH_PROCESS_CODES.UNKOWN_ERROR,
+        code: AUTH_PROCESS_CODES.UNKNOWN_ERROR,
       };
       return new Response(JSON.stringify(response), {
         status: 200,

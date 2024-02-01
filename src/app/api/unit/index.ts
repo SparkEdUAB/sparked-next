@@ -60,7 +60,7 @@ export default async function fetchUnits_(request: Request) {
   } catch (error) {
     const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {
@@ -124,7 +124,7 @@ export async function fetchUnitById_(request: Request) {
   } catch (error) {
     const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {
@@ -171,7 +171,7 @@ export async function deleteUnits_(request: Request) {
   } catch (error) {
     const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {
@@ -238,7 +238,7 @@ export async function findUnitsByName_(request: Request) {
   } catch (error) {
     const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {

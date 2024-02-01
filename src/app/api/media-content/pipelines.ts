@@ -1,6 +1,6 @@
 import { dbCollections } from "../lib/db/collections";
 
-export const p_fetchTopicsWithMetaData = ({
+export const p_fetchMediaContentWithMetaData = ({
   query = {},
   skip = 0,
   limit = 1000,
@@ -80,6 +80,20 @@ export const p_fetchTopicsWithMetaData = ({
       preserveNullAndEmptyArrays: true,
     },
   },
+  {
+    $lookup: {
+      from: dbCollections.topics.name,
+      localField: "topic_id",
+      foreignField: "_id",
+      as: "topic",
+    },
+  },
+  {
+    $unwind: {
+      path: "$topic",
+      preserveNullAndEmptyArrays: true,
+    },
+  },
 
   {
     $project: {
@@ -99,6 +113,9 @@ export const p_fetchTopicsWithMetaData = ({
       "course.name": 1,
       "unit.name": 1,
       "unit._id": 1,
+      "topic.name": 1,
+      "topic._id": 1,
+      "file_url": 1,
     },
   },
   {

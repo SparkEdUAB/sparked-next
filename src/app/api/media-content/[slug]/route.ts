@@ -1,14 +1,14 @@
 import SPARKED_PROCESS_CODES from "app/shared/processCodes";
 import { Session } from "next-auth";
 import { getServerSession } from "next-auth/next";
-import fetchTopics_, {
+import fetchMediaContent_, {
   deleteTopics_,
-  fetchTopicById_,
+  fetchMediaContentById_,
   findTopicsByName_,
 } from "..";
 import { authOptions } from "../../auth/constants";
 import createMediaContent_ from "../create";
-import editTopic_ from "../edit";
+import editMediaContent_ from "../edit";
 
 const schoolApiHandler_ = async function POST(
   req: Request,
@@ -23,9 +23,9 @@ const schoolApiHandler_ = async function POST(
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createMediaContent: createMediaContent_,
-    fetchTopics: fetchTopics_,
-    fetchTopicById: fetchTopicById_,
-    editTopic: editTopic_,
+    fetchMediaContent: fetchMediaContent_,
+    fetchMediaContentById: fetchMediaContentById_,
+    editMediaContent: editMediaContent_,
     deleteTopics: deleteTopics_,
     findTopicsByName: findTopicsByName_,
   };

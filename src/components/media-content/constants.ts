@@ -1,7 +1,7 @@
 import i18next from "i18next";
-import { T_ResourceFormFields } from "types/resources";
+import { T_MediaContentFormFields } from "types/media-content";
 
-export const RESOURCE_FORM_FIELDS: T_ResourceFormFields = {
+export const MEDIA_CONTENT_FORM_FIELDS: T_MediaContentFormFields = {
   name: {
     label: i18next.t("name"),
     key: "name",

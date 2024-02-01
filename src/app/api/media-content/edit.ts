@@ -4,22 +4,37 @@ import { Session } from "next-auth";
 import { zfd } from "zod-form-data";
 import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
-import TOPIC_PROCESS_CODES from "./processCodes";
+import MEDIA_CONTENT_PROCESS_CODES from "./processCodes";
 
-export default async function editTopic_(request: Request, session?: Session) {
+export default async function editMediaContent_(
+  request: Request,
+  session?: Session
+) {
   const schema = zfd.formData({
+    mediaContentId: zfd.text(),
     name: zfd.text(),
     description: zfd.text(),
+    unitId: zfd.text(),
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
-    courseId: zfd.text(),
-    unitId: zfd.text(),
-    topicId: zfd.text(),
+    courseId: zfd.text().optional(),
+    topicId: zfd.text().optional(),
+    fileUrl: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId, topicId } =
-    schema.parse(formBody);
+  const {
+    name,
+    description,
+    schoolId,
+    programId,
+    courseId,
+    unitId,
+    topicId,
+    fileUrl,
+    mediaContentId,
+  } = schema.parse(formBody);
+
   try {
     const db = await dbClient();
 
@@ -28,6 +43,50 @@ export default async function editTopic_(request: Request, session?: Session) {
         isError: true,
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
+
+
+
+        const mediaContent = mediaContentId
+          ? await db.collection(dbCollections.media_content.name).findOne(
+              {
+                _id: new BSON.ObjectId(mediaContentId),
+              },
+              { projection: { _id: 1 } }
+            )
+          : null;
+
+        if (!mediaContent) {
+          const response = {
+            isError: true,
+            code: MEDIA_CONTENT_PROCESS_CODES.MEDIA_CONTENT_NOT_FOUND,
+          };
+
+          return new Response(JSON.stringify(response), {
+            status: 200,
+          });
+        }
+
+
+    const topic = topicId
+      ? await db.collection(dbCollections.topics.name).findOne(
+          {
+            _id: new BSON.ObjectId(topicId),
+          },
+          { projection: { _id: 1 } }
+        )
+      : null;
+
+    if (!topic) {
+      const response = {
+        isError: true,
+        code: MEDIA_CONTENT_PROCESS_CODES.TOPIC_NOT_FOUND,
+      };
+
       return new Response(JSON.stringify(response), {
         status: 200,
       });
@@ -45,7 +104,7 @@ export default async function editTopic_(request: Request, session?: Session) {
     if (!school && schoolId) {
       const response = {
         isError: true,
-        code: TOPIC_PROCESS_CODES.SCHOOL_NOT_FOUND,
+        code: MEDIA_CONTENT_PROCESS_CODES.SCHOOL_NOT_FOUND,
       };
 
       return new Response(JSON.stringify(response), {
@@ -65,7 +124,7 @@ export default async function editTopic_(request: Request, session?: Session) {
     if (!program && programId) {
       const response = {
         isError: true,
-        code: TOPIC_PROCESS_CODES.PROGRAM_NOT_FOUND,
+        code: MEDIA_CONTENT_PROCESS_CODES.PROGRAM_NOT_FOUND,
       };
 
       return new Response(JSON.stringify(response), {
@@ -85,7 +144,7 @@ export default async function editTopic_(request: Request, session?: Session) {
     if (!course && courseId) {
       const response = {
         isError: true,
-        code: TOPIC_PROCESS_CODES.COURSE_NOT_FOUND,
+        code: MEDIA_CONTENT_PROCESS_CODES.COURSE_NOT_FOUND,
       };
 
       return new Response(JSON.stringify(response), {
@@ -93,74 +152,60 @@ export default async function editTopic_(request: Request, session?: Session) {
       });
     }
 
-            const unit = await db.collection(dbCollections.units.name).findOne(
-              {
-                _id: new BSON.ObjectId(unitId),
-              },
-              { projection: { _id: 1 } }
-            );
+    const unit = await db.collection(dbCollections.units.name).findOne(
+      {
+        _id: new BSON.ObjectId(unitId),
+      },
+      { projection: { _id: 1 } }
+    );
 
-            if (!unit) {
-              const response = {
-                isError: true,
-                code: TOPIC_PROCESS_CODES.UNIT_NOT_FOUND,
-              };
-
-              return new Response(JSON.stringify(response), {
-                status: 200,
-              });
-            }
-
-    const regexPattern = new RegExp(name, "i");
-
-    const topic = await db.collection(dbCollections.topics.name).findOne({
-      name: { $regex: regexPattern },
-      _id: { $ne: new BSON.ObjectId(topicId) },
-    });
-
-    if (topic) {
+    if (!unit) {
       const response = {
         isError: true,
-        code: TOPIC_PROCESS_CODES.TOPIC_EXIST,
+        code: MEDIA_CONTENT_PROCESS_CODES.UNIT_NOT_FOUND,
       };
 
       return new Response(JSON.stringify(response), {
         status: 200,
       });
     }
-
-    const query = {
-      _id: new BSON.ObjectId(topicId),
-    };
+        const query = {
+          _id: new BSON.ObjectId(mediaContentId),
+        };
 
     const updateQuery = {
       name,
       description,
       updated_at: new Date(),
-      school_id: new BSON.ObjectId(schoolId),
-      course_id: new BSON.ObjectId(courseId),
-      program_id: new BSON.ObjectId(programId),
-      unit_id: new BSON.ObjectId(unitId),
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
+      created_by_id: new BSON.ObjectId(session?.user?.id),
+      school_id: new BSON.ObjectId(schoolId),
+      program_id: new BSON.ObjectId(programId),
+      course_id: new BSON.ObjectId(courseId),
+      unit_id: new BSON.ObjectId(unitId),
+      topic_id: new BSON.ObjectId(topicId),
+      file_url: fileUrl,
     };
 
-    await db.collection(dbCollections.topics.name).updateOne(query, {
+    await db.collection(dbCollections.media_content.name).updateOne(query, {
       $set: updateQuery,
     });
 
     const response = {
       isError: false,
-      code: TOPIC_PROCESS_CODES.TOPIC_EDITED,
+      code: MEDIA_CONTENT_PROCESS_CODES.MEDIA_CONTENT_EDITED,
     };
 
     return new Response(JSON.stringify(response), {
       status: 200,
     });
   } catch (error) {
-    const resp = {
+
+
+    console.log("error", error);
+      const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {

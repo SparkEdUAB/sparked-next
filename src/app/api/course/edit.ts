@@ -123,7 +123,7 @@ export default async function editCourse_(request: Request, session?: Session) {
   } catch (error) {
     const resp = {
       isError: true,
-      code: SPARKED_PROCESS_CODES.UNKOWN_ERROR,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
 
     return new Response(JSON.stringify(resp), {

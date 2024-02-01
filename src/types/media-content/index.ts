@@ -1,18 +1,19 @@
-import { IformFields, T_FORM } from "types/form";
+import {  T_FORM } from "types/form";
 
-export type T_ResourceFields = {
-  key: string;
+export type T_MediaContentFields = {
+  key?: string;
   name: string;
   _id: string;
-  created_by: string;
+  created_by?: string;
   description: string;
   schoolId: string;
   programId: string;
   courseId: string;
   unitId: string;
   topicId: string;
+  file_url?: string;
 
-  created_at: string;
+  created_at?: string;
   user?: {
     name: string;
     email: string;
@@ -29,18 +30,18 @@ export type T_ResourceFields = {
     name: string;
     _id: string;
   };
-  unit: {
+  unit?: {
     name: string;
     _id: string;
   };
-  topic: {
+  topic?: {
     name: string;
     _id: string;
   };
 };
 
 
-export type T_ResourceFormFields = {
+export type T_MediaContentFormFields = {
   name: T_FORM;
   description: T_FORM;
   school: T_FORM;

@@ -4,73 +4,85 @@
 import { AdminPageTitle } from "@components/layouts";
 import UploadView from "@components/molecue/upload-view";
 import useMediaContent from "@hooks/use-media-content";
-import useTopic from "@hooks/use-topic";
 import useCourse from "@hooks/useCourse";
 import useProgram from "@hooks/useProgram";
 import useSchool from "@hooks/useSchool";
 import useUnit from "@hooks/useUnit";
-import SchoolStore from "@state/mobx/scholStore";
+import FileUploadStore from "@state/mobx/fileUploadStore";
 import { Card, Col, Form, Input, Row, Select } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { RESOURCE_FORM_FIELDS } from "./constants";
-import FileUploadStore from "@state/mobx/fileUploadStore";
-import { observer } from "mobx-react-lite";
+import { MEDIA_CONTENT_FORM_FIELDS } from "./constants";
+import MediaContentStore from "@state/mobx/mediaContentStore";
+import useTopic from "@hooks/use-topic";
 
-const CreateResourceView: React.FC = () => {
-  const { createResource } = useMediaContent();
+const EditMediaContentView: React.FC = () => {
+  const [form] = Form.useForm();
 
+  const { fileUrl } = FileUploadStore;
+  const { selectedMediaContent } = MediaContentStore;
+
+
+  const { editMediaContent, fetchMediaContentById, targetMediaContent } = useMediaContent(form);
+  const {  topics,fetchTopics } = useTopic();
+  const { units, fetchUnits } = useUnit();
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();
-  const { fetchUnits, units } = useUnit();
-  const { fetchTopics, topics } = useTopic();
 
-  const { selectedSchool } = SchoolStore;
-  const { fileUrl } = FileUploadStore;
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    fetchSchools({});
+    fetchMediaContentById({
+      mediaContentId: searchParams.get("mediaContentId") as string,
+      withMetaData: true,
+    });
+
     fetchPrograms({});
+    fetchSchools({});
     fetchCourses({});
     fetchUnits({});
     fetchTopics({});
   }, []);
 
-  const [form] = Form.useForm();
+
+
+  
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("create_resource")} />
+      <AdminPageTitle title={i18next.t("edit_media_content")} />
 
       <Row className="form-container">
         <Col span={12}>
           <Card
             className="form-card"
-            title={<p className="form-label">{i18next.t("new_topic")}</p>}
+            title={<p className="form-label">{targetMediaContent?.name}</p>}
             bordered={false}
           >
             <Form
+              form={form}
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
-              initialValues={selectedSchool || {}}
-              onFinish={createResource}
+              initialValues={targetMediaContent || {}}
+              onFinish={editMediaContent}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.name.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.name.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.name.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: RESOURCE_FORM_FIELDS.name.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.name.errorMsg,
                   },
                 ]}
               >
@@ -80,14 +92,14 @@ const CreateResourceView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.description.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.description.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.description.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.description.key}
                 rules={[
                   {
                     required: true,
-                    message: RESOURCE_FORM_FIELDS.description.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >
@@ -97,13 +109,13 @@ const CreateResourceView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.school.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.school.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.school.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.school.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.school.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.school.errorMsg,
                   },
                 ]}
               >
@@ -118,13 +130,13 @@ const CreateResourceView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.program.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.program.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.program.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.program.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.program.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.program.errorMsg,
                   },
                 ]}
               >
@@ -139,13 +151,13 @@ const CreateResourceView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.course.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.course.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.course.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.course.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.course.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.course.errorMsg,
                   },
                 ]}
               >
@@ -160,13 +172,13 @@ const CreateResourceView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.unit.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.unit.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.unit.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.unit.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.unit.errorMsg,
                   },
                 ]}
               >
@@ -181,18 +193,18 @@ const CreateResourceView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {RESOURCE_FORM_FIELDS.topic.label}
+                    {MEDIA_CONTENT_FORM_FIELDS.topic.label}
                   </p>
                 }
-                name={RESOURCE_FORM_FIELDS.topic.key}
+                name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
                 rules={[
                   {
-                    message: RESOURCE_FORM_FIELDS.topic.errorMsg,
+                    message: MEDIA_CONTENT_FORM_FIELDS.topic.errorMsg,
                   },
                 ]}
               >
                 <Select
-                  options={topics.map((i) => ({
+                  options={topics?.map((i) => ({
                     value: i._id,
                     label: i.name,
                   }))}
@@ -201,7 +213,7 @@ const CreateResourceView: React.FC = () => {
 
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button
-                  disabled={!fileUrl}
+                  
                   className={"form-submit-btn"}
                   type="primary"
                   htmlType="submit"
@@ -233,4 +245,4 @@ const CreateResourceView: React.FC = () => {
   );
 };
 
-export default observer(CreateResourceView);
+export default EditMediaContentView;
