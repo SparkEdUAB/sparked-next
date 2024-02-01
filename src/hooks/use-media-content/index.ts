@@ -285,7 +285,7 @@ const useMediaContent = (form?: any) => {
       return false;
     }
   };
-  const findTopicsByName = async ({
+  const findMediaContentByName = async ({
     withMetaData = false,
   }: {
     withMetaData: boolean;
@@ -296,7 +296,7 @@ const useMediaContent = (form?: any) => {
       return message.warning(i18next.t("search_empty"));
     }
 
-    const url = API_LINKS.FIND_TOPIC_BY_NAME;
+    const url = API_LINKS.FIND_MEDIA_CONTENT_BY_NAME;
     const formData = {
       body: JSON.stringify({
         name: searchQuery.trim(),
@@ -327,13 +327,16 @@ const useMediaContent = (form?: any) => {
         return false;
       }
       message.success(
-        responseData.topics.length + " " + i18next.t("topics_found")
+        responseData.mediaContent.length + " " + i18next.t("media_content_found")
       );
 
-      setMediaContent(responseData.topics);
+      setMediaContent(responseData.mediaContent);
 
-      return responseData.topics;
+      return responseData.mediaContent;
     } catch (err: any) {
+
+      console.log('mediaContent',err)
+
       setLoaderStatus(false);
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
@@ -375,7 +378,7 @@ const useMediaContent = (form?: any) => {
     targetMediaContent,
     isLoading,
     editMediaContent,
-    findTopicsByName,
+    findMediaContentByName,
     onSearchQueryChange,
     searchQuery,
     tempTopics,

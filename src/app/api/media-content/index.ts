@@ -179,7 +179,7 @@ export async function deleteTopics_(request: Request) {
   }
 }
 
-export async function findTopicsByName_(request: Request) {
+export async function findMediaContentByName_(request: Request) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
@@ -204,11 +204,11 @@ export async function findTopicsByName_(request: Request) {
     }
     const regexPattern = new RegExp(name, "i");
 
-    let topics = null;
+    let mediaContent = null;
 
     if (withMetaData) {
-      topics = await db
-        .collection(dbCollections.topics.name)
+      mediaContent = await db
+        .collection(dbCollections.media_content.name)
         .aggregate(
           p_fetchMediaContentWithMetaData({
             query: {
@@ -218,8 +218,8 @@ export async function findTopicsByName_(request: Request) {
         )
         .toArray();
     } else {
-      topics = await db
-        .collection(dbCollections.units.name)
+      mediaContent = await db
+        .collection(dbCollections.media_content.name)
         .find({
           name: { $regex: regexPattern },
         })
@@ -228,13 +228,16 @@ export async function findTopicsByName_(request: Request) {
 
     const response = {
       isError: false,
-      topics,
+mediaContent,
     };
 
     return new Response(JSON.stringify(response), {
       status: 200,
     });
   } catch (error) {
+
+      console.log('error',error)
+
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

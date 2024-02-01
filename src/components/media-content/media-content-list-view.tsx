@@ -26,7 +26,7 @@ const MediaContentListView: React.FC = observer(() => {
     setSelectedTopicIds,
     triggerDelete,
     triggerEdit,
-    findTopicsByName,
+    findMediaContentByName,
     onSearchQueryChange,
   } = useMediaContent();
   const { router, getChildLinkByKey } = useNavigation();
@@ -54,7 +54,7 @@ const MediaContentListView: React.FC = observer(() => {
         required
         type="text"
         onKeyDown={(e) => {
-          e.keyCode === 13 ? findTopicsByName({ withMetaData: true }) : null;
+          e.keyCode === 13 ? findMediaContentByName({ withMetaData: true }) : null;
         }}
       />
       <Button.Group>

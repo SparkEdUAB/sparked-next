@@ -47,7 +47,7 @@ export const API_LINKS: T_link = {
   DELETE_RESOURCES: "/api/media-content/deleteResources",
   FETCH_MEDIA_CONTENT_BY_ID: "/api/media-content/fetchMediaContentById",
   EDIT_MEDIA_CONTENT: "/api/media-content/editMediaContent",
-  FIND_RESOURCE_BY_NAME: "/api/media-content/findResourcesByName",
+  FIND_MEDIA_CONTENT_BY_NAME: "/api/media-content/findMediaContentByName",
 
   //   resources
   FILE_UPLOAD: "/api/file-upload/uploadFile",
