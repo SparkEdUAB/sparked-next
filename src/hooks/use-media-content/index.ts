@@ -335,7 +335,6 @@ const useMediaContent = (form?: any) => {
       return responseData.mediaContent;
     } catch (err: any) {
 
-      console.log('mediaContent',err)
 
       setLoaderStatus(false);
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
