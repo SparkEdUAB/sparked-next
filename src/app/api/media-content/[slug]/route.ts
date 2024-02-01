@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth/next";
 import fetchMediaContent_, {
   deleteTopics_,
   fetchMediaContentById_,
-  findTopicsByName_,
+  findMediaContentByName_,
 } from "..";
 import { authOptions } from "../../auth/constants";
 import createMediaContent_ from "../create";
@@ -27,7 +27,7 @@ const schoolApiHandler_ = async function POST(
     fetchMediaContentById: fetchMediaContentById_,
     editMediaContent: editMediaContent_,
     deleteTopics: deleteTopics_,
-    findTopicsByName: findTopicsByName_,
+    findMediaContentByName: findMediaContentByName_,
   };
 
   if (schoolFunctions[slug] && session) {
