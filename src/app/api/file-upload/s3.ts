@@ -9,7 +9,7 @@ type T_s3Upload = {
 const s3Upload = ({ file, fileName, ext }: T_s3Upload) =>
   new Promise((resolve, reject) => {
 
-    let imageUrl = getkeyName({ name: fileName, ext });
+    let imageUrl = getKeyName({ name: fileName, ext });
 
     var objectParams: any = {
       Bucket: process.env.S3_BUCKET,
@@ -40,7 +40,7 @@ const s3Upload = ({ file, fileName, ext }: T_s3Upload) =>
 
 const today = new Date().getTime();
 
-const getkeyName = ({ name, ext }: { name: string; ext: string }) =>
+const getKeyName = ({ name, ext }: { name: string; ext: string }) =>
   `${process.env.S3_MEDIA_CONTENT_FOLDER}/${name}-${today}.${ext}`;
 
 export default s3Upload;
