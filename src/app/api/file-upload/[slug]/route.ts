@@ -35,8 +35,8 @@ const fileUploadApiHandler_ = async function POST(
 
 export { fileUploadApiHandler_ as POST };
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+// export const config = {
+//   api: {
+//     bodyParser: false,
+//   },
+// };
