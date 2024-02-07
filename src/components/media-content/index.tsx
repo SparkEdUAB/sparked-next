@@ -52,13 +52,13 @@ export const mediaContentTableColumns: ColumnsType<T_MediaContentFields> = [
     key: "Topic",
     render: (url) => (
       <a target={"_blank"} href={url}>
-        {url}
+        
         <FileImageOutlined />
       </a>
     ),
   },
   {
-    title: "Create By",
+    title: "Created By",
     dataIndex: "created_by",
     key: "created_by",
     render: (text) => <a>{text}</a>,
