@@ -1,3 +1,5 @@
+import React from "react";
+
 export type T_link = {
   SIGNUP: string;
   LOGIN: string;
@@ -40,8 +42,12 @@ export type T_link = {
   FETCH_MEDIA_CONTENT: string;
   FETCH_MEDIA_CONTENT_BY_ID: string;
   EDIT_MEDIA_CONTENT: string;
+  DELETE_MEDIA_CONTENT: string;
 };
 
 export type TProcessCode = {
   [key: string]: number;
 };
+
+export type T_Record = Record<string, string>;
+export type T_React_key = React.Key;

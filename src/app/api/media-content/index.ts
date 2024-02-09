@@ -132,13 +132,13 @@ export async function fetchMediaContentById_(request: Request) {
   }
 }
 
-export async function deleteTopics_(request: Request) {
+export async function deleteMediaContentByIds_(request: Request) {
   const schema = zfd.formData({
-    topicIds: zfd.repeatableOfType(zfd.text()),
+    mediaContentIds: zfd.repeatableOfType(zfd.text()),
   });
   const formBody = await request.json();
 
-  const { topicIds } = schema.parse(formBody);
+  const { mediaContentIds } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -153,9 +153,9 @@ export async function deleteTopics_(request: Request) {
       });
     }
 
-    const results = await db.collection(dbCollections.topics.name).deleteMany({
+    const results = await db.collection(dbCollections.media_content.name).deleteMany({
       _id: {
-        $in: topicIds.map((i) => new BSON.ObjectId(i)),
+        $in: mediaContentIds.map((i) => new BSON.ObjectId(i)),
       },
     });
 

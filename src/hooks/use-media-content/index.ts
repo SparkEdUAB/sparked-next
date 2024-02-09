@@ -11,6 +11,7 @@ import UiStore from "@state/mobx/uiStore";
 import { T_createResourceFields, T_fetchTopic } from "./types";
 import { T_MediaContentFields } from "types/media-content";
 import FileUploadStore from "@state/mobx/fileUploadStore";
+import { T_React_key } from "app/types";
 
 const useMediaContent = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -25,11 +26,13 @@ const useMediaContent = (form?: any) => {
   >([]);
   const [targetMediaContent, setTargetMediaContent] =
     useState<T_MediaContentFields | null>(null);
-  const [selectedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
+  const [selectedMediaContentIds, setSelectedMediaContentIds] = useState<
+    T_React_key[]
+  >([]);
   const { fileUrl } = FileUploadStore;
 
   useEffect(() => {
-    UiStore.confirmDialogStatus && selectedTopicIds.length && deleteTopics();
+    UiStore.confirmDialogStatus && selectedMediaContentIds.length && deleteMediaContent();
   }, [UiStore.confirmDialogStatus]);
 
   const createResource = async (fields: T_createResourceFields) => {
@@ -234,19 +237,19 @@ const useMediaContent = (form?: any) => {
   };
 
   const triggerDelete = async () => {
-    if (!selectedTopicIds.length) {
+    if (!selectedMediaContentIds.length) {
       return message.warning(i18next.t("select_items"));
     }
 
     UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deleteTopics = async () => {
+  const deleteMediaContent = async () => {
     if (UiStore.isLoading) return;
 
-    const url = API_LINKS.DELETE_TOPICS;
+    const url = API_LINKS.DELETE_MEDIA_CONTENT;
     const formData = {
-      body: JSON.stringify({ topicIds: selectedTopicIds }),
+      body: JSON.stringify({ mediaContentIds: selectedMediaContentIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -273,9 +276,14 @@ const useMediaContent = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setMediaContent(
-        mediaContent.filter((i) => selectedTopicIds.indexOf(i._id) == -1)
-      );
+
+       const newMediaContentIds = mediaContent.filter(
+         (i) => selectedMediaContentIds.indexOf(i._id) == -1
+       );
+        
+        setMediaContent(newMediaContentIds);
+
+       // setTargetMediaContent(newMediaContentIds);
 
       return responseData.results;
     } catch (err: any) {
@@ -351,15 +359,15 @@ const useMediaContent = (form?: any) => {
   };
 
   const triggerEdit = async () => {
-    if (!selectedTopicIds.length) {
+    if (!selectedMediaContentIds.length) {
       return message.warning(i18next.t("select_item"));
-    } else if (selectedTopicIds.length > 1) {
+    } else if (selectedMediaContentIds.length > 1) {
       return message.warning(i18next.t("select_one_item"));
     }
 
     router.push(
       getChildLinkByKey("edit", ADMIN_LINKS.media_content) +
-        `?mediaContentId=${selectedTopicIds[0]}`
+        `?mediaContentId=${selectedMediaContentIds[0]}`
     );
   };
 
@@ -368,8 +376,8 @@ const useMediaContent = (form?: any) => {
     fetchMediaContent,
     mediaContent,
     setMediaContent,
-    setSelectedTopicIds,
-    selectedTopicIds,
+    setSelectedMediaContentIds,
+    selectedMediaContentIds,
     triggerDelete,
     triggerEdit,
     fetchMediaContentById,

@@ -22,8 +22,8 @@ const MediaContentListView: React.FC = observer(() => {
   const {
     fetchMediaContent,
     mediaContent,
-    selectedTopicIds,
-    setSelectedTopicIds,
+    selectedMediaContentIds,
+    setSelectedMediaContentIds,
     triggerDelete,
     triggerEdit,
     findMediaContentByName,
@@ -36,9 +36,9 @@ const MediaContentListView: React.FC = observer(() => {
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selectedTopicIds,
+    selectedRowKeys: selectedMediaContentIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: T_unitFields[]) => {
-      setSelectedTopicIds(selectedRows.map((i) => i.key));
+      setSelectedMediaContentIds(selectedRows.map((i) => i.key));
     },
   };
 
