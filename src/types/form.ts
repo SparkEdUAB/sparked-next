@@ -1,4 +1,4 @@
-export interface IformFields {
+export interface I_formFields {
   [key: string]: {
     label: string;
     key: string;

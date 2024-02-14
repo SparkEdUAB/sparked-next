@@ -1,7 +1,7 @@
 import i18next from "i18next";
-import { IformFields } from "types/form";
+import { I_formFields } from "types/form";
 
-export const COURSE_FORM_FIELDS: IformFields = {
+export const COURSE_FORM_FIELDS: I_formFields = {
   ["name"]: {
     label: i18next.t("name"),
     key: "name",

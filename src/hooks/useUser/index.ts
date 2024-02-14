@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import UiStore from "@state/mobx/uiStore";
 import { TcreateUnitFields, TfetchUnits, TUnitFields } from "./types";
 
-const useUnit = (form?: any) => {
+const useUsers = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
@@ -350,4 +350,4 @@ const useUnit = (form?: any) => {
   };
 };
 
-export default useUnit;
+export default useUsers;

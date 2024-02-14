@@ -7,8 +7,10 @@ import {
   HiDocumentReport,
   HiLibrary,
   HiTrendingUp,
-  HiUserGroup
 } from "react-icons/hi";
+
+import { FaUsers } from "react-icons/fa6";
+
 import { TmenuItemLink } from "types/links";
 
 export const ADMIN_LINKS: TmenuItemLink = {
@@ -20,13 +22,28 @@ export const ADMIN_LINKS: TmenuItemLink = {
     icon: HiChartPie,
     index: 0,
   },
+
   users: {
-    link: "/users",
+    link: "/admin/users",
     roles: ["admin"],
     label: i18next.t("users"),
     key: "admin_users",
-    icon: HiUserGroup,
-    index: 1,
+    icon: FaUsers,
+    index: 2,
+    children: [
+      {
+        label: "create",
+        key: "create",
+        link: "/admin/users/create",
+        roles: ["admin"],
+      },
+      {
+        label: "edit",
+        key: "edit",
+        link: "/admin/users/edit",
+        roles: ["admin"],
+      },
+    ],
   },
   courses: {
     link: "/admin/courses",
