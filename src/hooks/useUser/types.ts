@@ -1,7 +1,9 @@
-export type TcreateUnitFields = {
-  name: string;
-  description: string;
-  schoolId: string;
+export type T_createUserFields = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  gender: string;
 };
 export type TfetchUnits = {
   limit?: number;

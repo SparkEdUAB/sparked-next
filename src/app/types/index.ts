@@ -43,6 +43,8 @@ export type T_link = {
   FETCH_MEDIA_CONTENT_BY_ID: string;
   EDIT_MEDIA_CONTENT: string;
   DELETE_MEDIA_CONTENT: string;
+  //users
+  CREATE_USER: string;
 };
 
 export type TProcessCode = {

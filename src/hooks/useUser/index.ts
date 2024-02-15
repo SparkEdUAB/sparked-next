@@ -8,7 +8,8 @@ import { API_LINKS } from "app/links";
 import i18next from "i18next";
 import { useEffect, useState } from "react";
 import UiStore from "@state/mobx/uiStore";
-import { TcreateUnitFields, TfetchUnits, TUnitFields } from "./types";
+import { T_createUserFields, TfetchUnits, TUnitFields } from "./types";
+import type { CheckboxProps } from "antd";
 
 const useUsers = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -24,8 +25,8 @@ const useUsers = (form?: any) => {
     UiStore.confirmDialogStatus && selectedUnitIds.length && deleteUnits();
   }, [UiStore.confirmDialogStatus]);
 
-  const createUnit = async (fields: TcreateUnitFields) => {
-    const url = API_LINKS.CREATE_UNIT;
+  const createUser = async (fields: T_createUserFields) => {
+    const url = API_LINKS.CREATE_USER;
     const formData = {
       body: JSON.stringify({ ...fields }),
       method: "post",
@@ -329,8 +330,12 @@ const useUsers = (form?: any) => {
     );
   };
 
+  const onEmailPasswordChange: CheckboxProps["onChange"] = (e) => {
+    console.log(`checked = ${e.target.checked}`);
+  };
+
   return {
-    createUnit,
+    createUser,
     fetchUnits,
     units,
     setUnits,
@@ -347,6 +352,7 @@ const useUsers = (form?: any) => {
     onSearchQueryChange,
     searchQuery,
     tempUnits,
+    onEmailPasswordChange,
   };
 };
 

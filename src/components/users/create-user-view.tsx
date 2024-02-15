@@ -17,7 +17,10 @@ import { Checkbox } from "antd";
 const onFinishFailed = (errorInfo: any) => {};
 
 const CreateUserView: React.FC = () => {
-  const { createUnit, onEmailPasswordChange } = useUsers();
+
+  const [form] = Form.useForm();
+
+  const { createUnit, onEmailPasswordChange } = useUsers(form);
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();
@@ -30,7 +33,6 @@ const CreateUserView: React.FC = () => {
     fetchCourses({});
   }, []);
 
-  const [form] = Form.useForm();
 
   return (
     <>
@@ -44,6 +46,7 @@ const CreateUserView: React.FC = () => {
             bordered={false}
           >
             <Form
+              form={form}
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
