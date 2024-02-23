@@ -1,11 +1,7 @@
 import { Carousel } from "flowbite-react";
 import styled from "styled-components";
 
-
-
 const sliderTextBkgUrl = "assets/images/cover/slider-text-bkg.png";
-// const sliderTextBkgUrl =
-//   "https://img.freepik.com/free-vector/hand-drawn-back-school-pattern-collection_23-2149037428.jpg?t=st=1708695518~exp=1708699118~hmac=53adb27916bfc355d4bf998ac088740556fa7e0818dc3a2c78300234b2bf164b&w=1060";
 
 type T_imageContainer = {
   imageUrl: string;
@@ -17,7 +13,6 @@ type T_sliderTextContainer = {
 
 const ImageContainer = styled.div<T_imageContainer>`
   width: 100%;
-  /* height: 100px; */
   background-image: url(${(p) => p.imageUrl});
 
   background-size: contain;
@@ -29,21 +24,13 @@ const ImageContainer = styled.div<T_imageContainer>`
   filter: grayscale(100%);
 `;
 
-const SliderImage = styled.img`
-  object-fit: cover;
-  /* width: ; */
-  /* height: 100px; */
-`;
+
 const SliderTextContainer = styled.div<T_sliderTextContainer>`
   width: 52%;
   height: 100%;
   border-radius: 2%;
-  /* border: 3px dotted #049ba0; */
   display: flex;
-  /* justify-content: center; */
-  /* align-items: center; */
 
-  /* margin-bottom: auto; */
   background-image: url(${(p) => p.sliderTextBkgUrl});
   background-size: cover;
   background-repeat: no-repeat;
@@ -55,12 +42,11 @@ const SliderTextContainer = styled.div<T_sliderTextContainer>`
   filter: blur(5px);
 `;
 
-
 const SliderTitle = styled.p`
   text-align: center;
   right: 0;
-  top:0;
-  margin:5px;
+  top: 0;
+  margin: 5px;
   width: 50%;
   height: 100px;
   position: absolute;
@@ -102,9 +88,11 @@ export const HomePageSlider = () => {
           </SliderTitle>
 
           <SliderText>
+            {`
             Explore a world of learning with our extensive collection of books,
             magazines, and resources. Let's ignite your curiosity and spark your
             imagination
+            `}
           </SliderText>
         </ImageContainer>
 
@@ -116,13 +104,18 @@ export const HomePageSlider = () => {
             sliderTextBkgUrl={sliderTextBkgUrl}
           ></SliderTextContainer>
           <SliderTitle>
-            Presenting Educational And Training Content With Passion And AI.{" "}
+            {`
+             Presenting Educational And Training Content With Passion And AI.  
+
+            `}
           </SliderTitle>
 
           <SliderText>
-            Discover a revolutionary approach to educational and training
+            {`
+               Discover a revolutionary approach to educational and training
             content delivery. At the intersection of passion and artificial
             intelligence (AI), our platform redefines the learning experience
+            `}
           </SliderText>
         </ImageContainer>
 
@@ -134,12 +127,16 @@ export const HomePageSlider = () => {
             sliderTextBkgUrl={sliderTextBkgUrl}
           ></SliderTextContainer>
           <SliderTitle>
-            Discover what's new at Sparked! Explore our latest arrivals
+            {`
+                Discover what's new at Sparked! Explore our latest arrivals
+            `}
           </SliderTitle>
 
           <SliderText>
-            from captivating novels to informative guides. Stay ahead of the
+            {`
+               from captivating novels to informative guides. Stay ahead of the
             curve and dive into fresh reads to fuel your curiosity."
+            `}
           </SliderText>
         </ImageContainer>
 
@@ -151,13 +148,17 @@ export const HomePageSlider = () => {
             sliderTextBkgUrl={sliderTextBkgUrl}
           ></SliderTextContainer>
           <SliderTitle>
-            Check out Sparked's featured books! Immerse yourself in captivating
+            {`
+               Check out Sparked's featured books! Immerse yourself in captivating
             stories
+            `}
           </SliderTitle>
 
           <SliderText>
-            insightful non-fiction, and educational resources handpicked by our
+            {`
+              insightful non-fiction, and educational resources handpicked by our
             team. Find your next favorite read and let your imagination soar!"
+            `}
           </SliderText>
         </ImageContainer>
 
@@ -169,14 +170,20 @@ export const HomePageSlider = () => {
             sliderTextBkgUrl={sliderTextBkgUrl}
           ></SliderTextContainer>
           <SliderTitle>
-            Join us for exciting events at Sparked! Be on the lookout for
-            upcoming author visits
+            {`
+             Join us for exciting events at Sparked! Be on the lookout for
+            upcoming author visits  
+
+            `}
           </SliderTitle>
 
           <SliderText>
-            Don't miss out on book clubs, reading challenges, and more. Get
+            {`
+             Don't miss out on book clubs, reading challenges, and more. Get
             involved in our vibrant community and let's spark your love for
-            reading together!"
+            reading together!"  
+
+            `}
           </SliderText>
         </ImageContainer>
       </SliderCarousel>

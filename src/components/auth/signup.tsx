@@ -59,7 +59,9 @@ const Signup: React.FC = () => {
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
+              {/* @ts-ignore */}
+
+              <Button type="submit">
                 {i18next.t("submit")}
               </Button>
             </Form.Item>

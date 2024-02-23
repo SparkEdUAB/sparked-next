@@ -20,7 +20,7 @@ const CreateUserView: React.FC = () => {
 
   const [form] = Form.useForm();
 
-  const { createUnit, onEmailPasswordChange } = useUsers(form);
+  const { createUser, onEmailPasswordChange } = useUsers(form);
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();
@@ -51,7 +51,7 @@ const CreateUserView: React.FC = () => {
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
               initialValues={selectedSchool || {}}
-              onFinish={createUnit}
+              onFinish={createUser}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
@@ -175,11 +175,7 @@ const CreateUserView: React.FC = () => {
               </Form.Item>
 
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button
-                  className={"form-submit-btn"}
-                  type="primary"
-                  htmlType="submit"
-                >
+                <Button className={"form-submit-btn"} type="submit">
                   {i18next.t("submit")}
                 </Button>
               </Form.Item>

@@ -8,7 +8,7 @@ import { Button } from "flowbite-react";
 import i18next from "i18next";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { UNIT_FORM_FIELDS } from "./constants";
+import { USER_FORM_FIELDS } from "./constants";
 import useSchool from "@hooks/useSchool";
 import useUnit from "@hooks/useUnit";
 import useCourse from "@hooks/useCourse";
@@ -57,13 +57,13 @@ const EditUnitView: React.FC = () => {
             >
               <Form.Item
                 label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.name.label}</p>
+                  <p className="form-label">{USER_FORM_FIELDS.name.label}</p>
                 }
-                name={UNIT_FORM_FIELDS.name.key}
+                name={USER_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: UNIT_FORM_FIELDS.name.errorMsg,
+                    message: USER_FORM_FIELDS.name.errorMsg,
                   },
                 ]}
               >
@@ -73,14 +73,14 @@ const EditUnitView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {UNIT_FORM_FIELDS.description.label}
+                    {USER_FORM_FIELDS.description.label}
                   </p>
                 }
-                name={UNIT_FORM_FIELDS.description.key}
+                name={USER_FORM_FIELDS.description.key}
                 rules={[
                   {
                     required: true,
-                    message: UNIT_FORM_FIELDS.description.errorMsg,
+                    message: USER_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >
@@ -89,12 +89,12 @@ const EditUnitView: React.FC = () => {
 
               <Form.Item
                 label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.school.label}</p>
+                  <p className="form-label">{USER_FORM_FIELDS.school.label}</p>
                 }
-                name={UNIT_FORM_FIELDS.school.key}
+                name={USER_FORM_FIELDS.school.key}
                 rules={[
                   {
-                    message: UNIT_FORM_FIELDS.school.errorMsg,
+                    message: USER_FORM_FIELDS.school.errorMsg,
                   },
                 ]}
               >
@@ -107,12 +107,12 @@ const EditUnitView: React.FC = () => {
               </Form.Item>
               <Form.Item
                 label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.program.label}</p>
+                  <p className="form-label">{USER_FORM_FIELDS.program.label}</p>
                 }
-                name={UNIT_FORM_FIELDS.program.key}
+                name={USER_FORM_FIELDS.program.key}
                 rules={[
                   {
-                    message: UNIT_FORM_FIELDS.program.errorMsg,
+                    message: USER_FORM_FIELDS.program.errorMsg,
                   },
                 ]}
               >
@@ -126,12 +126,12 @@ const EditUnitView: React.FC = () => {
 
               <Form.Item
                 label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.course.label}</p>
+                  <p className="form-label">{USER_FORM_FIELDS.course.label}</p>
                 }
-                name={UNIT_FORM_FIELDS.course.key}
+                name={USER_FORM_FIELDS.course.key}
                 rules={[
                   {
-                    message: UNIT_FORM_FIELDS.course.errorMsg,
+                    message: USER_FORM_FIELDS.course.errorMsg,
                   },
                 ]}
               >
@@ -146,8 +146,8 @@ const EditUnitView: React.FC = () => {
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button
                   className={"form-submit-btn"}
-                  type="primary"
-                  htmlType="submit"
+                  type="submit"
+                 
                 >
                   {i18next.t("submit")}
                 </Button>
