@@ -1,15 +1,11 @@
-"use client";
+'use client';
 
-import Signup from "@components/auth/signup";
-import GuestLayout from "@components/layouts/guestLayout";
-import React from "react";
+import Signup from '@components/auth/signup';
+import GuestLayout from '@components/layouts/guestLayout';
+import React from 'react';
 
 const Home: React.FC = (props) => {
-  return (
-    <GuestLayout>
-      <Signup />
-    </GuestLayout>
-  );
+  return <Signup />;
 };
 
 export default Home;

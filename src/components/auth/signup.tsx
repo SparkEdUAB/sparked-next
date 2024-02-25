@@ -1,72 +1,82 @@
-import { Col, Form, Input, Row } from "antd";
-import i18next from "i18next";
-import { CourseBasedSvgImage } from "@components/svgs";
-import { Card } from "antd";
-import { Button } from "flowbite-react";
-import { SIGNUP_FORM_FIELDS } from "./constants";
-import useAuth from "@hooks/useAuth";
+import React from 'react';
+import { Form, Input, Button, Checkbox } from 'antd';
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import useAuth from '@hooks/useAuth';
+import i18next from 'i18next';
+import Link from 'next/link'
+import { SIGNUP_FORM_FIELDS } from './constants';
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const Signup: React.FC = () => {
-  const { handleSignup } = useAuth();
+const Signup = () => {
+  const { handleSignup, loading } = useAuth();
 
   return (
-    <Row className="auth-container">
-      <Col span={12}>
-        <CourseBasedSvgImage height={1000} width={1000} />
-      </Col>
-
-      <Col span={12}>
-        <Card
-          className="auth-card"
-          title={i18next.t("signup")}
-          bordered={false}
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+      }}
+    >
+      <Form
+        name="normal_login"
+        className="login-form"
+        onFinish={handleSignup}
+        onFinishFailed={onFinishFailed}
+      >
+        <Form.Item
+          name={SIGNUP_FORM_FIELDS.email.key}
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Username!',
+            },
+          ]}
         >
-          <Form
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 600 }}
-            initialValues={{ remember: true }}
-            onFinish={handleSignup}
-            onFinishFailed={onFinishFailed}
-            autoComplete="off"
+          <Input
+            size="large"
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Username"
+            width={300}
+          />
+        </Form.Item>
+        <Form.Item
+          name={SIGNUP_FORM_FIELDS.password.key}
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Password!',
+            },
+          ]}
+        >
+          <Input
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="Password"
+            size="large"
+          />
+        </Form.Item>
+        <Form.Item className="form-item-style">
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="button-style"
+            style={{
+              backgroundColor: '#1890ff',
+              borderColor: '#1890ff',
+              color: 'white',
+            }}
+            loading={loading}
           >
-            <Form.Item
-              label={SIGNUP_FORM_FIELDS.email.label}
-              name={SIGNUP_FORM_FIELDS.email.key}
-              rules={[
-                {
-                  required: true,
-                  message: SIGNUP_FORM_FIELDS.email.errorMsg,
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label={SIGNUP_FORM_FIELDS.password.label}
-              name={SIGNUP_FORM_FIELDS.password.key}
-              rules={[
-                {
-                  required: true,
-                  message: SIGNUP_FORM_FIELDS.password.errorMsg,
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                {i18next.t("submit")}
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
-      </Col>
-    </Row>
+            {i18next.t('submit')}
+          </Button>
+          <span style={{ marginLeft: '10px' }}>Or</span>
+          <Link href="/auth/login" style={{ marginLeft: '10px' }}>Login</Link>
+        </Form.Item>
+      </Form>
+    </div>
   );
 };
 
