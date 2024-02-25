@@ -31,14 +31,14 @@ const Signup = () => {
           rules={[
             {
               required: true,
-              message: 'Please input your Username!',
+              message: SIGNUP_FORM_FIELDS.email.errorMsg,
             },
           ]}
         >
           <Input
             size="large"
             prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Username"
+            placeholder={SIGNUP_FORM_FIELDS.email.label}
             width={300}
           />
         </Form.Item>
@@ -47,14 +47,14 @@ const Signup = () => {
           rules={[
             {
               required: true,
-              message: 'Please input your Password!',
+              message: SIGNUP_FORM_FIELDS.password.errorMsg,
             },
           ]}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            placeholder="Password"
+            placeholder={SIGNUP_FORM_FIELDS.password.label}
             size="large"
           />
         </Form.Item>
