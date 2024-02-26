@@ -31,7 +31,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "realm": "^12.1.0",
-    "styled-components": "^6.1.6",
+    "styled-components": "^6.1.8",
     "typescript": "5.1.6",
     "zod-form-data": "^2.0.1"
   },
