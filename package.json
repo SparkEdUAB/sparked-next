@@ -21,7 +21,7 @@
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.17",
     "flowbite": "^1.8.1",
-    "flowbite-react": "^0.5.0",
+    "flowbite-react": "^0.7.2",
     "i18next": "^23.5.1",
     "mobx": "^6.10.0",
     "mobx-react-lite": "^4.0.3",
@@ -31,7 +31,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "realm": "^12.1.0",
-    "styled-components": "^6.1.6",
+    "styled-components": "^6.1.8",
     "typescript": "5.1.6",
     "zod-form-data": "^2.0.1"
   },

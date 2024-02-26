@@ -215,8 +215,8 @@ const EditMediaContentView: React.FC = () => {
                 <Button
                   
                   className={"form-submit-btn"}
-                  type="primary"
-                  htmlType="submit"
+                  type="submit"
+                 
                 >
                   {i18next.t("submit")}
                 </Button>

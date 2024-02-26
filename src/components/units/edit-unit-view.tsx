@@ -146,8 +146,8 @@ const EditUnitView: React.FC = () => {
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button
                   className={"form-submit-btn"}
-                  type="primary"
-                  htmlType="submit"
+                  type="submit"
+                 
                 >
                   {i18next.t("submit")}
                 </Button>

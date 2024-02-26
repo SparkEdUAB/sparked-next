@@ -18,10 +18,10 @@ const useUnit = (form?: any) => {
   const [units, setUnits] = useState<Array<TUnitFields>>([]);
   const [tempUnits, setTempUnits] = useState<Array<TUnitFields>>([]);
   const [unit, setUnit] = useState<TUnitFields | null>(null);
-  const [selecetedUnitIds, setSelectedProgramIds] = useState<React.Key[]>([]);
+  const [selectedUnitIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
-    UiStore.confirmDialogStatus && selecetedUnitIds.length && deleteUnits();
+    UiStore.confirmDialogStatus && selectedUnitIds.length && deleteUnits();
   }, [UiStore.confirmDialogStatus]);
 
   const createUnit = async (fields: TcreateUnitFields) => {
@@ -204,7 +204,7 @@ const useUnit = (form?: any) => {
   };
 
   const triggerDelete = async () => {
-    if (!selecetedUnitIds.length) {
+    if (!selectedUnitIds.length) {
       return message.warning(i18next.t("select_items"));
     }
 
@@ -216,7 +216,7 @@ const useUnit = (form?: any) => {
 
     const url = API_LINKS.DELETE_UNITS;
     const formData = {
-      body: JSON.stringify({ unitIds: selecetedUnitIds }),
+      body: JSON.stringify({ unitIds: selectedUnitIds }),
       method: "post",
       headers: {
         "Content-Type": "application/json",
@@ -243,7 +243,7 @@ const useUnit = (form?: any) => {
       UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t("success"));
 
-      setUnits(units.filter((i) => selecetedUnitIds.indexOf(i._id) == -1));
+      setUnits(units.filter((i) => selectedUnitIds.indexOf(i._id) == -1));
 
       return responseData.results;
     } catch (err: any) {
@@ -317,15 +317,15 @@ const useUnit = (form?: any) => {
   };
 
   const triggerEdit = async () => {
-    if (!selecetedUnitIds.length) {
+    if (!selectedUnitIds.length) {
       return message.warning(i18next.t("select_item"));
-    } else if (selecetedUnitIds.length > 1) {
+    } else if (selectedUnitIds.length > 1) {
       return message.warning(i18next.t("select_one_item"));
     }
 
     router.push(
       getChildLinkByKey("edit", ADMIN_LINKS.units) +
-        `?unitId=${selecetedUnitIds[0]}`
+        `?unitId=${selectedUnitIds[0]}`
     );
   };
 
@@ -335,7 +335,7 @@ const useUnit = (form?: any) => {
     units,
     setUnits,
     setSelectedProgramIds,
-    selecetedUnitIds,
+    selectedUnitIds,
     triggerDelete,
     triggerEdit,
     fetchUnitById,

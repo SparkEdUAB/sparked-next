@@ -22,8 +22,22 @@ const AdminLayout: FC<TadminLayout> = observer(
         <Navbar className="nav-bar" fluid={true} rounded={true}>
           <Navbar.Brand href="#"></Navbar.Brand>
           <Navbar.Toggle />
-          <Navbar.Collapse>
-            <Navbar.Link style={{ color: "wheat" }} href="/" active={true}>
+          <Navbar.Collapse
+            style={{
+              backgroundColor: "#0b100ce4",
+              height: 100,
+              marginTop: -8,
+              width: "30%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Navbar.Link
+              className="navbar-menu-item"
+              href="/"
+              active={true}
+            >
               {i18next.t("home")}
             </Navbar.Link>
 

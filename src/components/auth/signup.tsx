@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import useAuth from '@hooks/useAuth';
 import i18next from 'i18next';
@@ -34,6 +34,7 @@ const Signup = () => {
               message: SIGNUP_FORM_FIELDS.email.errorMsg,
             },
           ]}
+          style={{ width: '400px' }}
         >
           <Input
             size="large"
@@ -50,6 +51,7 @@ const Signup = () => {
               message: SIGNUP_FORM_FIELDS.password.errorMsg,
             },
           ]}
+          style={{ width: '400px' }}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
@@ -70,7 +72,7 @@ const Signup = () => {
             }}
             loading={loading}
           >
-            {i18next.t('submit')}
+           Register
           </Button>
           <span style={{ marginLeft: '10px' }}>Or</span>
           <Link href="/auth/login" style={{ marginLeft: '10px' }}>Login</Link>
