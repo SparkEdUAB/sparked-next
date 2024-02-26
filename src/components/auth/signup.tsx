@@ -2,7 +2,6 @@ import React from 'react';
 import { Form, Input, Button } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import useAuth from '@hooks/useAuth';
-import i18next from 'i18next';
 import Link from 'next/link'
 import { SIGNUP_FORM_FIELDS } from './constants';
 
