@@ -19,9 +19,12 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: 'setup env file'
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env
+      - name: Build Next.js app
+        uses: actions/checkout@v3
+      - name: Set MongoDB URI
+        run: echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+      - name: Set MongoDB DB
+        run: echo "MONGODB_DB=sparked-next" >> .env
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
