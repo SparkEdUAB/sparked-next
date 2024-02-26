@@ -73,44 +73,6 @@ const Login: React.FC = () => {
             }}
             loading={loading}
           >
-<<<<<<< HEAD
-            <Form.Item
-              label={SIGNUP_FORM_FIELDS.email.label}
-              name={SIGNUP_FORM_FIELDS.email.key}
-              rules={[
-                {
-                  required: true,
-                  message: SIGNUP_FORM_FIELDS.email.errorMsg,
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label={SIGNUP_FORM_FIELDS.password.label}
-              name={SIGNUP_FORM_FIELDS.password.key}
-              rules={[
-                {
-                  required: true,
-                  message: SIGNUP_FORM_FIELDS.password.errorMsg,
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                {/* @ts-ignore */}
-              <Button type="submit">
-                {i18next.t("submit")}
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
-      </Col>
-    </Row>
-=======
             {i18next.t('submit')}
           </Button>
           <span style={{ marginLeft: '10px' }}>Or</span>
@@ -119,7 +81,6 @@ const Login: React.FC = () => {
       </Form.Item>
     </Form>
   </div>
->>>>>>> upstream/main
   );
 };
 
