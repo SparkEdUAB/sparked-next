@@ -2,64 +2,68 @@
 "use client";
 
 import { AdminPageTitle } from "@components/layouts";
-import useCourse from "@hooks/useCourse";
-import useSchool from "@hooks/useSchool";
-import SchoolStore from "@state/mobx/scholStore";
+import useProgram from "@hooks/useProgram";
 import { Card, Col, Form, Input, Row, Select } from "antd";
 import { Button } from "flowbite-react";
 import i18next from "i18next";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { UNIT_FORM_FIELDS } from "./constants";
-import useProgram from "@hooks/useProgram";
+import { USER_FORM_FIELDS } from "./constants";
+import useSchool from "@hooks/useSchool";
 import useUnit from "@hooks/useUnit";
+import useCourse from "@hooks/useCourse";
 
-const onFinishFailed = (errorInfo: any) => {};
-
-const CreateUnitView: React.FC = () => {
-  const { createUnit } = useUnit();
+const EditUnitView: React.FC = () => {
+  const [form] = Form.useForm();
+  const { editUnit, fetchUnitById, unit } = useUnit(form);
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();
 
-  const { selectedSchool } = SchoolStore;
+  const searchParams = useSearchParams();
+
 
   useEffect(() => {
-    fetchSchools({});
+    fetchUnitById({
+      unitId: searchParams.get("unitId") as string,
+      withMetaData: true,
+    });
+
     fetchPrograms({});
+    fetchSchools({});
     fetchCourses({});
   }, []);
 
-  const [form] = Form.useForm();
-
   return (
     <>
-      <AdminPageTitle title={i18next.t("create_unit")} />
+      <AdminPageTitle title={i18next.t("edit_unit")} />
 
       <Row className="form-container">
         <Col span={24}>
           <Card
             className="form-card"
-            title={<p className="form-label">{i18next.t("new_unit")}</p>}
+            title={<p className="form-label">{unit?.name}</p>}
             bordered={false}
           >
             <Form
+              form={form}
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
-              initialValues={selectedSchool || {}}
-              onFinish={createUnit}
+              initialValues={unit || {}}
+              onFinish={editUnit}
               onFinishFailed={() => {}}
               autoComplete="off"
             >
               <Form.Item
                 label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.name.label}</p>
+                  <p className="form-label">{USER_FORM_FIELDS.name.label}</p>
                 }
-                name={UNIT_FORM_FIELDS.name.key}
+                name={USER_FORM_FIELDS.name.key}
                 rules={[
                   {
                     required: true,
-                    message: UNIT_FORM_FIELDS.name.errorMsg,
+                    message: USER_FORM_FIELDS.name.errorMsg,
                   },
                 ]}
               >
@@ -69,14 +73,14 @@ const CreateUnitView: React.FC = () => {
               <Form.Item
                 label={
                   <p className="form-label">
-                    {UNIT_FORM_FIELDS.description.label}
+                    {USER_FORM_FIELDS.description.label}
                   </p>
                 }
-                name={UNIT_FORM_FIELDS.description.key}
+                name={USER_FORM_FIELDS.description.key}
                 rules={[
                   {
                     required: true,
-                    message: UNIT_FORM_FIELDS.description.errorMsg,
+                    message: USER_FORM_FIELDS.description.errorMsg,
                   },
                 ]}
               >
@@ -85,12 +89,12 @@ const CreateUnitView: React.FC = () => {
 
               <Form.Item
                 label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.school.label}</p>
+                  <p className="form-label">{USER_FORM_FIELDS.school.label}</p>
                 }
-                name={UNIT_FORM_FIELDS.school.key}
+                name={USER_FORM_FIELDS.school.key}
                 rules={[
                   {
-                    message: UNIT_FORM_FIELDS.school.errorMsg,
+                    message: USER_FORM_FIELDS.school.errorMsg,
                   },
                 ]}
               >
@@ -101,15 +105,14 @@ const CreateUnitView: React.FC = () => {
                   }))}
                 />
               </Form.Item>
-
               <Form.Item
                 label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.program.label}</p>
+                  <p className="form-label">{USER_FORM_FIELDS.program.label}</p>
                 }
-                name={UNIT_FORM_FIELDS.program.key}
+                name={USER_FORM_FIELDS.program.key}
                 rules={[
                   {
-                    message: UNIT_FORM_FIELDS.program.errorMsg,
+                    message: USER_FORM_FIELDS.program.errorMsg,
                   },
                 ]}
               >
@@ -123,12 +126,12 @@ const CreateUnitView: React.FC = () => {
 
               <Form.Item
                 label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.course.label}</p>
+                  <p className="form-label">{USER_FORM_FIELDS.course.label}</p>
                 }
-                name={UNIT_FORM_FIELDS.course.key}
+                name={USER_FORM_FIELDS.course.key}
                 rules={[
                   {
-                    message: UNIT_FORM_FIELDS.course.errorMsg,
+                    message: USER_FORM_FIELDS.course.errorMsg,
                   },
                 ]}
               >
@@ -157,4 +160,4 @@ const CreateUnitView: React.FC = () => {
   );
 };
 
-export default CreateUnitView;
+export default EditUnitView;

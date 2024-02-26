@@ -50,9 +50,7 @@ const CreateCourseView: React.FC = () => {
             >
               <Form.Item
                 label={
-                  <p className="form-label">
-                    {COURSE_FORM_FIELDS.name.label}
-                  </p>
+                  <p className="form-label">{COURSE_FORM_FIELDS.name.label}</p>
                 }
                 name={COURSE_FORM_FIELDS.name.key}
                 rules={[
@@ -126,8 +124,8 @@ const CreateCourseView: React.FC = () => {
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button
                   className={"form-submit-btn"}
-                  type="primary"
-                  htmlType="submit"
+                  //  @ts-ignore
+                  type="submit"
                 >
                   {i18next.t("submit")}
                 </Button>

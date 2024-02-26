@@ -15,18 +15,28 @@ const GuestLayout: FC<{
 
   return (
     <main className="">
-      <Navbar className="nav-bar " fluid={true} rounded={true}>
+      <Navbar className="nav-bar" fluid={true} rounded={true}>
         <Navbar.Brand href="#">
           <AppLogo />
         </Navbar.Brand>
         <Navbar.Toggle />
-        <Navbar.Collapse>
-          <Navbar.Link href="/" active={true}>
+        <Navbar.Collapse
+          style={{
+            backgroundColor: "#0b100ce4",
+            height: 100,
+            marginTop:-8,
+            width:'30%',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Navbar.Link className="navbar-menu-item" href="/" active={true}>
             {i18next.t("home")}
           </Navbar.Link>
           {!isAuthenticated ? (
             <>
-              <Navbar.Link href="/auth/signup">
+              <Navbar.Link className="navbar-menu-item" href="/auth/signup">
                 {i18next.t("login_signup")}
               </Navbar.Link>
             </>
@@ -38,8 +48,18 @@ const GuestLayout: FC<{
               >
                 {i18next.t("admin")}
               </Navbar.Link>
-              <Navbar.Link onClick={handleLogout} href="#">
+              <Navbar.Link
+                className="navbar-menu-item"
+                onClick={handleLogout}
+                href="#"
+              >
                 {i18next.t("logout")}
+              </Navbar.Link>
+              <Navbar.Link
+                className="navbar-menu-item"
+                href="library"
+              >
+                {i18next.t("library")}
               </Navbar.Link>
             </>
           )}

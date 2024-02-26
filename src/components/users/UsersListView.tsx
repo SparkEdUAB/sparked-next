@@ -3,7 +3,7 @@
 import { AdminPageTitle } from "@components/layouts";
 import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
 import useNavigation from "@hooks/useNavigation";
-import useUnit from "@hooks/useUnit";
+import useUnit from "@hooks/useUser";
 import { Table } from "antd";
 import { Button, TextInput } from "flowbite-react";
 import i18next from "i18next";
@@ -18,7 +18,7 @@ import {
 import { unitTableColumns } from ".";
 import { TunitFields } from "./types";
 
-const UnitListView: React.FC = observer(() => {
+const UsersListView: React.FC = observer(() => {
   const {
     fetchUnits,
     units,
@@ -44,13 +44,13 @@ const UnitListView: React.FC = observer(() => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("units")} />
+      <AdminPageTitle title={i18next.t("users")} />
 
       <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t("search_units")}
+        placeholder={i18next.t("search_users")}
         required
         type="text"
         onKeyDown={(e) => {
@@ -60,7 +60,7 @@ const UnitListView: React.FC = observer(() => {
       <Button.Group>
         <Button
           onClick={() =>
-            router.push(getChildLinkByKey("create", ADMIN_LINKS.units))
+            router.push(getChildLinkByKey("create", ADMIN_LINKS.users))
           }
           className={"table-action-buttons"}
         >
@@ -88,4 +88,4 @@ const UnitListView: React.FC = observer(() => {
   );
 });
 
-export default UnitListView;
+export default UsersListView;
