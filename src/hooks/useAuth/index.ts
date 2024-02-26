@@ -8,9 +8,11 @@ import i18next from "i18next";
 import { signIn, signOut } from "next-auth/react";
 import AUTH_PROCESS_CODES from "@app/api/auth/processCodes";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const useAuth = () => {
   const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const isAuthenticated = status === "authenticated";
@@ -24,7 +26,7 @@ const useAuth = () => {
         "Content-Type": "application/json",
       },
     };
-
+    setLoading(true)
     try {
       const resp = await fetch(url, formData);
 
@@ -52,6 +54,8 @@ const useAuth = () => {
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +68,7 @@ const useAuth = () => {
         "Content-Type": "application/json",
       },
     };
-
+    setLoading(true);
     try {
       const resp = await fetch(url, formData);
 
@@ -95,6 +99,8 @@ const useAuth = () => {
         `${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`
       );
       return false;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -106,7 +112,7 @@ const useAuth = () => {
         "Content-Type": "application/json",
       },
     };
-
+    setLoading(true);
     try {
       const resp = await fetch(url, formData);
 
@@ -132,6 +138,8 @@ const useAuth = () => {
     } catch (err: any) {
       message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
       return false;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,6 +148,7 @@ const useAuth = () => {
     handleSignup,
     handleLogin,
     handleLogout,
+    loading,
   };
 };
 
