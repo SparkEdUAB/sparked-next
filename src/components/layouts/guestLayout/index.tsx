@@ -22,8 +22,10 @@ const GuestLayout: FC<{
         <Navbar.Toggle />
         <Navbar.Collapse
           style={{
-            backgroundColor: "#555d5751",
+            backgroundColor: "#0b100ce4",
             height: 100,
+            marginTop:-8,
+            width:'30%',
             display: "flex",
             justifyContent: "center",
             alignItems: "center",

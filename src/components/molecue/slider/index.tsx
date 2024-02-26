@@ -1,7 +1,8 @@
 import { Carousel } from "flowbite-react";
 import styled from "styled-components";
 
-const sliderTextBkgUrl = "assets/images/cover/slider-text-bkg.png";
+const sliderTextBkgUrl =
+  "public/assets/images/cover/slider-text-bkg.png";
 
 type T_imageContainer = {
   imageUrl: string;
@@ -17,11 +18,14 @@ const ImageContainer = styled.div<T_imageContainer>`
 
   background-size: contain;
   background-repeat: no-repeat;
-  background-color: #cbcacc !important;
   display: flex;
   justify-content: flex-end;
+
   flex-direction: row;
-  filter: grayscale(100%);
+  /* filter: grayscale(30%); */
+  filter: blur(0.34px);
+
+  background-color: #101512cc !important;
 `;
 
 
@@ -31,9 +35,9 @@ const SliderTextContainer = styled.div<T_sliderTextContainer>`
   border-radius: 2%;
   display: flex;
 
-  background-image: url(${(p) => p.sliderTextBkgUrl});
   background-size: cover;
   background-repeat: no-repeat;
+  background-color: #101512cc !important;
 
   -webkit-filter: blur(5px);
   -moz-filter: blur(5px);
