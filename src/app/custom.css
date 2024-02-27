@@ -4,14 +4,9 @@
 
 .landing-page-container {
   background-color: #faf8f4 !important;
-  /* background-image: url("https://img.freepik.com/free-vector/rounded-lines-pattern-collection_52683-47554.jpg?t=st=1708685549~exp=1708689149~hmac=ade935b2a149920a94e2f0cfe47a0896cc8955e7f6a27d433f5639a0e82748f6&w=1060"); */
-  /* background-image: url("https:/img.freepik.com/free-vector/abstract-organic-pattern-design-background_1048-16175.jpg?t=st=1708686457~exp=1708690057~hmac=e18cc7ecdc2dc3f9e215813a05ac16624699a9e5a5ddd54d51d212285c66f501&w=1060"); */
-  /* background-image: url("https://img.freepik.com/free-vector/hand-draw-brush-shape-background_1409-1436.jpg?t=st=1708686560~exp=1708690160~hmac=16ed0ce0a12cea8e5e311afe2840685fd3846c4a32ed06816efcc64b13a2afa6&w=2000"); */
   background-image: url("https://img.freepik.com/free-vector/handdrawn-style-line-doodle-pattern_1409-3949.jpg?t=st=1708706966~exp=1708710566~hmac=20506a50dab787eeb4d62c1e106d3995e7e0367db13f7d86fcd31ce2045dabbe&w=1800");
-  /* background-image: url("https://img.freepik.com/free-vector/ethnic-pattern-background-colorful-seamless-aztec-design-vector_53876-154225.jpg?t=st=1708699431~exp=1708703031~hmac=768fc0e028e51940338be2356f16bfb83ab6601559a855b6964cc1b9b92a4774&w=1060"); */
   background-position:center;
-  /* background-repeat: no-repeat; */
-        /* filter: grayscale(100%); */
+
 
 }
 
@@ -23,7 +18,6 @@
   color: white;
     background-image: url("https://img.freepik.com/free-vector/handdrawn-style-line-doodle-pattern_1409-3949.jpg?t=st=1708706966~exp=1708710566~hmac=20506a50dab787eeb4d62c1e106d3995e7e0367db13f7d86fcd31ce2045dabbe&w=1800");
       background-position: center;
-        /* filter: grayscale(100%); */
         height: 100px;
 }
 
@@ -33,7 +27,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100 %;
+  height: 100%;
 }
 
 .landing-page-plain-card {
@@ -142,4 +136,37 @@
 .confirm-dialog-y-btn {
   background-color: black !important ;
   color: white !important;
+}
+
+
+.content-form-label{
+  color: gray;
+  padding: 10px;
+}
+
+.content-drop-down-filter {
+  max-width: 150px !important;
+  min-width: 150px !important;
+  margin-bottom: 10px;
+  margin-left: 5px;
+}
+
+.content-tag-container {
+  overflow: scroll;
+
+}
+
+.content-tag-container::-webkit-scrollbar {
+  width: 30px;
+  height: 5px;
+    opacity: 0;
+}
+
+.content-tag-container:hover::-webkit-scrollbar {
+  opacity: 1;
+}
+
+.content-tag-container::-webkit-scrollbar-thumb {
+  background-color: rgba(119, 107, 107, 0.1);
+    opacity: 0;
 }
