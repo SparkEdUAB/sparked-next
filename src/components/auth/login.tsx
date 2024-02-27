@@ -1,5 +1,4 @@
 import {  Form, Input, Button } from "antd";
-import i18next from "i18next";
 import { UserOutlined, LockOutlined,  } from '@ant-design/icons';
 // @todo use login form fields
 import { SIGNUP_FORM_FIELDS } from "./constants";
@@ -62,6 +61,7 @@ const Login: React.FC = () => {
       <Form.Item className="form-item-style">
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button
+          //@ts-ignore
             type="primary"
             htmlType="submit"
             className="button-style"

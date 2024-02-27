@@ -20,10 +20,10 @@ const WelcomePage: React.FC = () => {
             </a>
             <div className="flex items-center lg:order-2">
               <Flex gap="small" wrap="wrap">
-                <Button type="link" className="text-blue-600">
+                <Button type="link" className="text-blue-600" size='large'>
                   <Link href="/auth/login">Log in</Link>
                 </Button>
-                <Button type="text" className="bg-blue-600 text-white">
+                <Button type="text" className="bg-blue-600 text-white" size='large'>
                   <Link href="/auth/signup">Get started</Link>
                 </Button>
               </Flex>
