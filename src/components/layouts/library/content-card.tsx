@@ -20,6 +20,8 @@ const ContentDetailsCardView: React.FC<{ title: string }> = ({
     style={{ margin: 10, borderRadius: 20 }}
     cover={
       <Image
+        width={500}
+        height={500}
         alt="example"
         src="https://cdn.pixabay.com/photo/2023/06/16/11/47/books-8067850_1280.jpg"
       />
