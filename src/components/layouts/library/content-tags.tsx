@@ -17,6 +17,7 @@ const ContentTags: React.FC = () => (
   >
     {libraryTags.map((i, index) => (
       <Tag
+        key={index}
         style={{
           height: 40,
           textAlign: "center",

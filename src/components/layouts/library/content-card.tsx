@@ -6,6 +6,7 @@ import {
   ShareAltOutlined,
 } from "@ant-design/icons";
 import { Avatar, Card, Typography } from "antd";
+import Image from "next/image";
 import React from "react";
 
 const { Meta } = Card;
@@ -18,14 +19,14 @@ const ContentDetailsCardView: React.FC<{ title: string }> = ({
   <Card
     style={{ margin: 10, borderRadius: 20 }}
     cover={
-      <img
+      <Image
         alt="example"
         src="https://cdn.pixabay.com/photo/2023/06/16/11/47/books-8067850_1280.jpg"
       />
     }
     actions={[
-      <LikeOutlined />,
-      <DislikeOutlined />,
+      <LikeOutlined key={1} />,
+      <DislikeOutlined key={2} />,
       <ShareAltOutlined key="ellipsis" />,
     ]}
   >

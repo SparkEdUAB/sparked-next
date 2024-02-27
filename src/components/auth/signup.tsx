@@ -14,10 +14,10 @@ const Signup = () => {
   return (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
       }}
     >
       <Form
@@ -34,7 +34,7 @@ const Signup = () => {
               message: SIGNUP_FORM_FIELDS.email.errorMsg,
             },
           ]}
-          style={{ width: '400px' }}
+          style={{ width: "400px" }}
         >
           <Input
             size="large"
@@ -51,7 +51,7 @@ const Signup = () => {
               message: SIGNUP_FORM_FIELDS.password.errorMsg,
             },
           ]}
-          style={{ width: '400px' }}
+          style={{ width: "400px" }}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
@@ -62,20 +62,23 @@ const Signup = () => {
         </Form.Item>
         <Form.Item className="form-item-style">
           <Button
+            //@ts-ignore
             type="primary"
             htmlType="submit"
             className="button-style"
             style={{
-              backgroundColor: '#1890ff',
-              borderColor: '#1890ff',
-              color: 'white',
+              backgroundColor: "#1890ff",
+              borderColor: "#1890ff",
+              color: "white",
             }}
             loading={loading}
           >
-            {i18next.t('submit')}
+            {i18next.t("submit")}
           </Button>
-          <span style={{ marginLeft: '10px' }}>Or</span>
-          <Link href="/auth/login" style={{ marginLeft: '10px' }}>Login</Link>
+          <span style={{ marginLeft: "10px" }}>Or</span>
+          <Link href="/auth/login" style={{ marginLeft: "10px" }}>
+            Login
+          </Link>
         </Form.Item>
       </Form>
     </div>

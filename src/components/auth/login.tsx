@@ -63,6 +63,7 @@ const Login: React.FC = () => {
       <Form.Item className="form-item-style">
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Button
+          //@ts-ignore
             type="primary"
             htmlType="submit"
             className="button-style"

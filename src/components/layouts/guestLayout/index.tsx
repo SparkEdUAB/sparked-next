@@ -16,7 +16,7 @@ const GuestLayout: FC<{
 
 
   const commonLinks = [
-    <Navbar.Link className="navbar-menu-item" href="library">
+    <Navbar.Link key={"library"} className="navbar-menu-item" href="library">
       {i18next.t("library")}
     </Navbar.Link>,
   ];

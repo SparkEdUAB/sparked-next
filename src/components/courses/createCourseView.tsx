@@ -124,7 +124,6 @@ const CreateCourseView: React.FC = () => {
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button
                   className={"form-submit-btn"}
-                  //  @ts-ignore
                   type="submit"
                 >
                   {i18next.t("submit")}

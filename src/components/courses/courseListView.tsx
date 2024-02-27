@@ -33,7 +33,7 @@ const CourseListView: React.FC = observer(() => {
 
   useEffect(() => {
     fetchCourses({});
-  }, []);
+  }, [0]);
 
   const rowSelection = {
     selectedRowKeys: selecetedCourseIds,

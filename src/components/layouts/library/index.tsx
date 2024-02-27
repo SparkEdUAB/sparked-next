@@ -6,7 +6,7 @@ import {
   UserOutlined
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Breadcrumb, Form, Layout, Menu, Select, theme } from "antd";
+import { Form, Layout, Menu, Select, theme } from "antd";
 import React, { ReactNode, useEffect } from "react";
 
 import useCourse from "@hooks/useCourse";
@@ -186,7 +186,6 @@ const LibraryLayout: React.FC<T_props> = (props) => {
           />
         </Form.Item>
       </Form>
-      {/* </Row> */}
 
       <ContentTags />
 
@@ -203,7 +202,6 @@ const LibraryLayout: React.FC<T_props> = (props) => {
             bottom: 0,
             background: colorBgContainer,
           }}
-          // style={{ background: colorBgContainer }}
         >
           <Menu
             mode="inline"
@@ -214,11 +212,7 @@ const LibraryLayout: React.FC<T_props> = (props) => {
           />
         </Sider>
         <Layout style={{ padding: "0 24px 24px" }}>
-          {/* <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>Library</Breadcrumb.Item>
-            <Breadcrumb.Item>Content</Breadcrumb.Item>
-          </Breadcrumb> */}
+        
           <Content
             style={{
               padding: 24,
@@ -227,12 +221,9 @@ const LibraryLayout: React.FC<T_props> = (props) => {
               maxHeight:600,
               position:'fixed',
               overflow:'scroll',
-              // background: colorBgContainer,
               borderRadius: borderRadiusLG,
               marginLeft:200,
-              // marginTop:30
             }}
-            // style={{ margin: "24px 16px 0", overflow: "initial" }}
           >
             {children}
           </Content>
