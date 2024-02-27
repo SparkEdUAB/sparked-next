@@ -14,10 +14,10 @@ const Signup = () => {
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
       }}
     >
       <Form
@@ -34,7 +34,7 @@ const Signup = () => {
               message: SIGNUP_FORM_FIELDS.email.errorMsg,
             },
           ]}
-          style={{ width: "400px" }}
+          style={{ width: '400px' }}
         >
           <Input
             size="large"
@@ -51,7 +51,7 @@ const Signup = () => {
               message: SIGNUP_FORM_FIELDS.password.errorMsg,
             },
           ]}
-          style={{ width: "400px" }}
+          style={{ width: '400px' }}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
@@ -62,26 +62,63 @@ const Signup = () => {
         </Form.Item>
         <Form.Item className="form-item-style">
           <Button
-            //@ts-ignore
             type="primary"
             htmlType="submit"
             className="button-style"
             style={{
-              backgroundColor: "#1890ff",
-              borderColor: "#1890ff",
-              color: "white",
+              backgroundColor: '#1890ff',
+              borderColor: '#1890ff',
+              color: 'white',
             }}
             loading={loading}
           >
-            {i18next.t("submit")}
+<<<<<<< HEAD
+            <Form.Item
+              label={SIGNUP_FORM_FIELDS.email.label}
+              name={SIGNUP_FORM_FIELDS.email.key}
+              rules={[
+                {
+                  required: true,
+                  message: SIGNUP_FORM_FIELDS.email.errorMsg,
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label={SIGNUP_FORM_FIELDS.password.label}
+              name={SIGNUP_FORM_FIELDS.password.key}
+              rules={[
+                {
+                  required: true,
+                  message: SIGNUP_FORM_FIELDS.password.errorMsg,
+                },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+
+            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              {/* @ts-ignore */}
+
+              <Button type="submit">
+                {i18next.t("submit")}
+              </Button>
+            </Form.Item>
+          </Form>
+        </Card>
+      </Col>
+    </Row>
+=======
+            {i18next.t('submit')}
           </Button>
-          <span style={{ marginLeft: "10px" }}>Or</span>
-          <Link href="/auth/login" style={{ marginLeft: "10px" }}>
-            Login
-          </Link>
+          <span style={{ marginLeft: '10px' }}>Or</span>
+          <Link href="/auth/login" style={{ marginLeft: '10px' }}>Login</Link>
         </Form.Item>
       </Form>
     </div>
+>>>>>>> upstream/main
   );
 };
 

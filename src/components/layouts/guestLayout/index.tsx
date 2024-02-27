@@ -13,14 +13,6 @@ const GuestLayout: FC<{
 }> = ({ children }) => {
   const { isAuthenticated, handleLogout } = useAuth();
 
-
-
-  const commonLinks = [
-    <Navbar.Link key={"library"} className="navbar-menu-item" href="library">
-      {i18next.t("library")}
-    </Navbar.Link>,
-  ];
-
   return (
     <main className="">
       <Navbar className="nav-bar" fluid={true} rounded={true}>
@@ -32,8 +24,8 @@ const GuestLayout: FC<{
           style={{
             backgroundColor: "#0b100ce4",
             height: 100,
-            marginTop: -8,
-            width: "30%",
+            marginTop:-8,
+            width:'30%',
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -47,7 +39,6 @@ const GuestLayout: FC<{
               <Navbar.Link className="navbar-menu-item" href="/auth/signup">
                 {i18next.t("login_signup")}
               </Navbar.Link>
-              {commonLinks}
             </>
           ) : (
             <>
@@ -64,7 +55,12 @@ const GuestLayout: FC<{
               >
                 {i18next.t("logout")}
               </Navbar.Link>
-              {commonLinks}
+              <Navbar.Link
+                className="navbar-menu-item"
+                href="library"
+              >
+                {i18next.t("library")}
+              </Navbar.Link>
             </>
           )}
         </Navbar.Collapse>
