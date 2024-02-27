@@ -1,7 +1,5 @@
-import {  Form, Input } from "antd";
-import i18next from "i18next";
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Button } from "flowbite-react";
+import {  Form, Input, Button } from "antd";
+import { UserOutlined, LockOutlined,  } from '@ant-design/icons';
 // @todo use login form fields
 import { SIGNUP_FORM_FIELDS } from "./constants";
 import useAuth from "@hooks/useAuth";
@@ -74,7 +72,7 @@ const Login: React.FC = () => {
             }}
             loading={loading}
           >
-            {i18next.t('submit')}
+           Login
           </Button>
           <span style={{ marginLeft: '10px' }}>Or</span>
           <Link href="/auth/signup" style={{ marginLeft: '10px' }}>Register</Link>

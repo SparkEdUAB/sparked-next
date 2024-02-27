@@ -1,6 +1,5 @@
 "use client";
 
-import GuestLayout from "@components/layouts/guestLayout";
 import LibraryLayout from "@components/layouts/library";
 import { bookTitles } from "@components/layouts/library/book-titles";
 import ContentCardView from "@components/layouts/library/content-card";
@@ -9,7 +8,6 @@ import React from "react";
 
 const LibraryPage: React.FC = (props) => {
   return (
-    <GuestLayout>
       <LibraryLayout>
         <Row gutter={16}>
           {new Array(100).fill("i").map((i, index) => (
@@ -24,7 +22,6 @@ const LibraryPage: React.FC = (props) => {
           ))}
         </Row>
       </LibraryLayout>
-    </GuestLayout>
   );
 };
 

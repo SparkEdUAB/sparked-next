@@ -6,16 +6,19 @@ import "./custom.css";
 import "./globals.css";
 import "utils/intl";
 import {ConfirmDialog} from "@components/modals";
+import { Session } from "next-auth";
+import { ReactNode } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function RootLayout({
-  children,
-  pageProps,
-}: {
-  children: React.ReactNode;
-  pageProps?: any;
-}) {
+interface RootLayoutProps {
+  children: ReactNode;
+  pageProps?: {
+    session?: Session;
+  };
+}
+
+const RootLayout = ({ children, pageProps }: RootLayoutProps) => {
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -26,4 +29,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;
