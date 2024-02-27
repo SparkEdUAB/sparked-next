@@ -10,6 +10,7 @@ import React, { ReactNode } from "react";
 
 import { Input } from 'antd';
 import ContentTags from "./content-tags";
+import { bookTitles } from "./book-titles";
 
 const { Search } = Input;
 
@@ -27,28 +28,26 @@ const items1: MenuProps["items"] = ["1", "2", "3"].map((key) => ({
 }));
 
 const items2: MenuProps["items"] = [
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-].map((icon, index) => {
+ {icon: UserOutlined,title:'Trending'},
+ { icon:LaptopOutlined,title:'Recommended'},
+  {icon:NotificationOutlined,title:'Favorite'},
+].map((i, index) => {
   const key = String(index + 1);
 
   return {
     key: `sub${key}`,
-    icon: React.createElement(icon),
-    label: `subnav ${key}`,
+    icon: React.createElement(i.icon),
+    label: i.title,
 
-    children: new Array(4).fill(null).map((_, j) => {
+    children: bookTitles.slice(0,6).map((i, j) => {
       const subKey = index * 4 + j + 1;
       return {
         key: subKey,
-        label: `option${subKey}`,
+        label: i,
       };
     }),
   };
 });
-
-
 
 
 
@@ -99,8 +98,8 @@ const LibraryLayout: React.FC<T_props> = (props) => {
         <Layout style={{ padding: "0 24px 24px" }}>
           <Breadcrumb style={{ margin: "16px 0" }}>
             <Breadcrumb.Item>Home</Breadcrumb.Item>
-            <Breadcrumb.Item>List</Breadcrumb.Item>
-            <Breadcrumb.Item>App</Breadcrumb.Item>
+            <Breadcrumb.Item>Library</Breadcrumb.Item>
+            <Breadcrumb.Item>Content</Breadcrumb.Item>
           </Breadcrumb>
           <Content
             style={{
