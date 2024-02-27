@@ -1,3 +1,5 @@
+"use client";
+
 import {
   DislikeOutlined,
   LikeOutlined,
@@ -10,9 +12,11 @@ const { Meta } = Card;
 
 const { Text, Link } = Typography;
 
-const ContentDetailsCardView: React.FC<{ title: string }> = ({ title='' }) => (
+const ContentDetailsCardView: React.FC<{ title: string }> = ({
+  title = "",
+}) => (
   <Card
-    style={{ margin: 10 }}
+    style={{ margin: 10, borderRadius: 20 }}
     cover={
       <img
         alt="example"

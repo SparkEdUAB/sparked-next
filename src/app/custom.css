@@ -33,7 +33,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 100 %;
+  height: 100%;
 }
 
 .landing-page-plain-card {
@@ -142,4 +142,38 @@
 .confirm-dialog-y-btn {
   background-color: black !important ;
   color: white !important;
+}
+
+
+.content-form-label{
+  color: gray;
+  padding: 10px;
+}
+
+.content-drop-down-filter {
+  /* color: gray; */
+  max-width: 150px !important;
+  min-width: 150px !important;
+  margin-bottom: 10px;
+  margin-left: 5px;
+}
+
+.content-tag-container {
+  overflow: scroll;
+
+}
+
+.content-tag-container::-webkit-scrollbar {
+  width: 30px;
+  height: 5px;
+    opacity: 0;
+}
+
+.content-tag-container:hover::-webkit-scrollbar {
+  opacity: 1;
+}
+
+.content-tag-container::-webkit-scrollbar-thumb {
+  background-color: rgba(119, 107, 107, 0.1);
+    opacity: 0;
 }
