@@ -22,7 +22,7 @@ const UnitListView: React.FC = observer(() => {
   const {
     fetchUnits,
     units,
-    selecetedUnitIds,
+    selectedUnitIds,
     setSelectedProgramIds,
     triggerDelete,
     triggerEdit,
@@ -36,7 +36,7 @@ const UnitListView: React.FC = observer(() => {
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedUnitIds,
+    selectedRowKeys: selectedUnitIds,
     onChange: (selectedRowKeys: React.Key[], selectedRows: TunitFields[]) => {
       setSelectedProgramIds(selectedRows.map((i) => i.key));
     },

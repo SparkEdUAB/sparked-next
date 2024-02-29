@@ -1,10 +1,10 @@
 import Image from "next/image";
 
 const AppLogo = () => (
-  <div>
+  <div >
     <Image
-      width={100}
-      height={175}
+      width={80}
+      height={160}
       src="/logo.png"
       alt="SparkEd Logo"
       className="logo"

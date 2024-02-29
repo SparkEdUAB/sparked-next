@@ -39,8 +39,4 @@ export default async function uploadFile_(req: Request, session?: Session) {
   }
 }
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
+
