@@ -8,7 +8,6 @@ import { Sidebar } from 'flowbite-react';
 import styled from 'styled-components';
 import { toTitleCase } from 'utils/helpers';
 
-
 // TODO: Refactor this to use antd
 const FullHeightSidebar = styled(Sidebar)`
   height: 100vh;
@@ -28,7 +27,7 @@ const AdminSidebar = () => {
       if (Number(children?.length) > 0) {
         const isChildActive = children?.some((child: any) => pathname === child.link);
         return (
-          <Sidebar.Collapse label={toTitleCase(label)} key={key} active={isChildActive}>
+          <Sidebar.Collapse label={toTitleCase(label)} key={key} active={isChildActive} icon={icon}>
             {children?.map((child: any) => (
               <Sidebar.Item
                 key={child.key}
@@ -42,7 +41,7 @@ const AdminSidebar = () => {
         );
       }
       return (
-        <Sidebar.Item key={key} active={isActive} onClick={() => handleMenuClick(link)}>
+        <Sidebar.Item key={key} active={isActive} icon={icon} onClick={() => handleMenuClick(link)}>
           {toTitleCase(label)}
         </Sidebar.Item>
       );

@@ -24,7 +24,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: i18next.t('dashboard'),
     key: 'admin_home',
-    icon: <DashboardOutlined />,
+    icon: () => <DashboardOutlined />,
     index: 0,
   },
   users: {
@@ -32,7 +32,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: i18next.t('users'),
     key: 'admin_users',
-    icon: <UserOutlined />,
+    icon: () => <UserOutlined />,
     index: 2,
     children: [
       {
@@ -54,7 +54,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: i18next.t('courses'),
     key: 'admin_courses',
-    icon: <BookOutlined />,
+    icon: () => <BookOutlined />,
     index: 2,
     children: [
       {
@@ -76,7 +76,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: i18next.t('topics'),
     key: 'admin_topics',
-    icon: <BulbOutlined />,
+    icon: () => <BulbOutlined />,
     index: 3,
     children: [
       {
@@ -98,7 +98,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: i18next.t('schools'),
     key: 'admin_schools',
-    icon: <HomeOutlined />,
+    icon: () => <HomeOutlined />,
     index: 7,
     children: [
       {
@@ -120,7 +120,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: i18next.t('programs'),
     key: 'admin_programs',
-    icon: <AppstoreAddOutlined />,
+    icon: () => <AppstoreAddOutlined />,
     index: 8,
     children: [
       {
@@ -142,7 +142,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: i18next.t('units'),
     key: 'admin_units',
-    icon: <BlockOutlined />,
+    icon: () => <BlockOutlined />,
     index: 9,
     children: [
       {
@@ -164,7 +164,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: 'Media Content',
     key: 'admin_media-content',
-    icon: <ContainerOutlined />,
+    icon: () => <ContainerOutlined />,
     index: 9,
     children: [
       {
@@ -186,7 +186,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: i18next.t('statistics'),
     key: 'admin_statistics',
-    icon: <BarChartOutlined />,
+    icon: () => <BarChartOutlined />,
     index: 5,
   },
   feedback: {
@@ -194,7 +194,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
     roles: ['admin'],
     label: i18next.t('feedback'),
     key: 'admin_feedback',
-    icon: <MessageOutlined />,
+    icon: () => <MessageOutlined />,
     index: 6,
   },
 };
