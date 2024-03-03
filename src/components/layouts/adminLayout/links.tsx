@@ -14,6 +14,10 @@ import {
 } from '@ant-design/icons';
 import i18next from 'i18next';
 
+// Todo:
+// - Add logout link
+// - Add profile details
+
 export const ADMIN_LINKS: TmenuItemLink = {
   home: {
     link: '/admin',
@@ -158,7 +162,7 @@ export const ADMIN_LINKS: TmenuItemLink = {
   media_content: {
     link: '/admin/media-content',
     roles: ['admin'],
-    label: i18next.t('media-content'),
+    label: 'Media Content',
     key: 'admin_media-content',
     icon: <ContainerOutlined />,
     index: 9,
