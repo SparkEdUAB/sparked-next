@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 export type TmenuItemLink = {
   home: TmenuItemLinkParams;
   users: TmenuItemLinkParams;
@@ -25,7 +23,7 @@ export type TmenuItemLinkParams = {
   roles: Array<string>;
   label: string;
   key: string;
-  icon: ReactNode;
+  icon: any;
   index: number;
   hasDivider?: string;
   hasBadge?: boolean;
