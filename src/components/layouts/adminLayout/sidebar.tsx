@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import AppLogo from "@components/logo";
-import useNavigation from "@hooks/useNavigation";
-import { Badge, Sidebar } from "flowbite-react";
-import i18next from "i18next";
+import AppLogo from '@components/logo';
+import useNavigation from '@hooks/useNavigation';
+import { Badge, Sidebar } from 'flowbite-react';
+import i18next from 'i18next';
 
 const AdminSidebar = () => {
   const { fetchAdminMenuItems, isActiveMenuItem } = useNavigation();
@@ -13,16 +13,14 @@ const AdminSidebar = () => {
   return (
     <Sidebar aria-label="Sidebar with logo branding">
       <AppLogo />
-      <Sidebar.Items className="admin-menu" >
+      <Sidebar.Items className="admin-menu">
         <Sidebar.ItemGroup>
           {menuItems
             .sort((a, b) => a.index - b.index)
             .map((i) => (
               <Sidebar.Item
-                className={
-                  isActiveMenuItem(i) ? "active-menu-item" : "sidebar-menu-item"
-                }
-                key={i.key} 
+                className={isActiveMenuItem(i) ? 'active-menu-item' : 'sidebar-menu-item'}
+                key={i.key}
                 href={i.link}
                 icon={i.icon}
               >
@@ -34,7 +32,7 @@ const AdminSidebar = () => {
       <Sidebar.CTA className="admin-menu">
         <div className="mb-3 flex items-center">
           <Badge color="warning">
-            <p>{i18next.t("beta")}</p>
+            <p>{i18next.t('beta')}</p>
           </Badge>
           <button
             aria-label="Close"
@@ -43,15 +41,13 @@ const AdminSidebar = () => {
           ></button>
         </div>
         <div className="mb-3 text-sm text-gray-300 dark:text-indigo-400">
-          <p>{i18next.t("app_beta_note")}</p>
+          <p>{i18next.t('app_beta_note')}</p>
         </div>
         <a
           className="text-sm text-cyan-900 underline hover:text-cyan-800 dark:text-gray-400 dark:hover:text-gray-300"
           href="#"
         >
-          <p className="mb-3 text-sm text-gray-300 dark:text-indigo-400">
-            Got it !
-          </p>
+          <p className="mb-3 text-sm text-gray-300 dark:text-indigo-400">Got it !</p>
         </a>
       </Sidebar.CTA>
     </Sidebar>

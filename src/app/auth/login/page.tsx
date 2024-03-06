@@ -1,13 +1,10 @@
-"use client";
+'use client';
 
-import Login from "@components/auth/login";
-import GuestLayout from "@components/layouts/guestLayout/index";
-import React from "react";
+import Login from '@components/auth/login';
+import React from 'react';
 
 const Home: React.FC = (props) => {
-  return (
-      <Login />
-  );
+  return <Login />;
 };
 
 export default Home;
