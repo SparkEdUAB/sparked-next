@@ -18,13 +18,12 @@ const AdminLayout: FC<TadminLayout> = observer(
     const { activeMenuItem } = useNavigation();
 
     return (
-      <main className="">
+      <main className="admin-content-page">
         <Navbar className="nav-bar" fluid={true} rounded={true}>
           <Navbar.Brand href="#"></Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse
             style={{
-              backgroundColor: "#0b100ce4",
               height: 100,
               marginTop: -8,
               width: "30%",
@@ -72,7 +71,7 @@ const AdminLayout: FC<TadminLayout> = observer(
             <AdminSidebar />
           </div>
 
-          <div className="col-span-4">
+          <div className="col-span-4 ">
             {withBreadcrumb && (
               <AdminHeader
                 menuItems={ADMIN_LINKS}

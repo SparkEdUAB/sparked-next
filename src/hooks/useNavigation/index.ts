@@ -20,8 +20,8 @@ const useNavigation = () => {
 
     for (const menuItem in ADMIN_LINKS) {
       //@ts-ignore
-      const enrty = ADMIN_LINKS[menuItem];
-      menuItems.push(enrty);
+      const entry = ADMIN_LINKS[menuItem];
+      menuItems.push(entry);
     }
 
     return menuItems;

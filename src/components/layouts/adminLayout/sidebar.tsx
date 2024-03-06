@@ -13,7 +13,7 @@ const AdminSidebar = () => {
   return (
     <Sidebar aria-label="Sidebar with logo branding">
       <AppLogo />
-      <Sidebar.Items className="admin-menu">
+      <Sidebar.Items className="admin-menu" >
         <Sidebar.ItemGroup>
           {menuItems
             .sort((a, b) => a.index - b.index)
@@ -22,7 +22,7 @@ const AdminSidebar = () => {
                 className={
                   isActiveMenuItem(i) ? "active-menu-item" : "sidebar-menu-item"
                 }
-                key={i.key}
+                key={i.key} 
                 href={i.link}
                 icon={i.icon}
               >
