@@ -1,61 +1,56 @@
 'use client';
 
+import AppLogo from '@components/logo';
 import useNavigation from '@hooks/useNavigation';
-import React from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { TmenuItemLinkParams } from 'types/links';
-import { Sidebar } from 'flowbite-react';
-import styled from 'styled-components';
-import { toTitleCase } from 'utils/helpers';
+import { Badge, Sidebar } from 'flowbite-react';
+import i18next from 'i18next';
 
-// TODO: Refactor this to use antd
-const FullHeightSidebar = styled(Sidebar)`
-  height: 100vh;
-`;
 const AdminSidebar = () => {
-  const { fetchAdminMenuItems } = useNavigation();
-  const router = useRouter();
-  const pathname = usePathname();
+  const { fetchAdminMenuItems, isActiveMenuItem } = useNavigation();
 
-  const handleMenuClick = (link: string) => {
-    router.push(`${link}`);
-  };
-
-  const renderMenuItems = (links: TmenuItemLinkParams[]) => {
-    return links.map(({ key, label, icon, children, link }) => {
-      const isActive = pathname === link;
-      if (Number(children?.length) > 0) {
-        const isChildActive = children?.some((child: any) => pathname === child.link);
-        return (
-          <Sidebar.Collapse label={toTitleCase(label)} key={key} active={isChildActive} icon={icon}>
-            {children?.map((child: any) => (
-              <Sidebar.Item
-                key={child.key}
-                active={pathname === child.link}
-                onClick={() => handleMenuClick(child.link)}
-              >
-                {toTitleCase(child.label)}
-              </Sidebar.Item>
-            ))}
-          </Sidebar.Collapse>
-        );
-      }
-      return (
-        <Sidebar.Item key={key} active={isActive} icon={icon} onClick={() => handleMenuClick(link)}>
-          {toTitleCase(label)}
-        </Sidebar.Item>
-      );
-    });
-  };
+  const menuItems = fetchAdminMenuItems();
 
   return (
-    <FullHeightSidebar>
-      <Sidebar aria-label="Sidebar with multi-level dropdown example">
-        <Sidebar.Items>
-          <Sidebar.ItemGroup>{renderMenuItems(fetchAdminMenuItems())}</Sidebar.ItemGroup>
-        </Sidebar.Items>
-      </Sidebar>
-    </FullHeightSidebar>
+    <Sidebar aria-label="Sidebar with logo branding">
+      <AppLogo />
+      <Sidebar.Items className="admin-menu">
+        <Sidebar.ItemGroup>
+          {menuItems
+            .sort((a, b) => a.index - b.index)
+            .map((i) => (
+              <Sidebar.Item
+                className={isActiveMenuItem(i) ? 'active-menu-item' : 'sidebar-menu-item'}
+                key={i.key}
+                href={i.link}
+                icon={i.icon}
+              >
+                <p>{i.label}</p>
+              </Sidebar.Item>
+            ))}
+        </Sidebar.ItemGroup>
+      </Sidebar.Items>
+      <Sidebar.CTA className="admin-menu">
+        <div className="mb-3 flex items-center">
+          <Badge color="warning">
+            <p>{i18next.t('beta')}</p>
+          </Badge>
+          <button
+            aria-label="Close"
+            className="-m-1.5 ml-auto inline-flex h-6 w-6 rounded-lg bg-gray-100 p-1 text-cyan-900 hover:bg-gray-200 focus:ring-2 focus:ring-gray-400 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-gray-600"
+            type="button"
+          ></button>
+        </div>
+        <div className="mb-3 text-sm text-gray-300 dark:text-indigo-400">
+          <p>{i18next.t('app_beta_note')}</p>
+        </div>
+        <a
+          className="text-sm text-cyan-900 underline hover:text-cyan-800 dark:text-gray-400 dark:hover:text-gray-300"
+          href="#"
+        >
+          <p className="mb-3 text-sm text-gray-300 dark:text-indigo-400">Got it !</p>
+        </a>
+      </Sidebar.CTA>
+    </Sidebar>
   );
 };
 

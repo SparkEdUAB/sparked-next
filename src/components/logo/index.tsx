@@ -1,15 +1,13 @@
 import Image from "next/image";
 
 const AppLogo = () => (
-  <div >
     <Image
-      width={80}
-      height={160}
-      src="/logo.png"
+      width={300}
+      height={60}
+      src="/logo-blue.png"
       alt="SparkEd Logo"
-      className="logo"
+      className="admin-logo"
     />
-  </div>
 );
 
 export default AppLogo;

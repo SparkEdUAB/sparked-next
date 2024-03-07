@@ -3,7 +3,6 @@ import { FileImageOutlined } from "@ant-design/icons";
 
 
 export const StyledTableLinkView = styled.a`
-  color: #292b2f;
 `;
 
 

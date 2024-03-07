@@ -17,13 +17,49 @@ const AdminLayout: FC<TadminLayout> = observer(({ children, withBreadcrumb = tru
   const { activeMenuItem } = useNavigation();
 
   return (
-    <main className="h-screen">
-      <div className="grid grid-cols-5 grid-rows-5 gap-4 h-full">
+    <main className="admin-content-page">
+      <Navbar className="nav-bar" fluid={true} rounded={true}>
+        <Navbar.Brand href="#"></Navbar.Brand>
+        <Navbar.Toggle />
+        <Navbar.Collapse
+          style={{
+            height: 100,
+            marginTop: -8,
+            width: '30%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Navbar.Link className="navbar-menu-item" href="/" active={true}>
+            {i18next.t('home')}
+          </Navbar.Link>
+
+          {!isAuthenticated ? (
+            <>
+              <Navbar.Link className="navbar-menu-item" href="/auth/signup">
+                {i18next.t('login_signup')}
+              </Navbar.Link>
+            </>
+          ) : (
+            <>
+              <Navbar.Link className="navbar-menu-item" href={ADMIN_LINKS.home.link}>
+                {i18next.t('admin')}
+              </Navbar.Link>
+              <Navbar.Link className="navbar-menu-item" onClick={handleLogout} href="#">
+                {i18next.t('logout')}
+              </Navbar.Link>
+            </>
+          )}
+        </Navbar.Collapse>
+      </Navbar>
+
+      <div className="grid grid-cols-5 grid-rows-5 gap-4">
         <div className="basis-1/12">
           <AdminSidebar />
         </div>
 
-        <div className="col-span-4">
+        <div className="col-span-4 ">
           {withBreadcrumb && <AdminHeader menuItems={ADMIN_LINKS} targetLink={activeMenuItem?.link as string} />}
           {children}
         </div>
