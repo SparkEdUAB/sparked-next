@@ -1,25 +1,28 @@
-import { Button, Flex } from 'antd';
-
+import AppLogo from '@components/logo';
+import { Flex } from 'antd';
+import { DarkThemeToggle } from 'flowbite-react';
 import Link from 'next/link';
 
 const HeaderSection = () => {
   return (
-    <header>
-      <nav className="bg-blue-50 border-blue-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
+    <header className="bg-blue-50  dark:bg-gray-800">
+      <nav className="max-w-screen-xl px-4 mx-auto lg:px-6 py-2.5 ">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
           <a href="" className="flex items-center">
-            <span className="self-center text-xl font-semibold text-blue-900 whitespace-nowrap dark:text-white">
-              SparkEd
-            </span>
+            <AppLogo />
           </a>
           <div className="flex items-center lg:order-2">
-            <Flex gap="small" wrap="wrap">
-              <Button type="link" className="text-blue-600" size="large">
-                <Link href="/auth/login">Log in</Link>
-              </Button>
-              <Button type="text" className="bg-blue-600 text-white" size="large">
-                <Link href="/auth/signup">Get started</Link>
-              </Button>
+            <Flex gap="small" wrap="wrap" align="center">
+              <Link href="/auth/login" className="text-blue-600 font-medium mr-2">
+                Log in
+              </Link>
+              <Link
+                href="/auth/signup"
+                className="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+              >
+                Sign Up
+              </Link>
+              <DarkThemeToggle />
             </Flex>
           </div>
         </div>

@@ -2,8 +2,8 @@ const FooterSection = () => {
   return (
     <>
       <section className="bg-blue-50 dark:bg-gray-900">
-        <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 flex justify-center">
-          <div className="max-w-screen-lg text-blue-700 sm:text-lg dark:text-blue-300">
+        <div className="py-8 px-4 mx-auto max-w-screen-lg lg:py-16 lg:px-6 flex justify-center">
+          <div className="max-w-screen-xl text-blue-700 sm:text-lg dark:text-blue-300">
             <h2 className="mb-4 text-4xl font-bold text-blue-900 dark:text-white text-center">
               Powering future school digital libraries
             </h2>
