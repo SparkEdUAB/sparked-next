@@ -3,12 +3,13 @@ export type TcreateCourseFields = {
   description: string;
   schoolId: string;
 };
+
 export type TfetchCourses = {
   limit?: number;
   skip?: number;
 };
 
-export type TcourseFields = {
+export type TRawCourseFields = {
   key: string;
   name: string;
   _id: string;
@@ -18,7 +19,7 @@ export type TcourseFields = {
   programId: string;
 
   created_at: string;
-  user?: {
+  user: {
     name: string;
     email: string;
   };
@@ -30,4 +31,22 @@ export type TcourseFields = {
     name: string;
     _id: string;
   };
+};
+export type TcourseFields = {
+  index: number;
+  key: string;
+  _id: string;
+  name: string;
+  school:
+    | {
+        name: string;
+        _id: string;
+      }
+    | undefined;
+  schoolId: string | undefined;
+  schoolName: string | undefined;
+  programName: string | undefined;
+  programId: string | undefined;
+  created_by: string;
+  created_at: string;
 };
