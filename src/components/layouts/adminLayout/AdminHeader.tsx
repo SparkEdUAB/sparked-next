@@ -1,30 +1,24 @@
-"use client";
+'use client';
 
-import useNavigation from "@hooks/useNavigation";
-import { Breadcrumb } from "antd";
-import { FC } from "react";
-import { TmenuItemLink } from "types/links";
+import useNavigation from '@hooks/useNavigation';
+import { Breadcrumb } from 'flowbite-react';
+import { FC } from 'react';
+import { MdOutlineAdminPanelSettings } from 'react-icons/md';
+import { TmenuItemLink } from 'types/links';
 
-const AdminHeader: FC<{ menuItems: TmenuItemLink; targetLink: string }> = ({
-  menuItems,
-  targetLink,
-}) => {
+const AdminHeader: FC<{ menuItems: TmenuItemLink }> = ({ menuItems }) => {
   const { generateBreadcrumbItems, activeMenuItem } = useNavigation();
 
-  const breadcrumbItems = generateBreadcrumbItems(menuItems, targetLink);
+  const breadcrumbItems = generateBreadcrumbItems(menuItems, activeMenuItem?.link as string);
 
   return (
-    <Breadcrumb
-    className="admin-breadcrumbs"
-      items={[
-        ...breadcrumbItems.map((i) => (activeMenuItem?.label !== i.label ?{
-          title: <a className="admin-breadcrumb-item" href={i.link}>{i.label}</a>,
-        }:{})),
-        {
-          title: <a className="admin-active-breadcrumb-item" >{activeMenuItem?.label}</a>,
-        },
-      ]}
-    />
+    <Breadcrumb aria-label="Admin breadcrumb">
+      {breadcrumbItems.map((item, index) => (
+        <Breadcrumb.Item key={item.link} href={item.link} icon={index === 0 ? MdOutlineAdminPanelSettings : undefined}>
+          {item.label}
+        </Breadcrumb.Item>
+      ))}
+    </Breadcrumb>
   );
 };
 

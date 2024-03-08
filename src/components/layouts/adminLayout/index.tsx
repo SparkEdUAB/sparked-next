@@ -1,66 +1,28 @@
 'use client';
 
-import { Navbar } from 'flowbite-react';
-import i18next from 'i18next';
-import { FC } from 'react';
-
-import useAuth from '@hooks/useAuth';
+import { FC, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+
 import AdminSidebar from './sidebar';
 import { TadminLayout } from './types';
 import AdminHeader from './AdminHeader';
-import useNavigation from '@hooks/useNavigation';
 import { ADMIN_LINKS } from './links';
+import { AdminNavbar } from './AdminNavbar';
 
 const AdminLayout: FC<TadminLayout> = observer(({ children, withBreadcrumb = true }) => {
-  const { isAuthenticated, handleLogout } = useAuth();
-  const { activeMenuItem } = useNavigation();
+  const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
+
+  const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
 
   return (
     <main className="admin-content-page">
-      <Navbar className="nav-bar" fluid={true} rounded={true}>
-        <Navbar.Brand href="#"></Navbar.Brand>
-        <Navbar.Toggle />
-        <Navbar.Collapse
-          style={{
-            height: 100,
-            marginTop: -8,
-            width: '30%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <Navbar.Link className="navbar-menu-item" href="/" active={true}>
-            {i18next.t('home')}
-          </Navbar.Link>
+      <AdminNavbar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
 
-          {!isAuthenticated ? (
-            <>
-              <Navbar.Link className="navbar-menu-item" href="/auth/signup">
-                {i18next.t('login_signup')}
-              </Navbar.Link>
-            </>
-          ) : (
-            <>
-              <Navbar.Link className="navbar-menu-item" href={ADMIN_LINKS.home.link}>
-                {i18next.t('admin')}
-              </Navbar.Link>
-              <Navbar.Link className="navbar-menu-item" onClick={handleLogout} href="#">
-                {i18next.t('logout')}
-              </Navbar.Link>
-            </>
-          )}
-        </Navbar.Collapse>
-      </Navbar>
+      <div className="md:grid md:grid-cols-[256px_auto]">
+        <AdminSidebar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
 
-      <div className="grid grid-cols-5 grid-rows-5 gap-4">
-        <div className="basis-1/12">
-          <AdminSidebar />
-        </div>
-
-        <div className="col-span-4 ">
-          {withBreadcrumb && <AdminHeader menuItems={ADMIN_LINKS} targetLink={activeMenuItem?.link as string} />}
+        <div className="p-6">
+          {withBreadcrumb && <AdminHeader menuItems={ADMIN_LINKS} />}
           {children}
         </div>
       </div>
