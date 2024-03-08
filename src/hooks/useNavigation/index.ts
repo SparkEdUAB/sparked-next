@@ -1,13 +1,9 @@
-import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
-import NavigationStore from "@state/mobx/navigationStore";
-import { usePathname, useRouter } from "next/navigation";
-import {
-  TbreadcrumbItems,
-  TmenuItemLink,
-  TmenuItemLinkParams,
-} from "types/links";
-import { useParams } from "next/navigation";
-import axios from "axios";
+import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+import NavigationStore from '@state/mobx/navigationStore';
+import { TbreadcrumbItems, TmenuItemLink, TmenuItemLinkParams } from 'types/links';
+import { useParams, usePathname } from 'next/navigation';
+import axios from 'axios';
+import { useRouter } from 'next-nprogress-bar';
 
 const useNavigation = () => {
   const pathname = usePathname();
@@ -19,8 +15,7 @@ const useNavigation = () => {
     const menuItems: Array<TmenuItemLinkParams> = [];
 
     for (const menuItem in ADMIN_LINKS) {
-      //@ts-ignore
-      const entry = ADMIN_LINKS[menuItem];
+      const entry = ADMIN_LINKS[menuItem as keyof TmenuItemLink];
       menuItems.push(entry);
     }
 
@@ -33,28 +28,22 @@ const useNavigation = () => {
       return true;
     }
 
-    const childActiveMenus = menuItem.children?.filter(
-      (i) => i.link === pathname
-    );
+    const childActiveMenus = menuItem.children?.filter((i) => i.link === pathname);
 
-    childActiveMenus?.length &&
-      NavigationStore.setActiveMenuItem(childActiveMenus[0]);
+    childActiveMenus?.length && NavigationStore.setActiveMenuItem(childActiveMenus[0]);
 
     return menuItem.children && childActiveMenus?.length !== 0 ? true : false;
   };
 
-  const generateBreadcrumbItems = (
-    menuItems: TmenuItemLink,
-    targetLink: string
-  ) => {
+  const generateBreadcrumbItems = (menuItems: TmenuItemLink, targetLink: string) => {
     const breadcrumbItems: TbreadcrumbItems = [];
 
     if (!targetLink) return breadcrumbItems;
-    const linkSegments = targetLink.split("/");
+    const linkSegments = targetLink.split('/');
 
     linkSegments.map((_, index) => {
       for (const menuItem in menuItems) {
-        const targetLinkSegment = linkSegments.slice(0, index + 1).join("/");
+        const targetLinkSegment = linkSegments.slice(0, index + 1).join('/');
 
         //@ts-ignore
         if (menuItems[menuItem].link === targetLinkSegment) {
@@ -76,11 +65,11 @@ const useNavigation = () => {
     if (links?.length) {
       return links[0].link;
     } else {
-      return "";
+      return '';
     }
   };
 
-   const apiNavigator = axios;
+  const apiNavigator = axios;
 
   return {
     fetchAdminMenuItems,
