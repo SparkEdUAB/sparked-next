@@ -11,7 +11,7 @@ export type T_fetchTopic = {
   skip?: number;
 };
 
-export type T_topicFields = {
+export type TRawTopicFields = {
   key: string;
   name: string;
   _id: string;
@@ -43,4 +43,26 @@ export type T_topicFields = {
     name: string;
     _id: string;
   };
+};
+
+export type T_topicFields = {
+  index: number;
+  key: string;
+  _id: string;
+  name: string;
+  school?: {
+    name: string;
+    _id: string;
+  };
+  schoolId: string | undefined;
+  unitId: string | undefined;
+  description: string;
+  schoolName: string | undefined;
+  programId: string | undefined;
+  programName: string | undefined;
+  courseId: string | undefined;
+  courseName: string | undefined;
+  unitName: string;
+  created_by: string | undefined;
+  created_at: string;
 };

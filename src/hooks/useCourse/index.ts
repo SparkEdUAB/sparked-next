@@ -312,6 +312,7 @@ const useCourse = (form?: any) => {
     onSearchQueryChange,
     searchQuery,
     originalCourses,
+    deleteCourse,
   };
 };
 

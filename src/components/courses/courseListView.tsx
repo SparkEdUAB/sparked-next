@@ -24,6 +24,7 @@ const CourseListView: React.FC = observer(() => {
     findCourseByName,
     onSearchQueryChange,
     isLoading,
+    deleteCourse,
   } = useCourse();
   const { getChildLinkByKey } = useNavigation();
 
@@ -33,7 +34,7 @@ const CourseListView: React.FC = observer(() => {
 
   const rowSelection = {
     selectedRowKeys: selectedCourseIds,
-    onChange: (selectedRowKeys: React.Key[], selectedRows: TcourseFields[]) => {
+    onChange: (selectedRowKeys: React.Key[]) => {
       setSelectedCourseIds(selectedRowKeys);
     },
   };
@@ -54,7 +55,7 @@ const CourseListView: React.FC = observer(() => {
         }}
       />
       <AdminTable<TcourseFields>
-        triggerDelete={triggerDelete}
+        deleteItems={deleteCourse}
         rowSelection={rowSelection}
         items={courses}
         isLoading={isLoading}

@@ -9,18 +9,25 @@ export type TfetchUnits = {
 };
 
 export type TUnitFields = {
+  index: number;
   key: string;
-  name: string;
   _id: string;
-  created_by: string;
+  name: string;
   description: string;
+
   schoolId: string;
   programId: string;
   courseId: string;
 
+  schoolName: string;
+  programName: string;
+  courseName: string;
+
+  created_by: string;
   created_at: string;
+
   user?: {
-    name: string;
+    _id: string;
     email: string;
   };
   school?: {
@@ -34,5 +41,31 @@ export type TUnitFields = {
   course?: {
     name: string;
     _id: string;
+  };
+};
+
+export type TRawUnitFields = {
+  _id: string;
+  name: string;
+  description: string;
+
+  created_at: string;
+  updated_at: string;
+
+  user: {
+    _id: string;
+    email: string;
+  };
+  school: {
+    _id: string;
+    name: string;
+  };
+  program: {
+    _id: string;
+    name: string;
+  };
+  course: {
+    _id: string;
+    name: string;
   };
 };

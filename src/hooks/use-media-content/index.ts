@@ -1,34 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
-import useNavigation from "@hooks/useNavigation";
-import { message } from "antd";
-import { API_LINKS } from "app/links";
-import i18next from "i18next";
-import { useEffect, useState } from "react";
-import UiStore from "@state/mobx/uiStore";
-import { T_createResourceFields, T_fetchTopic } from "./types";
-import { T_MediaContentFields } from "types/media-content";
-import FileUploadStore from "@state/mobx/fileUploadStore";
-import { T_React_key } from "app/types";
+import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+import useNavigation from '@hooks/useNavigation';
+import { message } from 'antd';
+import { API_LINKS } from 'app/links';
+import i18next from 'i18next';
+import { useEffect, useState } from 'react';
+import UiStore from '@state/mobx/uiStore';
+import { T_createResourceFields, T_fetchTopic } from './types';
+import { TRawMediaContentFields, T_MediaContentFields } from 'types/media-content';
+import FileUploadStore from '@state/mobx/fileUploadStore';
+import { T_React_key } from 'app/types';
 
 const useMediaContent = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [mediaContent, setMediaContent] = useState<Array<T_MediaContentFields>>(
-    []
-  );
-  const [tempTopics, setTempMediaContent] = useState<
-    Array<T_MediaContentFields>
-  >([]);
-  const [targetMediaContent, setTargetMediaContent] =
-    useState<T_MediaContentFields | null>(null);
-  const [selectedMediaContentIds, setSelectedMediaContentIds] = useState<
-    T_React_key[]
-  >([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [mediaContent, setMediaContent] = useState<Array<T_MediaContentFields>>([]);
+  const [tempTopics, setTempMediaContent] = useState<Array<T_MediaContentFields>>([]);
+  const [targetMediaContent, setTargetMediaContent] = useState<T_MediaContentFields | null>(null);
+  const [selectedMediaContentIds, setSelectedMediaContentIds] = useState<T_React_key[]>([]);
   const { fileUrl } = FileUploadStore;
 
   useEffect(() => {
@@ -39,9 +32,9 @@ const useMediaContent = (form?: any) => {
     const url = API_LINKS.CREATE_MEDIA_CONTENT;
     const formData = {
       body: JSON.stringify({ ...fields, fileUrl }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
@@ -49,7 +42,7 @@ const useMediaContent = (form?: any) => {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -62,14 +55,14 @@ const useMediaContent = (form?: any) => {
 
       router.push(ADMIN_LINKS.media_content.link);
 
-      message.success(i18next.t("media content created"));
+      message.success(i18next.t('media content created'));
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
-  const editMediaContent = async (fields: T_MediaContentFields) => {
+  const editMediaContent = async (fields: TRawMediaContentFields) => {
     const url = API_LINKS.EDIT_MEDIA_CONTENT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -77,19 +70,19 @@ const useMediaContent = (form?: any) => {
         ...targetMediaContent,
         ...fields,
         mediaContentId: targetMediaContent?._id,
-        fileUrl: fileUrl ? fileUrl : targetMediaContent?.file_url,
+        fileUrl: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
       }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
-    
+
     try {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -102,31 +95,30 @@ const useMediaContent = (form?: any) => {
 
       router.push(ADMIN_LINKS.media_content.link);
 
-      message.success(i18next.t("success"));
+      message.success(i18next.t('success'));
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
-  const fetchMediaContent = async ({
-    limit = 1000,
-    skip = 0,
-  }: T_fetchTopic) => {
+  const fetchMediaContent = async ({ limit = 1000, skip = 0 }: T_fetchTopic) => {
     const url = API_LINKS.FETCH_MEDIA_CONTENT;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -137,33 +129,37 @@ const useMediaContent = (form?: any) => {
         return false;
       }
 
-      const _mediaContent = responseData.mediaContent?.map(
-        (i: T_MediaContentFields, index: number) => ({
-          index: index + 1,
-          key: i._id,
-          _id: i._id,
-          name: i.name,
-          fileUrl: i.file_url,
-          school: i.school,
-          schoolId: i.school?._id,
-          unitId: i.course?._id,
-          schoolName: i.school?.name,
-          programName: i.program?.name,
-          courseName: i.course?.name,
-          unitName: i.unit?.name,
-          programId: i.program?._id,
-          topicId: i.topic?._id,
-          topicName: i.topic?.name,
-          created_by: i.user?.email,
-          created_at: new Date(i.created_at as string).toDateString(),
-        })
+      const _mediaContent = (responseData.mediaContent as TRawMediaContentFields[])?.map<T_MediaContentFields>(
+        (i, index: number) =>
+          ({
+            index: index + 1,
+            key: i._id,
+            _id: i._id,
+            name: i.name,
+            fileUrl: i.file_url,
+            description: i.description,
+            courseId: i.course._id,
+            school: i.school,
+            schoolId: i.school?._id,
+            unitId: i.course?._id,
+            schoolName: i.school?.name,
+            programName: i.program?.name,
+            courseName: i.course?.name,
+            unitName: i.unit?.name,
+            programId: i.program?._id,
+            topicId: i.topic?._id,
+            topicName: i.topic?.name,
+            created_by: i.user?.email,
+            created_at: new Date(i.created_at as string).toDateString(),
+          } satisfies T_MediaContentFields),
       );
 
       setMediaContent(_mediaContent);
       setTempMediaContent(_mediaContent);
       return _mediaContent;
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
@@ -178,9 +174,9 @@ const useMediaContent = (form?: any) => {
     const url = API_LINKS.FETCH_MEDIA_CONTENT_BY_ID;
     const formData = {
       body: JSON.stringify({ mediaContentId, withMetaData }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
@@ -188,7 +184,7 @@ const useMediaContent = (form?: any) => {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -200,45 +196,44 @@ const useMediaContent = (form?: any) => {
       }
 
       if (responseData.mediaContent) {
-        const {
-          _id,
-          name,
-          description,
-          school,
-          program,
-          course,
-          unit,
-          topic,
-          file_url,
-        } = responseData.mediaContent as T_MediaContentFields;
+        const mediaContent = responseData.mediaContent as TRawMediaContentFields;
 
         const _mediaContent = {
-          _id,
-          name,
-          description,
-          schoolId: school?._id,
-          programId: program?._id,
-          courseId: course?._id,
-          unitId: unit?._id,
-          topicId: topic?._id,
-          fileUrl: file_url,
+          index: 1,
+          _id: mediaContent._id,
+          key: mediaContent._id,
+          name: mediaContent.name,
+          description: mediaContent.description,
+          schoolId: mediaContent.school?._id,
+          programId: mediaContent.program?._id,
+          courseId: mediaContent.course?._id,
+          unitId: mediaContent.unit?._id,
+          topicId: mediaContent.topic?._id,
+          courseName: mediaContent.course.name,
+          schoolName: mediaContent.school.name,
+          programName: mediaContent.program.name,
+          unitName: mediaContent.unit.name,
+          topicName: mediaContent.topic.name,
+          fileUrl: mediaContent.file_url,
+          file_url: mediaContent.file_url,
+          updated_at: mediaContent.updated_at,
         };
 
-        setTargetMediaContent(_mediaContent as T_MediaContentFields);
+        setTargetMediaContent(_mediaContent);
         form && form.setFieldsValue(_mediaContent);
         return _mediaContent;
       } else {
         return null;
       }
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
   const triggerDelete = async () => {
     if (!selectedMediaContentIds.length) {
-      return message.warning(i18next.t("select_items"));
+      return message.warning(i18next.t('select_items'));
     }
 
     UiStore.setConfirmDialogVisibility(true);
@@ -250,19 +245,21 @@ const useMediaContent = (form?: any) => {
     const url = API_LINKS.DELETE_MEDIA_CONTENT;
     const formData = {
       body: JSON.stringify({ mediaContentIds: selectedMediaContentIds }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
     try {
+      setLoaderStatus(true);
       UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
       UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -274,34 +271,28 @@ const useMediaContent = (form?: any) => {
       }
 
       UiStore.setConfirmDialogVisibility(false);
-      message.success(i18next.t("success"));
+      message.success(i18next.t('success'));
 
+      const newMediaContentIds = mediaContent.filter((i) => selectedMediaContentIds.indexOf(i._id) == -1);
 
-       const newMediaContentIds = mediaContent.filter(
-         (i) => selectedMediaContentIds.indexOf(i._id) == -1
-       );
-        
-        setMediaContent(newMediaContentIds);
+      setMediaContent(newMediaContentIds);
 
-       // setTargetMediaContent(newMediaContentIds);
+      // setTargetMediaContent(newMediaContentIds);
 
       return responseData.results;
     } catch (err: any) {
+      setLoaderStatus(false);
       UiStore.setLoaderStatus(false);
 
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
-  const findMediaContentByName = async ({
-    withMetaData = false,
-  }: {
-    withMetaData: boolean;
-  }) => {
+  const findMediaContentByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
     if (isLoading) {
-      return message.warning(i18next.t("wait"));
+      return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
-      return message.warning(i18next.t("search_empty"));
+      return message.warning(i18next.t('search_empty'));
     }
 
     const url = API_LINKS.FIND_MEDIA_CONTENT_BY_NAME;
@@ -312,9 +303,9 @@ const useMediaContent = (form?: any) => {
         skip: 0,
         withMetaData,
       }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
@@ -324,7 +315,7 @@ const useMediaContent = (form?: any) => {
       setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -334,18 +325,14 @@ const useMediaContent = (form?: any) => {
         message.warning(responseData.code);
         return false;
       }
-      message.success(
-        responseData.mediaContent.length + " " + i18next.t("media_content_found")
-      );
+      message.success(responseData.mediaContent.length + ' ' + i18next.t('media_content_found'));
 
       setMediaContent(responseData.mediaContent);
 
       return responseData.mediaContent;
     } catch (err: any) {
-
-
       setLoaderStatus(false);
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
@@ -360,15 +347,12 @@ const useMediaContent = (form?: any) => {
 
   const triggerEdit = async () => {
     if (!selectedMediaContentIds.length) {
-      return message.warning(i18next.t("select_item"));
+      return message.warning(i18next.t('select_item'));
     } else if (selectedMediaContentIds.length > 1) {
-      return message.warning(i18next.t("select_one_item"));
+      return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(
-      getChildLinkByKey("edit", ADMIN_LINKS.media_content) +
-        `?mediaContentId=${selectedMediaContentIds[0]}`
-    );
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.media_content) + `?mediaContentId=${selectedMediaContentIds[0]}`);
   };
 
   return {
@@ -389,6 +373,7 @@ const useMediaContent = (form?: any) => {
     onSearchQueryChange,
     searchQuery,
     tempTopics,
+    deleteMediaContent,
   };
 };
 

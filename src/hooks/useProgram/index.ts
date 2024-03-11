@@ -1,41 +1,37 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
-import { TschoolFields } from "@components/school/types";
-import useNavigation from "@hooks/useNavigation";
-import { message } from "antd";
-import { API_LINKS } from "app/links";
-import i18next from "i18next";
-import { useEffect, useState } from "react";
-import UiStore from "@state/mobx/uiStore";
-import { TcreateProgramFields, TfetchPrograms, TProgramFields } from "./types";
+import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+import { TschoolFields } from '@components/school/types';
+import useNavigation from '@hooks/useNavigation';
+import { message } from 'antd';
+import { API_LINKS } from 'app/links';
+import i18next from 'i18next';
+import { useEffect, useState } from 'react';
+import UiStore from '@state/mobx/uiStore';
+import { TcreateProgramFields, TfetchPrograms, TProgramFields, TRawProgramFields } from './types';
 
 const useProgram = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [programs, setPrograms] = useState<Array<TschoolFields>>([]);
-  const [tempPrograms, setTempPrograms] = useState<Array<TschoolFields>>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [programs, setPrograms] = useState<Array<TProgramFields>>([]);
+  const [tempPrograms, setTempPrograms] = useState<Array<TProgramFields>>([]);
   const [program, setSProgram] = useState<TProgramFields | null>(null);
-  const [selecetedProgramIds, setSelectedProgramIds] = useState<React.Key[]>(
-    []
-  );
+  const [selectedProgramIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
-    UiStore.confirmDialogStatus &&
-      selecetedProgramIds.length &&
-      deletePrograms();
+    UiStore.confirmDialogStatus && selectedProgramIds.length && deletePrograms();
   }, [UiStore.confirmDialogStatus]);
 
   const createProgram = async (fields: TcreateProgramFields) => {
     const url = API_LINKS.CREATE_PROGRAM;
     const formData = {
       body: JSON.stringify({ ...fields }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
@@ -43,7 +39,7 @@ const useProgram = (form?: any) => {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -56,9 +52,9 @@ const useProgram = (form?: any) => {
 
       router.push(ADMIN_LINKS.programs.link);
 
-      message.success(i18next.t("program_created"));
+      message.success(i18next.t('program_created'));
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
@@ -67,9 +63,9 @@ const useProgram = (form?: any) => {
     const url = API_LINKS.EDIT_PROGRAM;
     const formData = {
       body: JSON.stringify({ ...fields, _id: program?._id }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
@@ -77,7 +73,7 @@ const useProgram = (form?: any) => {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -90,9 +86,9 @@ const useProgram = (form?: any) => {
 
       router.push(ADMIN_LINKS.programs.link);
 
-      message.success(i18next.t("success"));
+      message.success(i18next.t('success'));
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
@@ -101,17 +97,19 @@ const useProgram = (form?: any) => {
     const url = API_LINKS.FETCH_PROGRAMS;
     const formData = {
       body: JSON.stringify({ limit, skip }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -122,25 +120,25 @@ const useProgram = (form?: any) => {
         return false;
       }
 
-      const _programs = responseData.programs?.map(
-        (i: TProgramFields, index: number) => ({
-          index: index + 1,
-          key: i._id,
-          _id: i._id,
-          name: i.name,
-          school: i.school,
-          schoolId: i.school?._id,
-          schoolName: i.school?.name,
-          created_by: i.user?.email,
-          created_at: new Date(i.created_at).toDateString(),
-        })
-      );
+      const _programs = (responseData.programs as TRawProgramFields[])?.map<TProgramFields>((i, index: number) => ({
+        index: index + 1,
+        key: i._id,
+        _id: i._id,
+        name: i.name,
+        school: i.school,
+        schoolId: i.school?._id,
+        schoolName: i.school?.name,
+        created_by: i.user?.email,
+        created_at: new Date(i.created_at).toDateString(),
+        description: i.description,
+      }));
 
       setPrograms(_programs);
       setTempPrograms(_programs);
       return _programs;
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
@@ -155,9 +153,9 @@ const useProgram = (form?: any) => {
     const url = API_LINKS.FETCH_PROGRAM_BY_ID;
     const formData = {
       body: JSON.stringify({ programId, withMetaData }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
@@ -165,7 +163,7 @@ const useProgram = (form?: any) => {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -177,8 +175,7 @@ const useProgram = (form?: any) => {
       }
 
       if (responseData.program) {
-        const { _id, name, description, school } =
-          responseData.program as TProgramFields;
+        const { _id, name, description, school } = responseData.program as TProgramFields;
 
         const _program = {
           _id,
@@ -194,14 +191,14 @@ const useProgram = (form?: any) => {
         return null;
       }
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
   const triggerDelete = async () => {
-    if (!selecetedProgramIds.length) {
-      return message.warning(i18next.t("select_items"));
+    if (!selectedProgramIds.length) {
+      return message.warning(i18next.t('select_items'));
     }
 
     UiStore.setConfirmDialogVisibility(true);
@@ -212,20 +209,22 @@ const useProgram = (form?: any) => {
 
     const url = API_LINKS.DELETE_PROGRAMS;
     const formData = {
-      body: JSON.stringify({ programIds: selecetedProgramIds }),
-      method: "post",
+      body: JSON.stringify({ programIds: selectedProgramIds }),
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
     try {
+      setLoaderStatus(true);
       UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
       UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -237,29 +236,24 @@ const useProgram = (form?: any) => {
       }
 
       UiStore.setConfirmDialogVisibility(false);
-      message.success(i18next.t("success"));
+      message.success(i18next.t('success'));
 
-      setPrograms(
-        programs.filter((i) => selecetedProgramIds.indexOf(i._id) == -1)
-      );
+      setPrograms(programs.filter((i) => selectedProgramIds.indexOf(i._id) == -1));
 
       return responseData.results;
     } catch (err: any) {
+      setLoaderStatus(false);
       UiStore.setLoaderStatus(false);
 
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
-  const findProgramsByName = async ({
-    withMetaData=false,
-  }: {
-    withMetaData: boolean;
-  }) => {
+  const findProgramsByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
     if (isLoading) {
-      return message.warning(i18next.t("wait"));
+      return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
-      return message.warning(i18next.t("search_empty"));
+      return message.warning(i18next.t('search_empty'));
     }
 
     const url = API_LINKS.FIND_PROGRAMS_BY_NAME;
@@ -270,9 +264,9 @@ const useProgram = (form?: any) => {
         skip: 0,
         withMetaData,
       }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
@@ -282,7 +276,7 @@ const useProgram = (form?: any) => {
       setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -292,16 +286,14 @@ const useProgram = (form?: any) => {
         message.warning(responseData.code);
         return false;
       }
-      message.success(
-        responseData.programs.length + " " + i18next.t("programs_found")
-      );
+      message.success(responseData.programs.length + ' ' + i18next.t('programs_found'));
 
       setPrograms(responseData.programs);
 
       return responseData.programs;
     } catch (err: any) {
       setLoaderStatus(false);
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
@@ -315,16 +307,13 @@ const useProgram = (form?: any) => {
   };
 
   const triggerEdit = async () => {
-    if (!selecetedProgramIds.length) {
-      return message.warning(i18next.t("select_item"));
-    } else if (selecetedProgramIds.length > 1) {
-      return message.warning(i18next.t("select_one_item"));
+    if (!selectedProgramIds.length) {
+      return message.warning(i18next.t('select_item'));
+    } else if (selectedProgramIds.length > 1) {
+      return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(
-      getChildLinkByKey("edit", ADMIN_LINKS.programs) +
-        `?programId=${selecetedProgramIds[0]}`
-    );
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.programs) + `?programId=${selectedProgramIds[0]}`);
   };
 
   return {
@@ -333,7 +322,7 @@ const useProgram = (form?: any) => {
     programs,
     setPrograms,
     setSelectedProgramIds,
-    selecetedProgramIds,
+    selectedProgramIds,
     triggerDelete,
     triggerEdit,
     fetchProgramById,
@@ -345,6 +334,7 @@ const useProgram = (form?: any) => {
     onSearchQueryChange,
     searchQuery,
     tempPrograms,
+    deletePrograms,
   };
 };
 
