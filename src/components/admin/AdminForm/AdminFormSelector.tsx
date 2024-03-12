@@ -34,7 +34,9 @@ export function AdminFormSelector({
   return (
     <div>
       <div className="mb-2 block">
-        <Label htmlFor={name} value={label} />
+        <Label htmlFor={name}>
+          {label} {required ? <span className="text-red-500">*</span> : undefined}
+        </Label>
       </div>
       {
         <Select
