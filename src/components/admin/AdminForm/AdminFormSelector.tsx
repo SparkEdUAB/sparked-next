@@ -48,7 +48,7 @@ export function AdminFormSelector({
           onChange={(e) => setSelected(e.target.value)}
         >
           {options.map((item) => (
-            <option value={item._id} selected={selected === item._id}>
+            <option key={item._id} value={item._id} selected={selected === item._id}>
               {item.name}
             </option>
           ))}
