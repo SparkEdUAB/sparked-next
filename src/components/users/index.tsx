@@ -2,8 +2,9 @@ import { Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import i18next from 'i18next';
 import { ColumnData } from '@components/admin/AdminTable/types';
+import { TUserFields } from '@hooks/useUser/types';
 
-export const unitTableColumns: ColumnData<TunitFields>[] = [
+export const userTableColumns: ColumnData<TUserFields>[] = [
   {
     title: '#',
     dataIndex: 'index',

@@ -3,29 +3,29 @@
 import { AdminPageTitle } from '@components/layouts';
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import useUnit from '@hooks/useUser';
+import useUser from '@hooks/useUser';
 import { TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
 import React, { useEffect } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { unitTableColumns } from '.';
+import { userTableColumns } from '.';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { TUnitFields } from '@hooks/useUser/types';
+import { TUserFields } from '@hooks/useUser/types';
 
 const UsersListView: React.FC = observer(() => {
   const {
     fetchUnits,
-    units,
-    selectedUnitIds,
-    setSelectedProgramIds,
+    users,
+    selectedUserIds,
+    setSelectedUserIds,
     triggerDelete,
     triggerEdit,
-    findUnitsByName,
+    findUsersByName,
     onSearchQueryChange,
     isLoading,
-    deleteUnits,
-  } = useUnit();
+    deleteUsers,
+  } = useUser();
   const { getChildLinkByKey } = useNavigation();
 
   useEffect(() => {
@@ -33,9 +33,9 @@ const UsersListView: React.FC = observer(() => {
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selectedUnitIds,
+    selectedRowKeys: selectedUserIds,
     onChange: (selectedRowKeys: React.Key[]) => {
-      setSelectedProgramIds(selectedRowKeys);
+      setSelectedUserIds(selectedRowKeys);
     },
   };
 
@@ -51,17 +51,17 @@ const UsersListView: React.FC = observer(() => {
         required
         type="text"
         onKeyDown={(e) => {
-          e.keyCode === 13 ? findUnitsByName({ withMetaData: true }) : null;
+          e.keyCode === 13 ? findUsersByName({ withMetaData: true }) : null;
         }}
       />
-      <AdminTable<TUnitFields>
-        deleteItems={deleteUnits}
+      <AdminTable<TUserFields>
+        deleteItems={deleteUsers}
         rowSelection={rowSelection}
-        items={units || []}
+        items={users || []}
         isLoading={isLoading}
         createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.users)}
         getEditUrl={(id: string) => getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${id}`}
-        columns={unitTableColumns}
+        columns={userTableColumns}
       />
     </>
   );
