@@ -49,6 +49,9 @@ export type T_MediaContentFields = {
   };
 };
 
+/**
+ * Corresponds to the type returned directly by the API
+ */
 export type TRawMediaContentFields = {
   _id: string;
   name: string;

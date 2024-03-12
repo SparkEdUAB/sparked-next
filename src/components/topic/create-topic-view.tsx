@@ -1,26 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import { AdminPageTitle } from "@components/layouts";
-import useCourse from "@hooks/useCourse";
-import useProgram from "@hooks/useProgram";
-import useSchool from "@hooks/useSchool";
-import useTopic from "@hooks/use-topic";
-import SchoolStore from "@state/mobx/scholStore";
-import { Card, Col, Form, Input, Row, Select } from "antd";
-import { Button } from "flowbite-react";
-import i18next from "i18next";
-import { useEffect } from "react";
-import { TOPIC_FORM_FIELDS } from "./constants";
-import useUnit from "@hooks/useUnit";
-
+import { AdminPageTitle } from '@components/layouts';
+import useCourse from '@hooks/useCourse';
+import useProgram from '@hooks/useProgram';
+import useSchool from '@hooks/useSchool';
+import useTopic from '@hooks/use-topic';
+import SchoolStore from '@state/mobx/scholStore';
+import { Button, Spinner } from 'flowbite-react';
+import i18next from 'i18next';
+import { FormEventHandler, useEffect } from 'react';
+import { TOPIC_FORM_FIELDS } from './constants';
+import useUnit from '@hooks/useUnit';
+import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
+import { extractValuesFromFormEvent } from 'utils/helpers';
+import { TcreateTopicFields } from '@hooks/use-topic/types';
 
 const CreateTopicView: React.FC = () => {
-  const { createTopic } = useTopic();
-  const { fetchSchools, schools } = useSchool();
-  const { fetchPrograms, programs } = useProgram();
-  const { fetchCourses, courses } = useCourse();
-  const { fetchUnits,units } = useUnit();
+  const { createTopic, isLoading } = useTopic();
+  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
+  const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
+  const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
 
   const { selectedSchool } = SchoolStore;
 
@@ -31,151 +33,80 @@ const CreateTopicView: React.FC = () => {
     fetchUnits({});
   }, []);
 
-  const [form] = Form.useForm();
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    const keys = [
+      TOPIC_FORM_FIELDS.name.key,
+      TOPIC_FORM_FIELDS.description.key,
+      TOPIC_FORM_FIELDS.school.key,
+      TOPIC_FORM_FIELDS.program.key,
+      TOPIC_FORM_FIELDS.course.key,
+      TOPIC_FORM_FIELDS.unit.key,
+    ];
+
+    let result = extractValuesFromFormEvent<TcreateTopicFields>(e, keys);
+    createTopic(result);
+  };
+
+  // const [form] = Form.useForm();
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("create_topic")} />
+      <AdminPageTitle title={i18next.t('create_topic')} />
 
-      <Row className="form-container">
-        <Col span={24}>
-          <Card
-            className="form-card"
-            title={<p className="form-label">{i18next.t("new_topic")}</p>}
-            bordered={false}
-          >
-            <Form
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600 }}
-              initialValues={selectedSchool || {}}
-              onFinish={createTopic}
-              onFinishFailed={() => {}}
-              autoComplete="off"
-            >
-              <Form.Item
-                label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.name.label}</p>
-                }
-                name={TOPIC_FORM_FIELDS.name.key}
-                rules={[
-                  {
-                    required: true,
-                    message: TOPIC_FORM_FIELDS.name.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+      <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
+        <AdminFormInput
+          disabled={isLoading}
+          name={TOPIC_FORM_FIELDS.name.key}
+          label={TOPIC_FORM_FIELDS.name.label}
+          required
+        />
 
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {TOPIC_FORM_FIELDS.description.label}
-                  </p>
-                }
-                name={TOPIC_FORM_FIELDS.description.key}
-                rules={[
-                  {
-                    required: true,
-                    message: TOPIC_FORM_FIELDS.description.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+        <AdminFormInput
+          disabled={isLoading}
+          name={TOPIC_FORM_FIELDS.description.key}
+          label={TOPIC_FORM_FIELDS.description.label}
+          required
+        />
 
-              <Form.Item
-                label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.school.label}</p>
-                }
-                name={TOPIC_FORM_FIELDS.school.key}
-                rules={[
-                  {
-                    message: TOPIC_FORM_FIELDS.school.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  options={schools.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
+        <AdminFormSelector
+          loadingItems={loadingSchools}
+          disabled={isLoading || loadingSchools}
+          options={schools}
+          label={TOPIC_FORM_FIELDS.school.label}
+          name={TOPIC_FORM_FIELDS.school.key}
+        />
 
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {TOPIC_FORM_FIELDS.program.label}
-                  </p>
-                }
-                name={TOPIC_FORM_FIELDS.program.key}
-                rules={[
-                  {
-                    message: TOPIC_FORM_FIELDS.program.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  options={programs.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
+        <AdminFormSelector
+          loadingItems={loadingPrograms}
+          disabled={isLoading || loadingPrograms}
+          options={programs}
+          label={TOPIC_FORM_FIELDS.program.label}
+          name={TOPIC_FORM_FIELDS.program.key}
+        />
 
-              <Form.Item
-                label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.course.label}</p>
-                }
-                name={TOPIC_FORM_FIELDS.course.key}
-                rules={[
-                  {
-                    message: TOPIC_FORM_FIELDS.course.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  options={courses.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
+        <AdminFormSelector
+          loadingItems={loadingCourses}
+          disabled={isLoading || loadingCourses}
+          options={courses}
+          label={TOPIC_FORM_FIELDS.course.label}
+          name={TOPIC_FORM_FIELDS.course.key}
+        />
 
-              <Form.Item
-                label={
-                  <p className="form-label">{TOPIC_FORM_FIELDS.unit.label}</p>
-                }
-                name={TOPIC_FORM_FIELDS.unit.key}
-                rules={[
-                  {
-                    message: TOPIC_FORM_FIELDS.unit.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  options={units.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
+        <AdminFormSelector
+          loadingItems={loadingUnits}
+          disabled={isLoading || loadingUnits}
+          options={units}
+          label={TOPIC_FORM_FIELDS.unit.label}
+          name={TOPIC_FORM_FIELDS.unit.key}
+        />
 
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button
-                  className={"form-submit-btn"}
-                  type="submit"
-                 
-                >
-                  {i18next.t("submit")}
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+        <Button type="submit" className="mt-2" disabled={isLoading}>
+          {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {i18next.t('submit')}
+        </Button>
+      </form>
     </>
   );
 };

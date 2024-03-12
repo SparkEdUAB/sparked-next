@@ -9,6 +9,9 @@ export type TfetchCourses = {
   skip?: number;
 };
 
+/**
+ * Corresponds to the type returned directly by the API
+ */
 export type TRawCourseFields = {
   key: string;
   name: string;
@@ -37,6 +40,7 @@ export type TcourseFields = {
   key: string;
   _id: string;
   name: string;
+  description: string;
   school:
     | {
         name: string;

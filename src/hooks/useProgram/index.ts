@@ -2,7 +2,6 @@
 'use client';
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
-import { TschoolFields } from '@components/school/types';
 import useNavigation from '@hooks/useNavigation';
 import { message } from 'antd';
 import { API_LINKS } from 'app/links';
@@ -36,7 +35,9 @@ const useProgram = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -54,12 +55,13 @@ const useProgram = (form?: any) => {
 
       message.success(i18next.t('program_created'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
-  const editProgram = async (fields: TschoolFields) => {
+  const editProgram = async (fields: TProgramFields) => {
     const url = API_LINKS.EDIT_PROGRAM;
     const formData = {
       body: JSON.stringify({ ...fields, _id: program?._id }),
@@ -70,7 +72,9 @@ const useProgram = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -88,6 +92,7 @@ const useProgram = (form?: any) => {
 
       message.success(i18next.t('success'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -160,7 +165,9 @@ const useProgram = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -191,6 +198,7 @@ const useProgram = (form?: any) => {
         return null;
       }
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }

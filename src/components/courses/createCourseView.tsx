@@ -5,17 +5,20 @@ import { AdminPageTitle } from '@components/layouts';
 import useCourse from '@hooks/useCourse';
 import useSchool from '@hooks/useSchool';
 import SchoolStore from '@state/mobx/scholStore';
-import { Card, Col, Form, Input, Row, Select } from 'antd';
-import { Button } from 'flowbite-react';
+import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { useEffect } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 import { COURSE_FORM_FIELDS } from './constants';
 import useProgram from '@hooks/useProgram';
+import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
+import { TcreateUnitFields } from '@hooks/useUnit/types';
+import { extractValuesFromFormEvent } from 'utils/helpers';
 
 const CreateCourseView: React.FC = () => {
-  const { createCourse } = useCourse();
-  const { fetchSchools, schools } = useSchool();
-  const { fetchPrograms, programs } = useProgram();
+  const { createCourse, isLoading } = useCourse();
+  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
 
   const { selectedSchool } = SchoolStore;
 
@@ -24,92 +27,60 @@ const CreateCourseView: React.FC = () => {
     fetchPrograms({});
   }, []);
 
-  const [form] = Form.useForm();
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    const keys = [
+      COURSE_FORM_FIELDS.name.key,
+      COURSE_FORM_FIELDS.description.key,
+      COURSE_FORM_FIELDS.school.key,
+      COURSE_FORM_FIELDS.program.key,
+    ];
+
+    let result = extractValuesFromFormEvent<TcreateUnitFields>(e, keys);
+    createCourse(result);
+  };
 
   return (
     <>
       <AdminPageTitle title="Create course" />
 
-      <Row className="form-container">
-        <Col span={24}>
-          {/* <Card className="form-card" title={<p className="form-label">New Course</p>} bordered={false}> */}
-          <Form
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            style={{ maxWidth: 600 }}
-            initialValues={selectedSchool || {}}
-            onFinish={createCourse}
-            onFinishFailed={() => {}}
-            autoComplete="off"
-          >
-            <Form.Item
-              label={<p className="form-label">{COURSE_FORM_FIELDS.name.label}</p>}
-              name={COURSE_FORM_FIELDS.name.key}
-              rules={[
-                {
-                  required: true,
-                  message: COURSE_FORM_FIELDS.name.errorMsg,
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+      <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
+        <AdminFormInput
+          disabled={isLoading}
+          name={COURSE_FORM_FIELDS.name.key}
+          label={COURSE_FORM_FIELDS.name.label}
+          required
+        />
 
-            <Form.Item
-              label={<p className="form-label">{COURSE_FORM_FIELDS.description.label}</p>}
-              name={COURSE_FORM_FIELDS.description.key}
-              rules={[
-                {
-                  required: true,
-                  message: COURSE_FORM_FIELDS.description.errorMsg,
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
+        <AdminFormInput
+          disabled={isLoading}
+          name={COURSE_FORM_FIELDS.description.key}
+          label={COURSE_FORM_FIELDS.description.label}
+          required
+        />
 
-            <Form.Item
-              label={<p className="form-label">{COURSE_FORM_FIELDS.school.label}</p>}
-              name={COURSE_FORM_FIELDS.school.key}
-              rules={[
-                {
-                  message: COURSE_FORM_FIELDS.school.errorMsg,
-                },
-              ]}
-            >
-              <Select
-                options={schools.map((i) => ({
-                  value: i._id,
-                  label: i.name,
-                }))}
-              />
-            </Form.Item>
-            <Form.Item
-              label={<p className="form-label">{COURSE_FORM_FIELDS.program.label}</p>}
-              name={COURSE_FORM_FIELDS.program.key}
-              rules={[
-                {
-                  message: COURSE_FORM_FIELDS.program.errorMsg,
-                },
-              ]}
-            >
-              <Select
-                options={programs.map((i) => ({
-                  value: i._id,
-                  label: i.name,
-                }))}
-              />
-            </Form.Item>
+        <AdminFormSelector
+          loadingItems={loadingSchools}
+          disabled={isLoading || loadingSchools}
+          options={schools}
+          label={COURSE_FORM_FIELDS.school.label}
+          name={COURSE_FORM_FIELDS.school.key}
+        />
 
-            <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-              <Button className={'form-submit-btn'} type="submit">
-                {i18next.t('submit')}
-              </Button>
-            </Form.Item>
-          </Form>
-          {/* </Card> */}
-        </Col>
-      </Row>
+        <AdminFormSelector
+          loadingItems={loadingPrograms}
+          disabled={isLoading || loadingPrograms}
+          options={programs}
+          label={COURSE_FORM_FIELDS.program.label}
+          name={COURSE_FORM_FIELDS.program.key}
+        />
+
+        <Button type="submit" className="mt-2" disabled={isLoading}>
+          {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {i18next.t('submit')}
+        </Button>
+      </form>
     </>
   );
 };

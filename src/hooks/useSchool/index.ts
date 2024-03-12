@@ -36,7 +36,9 @@ const useSchool = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -54,6 +56,7 @@ const useSchool = (form?: any) => {
 
       message.success(i18next.t('school_created'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -70,7 +73,9 @@ const useSchool = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -88,6 +93,7 @@ const useSchool = (form?: any) => {
 
       message.success(i18next.t('success'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -150,7 +156,9 @@ const useSchool = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -176,6 +184,7 @@ const useSchool = (form?: any) => {
       form && form.setFieldsValue(_school);
       return _school;
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }

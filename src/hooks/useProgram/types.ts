@@ -28,6 +28,9 @@ export type TProgramFields = {
   };
 };
 
+/**
+ * Corresponds to the type returned directly by the API
+ */
 export type TRawProgramFields = {
   _id: string;
   name: string;

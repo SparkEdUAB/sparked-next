@@ -4,13 +4,16 @@ export type TcreateTopicFields = {
   schoolId?: string;
   programId?: string;
   courseId?: string;
-  unitId: string;
+  unitId?: string;
 };
 export type T_fetchTopic = {
   limit?: number;
   skip?: number;
 };
 
+/**
+ * Corresponds to the type returned directly by the API
+ */
 export type TRawTopicFields = {
   key: string;
   name: string;

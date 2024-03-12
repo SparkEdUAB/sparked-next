@@ -19,7 +19,7 @@ const useMediaContent = (form?: any) => {
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [mediaContent, setMediaContent] = useState<Array<T_MediaContentFields>>([]);
-  const [tempTopics, setTempMediaContent] = useState<Array<T_MediaContentFields>>([]);
+  const [tempMediaContent, setTempMediaContent] = useState<Array<T_MediaContentFields>>([]);
   const [targetMediaContent, setTargetMediaContent] = useState<T_MediaContentFields | null>(null);
   const [selectedMediaContentIds, setSelectedMediaContentIds] = useState<T_React_key[]>([]);
   const { fileUrl } = FileUploadStore;
@@ -28,10 +28,10 @@ const useMediaContent = (form?: any) => {
     UiStore.confirmDialogStatus && selectedMediaContentIds.length && deleteMediaContent();
   }, [UiStore.confirmDialogStatus]);
 
-  const createResource = async (fields: T_createResourceFields) => {
+  const createResource = async (fields: T_createResourceFields, optionalFileUrl?: string) => {
     const url = API_LINKS.CREATE_MEDIA_CONTENT;
     const formData = {
-      body: JSON.stringify({ ...fields, fileUrl }),
+      body: JSON.stringify({ ...fields, fileUrl: fileUrl || optionalFileUrl }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -39,7 +39,9 @@ const useMediaContent = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -57,12 +59,13 @@ const useMediaContent = (form?: any) => {
 
       message.success(i18next.t('media content created'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
-  const editMediaContent = async (fields: TRawMediaContentFields) => {
+  const editMediaContent = async (fields: T_MediaContentFields, optionalFileUrl?: string) => {
     const url = API_LINKS.EDIT_MEDIA_CONTENT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -70,7 +73,7 @@ const useMediaContent = (form?: any) => {
         ...targetMediaContent,
         ...fields,
         mediaContentId: targetMediaContent?._id,
-        fileUrl: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
+        fileUrl: fileUrl || optionalFileUrl ? fileUrl || optionalFileUrl : targetMediaContent?.fileUrl,
       }),
       method: 'post',
       headers: {
@@ -79,7 +82,9 @@ const useMediaContent = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -97,6 +102,7 @@ const useMediaContent = (form?: any) => {
 
       message.success(i18next.t('success'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -181,7 +187,9 @@ const useMediaContent = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -226,6 +234,7 @@ const useMediaContent = (form?: any) => {
         return null;
       }
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -341,7 +350,7 @@ const useMediaContent = (form?: any) => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setMediaContent(tempTopics);
+      setMediaContent(tempMediaContent);
     }
   };
 
@@ -372,7 +381,7 @@ const useMediaContent = (form?: any) => {
     findMediaContentByName,
     onSearchQueryChange,
     searchQuery,
-    tempTopics,
+    tempMediaContent,
     deleteMediaContent,
   };
 };

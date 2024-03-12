@@ -35,7 +35,9 @@ const useTopic = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -53,6 +55,7 @@ const useTopic = (form?: any) => {
 
       message.success(i18next.t('topic_created'));
     } catch (err: any) {
+      setLoaderStatus(false);
       console.log('createTopic:errr', err);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -72,7 +75,9 @@ const useTopic = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -90,6 +95,7 @@ const useTopic = (form?: any) => {
 
       message.success(i18next.t('success'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -162,7 +168,9 @@ const useTopic = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -206,6 +214,7 @@ const useTopic = (form?: any) => {
         return null;
       }
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }

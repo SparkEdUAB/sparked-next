@@ -3,15 +3,14 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
+import { FormInstance, message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
 import { TcreateUnitFields, TfetchUnits, TRawUnitFields, TUnitFields } from './types';
-import { TRawCourseFields } from '@hooks/useCourse/types';
 
-const useUnit = (form?: any) => {
+const useUnit = (form?: FormInstance) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
@@ -36,7 +35,9 @@ const useUnit = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -54,6 +55,7 @@ const useUnit = (form?: any) => {
 
       message.success(i18next.t('unit_created'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -71,7 +73,9 @@ const useUnit = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -89,6 +93,7 @@ const useUnit = (form?: any) => {
 
       message.success(i18next.t('success'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }

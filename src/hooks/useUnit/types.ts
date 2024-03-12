@@ -2,7 +2,10 @@ export type TcreateUnitFields = {
   name: string;
   description: string;
   schoolId: string;
+  courseId: string;
+  programId: string;
 };
+
 export type TfetchUnits = {
   limit?: number;
   skip?: number;
@@ -44,6 +47,9 @@ export type TUnitFields = {
   };
 };
 
+/**
+ * Corresponds to the type returned directly by the API
+ */
 export type TRawUnitFields = {
   _id: string;
   name: string;

@@ -2,7 +2,6 @@
 'use client';
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
-import { TschoolFields } from '@components/school/types';
 import useNavigation from '@hooks/useNavigation';
 import { message } from 'antd';
 import { API_LINKS } from 'app/links';
@@ -36,7 +35,9 @@ const useCourse = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -54,12 +55,13 @@ const useCourse = (form?: any) => {
 
       message.success(i18next.t('course_created'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
-  const editCourse = async (fields: TschoolFields) => {
+  const editCourse = async (fields: TcourseFields) => {
     const url = API_LINKS.EDIT_COURSE;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -71,7 +73,9 @@ const useCourse = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -89,6 +93,7 @@ const useCourse = (form?: any) => {
 
       message.success(i18next.t('success'));
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -144,7 +149,9 @@ const useCourse = (form?: any) => {
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -168,6 +175,7 @@ const useCourse = (form?: any) => {
         return null;
       }
     } catch (err: any) {
+      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -324,6 +332,7 @@ function transformRawCourse(course: TRawCourseFields, index: number = 0): Tcours
     key: course._id,
     _id: course._id,
     name: course.name,
+    description: course.description,
     school: course.school,
     schoolId: course.school?._id,
     schoolName: course.school?.name,

@@ -1,122 +1,87 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import { AdminPageTitle } from "@components/layouts";
-import useProgram from "@hooks/useProgram";
-import { Card, Col, Form, Input, Row, Select } from "antd";
-import { Button } from "flowbite-react";
-import i18next from "i18next";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { CREATE_PROGRAM_FORM_FIELDS } from "./constants";
-import useSchool from "@hooks/useSchool";
+import { AdminPageTitle } from '@components/layouts';
+import useProgram from '@hooks/useProgram';
+import { Button, Spinner } from 'flowbite-react';
+import i18next from 'i18next';
+import { useSearchParams } from 'next/navigation';
+import { FormEventHandler, useEffect } from 'react';
+import { PROGRAM_FORM_FIELDS } from './constants';
+import useSchool from '@hooks/useSchool';
+import { extractValuesFromFormEvent } from 'utils/helpers';
+import { TProgramFields } from '@hooks/useProgram/types';
+import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 
 const EditProgramView: React.FC = () => {
-  const [form] = Form.useForm();
-  const { editProgram, fetchProgramById, program } = useProgram(form);
-  const { fetchSchools, schools } = useSchool();
+  const { editProgram, fetchProgramById, program, isLoading } = useProgram();
+  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
     fetchProgramById({
-      programId: searchParams.get("programId") as string,
+      programId: searchParams.get('programId') as string,
       withMetaData: true,
     });
 
     fetchSchools({});
   }, []);
 
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    const keys = [PROGRAM_FORM_FIELDS.name.key, PROGRAM_FORM_FIELDS.description.key, PROGRAM_FORM_FIELDS.school.key];
+
+    let result = extractValuesFromFormEvent<TProgramFields>(e, keys);
+    editProgram(result);
+  };
+
   return (
     <>
-      <AdminPageTitle title={i18next.t("edit_program")} />
+      <AdminPageTitle title={i18next.t('edit_program')} />
 
-      <Row className="form-container">
-        <Col span={24}>
-          <Card
-            className="form-card"
-            title={<p className="form-label">{program?.name}</p>}
-            bordered={false}
-          >
-            <Form
-              form={form}
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600 }}
-              initialValues={program || {}}
-              onFinish={editProgram}
-              onFinishFailed={() => {}}
-              autoComplete="off"
-            >
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_PROGRAM_FORM_FIELDS.name.label}
-                  </p>
-                }
-                name={CREATE_PROGRAM_FORM_FIELDS.name.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_PROGRAM_FORM_FIELDS.name.errorMsg,
-                  },
-                ]}
-              >
-                <Input defaultValue={program?.name} />
-              </Form.Item>
+      {program === null ? (
+        <div className="flex items-center justify-center h-[400px]">
+          <Spinner size="xl" />
+        </div>
+      ) : (
+        <form className="flex flex-col items-start" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-4 max-w-xl w-full">
+            <AdminFormInput
+              disabled={isLoading}
+              name={PROGRAM_FORM_FIELDS.name.key}
+              label={PROGRAM_FORM_FIELDS.name.label}
+              required
+              defaultValue={program.name}
+            />
 
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_PROGRAM_FORM_FIELDS.description.label}
-                  </p>
-                }
-                name={CREATE_PROGRAM_FORM_FIELDS.description.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_PROGRAM_FORM_FIELDS.description.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+            <AdminFormInput
+              disabled={isLoading}
+              name={PROGRAM_FORM_FIELDS.description.key}
+              label={PROGRAM_FORM_FIELDS.description.label}
+              required
+              defaultValue={program.description}
+            />
 
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_PROGRAM_FORM_FIELDS.school.label}
-                  </p>
-                }
-                name={CREATE_PROGRAM_FORM_FIELDS.school.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_PROGRAM_FORM_FIELDS.school.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  options={schools.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
+            <AdminFormSelector
+              loadingItems={loadingSchools}
+              disabled={isLoading || loadingSchools}
+              options={schools}
+              label={PROGRAM_FORM_FIELDS.school.label}
+              name={PROGRAM_FORM_FIELDS.school.key}
+              defaultValue={program.schoolId}
+              required
+            />
 
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button
-                  className={"form-submit-btn"}
-                  type="submit"
-                 
-                >
-                  {i18next.t("submit")}
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+            <Button type="submit" className="mt-2" disabled={isLoading}>
+              {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+              {i18next.t('submit')}
+            </Button>
+          </div>
+        </form>
+      )}
     </>
   );
 };

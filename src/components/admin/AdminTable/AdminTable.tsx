@@ -1,16 +1,14 @@
 'use client';
 
 import useNavigation from '@hooks/useNavigation';
-import { Button, Checkbox, Modal, Spinner, Table } from 'flowbite-react';
-import i18next from 'i18next';
+import { Checkbox, Spinner, Table } from 'flowbite-react';
 import React, { useState } from 'react';
-import { IoMdAddCircleOutline } from 'react-icons/io';
-import { RiDeleteBin6Line } from 'react-icons/ri';
 import Link from 'next/link';
 import { IoFileTrayOutline } from 'react-icons/io5';
 import { ColumnData, ItemTypeBase } from './types';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { message } from 'antd';
+import { DeletionWarningModal } from './DeletionWarningModal';
+import { AdminTableButtonGroup } from './AdminTableButtonGroup';
+import { MdEdit } from 'react-icons/md';
 
 export function AdminTable<ItemType extends ItemTypeBase>({
   rowSelection,
@@ -38,26 +36,10 @@ export function AdminTable<ItemType extends ItemTypeBase>({
 
   return (
     <>
-      <Button.Group className="mb-5">
-        <Button onClick={() => router.push(createNewUrl)} className={'table-action-buttons'}>
-          <IoMdAddCircleOutline className="mr-3 h-4 w-4" />
-          {i18next.t('new')}
-        </Button>
-        <Button
-          onClick={() =>
-            rowSelection.selectedRowKeys.length === 0
-              ? message.warning(i18next.t('select_items'))
-              : toggleDeletionWarning()
-          }
-          className={'table-action-buttons'}
-        >
-          <RiDeleteBin6Line className="mr-3 h-4 w-4" />
-          {i18next.t('delete')}
-        </Button>
-      </Button.Group>
+      {AdminTableButtonGroup({ router, createNewUrl, rowSelection, toggleDeletionWarning })}
       <Table>
         <Table.Head>
-          <Table.HeadCell className="p-4">
+          <Table.HeadCell className="p-4 bg-gray-100">
             <Checkbox
               checked={rowSelection.selectedRowKeys.length === items.length && items.length !== 0}
               onChange={(event) =>
@@ -66,28 +48,18 @@ export function AdminTable<ItemType extends ItemTypeBase>({
             />
           </Table.HeadCell>
           {columns.map((column) => (
-            <Table.HeadCell key={column.key}>{column.title?.toString()}</Table.HeadCell>
+            <Table.HeadCell key={column.key} className="bg-gray-100">
+              {column.title?.toString()}
+            </Table.HeadCell>
           ))}
-          <Table.HeadCell></Table.HeadCell>
+          <Table.HeadCell className="bg-gray-100"></Table.HeadCell>
         </Table.Head>
+
         <Table.Body className="divide-y">
           {isLoading ? (
-            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-              <Table.Cell colSpan={columns.length + 2}>
-                <div className="flex items-center justify-center h-[150px]">
-                  <Spinner size="xl" />
-                </div>
-              </Table.Cell>
-            </Table.Row>
+            <AdminTableLoadingSpinner colSpan={columns.length + 2} />
           ) : items.length === 0 ? (
-            <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-              <Table.Cell colSpan={columns.length + 2}>
-                <div className="flex flex-col items-center justify-center h-[150px] text-gray-300 dark:text-gray-700">
-                  <IoFileTrayOutline size={70} />
-                  <div className="font-semibold text-lg">Nothing to show</div>
-                </div>
-              </Table.Cell>
-            </Table.Row>
+            <NothingToShow colSpan={columns.length + 2} />
           ) : (
             items.map((item) => (
               <Table.Row key={item.key} className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -110,7 +82,7 @@ export function AdminTable<ItemType extends ItemTypeBase>({
                     href={getEditUrl(item._id)}
                     className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
                   >
-                    Edit
+                    <MdEdit size={18} />
                   </Link>
                 </Table.Cell>
               </Table.Row>
@@ -128,42 +100,27 @@ export function AdminTable<ItemType extends ItemTypeBase>({
   );
 }
 
-function DeletionWarningModal({
-  showDeletionWarning,
-  toggleDeletionWarning,
-  numberOfElements,
-  deleteItems,
-}: {
-  showDeletionWarning: boolean;
-  toggleDeletionWarning: () => void;
-  numberOfElements: number;
-  deleteItems: () => Promise<boolean | undefined>;
-}) {
+function NothingToShow({ colSpan }: { colSpan?: number | undefined }) {
   return (
-    <Modal show={showDeletionWarning} size="md" onClose={toggleDeletionWarning} popup>
-      <Modal.Header />
-      <Modal.Body>
-        <div className="text-center">
-          <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-            {i18next.t(numberOfElements === 1 ? 'deletion_confirmation_singular' : 'deletion_confirmation_plural')}
-          </h3>
-          <div className="flex justify-center gap-4">
-            <Button
-              color="failure"
-              onClick={() => {
-                toggleDeletionWarning();
-                deleteItems();
-              }}
-            >
-              {i18next.t('yes_im_sure')}
-            </Button>
-            <Button color="gray" onClick={toggleDeletionWarning}>
-              {i18next.t('no_cancel')}
-            </Button>
-          </div>
+    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+      <Table.Cell colSpan={colSpan}>
+        <div className="flex flex-col items-center justify-center h-[150px] text-gray-300 dark:text-gray-700">
+          <IoFileTrayOutline size={70} />
+          <div className="font-semibold text-lg">Nothing to show</div>
         </div>
-      </Modal.Body>
-    </Modal>
+      </Table.Cell>
+    </Table.Row>
+  );
+}
+
+function AdminTableLoadingSpinner({ colSpan }: { colSpan?: number | undefined }) {
+  return (
+    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+      <Table.Cell colSpan={colSpan}>
+        <div className="flex items-center justify-center h-[150px]">
+          <Spinner size="xl" />
+        </div>
+      </Table.Cell>
+    </Table.Row>
   );
 }

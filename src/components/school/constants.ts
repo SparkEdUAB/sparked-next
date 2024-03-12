@@ -1,13 +1,13 @@
-import i18next from "i18next";
-import { I_formFields } from "types/form";
+import i18next from 'i18next';
+import { I_formFields } from 'types/form';
 
-export const CREATE_SCHOOL_FORM_FIELDS: I_formFields = {
-  ["name"]: {
-    label: i18next.t("name"),
-    key: "name",
+export const SCHOOL_FORM_FIELDS: I_formFields = {
+  ['name']: {
+    label: i18next.t('name'),
+    key: 'name',
   },
-  ["description"]: {
-    label: i18next.t("description"),
-    key: "description",
+  ['description']: {
+    label: i18next.t('description'),
+    key: 'description',
   },
 };
