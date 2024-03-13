@@ -36,7 +36,12 @@ export function AdminTable<ItemType extends ItemTypeBase>({
 
   return (
     <>
-      {AdminTableButtonGroup({ router, createNewUrl, rowSelection, toggleDeletionWarning })}
+      <AdminTableButtonGroup
+        router={router}
+        createNewUrl={createNewUrl}
+        rowSelection={rowSelection}
+        toggleDeletionWarning={toggleDeletionWarning}
+      />
       <Table>
         <Table.Head>
           <Table.HeadCell className="p-4 bg-gray-100">
