@@ -18,7 +18,7 @@ const AdminLayout: FC<TadminLayout> = observer(({ children, withBreadcrumb = tru
     <main className="admin-content-page">
       <AdminNavbar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
 
-      <div className="md:grid md:grid-cols-[256px_auto]">
+      <div className="md:grid md:grid-cols-[256px_calc(100%_-_256px)]">
         <AdminSidebar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
 
         <div className="p-6">

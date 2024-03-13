@@ -42,59 +42,63 @@ export function AdminTable<ItemType extends ItemTypeBase>({
         rowSelection={rowSelection}
         toggleDeletionWarning={toggleDeletionWarning}
       />
-      <Table>
-        <Table.Head>
-          <Table.HeadCell className="p-4 bg-gray-100">
-            <Checkbox
-              checked={rowSelection.selectedRowKeys.length === items.length && items.length !== 0}
-              onChange={(event) =>
-                event.target.checked ? rowSelection.onChange(items.map((item) => item._id)) : rowSelection.onChange([])
-              }
-            />
-          </Table.HeadCell>
-          {columns.map((column) => (
-            <Table.HeadCell key={column.key} className="bg-gray-100">
-              {column.title?.toString()}
+      <div className="w-full overflow-x-scroll">
+        <Table>
+          <Table.Head>
+            <Table.HeadCell className="p-4 bg-gray-100">
+              <Checkbox
+                checked={rowSelection.selectedRowKeys.length === items.length && items.length !== 0}
+                onChange={(event) =>
+                  event.target.checked
+                    ? rowSelection.onChange(items.map((item) => item._id))
+                    : rowSelection.onChange([])
+                }
+              />
             </Table.HeadCell>
-          ))}
-          <Table.HeadCell className="bg-gray-100"></Table.HeadCell>
-        </Table.Head>
+            {columns.map((column) => (
+              <Table.HeadCell key={column.key} className="bg-gray-100">
+                {column.title?.toString()}
+              </Table.HeadCell>
+            ))}
+            <Table.HeadCell className="bg-gray-100"></Table.HeadCell>
+          </Table.Head>
 
-        <Table.Body className="divide-y">
-          {isLoading ? (
-            <AdminTableLoadingSpinner colSpan={columns.length + 2} />
-          ) : items.length === 0 ? (
-            <NothingToShow colSpan={columns.length + 2} />
-          ) : (
-            items.map((item) => (
-              <Table.Row key={item.key} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="p-4">
-                  <Checkbox
-                    checked={rowSelection.selectedRowKeys.includes(item._id)}
-                    onChange={(event) =>
-                      event.target.checked
-                        ? rowSelection.onChange([...rowSelection.selectedRowKeys, item._id])
-                        : rowSelection.onChange(rowSelection.selectedRowKeys.filter((id) => id !== item._id))
-                    }
-                  />
-                </Table.Cell>
-                {columns.map((column) => {
-                  const text = item[column.dataIndex as keyof ItemType] as string;
-                  return <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>;
-                })}
-                <Table.Cell>
-                  <Link
-                    href={getEditUrl(item._id)}
-                    className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                  >
-                    <MdEdit size={18} />
-                  </Link>
-                </Table.Cell>
-              </Table.Row>
-            ))
-          )}
-        </Table.Body>
-      </Table>
+          <Table.Body className="divide-y">
+            {isLoading ? (
+              <AdminTableLoadingSpinner colSpan={columns.length + 2} />
+            ) : items.length === 0 ? (
+              <NothingToShow colSpan={columns.length + 2} />
+            ) : (
+              items.map((item) => (
+                <Table.Row key={item.key} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <Table.Cell className="p-4">
+                    <Checkbox
+                      checked={rowSelection.selectedRowKeys.includes(item._id)}
+                      onChange={(event) =>
+                        event.target.checked
+                          ? rowSelection.onChange([...rowSelection.selectedRowKeys, item._id])
+                          : rowSelection.onChange(rowSelection.selectedRowKeys.filter((id) => id !== item._id))
+                      }
+                    />
+                  </Table.Cell>
+                  {columns.map((column) => {
+                    const text = item[column.dataIndex as keyof ItemType] as string;
+                    return <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>;
+                  })}
+                  <Table.Cell>
+                    <Link
+                      href={getEditUrl(item._id)}
+                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                    >
+                      <MdEdit size={18} />
+                    </Link>
+                  </Table.Cell>
+                </Table.Row>
+              ))
+            )}
+          </Table.Body>
+        </Table>
+      </div>
       <DeletionWarningModal
         showDeletionWarning={showDeletionWarning}
         toggleDeletionWarning={toggleDeletionWarning}
