@@ -54,7 +54,7 @@ const UsersListView: React.FC = observer(() => {
           e.keyCode === 13 ? findUsersByName({ withMetaData: true }) : null;
         }}
       />
-      <AdminTable<TUserFields>
+      {/* <AdminTable<TUserFields>
         deleteItems={deleteUsers}
         rowSelection={rowSelection}
         items={users || []}
@@ -62,7 +62,7 @@ const UsersListView: React.FC = observer(() => {
         createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.users)}
         getEditUrl={(id: string) => getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${id}`}
         columns={userTableColumns}
-      />
+      /> */}
     </>
   );
 });
