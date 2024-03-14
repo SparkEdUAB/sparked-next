@@ -23,7 +23,7 @@ const AdminLayout: FC<TadminLayout> = observer(({ children, withBreadcrumb = tru
 
         <div className="p-6">
           {withBreadcrumb && <AdminHeader menuItems={ADMIN_LINKS} />}
-          {children}
+          <div className="py-6">{children}</div>
         </div>
       </div>
     </main>

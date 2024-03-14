@@ -14,7 +14,7 @@ import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const CreateSchoolView: React.FC = () => {
+const CreateSchoolView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createSchool, isLoading } = useSchool();
 
   const { selectedSchool } = SchoolStore;
@@ -25,7 +25,7 @@ const CreateSchoolView: React.FC = () => {
     const keys = [SCHOOL_FORM_FIELDS.name.key, SCHOOL_FORM_FIELDS.description.key];
 
     let result = extractValuesFromFormEvent<TschoolFields>(e, keys);
-    createSchool(result);
+    createSchool(result, onSuccessfullyDone);
   };
 
   // const [form] = Form.useForm();

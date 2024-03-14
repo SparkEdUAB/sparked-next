@@ -28,7 +28,11 @@ const useMediaContent = (form?: any) => {
     UiStore.confirmDialogStatus && selectedMediaContentIds.length && deleteMediaContent();
   }, [UiStore.confirmDialogStatus]);
 
-  const createResource = async (fields: T_createResourceFields, optionalFileUrl?: string) => {
+  const createResource = async (
+    fields: T_createResourceFields,
+    optionalFileUrl?: string,
+    onSuccessfullyDone?: () => void,
+  ) => {
     const url = API_LINKS.CREATE_MEDIA_CONTENT;
     const formData = {
       body: JSON.stringify({ ...fields, fileUrl: fileUrl || optionalFileUrl }),
@@ -55,8 +59,7 @@ const useMediaContent = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.media_content.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('media content created'));
     } catch (err: any) {
       setLoaderStatus(false);
@@ -65,7 +68,11 @@ const useMediaContent = (form?: any) => {
     }
   };
 
-  const editMediaContent = async (fields: T_MediaContentFields, optionalFileUrl?: string) => {
+  const editMediaContent = async (
+    fields: T_MediaContentFields,
+    optionalFileUrl?: string,
+    onSuccessfullyDone?: () => void,
+  ) => {
     const url = API_LINKS.EDIT_MEDIA_CONTENT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -98,8 +105,7 @@ const useMediaContent = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.media_content.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('success'));
     } catch (err: any) {
       setLoaderStatus(false);

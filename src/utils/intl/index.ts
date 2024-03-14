@@ -39,6 +39,7 @@ i18next.init({
         create_user: 'Create a New User',
         create_topic: 'Create a New Topic',
         create_school: 'Create a New School',
+        create_course: 'Create a New Course',
         create_program: 'Create a New Program',
         create_resource: 'Create a New Resource',
 
@@ -46,6 +47,7 @@ i18next.init({
         edit_user: 'Edit a User',
         edit_topic: 'Edit a Topic',
         edit_school: 'Edit a School',
+        edit_course: 'Edit a Course',
         edit_program: 'Edit a Program',
         edit_media_content: 'Edit Media Content',
 

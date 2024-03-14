@@ -1,18 +1,18 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import useTopic from '@hooks/use-topic';
-import { Table } from 'antd';
-import { Button, TextInput } from 'flowbite-react';
+import { Modal, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
-import { HiMagnifyingGlass, HiOutlineNewspaper, HiOutlinePencilSquare, HiTrash } from 'react-icons/hi2';
+import React, { useEffect, useState } from 'react';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { topicTableColumns } from '.';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import { T_topicFields } from '@hooks/use-topic/types';
+import CreateTopicView from './create-topic-view';
+import EditTopicView from './edit-topic-view';
 
 const TopicsListView: React.FC = observer(() => {
   const {
@@ -20,14 +20,14 @@ const TopicsListView: React.FC = observer(() => {
     topics,
     selectedTopicIds: selectedTopicIds,
     setSelectedTopicIds,
-    triggerDelete,
-    triggerEdit,
     findTopicsByName,
     onSearchQueryChange,
     isLoading,
     deleteTopics,
   } = useTopic();
   const { router, getChildLinkByKey } = useNavigation();
+  const [creatingTopic, setCreatingTopic] = useState(false);
+  const [edittingTopicWithId, setEdittingTopicWithId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTopics({});
@@ -60,10 +60,37 @@ const TopicsListView: React.FC = observer(() => {
         rowSelection={rowSelection}
         items={topics || []}
         isLoading={isLoading}
-        createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.topics)}
-        getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.topics) + `?topicId=${id}`}
+        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.topics)}
+        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.topics) + `?topicId=${id}`}
+        createNew={() => setCreatingTopic(true)}
+        editItem={(id) => setEdittingTopicWithId(id)}
         columns={topicTableColumns}
       />
+      <Modal dismissible show={creatingTopic} onClose={() => setCreatingTopic(false)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          <CreateTopicView
+            onSuccessfullyDone={() => {
+              fetchTopics({});
+              setCreatingTopic(false);
+            }}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal dismissible show={!!edittingTopicWithId} onClose={() => setEdittingTopicWithId(null)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          {edittingTopicWithId ? (
+            <EditTopicView
+              topicId={edittingTopicWithId}
+              onSuccessfullyDone={() => {
+                fetchTopics({});
+                setEdittingTopicWithId(null);
+              }}
+            />
+          ) : null}
+        </Modal.Body>
+      </Modal>
     </>
   );
 });

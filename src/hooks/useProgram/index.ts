@@ -24,7 +24,7 @@ const useProgram = (form?: any) => {
     UiStore.confirmDialogStatus && selectedProgramIds.length && deletePrograms();
   }, [UiStore.confirmDialogStatus]);
 
-  const createProgram = async (fields: TcreateProgramFields) => {
+  const createProgram = async (fields: TcreateProgramFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_PROGRAM;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -51,7 +51,7 @@ const useProgram = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.programs.link);
+      onSuccessfullyDone?.();
 
       message.success(i18next.t('program_created'));
     } catch (err: any) {
@@ -61,7 +61,7 @@ const useProgram = (form?: any) => {
     }
   };
 
-  const editProgram = async (fields: TProgramFields) => {
+  const editProgram = async (fields: TProgramFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_PROGRAM;
     const formData = {
       body: JSON.stringify({ ...fields, _id: program?._id }),
@@ -88,7 +88,7 @@ const useProgram = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.programs.link);
+      onSuccessfullyDone?.();
 
       message.success(i18next.t('success'));
     } catch (err: any) {

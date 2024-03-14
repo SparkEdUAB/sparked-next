@@ -17,7 +17,7 @@ import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { TcreateTopicFields } from '@hooks/use-topic/types';
 
-const CreateTopicView: React.FC = () => {
+const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createTopic, isLoading } = useTopic();
   const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
   const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
@@ -46,7 +46,7 @@ const CreateTopicView: React.FC = () => {
     ];
 
     let result = extractValuesFromFormEvent<TcreateTopicFields>(e, keys);
-    createTopic(result);
+    createTopic(result, onSuccessfullyDone);
   };
 
   // const [form] = Form.useForm();

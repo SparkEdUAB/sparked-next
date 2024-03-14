@@ -3,7 +3,6 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useProgram from '@hooks/useProgram';
-import { Card, Col, Form, Input, Row, Select } from 'antd';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
@@ -18,7 +17,7 @@ import { T_topicFields } from '@hooks/use-topic/types';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
-const EditTopicView: React.FC = () => {
+const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSuccessfullyDone?: () => void }) => {
   const { editTopic, fetchTopicById, topic, isLoading } = useTopic();
   const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
   const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
@@ -29,7 +28,7 @@ const EditTopicView: React.FC = () => {
 
   useEffect(() => {
     fetchTopicById({
-      topicId: searchParams.get('topicId') as string,
+      topicId: topicId || (searchParams.get('topicId') as string),
       withMetaData: true,
     });
 
@@ -52,7 +51,7 @@ const EditTopicView: React.FC = () => {
     ];
 
     let result = extractValuesFromFormEvent<T_topicFields>(e, keys);
-    editTopic(result);
+    editTopic(result, onSuccessfullyDone);
   };
 
   return (

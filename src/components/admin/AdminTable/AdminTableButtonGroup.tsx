@@ -9,18 +9,20 @@ import { useRouter } from 'next-nprogress-bar';
 
 export function AdminTableButtonGroup({
   router,
-  createNewUrl,
+  // createNewUrl,
+  createNew,
   rowSelection,
   toggleDeletionWarning,
 }: {
   router: ReturnType<typeof useRouter>;
-  createNewUrl: string;
+  // createNewUrl: string;
+  createNew: () => void;
   rowSelection: { selectedRowKeys: React.Key[]; onChange: (selectedRowKeys: React.Key[]) => void };
   toggleDeletionWarning: () => void;
 }) {
   return (
     <Button.Group className="mb-5">
-      <Button onClick={() => router.push(createNewUrl)} className={'table-action-buttons'}>
+      <Button onClick={createNew} className={'table-action-buttons'}>
         <IoMdAddCircleOutline className="mr-3 h-4 w-4" />
         {i18next.t('new')}
       </Button>

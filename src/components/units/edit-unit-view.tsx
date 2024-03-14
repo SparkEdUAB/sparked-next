@@ -3,7 +3,6 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useProgram from '@hooks/useProgram';
-import { Card, Col, Form, Input, Row, Select } from 'antd';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
@@ -14,10 +13,10 @@ import useUnit from '@hooks/useUnit';
 import useCourse from '@hooks/useCourse';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
-import { TUnitFields, TcreateUnitFields } from '@hooks/useUnit/types';
+import { TUnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 
-const EditUnitView: React.FC = () => {
+const EditUnitView = ({ unitId, onSuccessfullyDone }: { unitId?: string; onSuccessfullyDone?: () => void }) => {
   // const [form] = Form.useForm();
   const { editUnit, fetchUnitById, unit, isLoading } = useUnit();
   const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
@@ -28,7 +27,7 @@ const EditUnitView: React.FC = () => {
 
   useEffect(() => {
     fetchUnitById({
-      unitId: searchParams.get('unitId') as string,
+      unitId: unitId || (searchParams.get('unitId') as string),
       withMetaData: true,
     });
 
@@ -49,7 +48,7 @@ const EditUnitView: React.FC = () => {
     ];
 
     let result = extractValuesFromFormEvent<TUnitFields>(e, keys);
-    editUnit(result);
+    editUnit(result, onSuccessfullyDone);
   };
 
   return (

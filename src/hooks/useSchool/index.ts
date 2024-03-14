@@ -25,7 +25,7 @@ const useSchool = (form?: any) => {
     UiStore.confirmDialogStatus && selectedSchoolIds.length && deleteSchools();
   }, [UiStore.confirmDialogStatus]);
 
-  const createSchool = async (fields: TcreateSchoolFields) => {
+  const createSchool = async (fields: TcreateSchoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_SCHOOL;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -52,8 +52,7 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.schools.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('school_created'));
     } catch (err: any) {
       setLoaderStatus(false);
@@ -62,7 +61,7 @@ const useSchool = (form?: any) => {
     }
   };
 
-  const editSchool = async (fields: TschoolFields) => {
+  const editSchool = async (fields: TschoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_SCHOOL;
     const formData = {
       body: JSON.stringify({ ...fields, _id: school?._id }),
@@ -89,8 +88,7 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.schools.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('success'));
     } catch (err: any) {
       setLoaderStatus(false);

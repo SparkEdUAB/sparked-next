@@ -15,7 +15,7 @@ import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector
 import { TcreateUnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 
-const CreateCourseView: React.FC = () => {
+const CreateCourseView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createCourse, isLoading } = useCourse();
   const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
   const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
@@ -38,12 +38,12 @@ const CreateCourseView: React.FC = () => {
     ];
 
     let result = extractValuesFromFormEvent<TcreateUnitFields>(e, keys);
-    createCourse(result);
+    createCourse(result, onSuccessfullyDone);
   };
 
   return (
     <>
-      <AdminPageTitle title="Create course" />
+      <AdminPageTitle title={i18next.t('create_course')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
         <AdminFormInput

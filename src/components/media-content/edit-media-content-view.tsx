@@ -2,20 +2,16 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import UploadView from '@components/molecue/upload-view';
 import useMediaContent from '@hooks/use-media-content';
 import useCourse from '@hooks/useCourse';
 import useProgram from '@hooks/useProgram';
 import useSchool from '@hooks/useSchool';
 import useUnit from '@hooks/useUnit';
-import FileUploadStore from '@state/mobx/fileUploadStore';
-import { Card, Col, Form, Input, Row, Select, message } from 'antd';
 import { Button, FileInput, Label, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
-import MediaContentStore from '@state/mobx/mediaContentStore';
 import useTopic from '@hooks/use-topic';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_MediaContentFields } from 'types/media-content';
@@ -23,7 +19,13 @@ import useFileUpload from '@hooks/use-file-upload';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 
-const EditMediaContentView: React.FC = () => {
+const EditMediaContentView = ({
+  resourceId,
+  onSuccessfullyDone,
+}: {
+  resourceId?: string;
+  onSuccessfullyDone?: () => void;
+}) => {
   // const [form] = Form.useForm();
 
   // const { fileUrl } = FileUploadStore;
@@ -44,7 +46,7 @@ const EditMediaContentView: React.FC = () => {
 
   useEffect(() => {
     fetchMediaContentById({
-      mediaContentId: searchParams.get('mediaContentId') as string,
+      mediaContentId: resourceId || (searchParams.get('mediaContentId') as string),
       withMetaData: true,
     });
 
@@ -84,7 +86,7 @@ const EditMediaContentView: React.FC = () => {
       }
     }
 
-    editMediaContent(result, fileUrl || undefined);
+    editMediaContent(result, fileUrl || undefined, onSuccessfullyDone);
   };
 
   const isLoading = uploadingFile || loadingResource;

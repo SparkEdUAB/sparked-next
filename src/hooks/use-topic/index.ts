@@ -24,7 +24,7 @@ const useTopic = (form?: any) => {
     UiStore.confirmDialogStatus && selectedTopicIds.length && deleteTopics();
   }, [UiStore.confirmDialogStatus]);
 
-  const createTopic = async (fields: TcreateTopicFields) => {
+  const createTopic = async (fields: TcreateTopicFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_TOPIC;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -51,8 +51,7 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.topics.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('topic_created'));
     } catch (err: any) {
       setLoaderStatus(false);
@@ -63,7 +62,7 @@ const useTopic = (form?: any) => {
     }
   };
 
-  const editTopic = async (fields: T_topicFields) => {
+  const editTopic = async (fields: T_topicFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_TOPIC;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -91,8 +90,7 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.topics.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('success'));
     } catch (err: any) {
       setLoaderStatus(false);

@@ -24,7 +24,7 @@ const useUnit = (form?: FormInstance) => {
     UiStore.confirmDialogStatus && selectedUnitIds.length && deleteUnits();
   }, [UiStore.confirmDialogStatus]);
 
-  const createUnit = async (fields: TcreateUnitFields) => {
+  const createUnit = async (fields: TcreateUnitFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_UNIT;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -51,8 +51,7 @@ const useUnit = (form?: FormInstance) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.units.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('unit_created'));
     } catch (err: any) {
       setLoaderStatus(false);
@@ -61,7 +60,7 @@ const useUnit = (form?: FormInstance) => {
     }
   };
 
-  const editUnit = async (fields: TUnitFields) => {
+  const editUnit = async (fields: TUnitFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_UNIT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -89,8 +88,7 @@ const useUnit = (form?: FormInstance) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.units.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('success'));
     } catch (err: any) {
       setLoaderStatus(false);

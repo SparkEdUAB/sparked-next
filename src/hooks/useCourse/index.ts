@@ -24,7 +24,7 @@ const useCourse = (form?: any) => {
     UiStore.confirmDialogStatus && selectedCourseIds.length && deleteCourse();
   }, [UiStore.confirmDialogStatus]);
 
-  const createCourse = async (fields: TcreateCourseFields) => {
+  const createCourse = async (fields: TcreateCourseFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_COURSE;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -51,8 +51,7 @@ const useCourse = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.courses.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('course_created'));
     } catch (err: any) {
       setLoaderStatus(false);
@@ -61,7 +60,7 @@ const useCourse = (form?: any) => {
     }
   };
 
-  const editCourse = async (fields: TcourseFields) => {
+  const editCourse = async (fields: TcourseFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_COURSE;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -89,8 +88,7 @@ const useCourse = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.courses.link);
-
+      onSuccessfullyDone?.();
       message.success(i18next.t('success'));
     } catch (err: any) {
       setLoaderStatus(false);

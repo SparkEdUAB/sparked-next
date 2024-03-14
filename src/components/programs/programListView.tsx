@@ -4,14 +4,15 @@ import { AdminPageTitle } from '@components/layouts';
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import useProgram from '@hooks/useProgram';
-import { TextInput } from 'flowbite-react';
+import { Modal, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { programTableColumns } from '.';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { TProgramFields } from '@hooks/useProgram/types';
+import CreateProgramView from './createProgramView';
+import EditProgramView from './editProgramView';
 
 const ProgramsListView: React.FC = observer(() => {
   const {
@@ -19,14 +20,14 @@ const ProgramsListView: React.FC = observer(() => {
     programs,
     selectedProgramIds,
     setSelectedProgramIds,
-    triggerDelete,
-    triggerEdit,
     findProgramsByName,
     onSearchQueryChange,
     deletePrograms,
     isLoading,
   } = useProgram();
-  const { router, getChildLinkByKey } = useNavigation();
+  const { getChildLinkByKey } = useNavigation();
+  const [creatingProgram, setCreatingProgram] = useState(false);
+  const [edittingProgramWithId, setEdittingProgramWithId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchPrograms({});
@@ -59,10 +60,37 @@ const ProgramsListView: React.FC = observer(() => {
         rowSelection={rowSelection}
         items={programs}
         isLoading={isLoading}
-        createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.programs)}
-        getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.programs) + `?programId=${id}`}
+        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.programs)}
+        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.programs) + `?programId=${id}`}
+        createNew={() => setCreatingProgram(true)}
+        editItem={(id) => setEdittingProgramWithId(id)}
         columns={programTableColumns}
       />
+      <Modal dismissible show={creatingProgram} onClose={() => setCreatingProgram(false)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          <CreateProgramView
+            onSuccessfullyDone={() => {
+              fetchPrograms({});
+              setCreatingProgram(false);
+            }}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal dismissible show={!!edittingProgramWithId} onClose={() => setEdittingProgramWithId(null)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          {edittingProgramWithId ? (
+            <EditProgramView
+              programId={edittingProgramWithId}
+              onSuccessfullyDone={() => {
+                fetchPrograms({});
+                setEdittingProgramWithId(null);
+              }}
+            />
+          ) : null}
+        </Modal.Body>
+      </Modal>
     </>
   );
 });

@@ -2,17 +2,14 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import UploadView from '@components/molecue/upload-view';
 import useMediaContent from '@hooks/use-media-content';
 import useTopic from '@hooks/use-topic';
 import useCourse from '@hooks/useCourse';
 import useProgram from '@hooks/useProgram';
 import useSchool from '@hooks/useSchool';
 import useUnit from '@hooks/useUnit';
-import FileUploadStore from '@state/mobx/fileUploadStore';
-import MediaContentStore from '@state/mobx/mediaContentStore';
 import { Button, FileInput, Label, Spinner } from 'flowbite-react';
-import i18next, { loadResources } from 'i18next';
+import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
@@ -23,7 +20,7 @@ import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector
 import useFileUpload from '@hooks/use-file-upload';
 import { message } from 'antd';
 
-const CreateMediaContentView: React.FC = () => {
+const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createResource, isLoading: loadingResource } = useMediaContent();
   const { uploadFile } = useFileUpload();
 
@@ -77,7 +74,7 @@ const CreateMediaContentView: React.FC = () => {
         return message.error(i18next.t('failed_to_upload'));
       }
 
-      createResource(result, fileUrl);
+      createResource(result, fileUrl, onSuccessfullyDone);
     } finally {
       setUploadingFile(false);
     }

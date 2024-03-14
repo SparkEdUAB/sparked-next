@@ -1,17 +1,18 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { TextInput } from 'flowbite-react';
+import { Modal, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import useCourse from '@hooks/useCourse';
 import { TcourseFields } from '@hooks/useCourse/types';
 import { AdminTable } from '../admin/AdminTable/AdminTable';
 import { courseTableColumns } from '.';
+import EditCourseView from './editCourseView';
+import CreateCourseView from './createCourseView';
 
 const CourseListView: React.FC = observer(() => {
   const {
@@ -27,6 +28,8 @@ const CourseListView: React.FC = observer(() => {
     deleteCourse,
   } = useCourse();
   const { getChildLinkByKey } = useNavigation();
+  const [creatingCourse, setCreatingCourse] = useState(false);
+  const [edittingCourseWithId, setEdittingCourseWithId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCourses({});
@@ -59,10 +62,37 @@ const CourseListView: React.FC = observer(() => {
         rowSelection={rowSelection}
         items={courses}
         isLoading={isLoading}
-        createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.courses)}
-        getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.courses) + `?courseId=${id}`}
+        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.courses)}
+        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.courses) + `?courseId=${id}`}
+        createNew={() => setCreatingCourse(true)}
+        editItem={(id) => setEdittingCourseWithId(id)}
         columns={courseTableColumns}
       />
+      <Modal dismissible show={creatingCourse} onClose={() => setCreatingCourse(false)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          <CreateCourseView
+            onSuccessfullyDone={() => {
+              fetchCourses({});
+              setCreatingCourse(false);
+            }}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal dismissible show={!!edittingCourseWithId} onClose={() => setEdittingCourseWithId(null)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          {edittingCourseWithId ? (
+            <EditCourseView
+              courseId={edittingCourseWithId}
+              onSuccessfullyDone={() => {
+                fetchCourses({});
+                setEdittingCourseWithId(null);
+              }}
+            />
+          ) : null}
+        </Modal.Body>
+      </Modal>
     </>
   );
 });

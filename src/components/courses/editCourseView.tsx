@@ -15,7 +15,7 @@ import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { TcourseFields } from '@hooks/useCourse/types';
 
-const EditCourseView: React.FC = () => {
+const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; onSuccessfullyDone?: () => void }) => {
   const { editCourse, fetchCourseById, course, isLoading } = useCourse();
   const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
   const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
@@ -24,7 +24,7 @@ const EditCourseView: React.FC = () => {
 
   useEffect(() => {
     fetchCourseById({
-      courseId: searchParams.get('courseId') as string,
+      courseId: courseId || (searchParams.get('courseId') as string),
       withMetaData: true,
     });
 
@@ -43,7 +43,7 @@ const EditCourseView: React.FC = () => {
     ];
 
     let result = extractValuesFromFormEvent<TcourseFields>(e, keys);
-    editCourse(result);
+    editCourse(result, onSuccessfullyDone);
   };
 
   return (

@@ -15,14 +15,14 @@ import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const EditSchoolView: React.FC = () => {
+const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; onSuccessfullyDone?: () => void }) => {
   // const [form] = Form.useForm();
   const { editSchool, fetchSchool, school, isLoading } = useSchool();
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    fetchSchool(searchParams.get('schoolId') as string);
+    fetchSchool(schoolId || (searchParams.get('schoolId') as string));
   }, []);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
@@ -31,7 +31,7 @@ const EditSchoolView: React.FC = () => {
     const keys = [SCHOOL_FORM_FIELDS.name.key, SCHOOL_FORM_FIELDS.description.key];
 
     let result = extractValuesFromFormEvent<TschoolFields>(e, keys);
-    editSchool(result);
+    editSchool(result, onSuccessfullyDone);
   };
 
   return (

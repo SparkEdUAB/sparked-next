@@ -2,8 +2,7 @@
 'use client';
 
 import useSchool from '@hooks/useSchool';
-// import { Card, Col, Form, Input, Row, Select, Skeleton } from "antd";
-import { Button, Label, Spinner } from 'flowbite-react';
+import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { AdminPageTitle } from '@components/layouts';
 import SchoolStore from '@state/mobx/scholStore';
@@ -17,7 +16,7 @@ import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const CreateProgramView: React.FC = () => {
+const CreateProgramView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createProgram, isLoading } = useProgram();
   const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
 
@@ -33,7 +32,7 @@ const CreateProgramView: React.FC = () => {
     const keys = [PROGRAM_FORM_FIELDS.name.key, PROGRAM_FORM_FIELDS.description.key, PROGRAM_FORM_FIELDS.school.key];
 
     let result = extractValuesFromFormEvent<TUnitFields>(e, keys);
-    createProgram(result);
+    createProgram(result, onSuccessfullyDone);
   };
 
   // const [form] = Form.useForm();

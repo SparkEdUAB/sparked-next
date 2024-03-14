@@ -14,8 +14,10 @@ export function AdminTable<ItemType extends ItemTypeBase>({
   rowSelection,
   items,
   isLoading,
-  createNewUrl,
-  getEditUrl,
+  // createNewUrl,
+  createNew,
+  // getEditUrl,
+  editItem,
   columns,
   deleteItems,
 }: {
@@ -26,8 +28,10 @@ export function AdminTable<ItemType extends ItemTypeBase>({
   };
   items: ItemType[];
   isLoading: boolean;
-  createNewUrl: string;
-  getEditUrl: (id: string) => string;
+  // createNewUrl: string;
+  createNew: () => void;
+  // getEditUrl: (id: string) => string;
+  editItem: (id: string) => void;
   columns: ColumnData<ItemType>[];
 }) {
   const { router } = useNavigation();
@@ -38,11 +42,12 @@ export function AdminTable<ItemType extends ItemTypeBase>({
     <>
       <AdminTableButtonGroup
         router={router}
-        createNewUrl={createNewUrl}
+        // createNewUrl={createNewUrl}
+        createNew={createNew}
         rowSelection={rowSelection}
         toggleDeletionWarning={toggleDeletionWarning}
       />
-      <div className="w-full overflow-x-scroll">
+      <div className="w-full overflow-x-scroll rounded-lg drop-shadow-md">
         <Table>
           <Table.Head>
             <Table.HeadCell className="p-4 bg-gray-100">
@@ -86,12 +91,17 @@ export function AdminTable<ItemType extends ItemTypeBase>({
                     return <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>;
                   })}
                   <Table.Cell>
-                    <Link
-                      href={getEditUrl(item._id)}
-                      className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
-                    >
-                      <MdEdit size={18} />
-                    </Link>
+                    {/* <a
+                      // href={getEditUrl(item._id)}
+                      onClick={() => editItem(item._id)}
+                      className="font-medium text-cyan-600 dark:text-cyan-500"
+                    > */}
+                    <MdEdit
+                      size={18}
+                      onClick={() => editItem(item._id)}
+                      className="cursor-pointer font-medium text-cyan-600 dark:text-cyan-500"
+                    />
+                    {/* </a> */}
                   </Table.Cell>
                 </Table.Row>
               ))

@@ -14,7 +14,13 @@ import { TProgramFields } from '@hooks/useProgram/types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 
-const EditProgramView: React.FC = () => {
+const EditProgramView = ({
+  programId,
+  onSuccessfullyDone,
+}: {
+  programId?: string;
+  onSuccessfullyDone?: () => void;
+}) => {
   const { editProgram, fetchProgramById, program, isLoading } = useProgram();
   const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
 
@@ -22,7 +28,7 @@ const EditProgramView: React.FC = () => {
 
   useEffect(() => {
     fetchProgramById({
-      programId: searchParams.get('programId') as string,
+      programId: programId || (searchParams.get('programId') as string),
       withMetaData: true,
     });
 
@@ -35,7 +41,7 @@ const EditProgramView: React.FC = () => {
     const keys = [PROGRAM_FORM_FIELDS.name.key, PROGRAM_FORM_FIELDS.description.key, PROGRAM_FORM_FIELDS.school.key];
 
     let result = extractValuesFromFormEvent<TProgramFields>(e, keys);
-    editProgram(result);
+    editProgram(result, onSuccessfullyDone);
   };
 
   return (

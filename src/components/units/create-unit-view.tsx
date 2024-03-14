@@ -18,7 +18,7 @@ import { AdminFormInput } from '../admin/AdminForm/AdminFormInput';
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const CreateUnitView: React.FC = () => {
+const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createUnit, isLoading } = useUnit();
   const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
   const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
@@ -44,7 +44,7 @@ const CreateUnitView: React.FC = () => {
     ];
 
     let result = extractValuesFromFormEvent<TcreateUnitFields>(e, keys);
-    createUnit(result);
+    createUnit(result, onSuccessfullyDone);
   };
 
   return (
