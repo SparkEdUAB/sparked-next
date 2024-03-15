@@ -15,7 +15,7 @@ export const TOPIC_FORM_FIELDS: I_FormFields = {
     key: 'schoolId',
   },
   ['program']: {
-    label: i18next.t('Program'),
+    label: i18next.t('program'),
     key: 'programId',
   },
   ['course']: {

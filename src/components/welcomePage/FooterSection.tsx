@@ -25,15 +25,15 @@ const FooterSection = () => {
             <div className="mb-6 md:mb-0">
               <a href="/" className="flex items-center">
                 <span className="self-center text-2xl font-semibold text-sky-900 whitespace-nowrap dark:text-white">
-                  <AppLogo width={133} height={25} />
+                  <AppLogo scale={0.8} />
                 </span>
               </a>
             </div>
             <div className="grid grid-cols-2 gap-8 sm:gap-6">
               <div>
-                <h2 className="mb-6 text-sm font-semibold text-sky-900 uppercase dark:text-white">Follow us</h2>
+                <h2 className="mb-3 text-sm font-semibold text-sky-900 uppercase dark:text-white">Follow us</h2>
                 <ul className="text-sky-700 dark:text-sky-300">
-                  <li className="mb-4">
+                  <li className="mb-3">
                     <a href="https://github.com/sparkeduab/sparked-next" className="hover:underline ">
                       Github
                     </a>
@@ -41,9 +41,9 @@ const FooterSection = () => {
                 </ul>
               </div>
               <div>
-                <h2 className="mb-6 text-sm font-semibold text-sky-900 uppercase dark:text-white">Legal</h2>
+                <h2 className="mb-3 text-sm font-semibold text-sky-900 uppercase dark:text-white">Legal</h2>
                 <ul className="text-sky-700 dark:text-sky-300">
-                  <li className="mb-4">
+                  <li className="mb-3">
                     <a href="#" className="hover:underline">
                       Privacy Policy
                     </a>
@@ -52,9 +52,9 @@ const FooterSection = () => {
               </div>
             </div>
           </div>
-          <hr className="my-6 border-sky-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-          <div className="sm:flex sm:items-center sm:justify-center">
-            <span className="text-sm text-sky-700 sm:text-center dark:text-sky-300">
+          <hr className="my-6 border-sky-200 md:mx-auto dark:border-gray-700 lg:my-8" />
+          <div className="md:flex md:items-center md:justify-center">
+            <span className="text-sm text-sky-700 md:text-center dark:text-sky-300">
               © 2024{' '}
               <a href="" className="hover:underline">
                 SparkEd™

@@ -1,13 +1,18 @@
 import Image from 'next/image';
 
-const AppLogo = ({ width, height }: { width?: number; height?: number }) => (
-  <Image
-    width={width || 160}
-    height={height || 30}
-    src="/alternate-logo.svg"
-    alt="SparkEd Logo"
-    className="admin-logo"
-  />
-);
+const AppLogo = ({ scale = 1 }: { scale?: number }) => {
+  const defaultWidth = 160;
+  const defaultHeight = 30;
+
+  return (
+    <Image
+      width={defaultWidth * scale}
+      height={defaultHeight * scale}
+      src="/alternate-logo.svg"
+      alt="SparkEd Logo"
+      className="admin-logo"
+    />
+  );
+};
 
 export default AppLogo;

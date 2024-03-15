@@ -9,6 +9,7 @@ i18next.init({
       translation: {
         home: 'Home',
         signup: 'Sign Up',
+        signin: 'Sign In',
         email: 'Email',
         password: 'Password',
         form: 'Form',
