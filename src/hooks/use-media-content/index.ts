@@ -8,8 +8,8 @@ import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
-import { T_createResourceFields, T_fetchTopic } from './types';
-import { TRawMediaContentFields, T_MediaContentFields } from 'types/media-content';
+import { T_CreateResourceFields, T_FetchTopic } from './types';
+import { T_RawMediaContentFields, T_MediaContentFields } from 'types/media-content';
 import FileUploadStore from '@state/mobx/fileUploadStore';
 import { T_React_key } from 'app/types';
 
@@ -29,7 +29,7 @@ const useMediaContent = (form?: any) => {
   }, [UiStore.confirmDialogStatus]);
 
   const createResource = async (
-    fields: T_createResourceFields,
+    fields: T_CreateResourceFields,
     optionalFileUrl?: string,
     onSuccessfullyDone?: () => void,
   ) => {
@@ -114,7 +114,7 @@ const useMediaContent = (form?: any) => {
     }
   };
 
-  const fetchMediaContent = async ({ limit = 1000, skip = 0 }: T_fetchTopic) => {
+  const fetchMediaContent = async ({ limit = 1000, skip = 0 }: T_FetchTopic) => {
     const url = API_LINKS.FETCH_MEDIA_CONTENT;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
@@ -141,7 +141,7 @@ const useMediaContent = (form?: any) => {
         return false;
       }
 
-      const _mediaContent = (responseData.mediaContent as TRawMediaContentFields[])?.map<T_MediaContentFields>(
+      const _mediaContent = (responseData.mediaContent as T_RawMediaContentFields[])?.map<T_MediaContentFields>(
         (i, index: number) =>
           ({
             index: index + 1,
@@ -210,7 +210,7 @@ const useMediaContent = (form?: any) => {
       }
 
       if (responseData.mediaContent) {
-        const mediaContent = responseData.mediaContent as TRawMediaContentFields;
+        const mediaContent = responseData.mediaContent as T_RawMediaContentFields;
 
         const _mediaContent = {
           index: 1,

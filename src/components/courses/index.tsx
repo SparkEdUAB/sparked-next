@@ -1,11 +1,8 @@
-import { Space } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import i18next from 'i18next';
-import { TcourseFields } from '@hooks/useCourse/types';
-import { ReactNode } from 'react';
-import { ColumnData } from '@components/admin/AdminTable/types';
+import { T_CourseFields } from '@hooks/useCourse/types';
+import { T_ColumnData } from '@components/admin/AdminTable/types';
 
-export const courseTableColumns: ColumnData<TcourseFields>[] = [
+export const courseTableColumns: T_ColumnData<T_CourseFields>[] = [
   {
     title: '#',
     dataIndex: 'index',

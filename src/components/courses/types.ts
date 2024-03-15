@@ -1,4 +1,4 @@
-export type TschoolFields = {
+export type T_SchoolFields = {
   key: string;
   _id: string;
   name: string;

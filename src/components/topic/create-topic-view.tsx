@@ -15,7 +15,7 @@ import useUnit from '@hooks/useUnit';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { extractValuesFromFormEvent } from 'utils/helpers';
-import { TcreateTopicFields } from '@hooks/use-topic/types';
+import { T_CreateTopicFields } from '@hooks/use-topic/types';
 
 const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createTopic, isLoading } = useTopic();
@@ -45,7 +45,7 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
       TOPIC_FORM_FIELDS.unit.key,
     ];
 
-    let result = extractValuesFromFormEvent<TcreateTopicFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_CreateTopicFields>(e, keys);
     createTopic(result, onSuccessfullyDone);
   };
 

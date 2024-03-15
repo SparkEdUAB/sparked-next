@@ -8,23 +8,23 @@ import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
-import { TcreateTopicFields, T_fetchTopic, T_topicFields, TRawTopicFields } from './types';
+import { T_CreateTopicFields, T_FetchTopic, T_TopicFields, T_RawTopicFields } from './types';
 
 const useTopic = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [topics, setTopics] = useState<Array<T_topicFields>>([]);
-  const [originalTopics, setOriginalTopics] = useState<Array<T_topicFields>>([]);
-  const [topic, setTopic] = useState<T_topicFields | null>(null);
+  const [topics, setTopics] = useState<Array<T_TopicFields>>([]);
+  const [originalTopics, setOriginalTopics] = useState<Array<T_TopicFields>>([]);
+  const [topic, setTopic] = useState<T_TopicFields | null>(null);
   const [selectedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
     UiStore.confirmDialogStatus && selectedTopicIds.length && deleteTopics();
   }, [UiStore.confirmDialogStatus]);
 
-  const createTopic = async (fields: TcreateTopicFields, onSuccessfullyDone?: () => void) => {
+  const createTopic = async (fields: T_CreateTopicFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_TOPIC;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -62,7 +62,7 @@ const useTopic = (form?: any) => {
     }
   };
 
-  const editTopic = async (fields: T_topicFields, onSuccessfullyDone?: () => void) => {
+  const editTopic = async (fields: T_TopicFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_TOPIC;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -99,7 +99,7 @@ const useTopic = (form?: any) => {
     }
   };
 
-  const fetchTopics = async ({ limit = 1000, skip = 0 }: T_fetchTopic) => {
+  const fetchTopics = async ({ limit = 1000, skip = 0 }: T_FetchTopic) => {
     const url = API_LINKS.FETCH_TOPICS;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
@@ -126,7 +126,7 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      const _units = (responseData.units as TRawTopicFields[])?.map<T_topicFields>((i, index: number) => ({
+      const _units = (responseData.units as T_RawTopicFields[])?.map<T_TopicFields>((i, index: number) => ({
         index: index + 1,
         key: i._id,
         _id: i._id,
@@ -183,10 +183,10 @@ const useTopic = (form?: any) => {
       }
 
       if (responseData.topic) {
-        const topic: TRawTopicFields = responseData.topic;
+        const topic: T_RawTopicFields = responseData.topic;
         const { _id, name, description, school, program, course, unit } = topic;
 
-        const _topic: T_topicFields = {
+        const _topic: T_TopicFields = {
           _id,
           name,
           description,

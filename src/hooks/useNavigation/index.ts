@@ -1,6 +1,6 @@
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import NavigationStore from '@state/mobx/navigationStore';
-import { TbreadcrumbItems, TmenuItemLink, TmenuItemLinkParams } from 'types/links';
+import { T_BreadcrumbItems, T_MenuItemLink, T_MenuItemLinkParams } from 'types/links';
 import { useParams, usePathname } from 'next/navigation';
 import axios from 'axios';
 import { useRouter } from 'next-nprogress-bar';
@@ -12,17 +12,17 @@ const useNavigation = () => {
   const { activeMenuItem } = NavigationStore;
 
   const fetchAdminMenuItems = () => {
-    const menuItems: Array<TmenuItemLinkParams> = [];
+    const menuItems: Array<T_MenuItemLinkParams> = [];
 
     for (const menuItem in ADMIN_LINKS) {
-      const entry = ADMIN_LINKS[menuItem as keyof TmenuItemLink];
+      const entry = ADMIN_LINKS[menuItem as keyof T_MenuItemLink];
       menuItems.push(entry);
     }
 
     return menuItems;
   };
 
-  const isActiveMenuItem = (menuItem: TmenuItemLinkParams): boolean => {
+  const isActiveMenuItem = (menuItem: T_MenuItemLinkParams): boolean => {
     if (pathname === menuItem.link) {
       NavigationStore.setActiveMenuItem(menuItem);
       return true;
@@ -35,8 +35,8 @@ const useNavigation = () => {
     return menuItem.children && childActiveMenus?.length !== 0 ? true : false;
   };
 
-  const generateBreadcrumbItems = (menuItems: TmenuItemLink, targetLink: string) => {
-    const breadcrumbItems: TbreadcrumbItems = [];
+  const generateBreadcrumbItems = (menuItems: T_MenuItemLink, targetLink: string) => {
+    const breadcrumbItems: T_BreadcrumbItems = [];
 
     if (!targetLink) return breadcrumbItems;
     const linkSegments = targetLink.split('/');
@@ -59,7 +59,7 @@ const useNavigation = () => {
     return breadcrumbItems;
   };
 
-  const getChildLinkByKey = (key: string, parentLink: TmenuItemLinkParams) => {
+  const getChildLinkByKey = (key: string, parentLink: T_MenuItemLinkParams) => {
     const links = parentLink.children?.filter((i) => i.key === key);
 
     if (links?.length) {

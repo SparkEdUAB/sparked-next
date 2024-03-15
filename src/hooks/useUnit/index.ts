@@ -8,23 +8,23 @@ import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
-import { TcreateUnitFields, TfetchUnits, TRawUnitFields, TUnitFields } from './types';
+import { T_CreateUnitFields, T_FetchUnits, T_RawUnitFields, T_UnitFields } from './types';
 
 const useUnit = (form?: FormInstance) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [units, setUnits] = useState<Array<TUnitFields>>([]);
-  const [tempUnits, setTempUnits] = useState<Array<TUnitFields>>([]);
-  const [unit, setUnit] = useState<TUnitFields | null>(null);
+  const [units, setUnits] = useState<Array<T_UnitFields>>([]);
+  const [tempUnits, setTempUnits] = useState<Array<T_UnitFields>>([]);
+  const [unit, setUnit] = useState<T_UnitFields | null>(null);
   const [selectedUnitIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
     UiStore.confirmDialogStatus && selectedUnitIds.length && deleteUnits();
   }, [UiStore.confirmDialogStatus]);
 
-  const createUnit = async (fields: TcreateUnitFields, onSuccessfullyDone?: () => void) => {
+  const createUnit = async (fields: T_CreateUnitFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_UNIT;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -60,7 +60,7 @@ const useUnit = (form?: FormInstance) => {
     }
   };
 
-  const editUnit = async (fields: TUnitFields, onSuccessfullyDone?: () => void) => {
+  const editUnit = async (fields: T_UnitFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_UNIT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -97,7 +97,7 @@ const useUnit = (form?: FormInstance) => {
     }
   };
 
-  const fetchUnits = async ({ limit = 1000, skip = 0 }: TfetchUnits) => {
+  const fetchUnits = async ({ limit = 1000, skip = 0 }: T_FetchUnits) => {
     const url = API_LINKS.FETCH_UNIT;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
@@ -124,7 +124,7 @@ const useUnit = (form?: FormInstance) => {
         return false;
       }
 
-      const _units = (responseData.units as TRawUnitFields[])?.map<TUnitFields>((i, index: number) => ({
+      const _units = (responseData.units as T_RawUnitFields[])?.map<T_UnitFields>((i, index: number) => ({
         index: index + 1,
         key: i._id,
         _id: i._id,
@@ -184,7 +184,7 @@ const useUnit = (form?: FormInstance) => {
       }
 
       if (responseData.unit) {
-        const { _id, name, description, school, program, course } = responseData.unit as TUnitFields;
+        const { _id, name, description, school, program, course } = responseData.unit as T_UnitFields;
 
         const _unit = {
           _id,
@@ -195,7 +195,7 @@ const useUnit = (form?: FormInstance) => {
           courseId: course?._id,
         };
 
-        setUnit(_unit as TUnitFields);
+        setUnit(_unit as T_UnitFields);
         form && form.setFieldsValue(_unit);
         return _unit;
       } else {

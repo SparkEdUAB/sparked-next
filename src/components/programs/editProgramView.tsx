@@ -10,7 +10,7 @@ import { FormEventHandler, useEffect } from 'react';
 import { PROGRAM_FORM_FIELDS } from './constants';
 import useSchool from '@hooks/useSchool';
 import { extractValuesFromFormEvent } from 'utils/helpers';
-import { TProgramFields } from '@hooks/useProgram/types';
+import { T_ProgramFields } from '@hooks/useProgram/types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 
@@ -40,7 +40,7 @@ const EditProgramView = ({
 
     const keys = [PROGRAM_FORM_FIELDS.name.key, PROGRAM_FORM_FIELDS.description.key, PROGRAM_FORM_FIELDS.school.key];
 
-    let result = extractValuesFromFormEvent<TProgramFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_ProgramFields>(e, keys);
     editProgram(result, onSuccessfullyDone);
   };
 

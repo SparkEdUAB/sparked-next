@@ -12,7 +12,7 @@ import { UNIT_FORM_FIELDS } from './constants';
 import useProgram from '@hooks/useProgram';
 import useUnit from '@hooks/useUnit';
 import { extractValuesFromFormEvent } from 'utils/helpers';
-import { TcreateUnitFields } from '@hooks/useUnit/types';
+import { T_CreateUnitFields } from '@hooks/useUnit/types';
 import { AdminFormSelector } from '../admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '../admin/AdminForm/AdminFormInput';
 
@@ -43,7 +43,7 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
       UNIT_FORM_FIELDS.course.key,
     ];
 
-    let result = extractValuesFromFormEvent<TcreateUnitFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_CreateUnitFields>(e, keys);
     createUnit(result, onSuccessfullyDone);
   };
 

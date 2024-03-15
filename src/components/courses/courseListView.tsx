@@ -8,7 +8,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import useCourse from '@hooks/useCourse';
-import { TcourseFields } from '@hooks/useCourse/types';
+import { T_CourseFields } from '@hooks/useCourse/types';
 import { AdminTable } from '../admin/AdminTable/AdminTable';
 import { courseTableColumns } from '.';
 import EditCourseView from './editCourseView';
@@ -20,8 +20,6 @@ const CourseListView: React.FC = observer(() => {
     courses,
     selectedCourseIds,
     setSelectedCourseIds,
-    triggerDelete,
-    triggerEdit,
     findCourseByName,
     onSearchQueryChange,
     isLoading,
@@ -57,7 +55,7 @@ const CourseListView: React.FC = observer(() => {
           e.keyCode === 13 ? findCourseByName({ withMetaData: true }) : null;
         }}
       />
-      <AdminTable<TcourseFields>
+      <AdminTable<T_CourseFields>
         deleteItems={deleteCourse}
         rowSelection={rowSelection}
         items={courses}

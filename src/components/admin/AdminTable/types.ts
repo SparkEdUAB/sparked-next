@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 
-export type ItemTypeBase = {
+export type T_ItemTypeBase = {
   _id: string;
   key: string;
 };
 
-export type ColumnData<Item extends ItemTypeBase> = {
+export type T_ColumnData<Item extends T_ItemTypeBase> = {
   title: string;
   dataIndex: keyof Item;
   key: string;

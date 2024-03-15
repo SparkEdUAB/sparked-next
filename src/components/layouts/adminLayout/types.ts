@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
-export type TadminLayout = {
+export type T_AdminLayout = {
   children: ReactNode;
   withBreadcrumb?: boolean;
 };

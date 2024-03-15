@@ -52,7 +52,7 @@ export type T_MediaContentFields = {
 /**
  * Corresponds to the type returned directly by the API
  */
-export type TRawMediaContentFields = {
+export type T_RawMediaContentFields = {
   _id: string;
   name: string;
   description: string;

@@ -10,7 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useEffect } from 'react';
 import { SCHOOL_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers';
-import { TschoolFields } from './types';
+import { T_SchoolFields } from './types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
 const onFinishFailed = (errorInfo: any) => {};
@@ -30,7 +30,7 @@ const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; o
 
     const keys = [SCHOOL_FORM_FIELDS.name.key, SCHOOL_FORM_FIELDS.description.key];
 
-    let result = extractValuesFromFormEvent<TschoolFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_SchoolFields>(e, keys);
     editSchool(result, onSuccessfullyDone);
   };
 

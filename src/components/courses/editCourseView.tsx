@@ -13,7 +13,7 @@ import useCourse from '@hooks/useCourse';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { extractValuesFromFormEvent } from 'utils/helpers';
-import { TcourseFields } from '@hooks/useCourse/types';
+import { T_CourseFields } from '@hooks/useCourse/types';
 
 const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; onSuccessfullyDone?: () => void }) => {
   const { editCourse, fetchCourseById, course, isLoading } = useCourse();
@@ -42,7 +42,7 @@ const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; o
       COURSE_FORM_FIELDS.program.key,
     ];
 
-    let result = extractValuesFromFormEvent<TcourseFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_CourseFields>(e, keys);
     editCourse(result, onSuccessfullyDone);
   };
 

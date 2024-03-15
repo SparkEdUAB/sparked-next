@@ -2,9 +2,9 @@ import type { ColumnsType } from 'antd/es/table';
 import i18next from 'i18next';
 import { T_MediaContentFields } from 'types/media-content';
 import { StyledFileImageOutlinedIcon, StyledTableLinkView } from '@components/atom';
-import { ColumnData } from '@components/admin/AdminTable/types';
+import { T_ColumnData } from '@components/admin/AdminTable/types';
 
-export const mediaContentTableColumns: ColumnData<T_MediaContentFields>[] = [
+export const mediaContentTableColumns: T_ColumnData<T_MediaContentFields>[] = [
   {
     title: '#',
     dataIndex: 'index',

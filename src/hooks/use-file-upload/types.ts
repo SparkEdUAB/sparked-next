@@ -1,4 +1,4 @@
-export type T_uploadViewProps = {
+export type T_UploadViewProps = {
   name: string;
-  multiple:boolean;
+  multiple: boolean;
 };

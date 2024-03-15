@@ -13,7 +13,7 @@ import useUnit from '@hooks/useUnit';
 import useCourse from '@hooks/useCourse';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
-import { TUnitFields } from '@hooks/useUnit/types';
+import { T_UnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 
 const EditUnitView = ({ unitId, onSuccessfullyDone }: { unitId?: string; onSuccessfullyDone?: () => void }) => {
@@ -47,7 +47,7 @@ const EditUnitView = ({ unitId, onSuccessfullyDone }: { unitId?: string; onSucce
       UNIT_FORM_FIELDS.course.key,
     ];
 
-    let result = extractValuesFromFormEvent<TUnitFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_UnitFields>(e, keys);
     editUnit(result, onSuccessfullyDone);
   };
 

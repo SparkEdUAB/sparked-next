@@ -4,9 +4,9 @@ import useNavigation from '@hooks/useNavigation';
 import { Breadcrumb } from 'flowbite-react';
 import { FC } from 'react';
 import { MdOutlineAdminPanelSettings } from 'react-icons/md';
-import { TmenuItemLink } from 'types/links';
+import { T_MenuItemLink } from 'types/links';
 
-const AdminHeader: FC<{ menuItems: TmenuItemLink }> = ({ menuItems }) => {
+const AdminHeader: FC<{ menuItems: T_MenuItemLink }> = ({ menuItems }) => {
   const { generateBreadcrumbItems, activeMenuItem } = useNavigation();
 
   const breadcrumbItems = generateBreadcrumbItems(menuItems, activeMenuItem?.link as string);

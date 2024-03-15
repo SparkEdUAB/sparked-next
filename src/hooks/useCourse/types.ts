@@ -1,10 +1,10 @@
-export type TcreateCourseFields = {
+export type T_CreateCourseFields = {
   name: string;
   description: string;
   schoolId: string;
 };
 
-export type TfetchCourses = {
+export type T_FetchCourses = {
   limit?: number;
   skip?: number;
 };
@@ -12,7 +12,7 @@ export type TfetchCourses = {
 /**
  * Corresponds to the type returned directly by the API
  */
-export type TRawCourseFields = {
+export type T_RawCourseFields = {
   key: string;
   name: string;
   _id: string;
@@ -35,7 +35,7 @@ export type TRawCourseFields = {
     _id: string;
   };
 };
-export type TcourseFields = {
+export type T_CourseFields = {
   index: number;
   key: string;
   _id: string;

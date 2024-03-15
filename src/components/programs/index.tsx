@@ -1,9 +1,9 @@
 import { Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { ColumnData } from '@components/admin/AdminTable/types';
-import { TProgramFields } from '@hooks/useProgram/types';
+import { T_ColumnData } from '@components/admin/AdminTable/types';
+import { T_ProgramFields } from '@hooks/useProgram/types';
 
-export const programTableColumns: ColumnData<TProgramFields>[] = [
+export const programTableColumns: T_ColumnData<T_ProgramFields>[] = [
   {
     title: '#',
     dataIndex: 'index',

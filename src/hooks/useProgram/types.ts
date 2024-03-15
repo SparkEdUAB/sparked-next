@@ -1,14 +1,14 @@
-export type TcreateProgramFields = {
+export type T_CreateProgramFields = {
   name: string;
   description: string;
   schoolId: string;
 };
-export type TfetchPrograms = {
+export type T_FetchPrograms = {
   limit?: number;
   skip?: number;
 };
 
-export type TProgramFields = {
+export type T_ProgramFields = {
   index: number;
   key: string;
   _id: string;
@@ -31,7 +31,7 @@ export type TProgramFields = {
 /**
  * Corresponds to the type returned directly by the API
  */
-export type TRawProgramFields = {
+export type T_RawProgramFields = {
   _id: string;
   name: string;
   description: string;

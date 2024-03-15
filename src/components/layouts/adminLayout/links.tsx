@@ -1,4 +1,4 @@
-import { TmenuItemLink } from 'types/links';
+import { T_MenuItemLink } from 'types/links';
 import React from 'react';
 import {
   DashboardOutlined,
@@ -18,7 +18,7 @@ import i18next from 'i18next';
 // - Add logout link
 // - Add profile details
 
-export const ADMIN_LINKS: TmenuItemLink = {
+export const ADMIN_LINKS: T_MenuItemLink = {
   home: {
     link: '/admin',
     roles: ['admin'],

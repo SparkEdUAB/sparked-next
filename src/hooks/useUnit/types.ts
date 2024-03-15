@@ -1,4 +1,4 @@
-export type TcreateUnitFields = {
+export type T_CreateUnitFields = {
   name: string;
   description: string;
   schoolId: string;
@@ -6,12 +6,12 @@ export type TcreateUnitFields = {
   programId: string;
 };
 
-export type TfetchUnits = {
+export type T_FetchUnits = {
   limit?: number;
   skip?: number;
 };
 
-export type TUnitFields = {
+export type T_UnitFields = {
   index: number;
   key: string;
   _id: string;
@@ -50,7 +50,7 @@ export type TUnitFields = {
 /**
  * Corresponds to the type returned directly by the API
  */
-export type TRawUnitFields = {
+export type T_RawUnitFields = {
   _id: string;
   name: string;
   description: string;

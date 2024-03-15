@@ -1,12 +1,12 @@
 import { Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { TschoolFields } from './types';
-import { ColumnData } from '@components/admin/AdminTable/types';
+import { T_SchoolFields } from './types';
+import { T_ColumnData } from '@components/admin/AdminTable/types';
 
-export const schoolTableColumns: ColumnData<TschoolFields>[] = [
+export const schoolTableColumns: T_ColumnData<T_SchoolFields>[] = [
   {
     title: '#',
-    dataIndex: 'index' as keyof TschoolFields,
+    dataIndex: 'index' as keyof T_SchoolFields,
     key: 'index',
     render: (text) => <a>{text}</a>,
   },

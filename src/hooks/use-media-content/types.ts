@@ -1,4 +1,4 @@
-export type T_createResourceFields = {
+export type T_CreateResourceFields = {
   name: string;
   description: string;
   schoolId?: string;
@@ -8,9 +8,7 @@ export type T_createResourceFields = {
   topicId?: string;
   fileUrl?: string;
 };
-export type T_fetchTopic = {
+export type T_FetchTopic = {
   limit?: number;
   skip?: number;
 };
-
-

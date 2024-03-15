@@ -10,7 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { topicTableColumns } from '.';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { T_topicFields } from '@hooks/use-topic/types';
+import { T_TopicFields } from '@hooks/use-topic/types';
 import CreateTopicView from './create-topic-view';
 import EditTopicView from './edit-topic-view';
 
@@ -55,7 +55,7 @@ const TopicsListView: React.FC = observer(() => {
           e.keyCode === 13 ? findTopicsByName({ withMetaData: true }) : null;
         }}
       />
-      <AdminTable<T_topicFields>
+      <AdminTable<T_TopicFields>
         deleteItems={deleteTopics}
         rowSelection={rowSelection}
         items={topics || []}

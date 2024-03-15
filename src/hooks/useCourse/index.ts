@@ -8,23 +8,23 @@ import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
-import { TcreateCourseFields, TfetchCourses, TcourseFields, TRawCourseFields } from './types';
+import { T_CreateCourseFields, T_FetchCourses, T_CourseFields, T_RawCourseFields } from './types';
 
 const useCourse = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [courses, setCourses] = useState<Array<TcourseFields>>([]);
-  const [originalCourses, setOriginalCourses] = useState<Array<TcourseFields>>([]);
-  const [course, setCourse] = useState<TcourseFields | null>(null);
+  const [courses, setCourses] = useState<Array<T_CourseFields>>([]);
+  const [originalCourses, setOriginalCourses] = useState<Array<T_CourseFields>>([]);
+  const [course, setCourse] = useState<T_CourseFields | null>(null);
   const [selectedCourseIds, setSelectedCourseIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
     UiStore.confirmDialogStatus && selectedCourseIds.length && deleteCourse();
   }, [UiStore.confirmDialogStatus]);
 
-  const createCourse = async (fields: TcreateCourseFields, onSuccessfullyDone?: () => void) => {
+  const createCourse = async (fields: T_CreateCourseFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_COURSE;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -60,7 +60,7 @@ const useCourse = (form?: any) => {
     }
   };
 
-  const editCourse = async (fields: TcourseFields, onSuccessfullyDone?: () => void) => {
+  const editCourse = async (fields: T_CourseFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_COURSE;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -97,7 +97,7 @@ const useCourse = (form?: any) => {
     }
   };
 
-  const fetchCourses = async ({ limit = 1000, skip = 0 }: TfetchCourses) => {
+  const fetchCourses = async ({ limit = 1000, skip = 0 }: T_FetchCourses) => {
     const url = API_LINKS.FETCH_COURSES;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
@@ -164,7 +164,7 @@ const useCourse = (form?: any) => {
       }
 
       if (responseData.course) {
-        const _course = responseData.course as TRawCourseFields;
+        const _course = responseData.course as T_RawCourseFields;
 
         setCourse(transformRawCourse(_course));
         form && form.setFieldsValue(_course);
@@ -271,7 +271,7 @@ const useCourse = (form?: any) => {
       }
       message.success(responseData.courses.length + ' ' + i18next.t('courses_found'));
 
-      const _courses = (responseData.courses as TRawCourseFields[]).map(transformRawCourse);
+      const _courses = (responseData.courses as T_RawCourseFields[]).map(transformRawCourse);
       setCourses(_courses);
 
       return _courses;
@@ -324,7 +324,7 @@ const useCourse = (form?: any) => {
 
 export default useCourse;
 
-function transformRawCourse(course: TRawCourseFields, index: number = 0): TcourseFields {
+function transformRawCourse(course: T_RawCourseFields, index: number = 0): T_CourseFields {
   return {
     index: index + 1,
     key: course._id,

@@ -1,10 +1,10 @@
 import { Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import i18next from 'i18next';
-import { ColumnData } from '@components/admin/AdminTable/types';
-import { TUserFields } from '@hooks/useUser/types';
+import { T_ColumnData } from '@components/admin/AdminTable/types';
+import { T_UserFields } from '@hooks/useUser/types';
 
-export const userTableColumns: ColumnData<TUserFields>[] = [
+export const userTableColumns: T_ColumnData<T_UserFields>[] = [
   {
     title: '#',
     dataIndex: 'index',

@@ -1,9 +1,9 @@
-import { ColumnData } from '@components/admin/AdminTable/types';
-import { T_topicFields } from '@hooks/use-topic/types';
+import { T_ColumnData } from '@components/admin/AdminTable/types';
+import { T_TopicFields } from '@hooks/use-topic/types';
 import type { ColumnsType } from 'antd/es/table';
 import i18next from 'i18next';
 
-export const topicTableColumns: ColumnData<T_topicFields>[] = [
+export const topicTableColumns: T_ColumnData<T_TopicFields>[] = [
   {
     title: '#',
     dataIndex: 'index',

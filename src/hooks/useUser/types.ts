@@ -1,16 +1,16 @@
-export type T_createUserFields = {
+export type T_CreateUserFields = {
   first_name: string;
   last_name: string;
   email: string;
   password: string;
   gender: string;
 };
-export type TfetchUsers = {
+export type T_FetchUsers = {
   limit?: number;
   skip?: number;
 };
 
-export type TUserFields = {
+export type T_UserFields = {
   index: number;
   key: string;
   name: string;

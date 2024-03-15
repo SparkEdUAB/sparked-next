@@ -13,7 +13,7 @@ import { HiMagnifyingGlass, HiOutlineNewspaper, HiOutlinePencilSquare, HiTrash }
 import { mediaContentTableColumns } from '.';
 import { T_MediaContentFields } from 'types/media-content';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { ItemTypeBase } from '@components/admin/AdminTable/types';
+import { T_ItemTypeBase } from '@components/admin/AdminTable/types';
 import CreateMediaContentView from './create-media-content-view';
 import EditMediaContentView from './edit-media-content-view';
 

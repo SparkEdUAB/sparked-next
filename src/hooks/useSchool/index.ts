@@ -2,13 +2,13 @@
 'use client';
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
-import { TschoolFields } from '@components/school/types';
+import { T_SchoolFields } from '@components/school/types';
 import useNavigation from '@hooks/useNavigation';
 import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import { TcreateSchoolFields, TfetchSchools } from './types';
+import { T_CreateSchoolFields, T_FetchSchools } from './types';
 import UiStore from '@state/mobx/uiStore';
 
 const useSchool = (form?: any) => {
@@ -16,16 +16,16 @@ const useSchool = (form?: any) => {
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [schools, setSchools] = useState<Array<TschoolFields>>([]);
-  const [tempSchools, setTempSchools] = useState<Array<TschoolFields>>([]);
-  const [school, setSchool] = useState<TschoolFields | null>(null);
+  const [schools, setSchools] = useState<Array<T_SchoolFields>>([]);
+  const [tempSchools, setTempSchools] = useState<Array<T_SchoolFields>>([]);
+  const [school, setSchool] = useState<T_SchoolFields | null>(null);
   const [selectedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
     UiStore.confirmDialogStatus && selectedSchoolIds.length && deleteSchools();
   }, [UiStore.confirmDialogStatus]);
 
-  const createSchool = async (fields: TcreateSchoolFields, onSuccessfullyDone?: () => void) => {
+  const createSchool = async (fields: T_CreateSchoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_SCHOOL;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -61,7 +61,7 @@ const useSchool = (form?: any) => {
     }
   };
 
-  const editSchool = async (fields: TschoolFields, onSuccessfullyDone?: () => void) => {
+  const editSchool = async (fields: T_SchoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_SCHOOL;
     const formData = {
       body: JSON.stringify({ ...fields, _id: school?._id }),
@@ -97,7 +97,7 @@ const useSchool = (form?: any) => {
     }
   };
 
-  const fetchSchools = async ({ limit = 1000, skip = 0 }: TfetchSchools) => {
+  const fetchSchools = async ({ limit = 1000, skip = 0 }: T_FetchSchools) => {
     const url = API_LINKS.FETCH_SCHOOLS;
     const formData = {
       body: JSON.stringify({ limit, skip }),
@@ -124,7 +124,7 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      const _schools = responseData.schools?.map((i: TschoolFields, index: number) => ({
+      const _schools = responseData.schools?.map((i: T_SchoolFields, index: number) => ({
         index: index + 1,
         key: i._id,
         _id: i._id,
@@ -170,7 +170,7 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      const { _id, name, description } = responseData.school as TschoolFields;
+      const { _id, name, description } = responseData.school as T_SchoolFields;
 
       const _school = {
         _id,
@@ -178,7 +178,7 @@ const useSchool = (form?: any) => {
         description,
       };
 
-      setSchool(_school as TschoolFields);
+      setSchool(_school as T_SchoolFields);
       form && form.setFieldsValue(_school);
       return _school;
     } catch (err: any) {

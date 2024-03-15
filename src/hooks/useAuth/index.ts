@@ -3,7 +3,7 @@
 import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import { useSession } from 'next-auth/react';
-import { TloginFields, TsignupFields } from './types';
+import { T_LoginFields, T_SignupFields } from './types';
 import i18next from 'i18next';
 import { signIn, signOut } from 'next-auth/react';
 import AUTH_PROCESS_CODES from '@app/api/auth/processCodes';
@@ -17,7 +17,7 @@ const useAuth = () => {
 
   const isAuthenticated = status === 'authenticated';
 
-  const handleSignup = async (fields: TsignupFields) => {
+  const handleSignup = async (fields: T_SignupFields) => {
     const url = API_LINKS.SIGNUP;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -59,7 +59,7 @@ const useAuth = () => {
     }
   };
 
-  const handleLogin = async (fields: TloginFields) => {
+  const handleLogin = async (fields: T_LoginFields) => {
     const url = API_LINKS.LOGIN;
     const formData = {
       body: JSON.stringify({ ...fields }),

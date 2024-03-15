@@ -13,7 +13,7 @@ import useUnit from '@hooks/useUnit';
 import useCourse from '@hooks/useCourse';
 import useTopic from '@hooks/use-topic';
 import { extractValuesFromFormEvent } from 'utils/helpers';
-import { T_topicFields } from '@hooks/use-topic/types';
+import { T_TopicFields } from '@hooks/use-topic/types';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
@@ -50,7 +50,7 @@ const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSu
       TOPIC_FORM_FIELDS.unit.key,
     ];
 
-    let result = extractValuesFromFormEvent<T_topicFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_TopicFields>(e, keys);
     editTopic(result, onSuccessfullyDone);
   };
 

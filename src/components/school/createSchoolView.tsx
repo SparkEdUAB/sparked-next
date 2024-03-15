@@ -9,7 +9,7 @@ import { AdminPageTitle } from '@components/layouts';
 import SchoolStore from '@state/mobx/scholStore';
 import { FormEventHandler } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers';
-import { TschoolFields } from './types';
+import { T_SchoolFields } from './types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
 const onFinishFailed = (errorInfo: any) => {};
@@ -24,7 +24,7 @@ const CreateSchoolView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => v
 
     const keys = [SCHOOL_FORM_FIELDS.name.key, SCHOOL_FORM_FIELDS.description.key];
 
-    let result = extractValuesFromFormEvent<TschoolFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_SchoolFields>(e, keys);
     createSchool(result, onSuccessfullyDone);
   };
 

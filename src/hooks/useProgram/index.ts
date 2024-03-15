@@ -8,23 +8,23 @@ import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
-import { TcreateProgramFields, TfetchPrograms, TProgramFields, TRawProgramFields } from './types';
+import { T_CreateProgramFields, T_FetchPrograms, T_ProgramFields, T_RawProgramFields } from './types';
 
 const useProgram = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [programs, setPrograms] = useState<Array<TProgramFields>>([]);
-  const [tempPrograms, setTempPrograms] = useState<Array<TProgramFields>>([]);
-  const [program, setSProgram] = useState<TProgramFields | null>(null);
+  const [programs, setPrograms] = useState<Array<T_ProgramFields>>([]);
+  const [tempPrograms, setTempPrograms] = useState<Array<T_ProgramFields>>([]);
+  const [program, setSProgram] = useState<T_ProgramFields | null>(null);
   const [selectedProgramIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
     UiStore.confirmDialogStatus && selectedProgramIds.length && deletePrograms();
   }, [UiStore.confirmDialogStatus]);
 
-  const createProgram = async (fields: TcreateProgramFields, onSuccessfullyDone?: () => void) => {
+  const createProgram = async (fields: T_CreateProgramFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_PROGRAM;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -61,7 +61,7 @@ const useProgram = (form?: any) => {
     }
   };
 
-  const editProgram = async (fields: TProgramFields, onSuccessfullyDone?: () => void) => {
+  const editProgram = async (fields: T_ProgramFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_PROGRAM;
     const formData = {
       body: JSON.stringify({ ...fields, _id: program?._id }),
@@ -98,7 +98,7 @@ const useProgram = (form?: any) => {
     }
   };
 
-  const fetchPrograms = async ({ limit = 1000, skip = 0 }: TfetchPrograms) => {
+  const fetchPrograms = async ({ limit = 1000, skip = 0 }: T_FetchPrograms) => {
     const url = API_LINKS.FETCH_PROGRAMS;
     const formData = {
       body: JSON.stringify({ limit, skip }),
@@ -125,7 +125,7 @@ const useProgram = (form?: any) => {
         return false;
       }
 
-      const _programs = (responseData.programs as TRawProgramFields[])?.map<TProgramFields>((i, index: number) => ({
+      const _programs = (responseData.programs as T_RawProgramFields[])?.map<T_ProgramFields>((i, index: number) => ({
         index: index + 1,
         key: i._id,
         _id: i._id,
@@ -182,7 +182,7 @@ const useProgram = (form?: any) => {
       }
 
       if (responseData.program) {
-        const { _id, name, description, school } = responseData.program as TProgramFields;
+        const { _id, name, description, school } = responseData.program as T_ProgramFields;
 
         const _program = {
           _id,
@@ -191,7 +191,7 @@ const useProgram = (form?: any) => {
           schoolId: school?._id,
         };
 
-        setSProgram(_program as TProgramFields);
+        setSProgram(_program as T_ProgramFields);
         form && form.setFieldsValue(_program);
         return _program;
       } else {

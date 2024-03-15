@@ -1,8 +1,8 @@
 import i18next from 'i18next';
-import { ColumnData } from '@components/admin/AdminTable/types';
-import { TUnitFields } from '@hooks/useUnit/types';
+import { T_ColumnData } from '@components/admin/AdminTable/types';
+import { T_UnitFields } from '@hooks/useUnit/types';
 
-export const unitTableColumns: ColumnData<TUnitFields>[] = [
+export const unitTableColumns: T_ColumnData<T_UnitFields>[] = [
   {
     title: '#',
     dataIndex: 'index',

@@ -3,14 +3,13 @@
 import useNavigation from '@hooks/useNavigation';
 import { Checkbox, Spinner, Table } from 'flowbite-react';
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { IoFileTrayOutline } from 'react-icons/io5';
-import { ColumnData, ItemTypeBase } from './types';
+import { T_ColumnData, T_ItemTypeBase } from './types';
 import { DeletionWarningModal } from './DeletionWarningModal';
 import { AdminTableButtonGroup } from './AdminTableButtonGroup';
 import { MdEdit } from 'react-icons/md';
 
-export function AdminTable<ItemType extends ItemTypeBase>({
+export function AdminTable<ItemType extends T_ItemTypeBase>({
   rowSelection,
   items,
   isLoading,
@@ -32,7 +31,7 @@ export function AdminTable<ItemType extends ItemTypeBase>({
   createNew: () => void;
   // getEditUrl: (id: string) => string;
   editItem: (id: string) => void;
-  columns: ColumnData<ItemType>[];
+  columns: T_ColumnData<ItemType>[];
 }) {
   const { router } = useNavigation();
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);

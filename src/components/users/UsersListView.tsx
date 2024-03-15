@@ -4,29 +4,31 @@ import { AdminPageTitle } from '@components/layouts';
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import useUser from '@hooks/useUser';
-import { TextInput } from 'flowbite-react';
+import { Modal, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { userTableColumns } from '.';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { TUserFields } from '@hooks/useUser/types';
+import { T_UserFields } from '@hooks/useUser/types';
+import CreateUserView from './create-user-view';
+import EditUserView from './edit-unit-view';
 
-const UsersListView: React.FC = observer(() => {
+const UsersListView = observer(() => {
   const {
     fetchUnits,
     users,
     selectedUserIds,
     setSelectedUserIds,
-    triggerDelete,
-    triggerEdit,
     findUsersByName,
     onSearchQueryChange,
     isLoading,
     deleteUsers,
   } = useUser();
   const { getChildLinkByKey } = useNavigation();
+  const [creatingUser, setCreatingUser] = useState(false);
+  const [edittingUserWithId, setEdittingUserWithId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUnits({});
@@ -54,15 +56,42 @@ const UsersListView: React.FC = observer(() => {
           e.keyCode === 13 ? findUsersByName({ withMetaData: true }) : null;
         }}
       />
-      {/* <AdminTable<TUserFields>
+      <AdminTable<T_UserFields>
         deleteItems={deleteUsers}
         rowSelection={rowSelection}
         items={users || []}
         isLoading={isLoading}
-        createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.users)}
-        getEditUrl={(id: string) => getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${id}`}
+        //createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.users)}
+        //getEditUrl={(id: string) => getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${id}`}
+        createNew={() => setCreatingUser(true)}
+        editItem={(id) => setEdittingUserWithId(id)}
         columns={userTableColumns}
-      /> */}
+      />
+      {/*<Modal dismissible show={creatingUser} onClose={() => setCreatingUser(false)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          <CreateUserView
+            onSuccessfullyDone={() => {
+              fetchUsers({});
+              setCreatingUser(false);
+            }}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal dismissible show={!!edittingUserWithId} onClose={() => setEdittingUserWithId(null)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          {edittingUserWithId ? (
+            <EditUserView
+              courseId={edittingUserWithId}
+              onSuccessfullyDone={() => {
+                fetchUsers({});
+                setEdittingUserWithId(null);
+              }}
+            />
+          ) : null}
+        </Modal.Body>
+      </Modal>*/}
     </>
   );
 });

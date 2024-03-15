@@ -8,7 +8,7 @@ import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
-import { T_createUserFields, TfetchUsers, TUserFields } from './types';
+import { T_CreateUserFields, T_FetchUsers, T_UserFields } from './types';
 import type { CheckboxProps } from 'antd';
 
 const useUsers = (form?: any) => {
@@ -16,16 +16,16 @@ const useUsers = (form?: any) => {
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [users, setUsers] = useState<Array<TUserFields>>([]);
-  const [tempUsers, setTempUsers] = useState<Array<TUserFields>>([]);
-  const [user, setUser] = useState<TUserFields | null>(null);
+  const [users, setUsers] = useState<Array<T_UserFields>>([]);
+  const [tempUsers, setTempUsers] = useState<Array<T_UserFields>>([]);
+  const [user, setUser] = useState<T_UserFields | null>(null);
   const [selectedUserIds, setSelectedUserIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
     UiStore.confirmDialogStatus && selectedUserIds.length && deleteUsers();
   }, [UiStore.confirmDialogStatus]);
 
-  const createUser = async (fields: T_createUserFields) => {
+  const createUser = async (fields: T_CreateUserFields, onSuccessfullyDone: () => void) => {
     const url = API_LINKS.CREATE_USER;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -50,7 +50,7 @@ const useUsers = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.units.link);
+      onSuccessfullyDone?.();
 
       message.success(i18next.t('unit_created'));
     } catch (err: any) {
@@ -59,7 +59,7 @@ const useUsers = (form?: any) => {
     }
   };
 
-  const editUnit = async (fields: TUserFields) => {
+  const editUnit = async (fields: T_UserFields, onSuccessfullyDone: () => void) => {
     const url = API_LINKS.EDIT_UNIT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -85,7 +85,7 @@ const useUsers = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.units.link);
+      onSuccessfullyDone?.();
 
       message.success(i18next.t('success'));
     } catch (err: any) {
@@ -94,7 +94,7 @@ const useUsers = (form?: any) => {
     }
   };
 
-  const fetchUnits = async ({ limit = 1000, skip = 0 }: TfetchUsers) => {
+  const fetchUnits = async ({ limit = 1000, skip = 0 }: T_FetchUsers) => {
     const url = API_LINKS.FETCH_UNIT;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
@@ -122,7 +122,7 @@ const useUsers = (form?: any) => {
       }
 
       const _units = responseData.units?.map(
-        (i: TUserFields, index: number) =>
+        (i: T_UserFields, index: number) =>
           ({
             index: index + 1,
             key: i._id,
@@ -136,7 +136,7 @@ const useUsers = (form?: any) => {
             programId: i.program?._id,
             created_by: i.user?.email,
             created_at: new Date(i.created_at).toDateString(),
-          } satisfies TUserFields),
+          } satisfies T_UserFields),
       );
 
       setUsers(_units);
@@ -175,9 +175,9 @@ const useUsers = (form?: any) => {
       }
 
       if (responseData.unit) {
-        const { _id, name, school, program, created_at } = responseData.unit as TUserFields;
+        const { _id, name, school, program, created_at } = responseData.unit as T_UserFields;
 
-        const _user: TUserFields = {
+        const _user: T_UserFields = {
           _id,
           name,
           schoolId: school?._id,
