@@ -12,14 +12,14 @@ import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 
 const inter = Inter({ subsets: ['latin'] });
 
-interface RootLayoutProps {
+interface I_RootLayoutProps {
   children: ReactNode;
   pageProps?: {
     session?: Session;
   };
 }
 
-const RootLayout = ({ children, pageProps }: RootLayoutProps) => {
+const RootLayout = ({ children, pageProps }: I_RootLayoutProps) => {
   return (
     <html lang="en">
       <head>

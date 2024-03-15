@@ -1,4 +1,4 @@
-import { T_FORM } from 'types/form';
+import { I_FORM } from 'types/form';
 
 export type T_MediaContentFields = {
   index: number;
@@ -88,11 +88,11 @@ export type T_RawMediaContentFields = {
 };
 
 export type T_MediaContentFormFields = {
-  name: T_FORM;
-  description: T_FORM;
-  school: T_FORM;
-  program: T_FORM;
-  course: T_FORM;
-  unit: T_FORM;
-  topic: T_FORM;
+  name: I_FORM;
+  description: I_FORM;
+  school: I_FORM;
+  program: I_FORM;
+  course: I_FORM;
+  unit: I_FORM;
+  topic: I_FORM;
 };
