@@ -48,7 +48,7 @@ function LibraryNavbar({
             <HiX aria-label="Close sidebar" className="h-6 w-6 cursor-pointer text-gray-500 dark:text-gray-400" />
           )}
         </button>
-        <Navbar.Brand as={Link} href="https://flowbite-react.com">
+        <Navbar.Brand as={Link} href="/">
           <AppLogo />
         </Navbar.Brand>
       </div>
