@@ -1,53 +1,20 @@
 'use client';
 
-import { DislikeOutlined, LikeOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { Avatar, Card, Typography } from 'antd';
-import Image from 'next/image';
+import { Card } from 'flowbite-react';
+import Link from 'next/link';
 import React from 'react';
 
-const { Meta } = Card;
-
-const { Text, Link } = Typography;
-
-const ContentDetailsCardView: React.FC<{ title: string }> = ({ title = '' }) => (
-  <Card
-    className="library-container"
-    style={{ margin: 10, borderRadius: 20 }}
-    cover={
-      <Image
-        width={500}
-        height={500}
-        alt="example"
-        src="https://cdn.pixabay.com/photo/2023/06/16/11/47/books-8067850_1280.jpg"
-      />
-    }
-    actions={[<LikeOutlined key={1} />, <DislikeOutlined key={2} />, <ShareAltOutlined key="ellipsis" />]}
-  >
-    <Meta
-      className="content-details-card-meta-container"
-      avatar={<Avatar src="https://cdn.pixabay.com/photo/2017/09/21/13/32/girl-2771936_1280.jpg" />}
-      title={<span className="content-details-card-meta">{title}</span>}
-      description={<span className="content-details-card-meta">{'This is the description'}</span>}
-    />
-
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-around',
-        width: '100%',
-        margin: 5,
-        alignItems: 'center',
-        flexDirection: 'row',
-      }}
+const ContentDetailsCardView = ({ title = '' }: { title: string }) => (
+  <Link href="#">
+    <Card
+      className="max-w-sm mx-2 my-1 dark:bg-gray-700"
+      imgAlt={title}
+      imgSrc="https://cdn.pixabay.com/photo/2023/06/16/11/47/books-8067850_1280.jpg"
     >
-      <Text type="secondary">
-        <span className="content-details-card-meta-subtitle">200 views</span>
-      </Text>
-      <Text type="secondary">
-        <span className="content-details-card-meta-subtitle">3hrs ago</span>
-      </Text>
-    </div>
-  </Card>
+      <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{title}</h5>
+      <p className="font-normal text-gray-700 dark:text-gray-400">This is where the description should be.</p>
+    </Card>
+  </Link>
 );
 
 export default ContentDetailsCardView;

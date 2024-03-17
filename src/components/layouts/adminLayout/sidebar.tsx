@@ -19,7 +19,7 @@ const AdminSidebar = ({
   return (
     <>
       <div
-        className={`fixed inset-0 z-50 h-full w-64 flex-none border-r border-gray-200 dark:border-gray-600 md:static md:block md:h-auto md:overflow-y-visible ${
+        className={`fixed inset-0 z-50 h-full w-64 flex-none md:static md:block md:h-auto md:overflow-y-visible ${
           sidebarIsCollapsed ? 'hidden' : ''
         }`}
       >
