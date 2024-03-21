@@ -1,17 +1,20 @@
-export type TcreateTopicFields = {
+export type T_CreateTopicFields = {
   name: string;
   description: string;
   schoolId?: string;
   programId?: string;
   courseId?: string;
-  unitId: string;
+  unitId?: string;
 };
-export type T_fetchTopic = {
+export type T_FetchTopic = {
   limit?: number;
   skip?: number;
 };
 
-export type T_topicFields = {
+/**
+ * Corresponds to the type returned directly by the API
+ */
+export type T_RawTopicFields = {
   key: string;
   name: string;
   _id: string;
@@ -43,4 +46,26 @@ export type T_topicFields = {
     name: string;
     _id: string;
   };
+};
+
+export type T_TopicFields = {
+  index: number;
+  key: string;
+  _id: string;
+  name: string;
+  school?: {
+    name: string;
+    _id: string;
+  };
+  schoolId: string | undefined;
+  unitId: string | undefined;
+  description: string;
+  schoolName: string | undefined;
+  programId: string | undefined;
+  programName: string | undefined;
+  courseId: string | undefined;
+  courseName: string | undefined;
+  unitName: string;
+  created_by: string | undefined;
+  created_at: string;
 };

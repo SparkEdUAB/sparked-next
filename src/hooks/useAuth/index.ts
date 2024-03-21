@@ -1,37 +1,37 @@
-"use client";
+'use client';
 
-import { message } from "antd";
-import { API_LINKS } from "app/links";
-import { useSession } from "next-auth/react";
-import { TloginFields, TsignupFields } from "./types";
-import i18next from "i18next";
-import { signIn, signOut } from "next-auth/react";
-import AUTH_PROCESS_CODES from "@app/api/auth/processCodes";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { message } from 'antd';
+import { API_LINKS } from 'app/links';
+import { useSession } from 'next-auth/react';
+import { T_LoginFields, T_SignupFields } from './types';
+import i18next from 'i18next';
+import { signIn, signOut } from 'next-auth/react';
+import AUTH_PROCESS_CODES from '@app/api/auth/processCodes';
+import { useState } from 'react';
+import { useRouter } from 'next-nprogress-bar';
 
 const useAuth = () => {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const isAuthenticated = status === "authenticated";
+  const isAuthenticated = status === 'authenticated';
 
-  const handleSignup = async (fields: TsignupFields) => {
+  const handleSignup = async (fields: T_SignupFields) => {
     const url = API_LINKS.SIGNUP;
     const formData = {
       body: JSON.stringify({ ...fields }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
-    setLoading(true)
+    setLoading(true);
     try {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -40,32 +40,32 @@ const useAuth = () => {
       if (responseData.isError) {
         message.warning(
           responseData.code === AUTH_PROCESS_CODES.USER_ALREADY_EXIST
-            ? i18next.t("user_already_exist")
-            : i18next.t("unknown_error")
+            ? i18next.t('user_already_exist')
+            : i18next.t('unknown_error'),
         );
         return false;
       }
       message.success(
         responseData.code === AUTH_PROCESS_CODES.USER_CREATED
-          ? i18next.t("account_created")
-          : i18next.t("unknown_error")
+          ? i18next.t('account_created')
+          : i18next.t('unknown_error'),
       );
-      router.replace("/");
+      router.replace('/');
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     } finally {
       setLoading(false);
     }
   };
 
-  const handleLogin = async (fields: TloginFields) => {
+  const handleLogin = async (fields: T_LoginFields) => {
     const url = API_LINKS.LOGIN;
     const formData = {
       body: JSON.stringify({ ...fields }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
     setLoading(true);
@@ -73,7 +73,7 @@ const useAuth = () => {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -86,18 +86,16 @@ const useAuth = () => {
 
       const { user } = responseData;
 
-      const respd = await signIn("credentials", {
+      const respd = await signIn('credentials', {
         redirect: false,
         user: JSON.stringify(user),
       });
 
-      router.replace("/");
+      router.replace('/');
 
-      message.success(i18next.t("logged_in"));
+      message.success(i18next.t('logged_in'));
     } catch (err: any) {
-      message.error(
-        `${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`
-      );
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     } finally {
       setLoading(false);
@@ -107,9 +105,9 @@ const useAuth = () => {
   const handleLogout = async () => {
     const url = API_LINKS.LOGOUT;
     const formData = {
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
     setLoading(true);
@@ -117,7 +115,7 @@ const useAuth = () => {
       const resp = await fetch(url, formData);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -126,17 +124,17 @@ const useAuth = () => {
       if (responseData.isError) {
         message.warning(
           responseData.code === AUTH_PROCESS_CODES.FAILED_TO_LOGOUT_USER
-            ? i18next.t("logout_failed")
-            : i18next.t("unknown_error")
+            ? i18next.t('logout_failed')
+            : i18next.t('unknown_error'),
         );
         return false;
       }
 
-      const respd = await signOut({ redirect: false, callbackUrl: "/" });
+      const respd = await signOut({ redirect: false, callbackUrl: '/' });
 
-      message.success(i18next.t("logout_ok"));
+      message.success(i18next.t('logout_ok'));
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     } finally {
       setLoading(false);

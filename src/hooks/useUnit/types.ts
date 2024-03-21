@@ -1,26 +1,36 @@
-export type TcreateUnitFields = {
+export type T_CreateUnitFields = {
   name: string;
   description: string;
   schoolId: string;
+  courseId: string;
+  programId: string;
 };
-export type TfetchUnits = {
+
+export type T_FetchUnits = {
   limit?: number;
   skip?: number;
 };
 
-export type TUnitFields = {
+export type T_UnitFields = {
+  index: number;
   key: string;
-  name: string;
   _id: string;
-  created_by: string;
+  name: string;
   description: string;
+
   schoolId: string;
   programId: string;
   courseId: string;
 
+  schoolName: string;
+  programName: string;
+  courseName: string;
+
+  created_by: string;
   created_at: string;
+
   user?: {
-    name: string;
+    _id: string;
     email: string;
   };
   school?: {
@@ -34,5 +44,34 @@ export type TUnitFields = {
   course?: {
     name: string;
     _id: string;
+  };
+};
+
+/**
+ * Corresponds to the type returned directly by the API
+ */
+export type T_RawUnitFields = {
+  _id: string;
+  name: string;
+  description: string;
+
+  created_at: string;
+  updated_at: string;
+
+  user: {
+    _id: string;
+    email: string;
+  };
+  school: {
+    _id: string;
+    name: string;
+  };
+  program: {
+    _id: string;
+    name: string;
+  };
+  course: {
+    _id: string;
+    name: string;
   };
 };

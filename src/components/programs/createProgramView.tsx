@@ -1,21 +1,24 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import useSchool from "@hooks/useSchool";
-import { Card, Col, Form, Input, Row, Select, Skeleton } from "antd";
-import { Button, Label } from "flowbite-react";
-import i18next from "i18next";
-import { CREATE_PROGRAM_FORM_FIELDS } from "./constants";
-import { AdminPageTitle } from "@components/layouts";
-import SchoolStore from "@state/mobx/scholStore";
-import { useEffect } from "react";
-import useProgram from "@hooks/useProgram";
+import useSchool from '@hooks/useSchool';
+import { Button, Spinner } from 'flowbite-react';
+import i18next from 'i18next';
+import { AdminPageTitle } from '@components/layouts';
+import SchoolStore from '@state/mobx/scholStore';
+import { FormEventHandler, useEffect } from 'react';
+import useProgram from '@hooks/useProgram';
+import { T_UnitFields } from '@hooks/useUnit/types';
+import { extractValuesFromFormEvent } from 'utils/helpers';
+import { PROGRAM_FORM_FIELDS } from './constants';
+import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const CreateProgramView: React.FC = () => {
-  const { createProgram } = useProgram();
-  const { fetchSchools, schools } = useSchool();
+const CreateProgramView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
+  const { createProgram, isLoading } = useProgram();
+  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
 
   const { selectedSchool } = SchoolStore;
 
@@ -23,98 +26,50 @@ const CreateProgramView: React.FC = () => {
     fetchSchools({});
   }, []);
 
-  const [form] = Form.useForm();
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    const keys = [PROGRAM_FORM_FIELDS.name.key, PROGRAM_FORM_FIELDS.description.key, PROGRAM_FORM_FIELDS.school.key];
+
+    let result = extractValuesFromFormEvent<T_UnitFields>(e, keys);
+    createProgram(result, onSuccessfullyDone);
+  };
+
+  // const [form] = Form.useForm();
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("create_program")} />
+      <AdminPageTitle title={i18next.t('create_program')} />
 
-      <Row className="form-container">
-        <Col span={24}>
-          <Card
-            className="form-card"
-            title={<p className="form-label">{i18next.t("new_program")}</p>}
-            bordered={false}
-          >
-            <Form
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600 }}
-              initialValues={selectedSchool || {}}
-              onFinish={createProgram}
-              onFinishFailed={() => {}}
-              autoComplete="off"
-            >
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_PROGRAM_FORM_FIELDS.name.label}
-                  </p>
-                }
-                name={CREATE_PROGRAM_FORM_FIELDS.name.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_PROGRAM_FORM_FIELDS.name.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+      <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
+        <AdminFormInput
+          disabled={isLoading}
+          name={PROGRAM_FORM_FIELDS.name.key}
+          label={PROGRAM_FORM_FIELDS.name.label}
+          required
+        />
 
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_PROGRAM_FORM_FIELDS.description.label}
-                  </p>
-                }
-                name={CREATE_PROGRAM_FORM_FIELDS.description.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_PROGRAM_FORM_FIELDS.description.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+        <AdminFormInput
+          disabled={isLoading}
+          name={PROGRAM_FORM_FIELDS.description.key}
+          label={PROGRAM_FORM_FIELDS.description.label}
+          required
+        />
 
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_PROGRAM_FORM_FIELDS.school.label}
-                  </p>
-                }
-                name={CREATE_PROGRAM_FORM_FIELDS.school.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_PROGRAM_FORM_FIELDS.school.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  // onChange={handleChange}
-                  options={schools.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
+        <AdminFormSelector
+          loadingItems={loadingSchools}
+          disabled={isLoading || loadingSchools}
+          options={schools}
+          label={PROGRAM_FORM_FIELDS.school.label}
+          name={PROGRAM_FORM_FIELDS.school.key}
+          required
+        />
 
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button
-                  className={"form-submit-btn"}
-                  type="submit"
-                 
-                >
-                  {i18next.t("submit")}
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+        <Button type="submit" className="mt-2" disabled={isLoading}>
+          {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {i18next.t('submit')}
+        </Button>
+      </form>
     </>
   );
 };

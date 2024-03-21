@@ -1,11 +1,11 @@
-import { TschoolFields } from "@components/school/types";
+import { T_SchoolFields } from '@components/school/types';
 
 class schoolStore {
-  selectedSchool: TschoolFields | null = null;
+  selectedSchool: T_SchoolFields | null = null;
 
   constructor() {}
 
-  setSelectedSchool = (selectedSchool: TschoolFields) => {
+  setSelectedSchool = (selectedSchool: T_SchoolFields) => {
     this.selectedSchool = selectedSchool;
   };
 }

@@ -1,22 +1,18 @@
-"use client";
+'use client';
 
-import { AdminPageTitle } from "@components/layouts";
-import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
-import useNavigation from "@hooks/useNavigation";
-import useUnit from "@hooks/useUnit";
-import { Table } from "antd";
-import { Button, TextInput } from "flowbite-react";
-import i18next from "i18next";
-import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
-import {
-  HiMagnifyingGlass,
-  HiOutlineNewspaper,
-  HiOutlinePencilSquare,
-  HiTrash,
-} from "react-icons/hi2";
-import { unitTableColumns } from ".";
-import { TunitFields } from "./types";
+import { AdminPageTitle } from '@components/layouts';
+import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+import useNavigation from '@hooks/useNavigation';
+import useUnit from '@hooks/useUnit';
+import { Modal, TextInput } from 'flowbite-react';
+import i18next from 'i18next';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect, useState } from 'react';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { unitTableColumns } from '.';
+import { AdminTable } from '@components/admin/AdminTable/AdminTable';
+import CreateUnitView from './create-unit-view';
+import EditUnitView from './edit-unit-view';
 
 const UnitListView: React.FC = observer(() => {
   const {
@@ -24,12 +20,14 @@ const UnitListView: React.FC = observer(() => {
     units,
     selectedUnitIds,
     setSelectedProgramIds,
-    triggerDelete,
-    triggerEdit,
     findUnitsByName,
     onSearchQueryChange,
+    deleteUnits,
+    isLoading,
   } = useUnit();
   const { router, getChildLinkByKey } = useNavigation();
+  const [creatingUnit, setCreatingUnit] = useState(false);
+  const [edittingUnitWithId, setEdittingUnitWithId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchUnits({});
@@ -37,53 +35,62 @@ const UnitListView: React.FC = observer(() => {
 
   const rowSelection = {
     selectedRowKeys: selectedUnitIds,
-    onChange: (selectedRowKeys: React.Key[], selectedRows: TunitFields[]) => {
-      setSelectedProgramIds(selectedRows.map((i) => i.key));
+    onChange: (selectedRowKeys: React.Key[]) => {
+      setSelectedProgramIds(selectedRowKeys);
     },
   };
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("units")} />
+      <AdminPageTitle title={i18next.t('units')} />
 
       <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t("search_units")}
+        placeholder={i18next.t('search_units')}
         required
         type="text"
         onKeyDown={(e) => {
           e.keyCode === 13 ? findUnitsByName({ withMetaData: true }) : null;
         }}
       />
-      <Button.Group>
-        <Button
-          onClick={() =>
-            router.push(getChildLinkByKey("create", ADMIN_LINKS.units))
-          }
-          className={"table-action-buttons"}
-        >
-          <HiOutlinePencilSquare className="mr-3 h-4 w-4" />
-          {i18next.t("new")}
-        </Button>
-        <Button onClick={triggerDelete} className={"table-action-buttons"}>
-          <HiTrash className="mr-3 h-4 w-4" />
-          {i18next.t("delete")}
-        </Button>
-        <Button onClick={triggerEdit} className={"table-action-buttons"}>
-          <HiOutlineNewspaper className="mr-3 h-4 w-4" />
-          {i18next.t("edit")}
-        </Button>
-      </Button.Group>
-      <Table
-        className="admin-table"
-        bordered
+      <AdminTable
+        deleteItems={deleteUnits}
         rowSelection={rowSelection}
+        items={units}
+        isLoading={isLoading}
+        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.units)}
+        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${id}`}
+        createNew={() => setCreatingUnit(true)}
+        editItem={(id) => setEdittingUnitWithId(id)}
         columns={unitTableColumns}
-        //@ts-ignore
-        dataSource={units || []}
       />
+      <Modal dismissible show={creatingUnit} onClose={() => setCreatingUnit(false)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          <CreateUnitView
+            onSuccessfullyDone={() => {
+              fetchUnits({});
+              setCreatingUnit(false);
+            }}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal dismissible show={!!edittingUnitWithId} onClose={() => setEdittingUnitWithId(null)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          {edittingUnitWithId ? (
+            <EditUnitView
+              unitId={edittingUnitWithId}
+              onSuccessfullyDone={() => {
+                fetchUnits({});
+                setEdittingUnitWithId(null);
+              }}
+            />
+          ) : null}
+        </Modal.Body>
+      </Modal>
     </>
   );
 });

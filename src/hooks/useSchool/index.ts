@@ -1,45 +1,47 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
-import { TschoolFields } from "@components/school/types";
-import useNavigation from "@hooks/useNavigation";
-import { message } from "antd";
-import { API_LINKS } from "app/links";
-import i18next from "i18next";
-import { useEffect, useState } from "react";
-import { TcreateSchoolFields, TfetchSchools } from "./types";
-import UiStore from "@state/mobx/uiStore";
+import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+import { T_SchoolFields } from '@components/school/types';
+import useNavigation from '@hooks/useNavigation';
+import { message } from 'antd';
+import { API_LINKS } from 'app/links';
+import i18next from 'i18next';
+import { useEffect, useState } from 'react';
+import { T_CreateSchoolFields, T_FetchSchools } from './types';
+import UiStore from '@state/mobx/uiStore';
 
 const useSchool = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [schools, setSchools] = useState<Array<TschoolFields>>([]);
-  const [tempSchools, setTempSchools] = useState<Array<TschoolFields>>([]);
-  const [school, setSchool] = useState<TschoolFields | null>(null);
-  const [selecetedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [schools, setSchools] = useState<Array<T_SchoolFields>>([]);
+  const [tempSchools, setTempSchools] = useState<Array<T_SchoolFields>>([]);
+  const [school, setSchool] = useState<T_SchoolFields | null>(null);
+  const [selectedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
 
   useEffect(() => {
-    UiStore.confirmDialogStatus && selecetedSchoolIds.length && deleteSchools();
+    UiStore.confirmDialogStatus && selectedSchoolIds.length && deleteSchools();
   }, [UiStore.confirmDialogStatus]);
 
-  const createSchool = async (fields: TcreateSchoolFields) => {
+  const createSchool = async (fields: T_CreateSchoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_SCHOOL;
     const formData = {
       body: JSON.stringify({ ...fields }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -50,30 +52,32 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.schools.link);
-
-      message.success(i18next.t("school_created"));
+      onSuccessfullyDone?.();
+      message.success(i18next.t('school_created'));
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
-  const editSchool = async (fields: TschoolFields) => {
+  const editSchool = async (fields: T_SchoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_SCHOOL;
     const formData = {
       body: JSON.stringify({ ...fields, _id: school?._id }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -84,30 +88,32 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      router.push(ADMIN_LINKS.schools.link);
-
-      message.success(i18next.t("success"));
+      onSuccessfullyDone?.();
+      message.success(i18next.t('success'));
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
-  const fetchSchools = async ({ limit = 1000, skip = 0 }: TfetchSchools) => {
+  const fetchSchools = async ({ limit = 1000, skip = 0 }: T_FetchSchools) => {
     const url = API_LINKS.FETCH_SCHOOLS;
     const formData = {
       body: JSON.stringify({ limit, skip }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -118,22 +124,21 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      const _schools = responseData.schools?.map(
-        (i: TschoolFields, index: number) => ({
-          index: index + 1,
-          key: i._id,
-          _id: i._id,
-          name: i.name,
-          created_by: i.user.email,
-          created_at: new Date(i.created_at).toDateString(),
-        })
-      );
+      const _schools = responseData.schools?.map((i: T_SchoolFields, index: number) => ({
+        index: index + 1,
+        key: i._id,
+        _id: i._id,
+        name: i.name,
+        created_by: i.user.email,
+        created_at: new Date(i.created_at).toDateString(),
+      }));
 
       setSchools(_schools);
-       setTempSchools(_schools);
+      setTempSchools(_schools);
       return _schools;
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
@@ -142,17 +147,19 @@ const useSchool = (form?: any) => {
     const url = API_LINKS.FETCH_SCHOOL;
     const formData = {
       body: JSON.stringify({ schoolId }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
     try {
+      setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -163,7 +170,7 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      const { _id, name, description } = responseData.school as TschoolFields;
+      const { _id, name, description } = responseData.school as T_SchoolFields;
 
       const _school = {
         _id,
@@ -171,18 +178,19 @@ const useSchool = (form?: any) => {
         description,
       };
 
-      setSchool(_school as TschoolFields);
+      setSchool(_school as T_SchoolFields);
       form && form.setFieldsValue(_school);
       return _school;
     } catch (err: any) {
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
 
   const triggerDelete = async () => {
-    if (!selecetedSchoolIds.length) {
-      return message.warning(i18next.t("select_items"));
+    if (!selectedSchoolIds.length) {
+      return message.warning(i18next.t('select_items'));
     }
 
     UiStore.setConfirmDialogVisibility(true);
@@ -193,20 +201,22 @@ const useSchool = (form?: any) => {
 
     const url = API_LINKS.DELETE_SCHOOLS;
     const formData = {
-      body: JSON.stringify({ schoolIds: selecetedSchoolIds }),
-      method: "post",
+      body: JSON.stringify({ schoolIds: selectedSchoolIds }),
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
     try {
+      setLoaderStatus(true);
       UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
+      setLoaderStatus(false);
       UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -218,25 +228,24 @@ const useSchool = (form?: any) => {
       }
 
       UiStore.setConfirmDialogVisibility(false);
-      message.success(i18next.t("success"));
+      message.success(i18next.t('success'));
 
-      setSchools(
-        schools.filter((i) => selecetedSchoolIds.indexOf(i._id) == -1)
-      );
+      setSchools(schools.filter((i) => selectedSchoolIds.indexOf(i._id) == -1));
 
       return responseData.results;
     } catch (err: any) {
+      setLoaderStatus(false);
       UiStore.setLoaderStatus(false);
 
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
   const findSchoolsByName = async () => {
     if (isLoading) {
-      return message.warning(i18next.t("wait"));
+      return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
-      return message.warning(i18next.t("search_empty"));
+      return message.warning(i18next.t('search_empty'));
     }
 
     const url = API_LINKS.FIND_SCHOOLS_BY_NAME;
@@ -244,11 +253,11 @@ const useSchool = (form?: any) => {
       body: JSON.stringify({
         name: searchQuery.trim(),
         limit: 1000,
-        skip:0,
+        skip: 0,
       }),
-      method: "post",
+      method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
     };
 
@@ -258,7 +267,7 @@ const useSchool = (form?: any) => {
       setLoaderStatus(false);
 
       if (!resp.ok) {
-        message.warning(i18next.t("unknown_error"));
+        message.warning(i18next.t('unknown_error'));
         return false;
       }
 
@@ -268,17 +277,14 @@ const useSchool = (form?: any) => {
         message.warning(responseData.code);
         return false;
       }
-      message.success(
-        responseData.schools.length + " " + i18next.t("schools_found")
-      );
+      message.success(responseData.schools.length + ' ' + i18next.t('schools_found'));
 
-     
       setSchools(responseData.schools);
 
       return responseData.schools;
     } catch (err: any) {
       setLoaderStatus(false);
-      message.error(`${i18next.t("unknown_error")}. ${err.msg ? err.msg : ""}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
@@ -292,16 +298,13 @@ const useSchool = (form?: any) => {
   };
 
   const triggerEdit = async () => {
-    if (!selecetedSchoolIds.length) {
-      return message.warning(i18next.t("select_item"));
-    } else if (selecetedSchoolIds.length > 1) {
-      return message.warning(i18next.t("select_one_item"));
+    if (!selectedSchoolIds.length) {
+      return message.warning(i18next.t('select_item'));
+    } else if (selectedSchoolIds.length > 1) {
+      return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(
-      getChildLinkByKey("edit", ADMIN_LINKS.schools) +
-        `?schoolId=${selecetedSchoolIds[0]}`
-    );
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.schools) + `?schoolId=${selectedSchoolIds[0]}`);
   };
 
   return {
@@ -310,7 +313,7 @@ const useSchool = (form?: any) => {
     schools,
     setSchools,
     setSelectedSchoolIds,
-    selecetedSchoolIds,
+    selectedSchoolIds,
     triggerDelete,
     triggerEdit,
     fetchSchool,
@@ -322,6 +325,7 @@ const useSchool = (form?: any) => {
     onSearchQueryChange,
     searchQuery,
     tempSchools,
+    deleteSchools,
   };
 };
 

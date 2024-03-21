@@ -1,90 +1,96 @@
-"use client";
+'use client';
 
-import { AdminPageTitle } from "@components/layouts";
-import { ADMIN_LINKS } from "@components/layouts/adminLayout/links";
-import useNavigation from "@hooks/useNavigation";
-import useTopic from "@hooks/use-topic";
-import { Table } from "antd";
-import { Button, TextInput } from "flowbite-react";
-import i18next from "i18next";
-import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
-import {
-  HiMagnifyingGlass,
-  HiOutlineNewspaper,
-  HiOutlinePencilSquare,
-  HiTrash,
-} from "react-icons/hi2";
-import { topicTableColumns } from ".";
-import { TunitFields } from "./types";
+import { AdminPageTitle } from '@components/layouts';
+import useNavigation from '@hooks/useNavigation';
+import useTopic from '@hooks/use-topic';
+import { Modal, TextInput } from 'flowbite-react';
+import i18next from 'i18next';
+import { observer } from 'mobx-react-lite';
+import React, { useEffect, useState } from 'react';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { topicTableColumns } from '.';
+import { AdminTable } from '@components/admin/AdminTable/AdminTable';
+import { T_TopicFields } from '@hooks/use-topic/types';
+import CreateTopicView from './create-topic-view';
+import EditTopicView from './edit-topic-view';
 
 const TopicsListView: React.FC = observer(() => {
   const {
     fetchTopics,
     topics,
-    selecetedTopicIds,
+    selectedTopicIds: selectedTopicIds,
     setSelectedTopicIds,
-    triggerDelete,
-    triggerEdit,
     findTopicsByName,
     onSearchQueryChange,
+    isLoading,
+    deleteTopics,
   } = useTopic();
   const { router, getChildLinkByKey } = useNavigation();
+  const [creatingTopic, setCreatingTopic] = useState(false);
+  const [edittingTopicWithId, setEdittingTopicWithId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchTopics({});
   }, []);
 
   const rowSelection = {
-    selectedRowKeys: selecetedTopicIds,
-    onChange: (selectedRowKeys: React.Key[], selectedRows: TunitFields[]) => {
-      setSelectedTopicIds(selectedRows.map((i) => i.key));
+    selectedRowKeys: selectedTopicIds,
+    onChange: (selectedRowKeys: React.Key[]) => {
+      setSelectedTopicIds(selectedRowKeys);
     },
   };
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("topics")} />
+      <AdminPageTitle title={i18next.t('topics')} />
 
       <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t("search_units")}
+        placeholder={i18next.t('search_units')}
         required
         type="text"
         onKeyDown={(e) => {
           e.keyCode === 13 ? findTopicsByName({ withMetaData: true }) : null;
         }}
       />
-      <Button.Group>
-        <Button
-          onClick={() =>
-            router.push(getChildLinkByKey("create", ADMIN_LINKS.topics))
-          }
-          className={"table-action-buttons"}
-        >
-          <HiOutlinePencilSquare className="mr-3 h-4 w-4" />
-          {i18next.t("new")}
-        </Button>
-        <Button onClick={triggerDelete} className={"table-action-buttons"}>
-          <HiTrash className="mr-3 h-4 w-4" />
-          {i18next.t("delete")}
-        </Button>
-        <Button onClick={triggerEdit} className={"table-action-buttons"}>
-          <HiOutlineNewspaper className="mr-3 h-4 w-4" />
-          {i18next.t("edit")}
-        </Button>
-      </Button.Group>
-      <Table
-        className="admin-table"
-        bordered
+      <AdminTable<T_TopicFields>
+        deleteItems={deleteTopics}
         rowSelection={rowSelection}
-        //@ts-ignore
+        items={topics || []}
+        isLoading={isLoading}
+        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.topics)}
+        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.topics) + `?topicId=${id}`}
+        createNew={() => setCreatingTopic(true)}
+        editItem={(id) => setEdittingTopicWithId(id)}
         columns={topicTableColumns}
-        //@ts-ignore
-        dataSource={topics || []}
       />
+      <Modal dismissible show={creatingTopic} onClose={() => setCreatingTopic(false)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          <CreateTopicView
+            onSuccessfullyDone={() => {
+              fetchTopics({});
+              setCreatingTopic(false);
+            }}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal dismissible show={!!edittingTopicWithId} onClose={() => setEdittingTopicWithId(null)} popup>
+        <Modal.Header />
+        <Modal.Body>
+          {edittingTopicWithId ? (
+            <EditTopicView
+              topicId={edittingTopicWithId}
+              onSuccessfullyDone={() => {
+                fetchTopics({});
+                setEdittingTopicWithId(null);
+              }}
+            />
+          ) : null}
+        </Modal.Body>
+      </Modal>
     </>
   );
 });

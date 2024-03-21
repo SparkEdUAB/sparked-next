@@ -1,18 +1,17 @@
-import { Carousel } from "flowbite-react";
-import styled from "styled-components";
+import { Carousel } from 'flowbite-react';
+import styled from 'styled-components';
 
-const sliderTextBkgUrl =
-  "public/assets/images/cover/slider-text-bkg.png";
+const sliderTextBkgUrl = 'public/assets/images/cover/slider-text-bkg.png';
 
-type T_imageContainer = {
+type T_ImageContainer = {
   imageUrl: string;
 };
 
-type T_sliderTextContainer = {
+type T_SliderTextContainer = {
   sliderTextBkgUrl: string;
 };
 
-const ImageContainer = styled.div<T_imageContainer>`
+const ImageContainer = styled.div<T_ImageContainer>`
   width: 100%;
   background-image: url(${(p) => p.imageUrl});
 
@@ -28,8 +27,7 @@ const ImageContainer = styled.div<T_imageContainer>`
   background-color: #101512cc !important;
 `;
 
-
-const SliderTextContainer = styled.div<T_sliderTextContainer>`
+const SliderTextContainer = styled.div<T_SliderTextContainer>`
   width: 52%;
   height: 100%;
   border-radius: 2%;
@@ -84,12 +82,8 @@ export const HomePageSlider = () => {
           imageUrl="https://img.freepik.com/free-photo/group-international-students-sitting-grass-together-park-university-african-caucasian-girls-indian-boy-talking-outdoors_1157-50065.jpg?t=st=1708684780~exp=1708688380~hmac=3bd13570c8efd61351953e248e06c6faf95d896f2eb3cdae3b487bea01804017&w=1800"
           className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white"
         >
-          <SliderTextContainer
-            sliderTextBkgUrl={sliderTextBkgUrl}
-          ></SliderTextContainer>
-          <SliderTitle>
-            Welcome to Sparked - your gateway to knowledge!
-          </SliderTitle>
+          <SliderTextContainer sliderTextBkgUrl={sliderTextBkgUrl}></SliderTextContainer>
+          <SliderTitle>Welcome to Sparked - your gateway to knowledge!</SliderTitle>
 
           <SliderText>
             {`
@@ -104,9 +98,7 @@ export const HomePageSlider = () => {
           imageUrl="https://img.freepik.com/free-photo/side-view-woman-working-as-travel-agent_23-2150433458.jpg?t=st=1708702733~exp=1708706333~hmac=e4a1690efa66d45683bf2f58364e65128efa548abe3bafac774427f0993b1635&w=1800"
           className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white"
         >
-          <SliderTextContainer
-            sliderTextBkgUrl={sliderTextBkgUrl}
-          ></SliderTextContainer>
+          <SliderTextContainer sliderTextBkgUrl={sliderTextBkgUrl}></SliderTextContainer>
           <SliderTitle>
             {`
              Presenting Educational And Training Content With Passion And AI.  
@@ -127,9 +119,7 @@ export const HomePageSlider = () => {
           className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white"
           imageUrl="https://img.freepik.com/free-photo/cheerful-man-classroom-posing-camera_23-2147663989.jpg?t=st=1708685035~exp=1708688635~hmac=8eb9796885031de81ed4c50e28467fed995bf0440ec6fdf08b49e566d727ee7d&w=1800"
         >
-          <SliderTextContainer
-            sliderTextBkgUrl={sliderTextBkgUrl}
-          ></SliderTextContainer>
+          <SliderTextContainer sliderTextBkgUrl={sliderTextBkgUrl}></SliderTextContainer>
           <SliderTitle>
             {`
                 Discover what's new at Sparked! Explore our latest arrivals
@@ -148,9 +138,7 @@ export const HomePageSlider = () => {
           imageUrl="https://img.freepik.com/free-photo/group-four-african-american-girls-walking-stairs-city_627829-2812.jpg?t=st=1708684880~exp=1708688480~hmac=2c669e521f8474c34d8bf28f4a3459309a157203b6e8093eb5c6bb8e9dd1b4d4&w=1800"
           className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white"
         >
-          <SliderTextContainer
-            sliderTextBkgUrl={sliderTextBkgUrl}
-          ></SliderTextContainer>
+          <SliderTextContainer sliderTextBkgUrl={sliderTextBkgUrl}></SliderTextContainer>
           <SliderTitle>
             {`
                Check out Sparked's featured books! Immerse yourself in captivating
@@ -170,9 +158,7 @@ export const HomePageSlider = () => {
           imageUrl="https://img.freepik.com/free-photo/teacher-helping-kids-class_23-2148892533.jpg?t=st=1708702783~exp=1708706383~hmac=77580a907ee62f0b379966e992eb285eb10eea0b382d87f72b78b0ef7c8cdfd6&w=1800"
           className="flex h-full items-center justify-center bg-gray-400 dark:bg-gray-700 dark:text-white"
         >
-          <SliderTextContainer
-            sliderTextBkgUrl={sliderTextBkgUrl}
-          ></SliderTextContainer>
+          <SliderTextContainer sliderTextBkgUrl={sliderTextBkgUrl}></SliderTextContainer>
           <SliderTitle>
             {`
              Join us for exciting events at Sparked! Be on the lookout for

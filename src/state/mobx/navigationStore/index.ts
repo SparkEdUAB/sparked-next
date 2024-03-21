@@ -1,13 +1,11 @@
-import { TchildMenuItemLinkParams, TmenuItemLinkParams } from "types/links";
+import { T_ChildMenuItemLinkParams, T_MenuItemLinkParams } from 'types/links';
 
 class navigationStore {
-  activeMenuItem: TmenuItemLinkParams | TchildMenuItemLinkParams | null = null;
+  activeMenuItem: T_MenuItemLinkParams | T_ChildMenuItemLinkParams | null = null;
 
   constructor() {}
 
-  setActiveMenuItem = (
-    activeMenuItem: TmenuItemLinkParams | TchildMenuItemLinkParams
-  ) => {
+  setActiveMenuItem = (activeMenuItem: T_MenuItemLinkParams | T_ChildMenuItemLinkParams) => {
     this.activeMenuItem = activeMenuItem;
   };
 }

@@ -12,7 +12,7 @@ import { Input } from 'antd';
 import { bookTitles } from './book-titles';
 import ContentTags from './content-tags';
 
-type T_props = {
+type T_Props = {
   children: ReactNode;
 };
 
@@ -45,7 +45,7 @@ const items2: MenuProps['items'] = [
   };
 });
 
-const LibraryLayout: React.FC<T_props> = (props) => {
+const LibraryLayout: React.FC<T_Props> = (props) => {
   const { children } = props;
 
   const [form] = Form.useForm();

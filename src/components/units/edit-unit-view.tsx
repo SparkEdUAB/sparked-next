@@ -1,31 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import { AdminPageTitle } from "@components/layouts";
-import useProgram from "@hooks/useProgram";
-import { Card, Col, Form, Input, Row, Select } from "antd";
-import { Button } from "flowbite-react";
-import i18next from "i18next";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { UNIT_FORM_FIELDS } from "./constants";
-import useSchool from "@hooks/useSchool";
-import useUnit from "@hooks/useUnit";
-import useCourse from "@hooks/useCourse";
+import { AdminPageTitle } from '@components/layouts';
+import useProgram from '@hooks/useProgram';
+import { Button, Spinner } from 'flowbite-react';
+import i18next from 'i18next';
+import { useSearchParams } from 'next/navigation';
+import { FormEventHandler, useEffect } from 'react';
+import { UNIT_FORM_FIELDS } from './constants';
+import useSchool from '@hooks/useSchool';
+import useUnit from '@hooks/useUnit';
+import useCourse from '@hooks/useCourse';
+import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
+import { T_UnitFields } from '@hooks/useUnit/types';
+import { extractValuesFromFormEvent } from 'utils/helpers';
 
-const EditUnitView: React.FC = () => {
-  const [form] = Form.useForm();
-  const { editUnit, fetchUnitById, unit } = useUnit(form);
-  const { fetchSchools, schools } = useSchool();
-  const { fetchPrograms, programs } = useProgram();
-  const { fetchCourses, courses } = useCourse();
+const EditUnitView = ({ unitId, onSuccessfullyDone }: { unitId?: string; onSuccessfullyDone?: () => void }) => {
+  // const [form] = Form.useForm();
+  const { editUnit, fetchUnitById, unit, isLoading } = useUnit();
+  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
+  const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
 
   const searchParams = useSearchParams();
 
-
   useEffect(() => {
     fetchUnitById({
-      unitId: searchParams.get("unitId") as string,
+      unitId: unitId || (searchParams.get('unitId') as string),
       withMetaData: true,
     });
 
@@ -34,128 +36,82 @@ const EditUnitView: React.FC = () => {
     fetchCourses({});
   }, []);
 
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    const keys = [
+      UNIT_FORM_FIELDS.name.key,
+      UNIT_FORM_FIELDS.description.key,
+      UNIT_FORM_FIELDS.school.key,
+      UNIT_FORM_FIELDS.program.key,
+      UNIT_FORM_FIELDS.course.key,
+    ];
+
+    let result = extractValuesFromFormEvent<T_UnitFields>(e, keys);
+    editUnit(result, onSuccessfullyDone);
+  };
+
   return (
     <>
-      <AdminPageTitle title={i18next.t("edit_unit")} />
+      <AdminPageTitle title={i18next.t('edit_unit')} />
 
-      <Row className="form-container">
-        <Col span={24}>
-          <Card
-            className="form-card"
-            title={<p className="form-label">{unit?.name}</p>}
-            bordered={false}
-          >
-            <Form
-              form={form}
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600 }}
-              initialValues={unit || {}}
-              onFinish={editUnit}
-              onFinishFailed={() => {}}
-              autoComplete="off"
-            >
-              <Form.Item
-                label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.name.label}</p>
-                }
-                name={UNIT_FORM_FIELDS.name.key}
-                rules={[
-                  {
-                    required: true,
-                    message: UNIT_FORM_FIELDS.name.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+      {unit === null ? (
+        <div className="flex items-center justify-center h-[400px]">
+          <Spinner size="xl" />
+        </div>
+      ) : (
+        <form className="flex flex-col items-start" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-4 md:max-w-xl w-full">
+            <AdminFormInput
+              disabled={isLoading}
+              name={UNIT_FORM_FIELDS.name.key}
+              label={UNIT_FORM_FIELDS.name.label}
+              required
+              defaultValue={unit.name}
+            />
 
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {UNIT_FORM_FIELDS.description.label}
-                  </p>
-                }
-                name={UNIT_FORM_FIELDS.description.key}
-                rules={[
-                  {
-                    required: true,
-                    message: UNIT_FORM_FIELDS.description.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+            <AdminFormInput
+              disabled={isLoading}
+              name={UNIT_FORM_FIELDS.description.key}
+              label={UNIT_FORM_FIELDS.description.label}
+              required
+              defaultValue={unit.description}
+            />
 
-              <Form.Item
-                label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.school.label}</p>
-                }
-                name={UNIT_FORM_FIELDS.school.key}
-                rules={[
-                  {
-                    message: UNIT_FORM_FIELDS.school.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  options={schools.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
-              <Form.Item
-                label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.program.label}</p>
-                }
-                name={UNIT_FORM_FIELDS.program.key}
-                rules={[
-                  {
-                    message: UNIT_FORM_FIELDS.program.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  options={programs.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
+            <AdminFormSelector
+              loadingItems={loadingSchools}
+              disabled={isLoading || loadingSchools}
+              options={schools}
+              label={UNIT_FORM_FIELDS.school.label}
+              name={UNIT_FORM_FIELDS.school.key}
+              defaultValue={unit.schoolId}
+            />
 
-              <Form.Item
-                label={
-                  <p className="form-label">{UNIT_FORM_FIELDS.course.label}</p>
-                }
-                name={UNIT_FORM_FIELDS.course.key}
-                rules={[
-                  {
-                    message: UNIT_FORM_FIELDS.course.errorMsg,
-                  },
-                ]}
-              >
-                <Select
-                  options={courses.map((i) => ({
-                    value: i._id,
-                    label: i.name,
-                  }))}
-                />
-              </Form.Item>
+            <AdminFormSelector
+              loadingItems={loadingPrograms}
+              disabled={isLoading || loadingPrograms}
+              options={programs}
+              label={UNIT_FORM_FIELDS.program.label}
+              name={UNIT_FORM_FIELDS.program.key}
+              defaultValue={unit.programId}
+            />
 
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button
-                  className={"form-submit-btn"}
-                  type="submit"
-                 
-                >
-                  {i18next.t("submit")}
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+            <AdminFormSelector
+              loadingItems={loadingCourses}
+              disabled={isLoading || loadingCourses}
+              options={courses}
+              label={UNIT_FORM_FIELDS.course.label}
+              name={UNIT_FORM_FIELDS.course.key}
+              defaultValue={unit.courseId}
+            />
+
+            <Button type="submit" className="mt-2" disabled={isLoading}>
+              {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+              {i18next.t('submit')}
+            </Button>
+          </div>
+        </form>
+      )}
     </>
   );
 };

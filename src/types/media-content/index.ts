@@ -1,19 +1,28 @@
-import {  T_FORM } from "types/form";
+import { I_FORM } from 'types/form';
 
 export type T_MediaContentFields = {
-  key?: string;
-  name: string;
+  index: number;
+  key: string;
   _id: string;
-  created_by?: string;
+  name: string;
   description: string;
-  schoolId: string;
-  programId: string;
-  courseId: string;
-  unitId: string;
-  topicId: string;
-  file_url?: string;
+  fileUrl?: string;
 
+  schoolId?: string;
+  programId?: string;
+  courseId?: string;
+  unitId?: string;
+  topicId?: string;
+
+  schoolName: string;
+  programName: string;
+  courseName: string;
+  unitName: string;
+  topicName: string;
+
+  created_by?: string;
   created_at?: string;
+
   user?: {
     name: string;
     email: string;
@@ -40,13 +49,50 @@ export type T_MediaContentFields = {
   };
 };
 
+/**
+ * Corresponds to the type returned directly by the API
+ */
+export type T_RawMediaContentFields = {
+  _id: string;
+  name: string;
+  description: string;
+  file_url: string;
+
+  created_at: string;
+  updated_at: string;
+
+  user: {
+    _id: string;
+    email: string;
+  };
+  school: {
+    _id: string;
+    name: string;
+  };
+  program: {
+    _id: string;
+    name: string;
+  };
+  course: {
+    _id: string;
+    name: string;
+  };
+  unit: {
+    _id: string;
+    name: string;
+  };
+  topic: {
+    _id: string;
+    name: string;
+  };
+};
 
 export type T_MediaContentFormFields = {
-  name: T_FORM;
-  description: T_FORM;
-  school: T_FORM;
-  program: T_FORM;
-  course: T_FORM;
-  unit: T_FORM;
-  topic: T_FORM;
+  name: I_FORM;
+  description: I_FORM;
+  school: I_FORM;
+  program: I_FORM;
+  course: I_FORM;
+  unit: I_FORM;
+  topic: I_FORM;
 };

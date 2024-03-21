@@ -1,90 +1,59 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import useSchool from "@hooks/useSchool";
-import { Card, Col, Form, Input, Row, Skeleton } from "antd";
-import { Button } from "flowbite-react";
-import i18next from "i18next";
-import { CREATE_SCHOOL_FORM_FIELDS } from "./constants";
-import { AdminPageTitle } from "@components/layouts";
-import SchoolStore from "@state/mobx/scholStore";
+import useSchool from '@hooks/useSchool';
+import { Button, Spinner } from 'flowbite-react';
+import i18next from 'i18next';
+import { SCHOOL_FORM_FIELDS } from './constants';
+import { AdminPageTitle } from '@components/layouts';
+import SchoolStore from '@state/mobx/scholStore';
+import { FormEventHandler } from 'react';
+import { extractValuesFromFormEvent } from 'utils/helpers';
+import { T_SchoolFields } from './types';
+import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const CreateSchoolView: React.FC = () => {
-  const { createSchool, fetchSchool, school } = useSchool();
+const CreateSchoolView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
+  const { createSchool, isLoading } = useSchool();
 
   const { selectedSchool } = SchoolStore;
 
-  const [form] = Form.useForm();
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    const keys = [SCHOOL_FORM_FIELDS.name.key, SCHOOL_FORM_FIELDS.description.key];
+
+    let result = extractValuesFromFormEvent<T_SchoolFields>(e, keys);
+    createSchool(result, onSuccessfullyDone);
+  };
+
+  // const [form] = Form.useForm();
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("create_school")} />
+      <AdminPageTitle title={i18next.t('create_school')} />
 
-      <Row className="form-container">
-        <Col span={24}>
-          <Card
-            className="form-card"
-            title={<p className="form-label">{i18next.t("new_school")}</p>}
-            bordered={false}
-          >
-            <Form
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600 }}
-              initialValues={selectedSchool || {}}
-              onFinish={createSchool}
-              onFinishFailed={() => {}}
-              autoComplete="off"
-            >
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_SCHOOL_FORM_FIELDS.name.label}
-                  </p>
-                }
-                name={CREATE_SCHOOL_FORM_FIELDS.name.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_SCHOOL_FORM_FIELDS.name.errorMsg,
-                  },
-                ]}
-              >
-                <Input defaultValue={school?.name} />
-              </Form.Item>
+      <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
+        <AdminFormInput
+          disabled={isLoading}
+          name={SCHOOL_FORM_FIELDS.name.key}
+          label={SCHOOL_FORM_FIELDS.name.label}
+          required
+        />
 
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_SCHOOL_FORM_FIELDS.description.label}
-                  </p>
-                }
-                name={CREATE_SCHOOL_FORM_FIELDS.description.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_SCHOOL_FORM_FIELDS.description.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+        <AdminFormInput
+          disabled={isLoading}
+          name={SCHOOL_FORM_FIELDS.description.key}
+          label={SCHOOL_FORM_FIELDS.description.label}
+          required
+        />
 
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button
-                  className={"form-submit-btn"}
-                  type="submit"
-                 
-                >
-                  {i18next.t("submit")}
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+        <Button type="submit" className="mt-2" disabled={isLoading}>
+          {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {i18next.t('submit')}
+        </Button>
+      </form>
     </>
   );
 };

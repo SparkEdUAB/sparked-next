@@ -1,10 +1,12 @@
+import AppLogo from '@components/logo';
+
 const FooterSection = () => {
   return (
     <>
-      <section className="bg-blue-50 dark:bg-gray-900">
-        <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6 flex justify-center">
-          <div className="max-w-screen-lg text-blue-700 sm:text-lg dark:text-blue-300">
-            <h2 className="mb-4 text-4xl font-bold text-blue-900 dark:text-white text-center">
+      <section className="bg-sky-50 dark:bg-gray-900">
+        <div className="py-8 px-4 mx-auto max-w-screen-lg lg:py-16 lg:px-6 flex justify-center">
+          <div className="max-w-screen-lg  sm:text-lg">
+            <h2 className="mb-4 text-4xl font-semibold text-sky-900 dark:text-white text-center">
               Powering future school digital libraries
             </h2>
             <p className="mb-4 font-light text-center">
@@ -17,21 +19,21 @@ const FooterSection = () => {
         </div>
       </section>
 
-      <footer className="p-4 bg-blue-50 sm:p-6 dark:bg-gray-800">
-        <div className="mx-auto max-w-screen-xl">
+      <footer className="bg-sky-50 dark:bg-gray-800">
+        <div className="mx-auto max-w-screen-lg p-6">
           <div className="md:flex md:justify-between">
             <div className="mb-6 md:mb-0">
-              <a href="https://flowbite.com" className="flex items-center">
-                <span className="self-center text-2xl font-semibold text-blue-900 whitespace-nowrap dark:text-white">
-                  SparkEd
+              <a href="/" className="flex items-center">
+                <span className="self-center text-2xl font-semibold text-sky-900 whitespace-nowrap dark:text-white">
+                  <AppLogo scale={0.8} />
                 </span>
               </a>
             </div>
-            <div className="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
+            <div className="grid grid-cols-2 gap-8 sm:gap-6">
               <div>
-                <h2 className="mb-6 text-sm font-semibold text-blue-900 uppercase dark:text-white">Follow us</h2>
-                <ul className="text-blue-700 dark:text-blue-300">
-                  <li className="mb-4">
+                <h2 className="mb-3 text-sm font-semibold text-sky-900 uppercase dark:text-white">Follow us</h2>
+                <ul className="text-sky-700 dark:text-sky-300">
+                  <li className="mb-3">
                     <a href="https://github.com/sparkeduab/sparked-next" className="hover:underline ">
                       Github
                     </a>
@@ -39,9 +41,9 @@ const FooterSection = () => {
                 </ul>
               </div>
               <div>
-                <h2 className="mb-6 text-sm font-semibold text-blue-900 uppercase dark:text-white">Legal</h2>
-                <ul className="text-blue-700 dark:text-blue-300">
-                  <li className="mb-4">
+                <h2 className="mb-3 text-sm font-semibold text-sky-900 uppercase dark:text-white">Legal</h2>
+                <ul className="text-sky-700 dark:text-sky-300">
+                  <li className="mb-3">
                     <a href="#" className="hover:underline">
                       Privacy Policy
                     </a>
@@ -50,9 +52,9 @@ const FooterSection = () => {
               </div>
             </div>
           </div>
-          <hr className="my-6 border-blue-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
-          <div className="sm:flex sm:items-center sm:justify-between">
-            <span className="text-sm text-blue-700 sm:text-center dark:text-blue-300">
+          <hr className="my-6 border-sky-200 md:mx-auto dark:border-gray-700 lg:my-8" />
+          <div className="md:flex md:items-center md:justify-center">
+            <span className="text-sm text-sky-700 md:text-center dark:text-sky-300">
               © 2024{' '}
               <a href="" className="hover:underline">
                 SparkEd™

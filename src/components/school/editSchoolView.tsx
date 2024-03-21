@@ -1,95 +1,73 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import { AdminPageTitle } from "@components/layouts";
-import useSchool from "@hooks/useSchool";
-import { Card, Col, Form, Input, Row } from "antd";
-import { Button } from "flowbite-react";
-import i18next from "i18next";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { CREATE_SCHOOL_FORM_FIELDS } from "./constants";
+import { AdminPageTitle } from '@components/layouts';
+import useSchool from '@hooks/useSchool';
+import { Card, Col, Form, Input, Row } from 'antd';
+import { Button, Spinner } from 'flowbite-react';
+import i18next from 'i18next';
+import { useSearchParams } from 'next/navigation';
+import { FormEventHandler, useEffect } from 'react';
+import { SCHOOL_FORM_FIELDS } from './constants';
+import { extractValuesFromFormEvent } from 'utils/helpers';
+import { T_SchoolFields } from './types';
+import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const EditSchoolView: React.FC = () => {
-  const [form] = Form.useForm();
-  const { editSchool, fetchSchool, school } = useSchool(form);
+const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; onSuccessfullyDone?: () => void }) => {
+  // const [form] = Form.useForm();
+  const { editSchool, fetchSchool, school, isLoading } = useSchool();
 
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    fetchSchool(searchParams.get("schoolId") as string);
+    fetchSchool(schoolId || (searchParams.get('schoolId') as string));
   }, []);
+
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+
+    const keys = [SCHOOL_FORM_FIELDS.name.key, SCHOOL_FORM_FIELDS.description.key];
+
+    let result = extractValuesFromFormEvent<T_SchoolFields>(e, keys);
+    editSchool(result, onSuccessfullyDone);
+  };
 
   return (
     <>
-      <AdminPageTitle title={i18next.t("edit_school")} />
+      <AdminPageTitle title={i18next.t('edit_school')} />
 
-      <Row className="form-container">
-        <Col span={24}>
-          <Card
-            className="form-card"
-            title={<p className="form-label">{school?.name}</p>}
-            bordered={false}
-          >
-            <Form
-              form={form}
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600 }}
-              initialValues={school || {}}
-              onFinish={editSchool}
-              onFinishFailed={() => {}}
-              autoComplete="off"
-            >
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_SCHOOL_FORM_FIELDS.name.label}
-                  </p>
-                }
-                name={CREATE_SCHOOL_FORM_FIELDS.name.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_SCHOOL_FORM_FIELDS.name.errorMsg,
-                  },
-                ]}
-              >
-                <Input defaultValue={school?.name} />
-              </Form.Item>
+      {school === null ? (
+        <div className="flex items-center justify-center h-[400px]">
+          <Spinner size="xl" />
+        </div>
+      ) : (
+        <form className="flex flex-col items-start" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-4 max-w-xl w-full">
+            <AdminFormInput
+              disabled={isLoading}
+              name={SCHOOL_FORM_FIELDS.name.key}
+              label={SCHOOL_FORM_FIELDS.name.label}
+              required
+              defaultValue={school.name}
+            />
 
-              <Form.Item
-                label={
-                  <p className="form-label">
-                    {CREATE_SCHOOL_FORM_FIELDS.description.label}
-                  </p>
-                }
-                name={CREATE_SCHOOL_FORM_FIELDS.description.key}
-                rules={[
-                  {
-                    required: true,
-                    message: CREATE_SCHOOL_FORM_FIELDS.description.errorMsg,
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+            <AdminFormInput
+              disabled={isLoading}
+              name={SCHOOL_FORM_FIELDS.description.key}
+              label={SCHOOL_FORM_FIELDS.description.label}
+              required
+              defaultValue={school.description}
+            />
 
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button
-                  className={"form-submit-btn"}
-                  type="submit"
-                 
-                >
-                  {i18next.t("submit")}
-                </Button>
-              </Form.Item>
-            </Form>
-          </Card>
-        </Col>
-      </Row>
+            <Button type="submit" className="mt-2" disabled={isLoading}>
+              {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+              {i18next.t('submit')}
+            </Button>
+          </div>
+        </form>
+      )}
     </>
   );
 };

@@ -1,4 +1,4 @@
-export interface I_formFields {
+export interface I_FormFields {
   [key: string]: {
     label: string;
     key: string;
@@ -6,7 +6,7 @@ export interface I_formFields {
   };
 }
 
-export interface T_FORM {
+export interface I_FORM {
   label: string;
   key: string;
   errorMsg?: string;

@@ -1,23 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-"use client";
+'use client';
 
-import { AdminPageTitle } from "@components/layouts";
-import useCourse from "@hooks/useCourse";
-import useProgram from "@hooks/useProgram";
-import useSchool from "@hooks/useSchool";
-import useUsers from "@hooks/useUser";
-import SchoolStore from "@state/mobx/scholStore";
-import { Card, Col, Form, Input, Row, Select } from "antd";
-import { Button } from "flowbite-react";
-import i18next from "i18next";
-import { useEffect } from "react";
-import { USER_FORM_FIELDS } from "./constants";
-import { Checkbox } from "antd";
+import { AdminPageTitle } from '@components/layouts';
+import useCourse from '@hooks/useCourse';
+import useProgram from '@hooks/useProgram';
+import useSchool from '@hooks/useSchool';
+import useUsers from '@hooks/useUser';
+import SchoolStore from '@state/mobx/scholStore';
+import { Card, Col, Form, Input, Row, Select } from 'antd';
+import { Button } from 'flowbite-react';
+import i18next from 'i18next';
+import { useEffect } from 'react';
+import { USER_FORM_FIELDS } from './constants';
+import { Checkbox } from 'antd';
 
 const onFinishFailed = (errorInfo: any) => {};
 
-const CreateUserView: React.FC = () => {
-
+const CreateUserView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (() => void) | undefined }) => {
   const [form] = Form.useForm();
 
   const { createUser, onEmailPasswordChange } = useUsers(form);
@@ -33,18 +32,13 @@ const CreateUserView: React.FC = () => {
     fetchCourses({});
   }, []);
 
-
   return (
     <>
-      <AdminPageTitle title={i18next.t("create_user")} />
+      <AdminPageTitle title={i18next.t('create_user')} />
 
-      <Row className="form-container">
+      {/*<Row className="form-container">
         <Col span={24}>
-          <Card
-            className="form-card"
-            title={<p className="form-label">{i18next.t("new_user")}</p>}
-            bordered={false}
-          >
+          <Card className="form-card" title={<p className="form-label">{i18next.t('new_user')}</p>} bordered={false}>
             <Form
               form={form}
               labelCol={{ span: 8 }}
@@ -56,11 +50,7 @@ const CreateUserView: React.FC = () => {
               autoComplete="off"
             >
               <Form.Item
-                label={
-                  <p className="form-label">
-                    {USER_FORM_FIELDS.first_name.label}
-                  </p>
-                }
+                label={<p className="form-label">{USER_FORM_FIELDS.first_name.label}</p>}
                 name={USER_FORM_FIELDS.first_name.key}
                 rules={[
                   {
@@ -73,11 +63,7 @@ const CreateUserView: React.FC = () => {
               </Form.Item>
 
               <Form.Item
-                label={
-                  <p className="form-label">
-                    {USER_FORM_FIELDS.last_name.label}
-                  </p>
-                }
+                label={<p className="form-label">{USER_FORM_FIELDS.last_name.label}</p>}
                 name={USER_FORM_FIELDS.last_name.key}
                 rules={[
                   {
@@ -90,9 +76,7 @@ const CreateUserView: React.FC = () => {
               </Form.Item>
 
               <Form.Item
-                label={
-                  <p className="form-label">{USER_FORM_FIELDS.email.label}</p>
-                }
+                label={<p className="form-label">{USER_FORM_FIELDS.email.label}</p>}
                 name={USER_FORM_FIELDS.email.key}
                 rules={[
                   {
@@ -105,11 +89,7 @@ const CreateUserView: React.FC = () => {
               </Form.Item>
 
               <Form.Item
-                label={
-                  <p className="form-label">
-                    {USER_FORM_FIELDS.password.label}
-                  </p>
-                }
+                label={<p className="form-label">{USER_FORM_FIELDS.password.label}</p>}
                 name={USER_FORM_FIELDS.password.key}
                 rules={[
                   {
@@ -122,11 +102,7 @@ const CreateUserView: React.FC = () => {
               </Form.Item>
 
               <Form.Item
-                label={
-                  <p className="form-label">
-                    {USER_FORM_FIELDS.confirm_password.label}
-                  </p>
-                }
+                label={<p className="form-label">{USER_FORM_FIELDS.confirm_password.label}</p>}
                 name={USER_FORM_FIELDS.confirm_password.key}
                 rules={[
                   {
@@ -139,9 +115,7 @@ const CreateUserView: React.FC = () => {
               </Form.Item>
 
               <Form.Item
-                label={
-                  <p className="form-label">{USER_FORM_FIELDS.gender.label}</p>
-                }
+                label={<p className="form-label">{USER_FORM_FIELDS.gender.label}</p>}
                 name={USER_FORM_FIELDS.gender.key}
                 rules={[
                   {
@@ -150,7 +124,7 @@ const CreateUserView: React.FC = () => {
                 ]}
               >
                 <Select
-                  options={["male", "female"].map((i) => ({
+                  options={['male', 'female'].map((i) => ({
                     value: i,
                     label: i,
                   }))}
@@ -158,11 +132,7 @@ const CreateUserView: React.FC = () => {
               </Form.Item>
 
               <Form.Item
-                label={
-                  <p className="form-label">
-                    {USER_FORM_FIELDS.email_password.label}
-                  </p>
-                }
+                label={<p className="form-label">{USER_FORM_FIELDS.email_password.label}</p>}
                 name={USER_FORM_FIELDS.email_password.key}
                 rules={[
                   {
@@ -175,14 +145,14 @@ const CreateUserView: React.FC = () => {
               </Form.Item>
 
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button className={"form-submit-btn"} type="submit">
-                  {i18next.t("submit")}
+                <Button className={'form-submit-btn'} type="submit">
+                  {i18next.t('submit')}
                 </Button>
               </Form.Item>
             </Form>
           </Card>
         </Col>
-      </Row>
+      </Row>*/}
     </>
   );
 };
