@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 export type T_link = {
   SIGNUP: string;
@@ -43,6 +43,7 @@ export type T_link = {
   FETCH_MEDIA_CONTENT_BY_ID: string;
   EDIT_MEDIA_CONTENT: string;
   DELETE_MEDIA_CONTENT: string;
+  FETCH_RANDOM_MEDIA_CONTENT: string;
   //users
   CREATE_USER: string;
 };

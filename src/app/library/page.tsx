@@ -8,9 +8,12 @@ import { Badge, Button, Label, Modal, Select } from 'flowbite-react';
 import { libraryTags } from '@components/layouts/library/tags';
 import { HiFilter } from 'react-icons/hi';
 import { RiFilter2Fill } from 'react-icons/ri';
+import { test_fetchRandomMediaContent } from 'app/_tests_/api/content';
 
 const LibraryPage: React.FC = (props) => {
   const [filtering, setFiltering] = useState(false);
+
+  test_fetchRandomMediaContent();
 
   return (
     <main>
