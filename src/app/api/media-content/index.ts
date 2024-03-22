@@ -1,10 +1,10 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { z } from "zod";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { p_fetchMediaContentWithMetaData } from "./pipelines";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { z } from 'zod';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent } from './pipelines';
 
 export default async function fetchMediaContent_(request: Request) {
   const schema = zfd.formData({
@@ -44,7 +44,7 @@ export default async function fetchMediaContent_(request: Request) {
           {
             limit,
             skip,
-          }
+          },
         )
         .toArray();
     }
@@ -101,7 +101,7 @@ export async function fetchMediaContentById_(request: Request) {
             query: {
               _id: new BSON.ObjectId(mediaContentId),
             },
-          })
+          }),
         )
         .toArray();
 
@@ -202,7 +202,7 @@ export async function findMediaContentByName_(request: Request) {
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(name, 'i');
 
     let mediaContent = null;
 
@@ -214,7 +214,7 @@ export async function findMediaContentByName_(request: Request) {
             query: {
               name: { $regex: regexPattern },
             },
-          })
+          }),
         )
         .toArray();
     } else {
@@ -228,15 +228,71 @@ export async function findMediaContentByName_(request: Request) {
 
     const response = {
       isError: false,
-mediaContent,
+      mediaContent,
     };
 
     return new Response(JSON.stringify(response), {
       status: 200,
     });
   } catch (error) {
+    console.log('error', error);
 
-      console.log('error',error)
+    const resp = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+    };
+
+    return new Response(JSON.stringify(resp), {
+      status: 200,
+    });
+  }
+}
+
+export async function fetchRandomMediaContent_(request: Request) {
+  const schema = zfd.formData({
+    limit: zfd.numeric(),
+  });
+
+  const formBody = request.text();
+
+  // let { limit } = schema.parse(formBody);
+
+  const limit = 1000;
+
+  try {
+    const db = await dbClient();
+
+    if (!db) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+      };
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
+    let mediaContent = null;
+
+    mediaContent = await db
+      .collection(dbCollections.media_content.name)
+      .aggregate(
+        p_fetchRandomMediaContent({
+          limit,
+        }),
+      )
+      .toArray();
+
+    const response = {
+      isError: false,
+      mediaContent,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  } catch (error) {
+    console.log('error', error);
 
     const resp = {
       isError: true,
