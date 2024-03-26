@@ -1,21 +1,10 @@
 .logo {
   margin-top: -20px !important;
 }
-/* .admin-logo {
-  height: 100px;
-  background-color: #264463 !important;
-} */
-
 .landing-page-container {
-  /* background-color: #faf8f4 !important; */
   background-image: url('https://img.freepik.com/free-vector/handdrawn-style-line-doodle-pattern_1409-3949.jpg?t=st=1708706966~exp=1708710566~hmac=20506a50dab787eeb4d62c1e106d3995e7e0367db13f7d86fcd31ce2045dabbe&w=1800');
   background-position: center;
 }
-
-/* .nav-bar {
-  background-color: #031525 !important;
-  color: white;
-} */
 
 .landing-page-main-card-container {
   margin-top: 120px;
@@ -55,10 +44,6 @@
   margin: 0 auto;
 }
 
-/* .active-menu-item {
-  background-color: white;
-} */
-
 .table-action-item {
   margin: 10px;
 }
@@ -67,48 +52,6 @@
   margin: 20px 0 20px 0 !important;
   width: 99%;
 }
-/* 
-.ant-table-thead > tr > th {
-  background-color: #031525 !important;
-  color: white !important;
-}
-
-.ant-table-tbody > tr {
-  background-color: #264463 !important;
-  color: white !important;
-}
-
-.ant-table-cell-row-hover {
-  background-color: #1b68b5 !important;
-  color: white !important;
-}
-
-:where(.css-dev-only-do-not-override-xu9wm8).ant-table-wrapper
-  .ant-table-tbody
-  .ant-table-row.ant-table-row-selected
-  > .ant-table-cell {
-  background: #1b68b5;
-} */
-
-/* .ant-table-tbody > tr:nth-child(2n) {
-  background-color: #031525 !important;
-  color: white !important;
-} */
-
-/*.table-action-buttons {
-  margin: 0 10px 10px 0;
-  background-color: #264463 !important;
-  color: white;
-}*/
-
-/* .admin-table {
-  margin: 0 10px 10px 0;
-} */
-
-/* .admin-menu {
-  background-color: #264463 !important;
-  padding: 10px;
-} */
 
 .sidebar-menu-item {
   color: white !important;
@@ -120,24 +63,9 @@
   background-color: gray !important;
 }
 
-/* .navbar-menu-item {
-  color: white !important;
-  font-size: 15px;
-  margin: 10px;
-} */
-/* 
-.admin-breadcrumbs {
-  margin: 10px;
-  color: white !important;
-} */
-
 .admin-active-breadcrumb-item {
   color: gray !important;
 }
-/* 
-.admin-breadcrumb-item {
-  color: white !important;
-} */
 
 .form-card {
   background-color: #031525 !important;
@@ -191,14 +119,6 @@
   opacity: 0;
 }
 
-/* .admin-content-page {
-  background-color: #264463;
-}
-
-.admin-page-title {
-  color: white !important;
-} */
-
 .library-container {
   background-color: #264463;
   color: white;
@@ -212,4 +132,27 @@
 }
 .content-tag-item {
   color: white !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 16px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #eee;
+  border-radius: 16px;
+}
+
+html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #666;
+}
+
+html.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: #444;
 }

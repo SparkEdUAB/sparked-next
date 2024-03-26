@@ -5,8 +5,6 @@ import { bookTitles } from '@components/layouts/library/book-titles';
 import ContentCardView from '@components/layouts/library/content-card';
 import { Badge, Label, Modal, Select } from 'flowbite-react';
 import { libraryTags } from '@components/layouts/library/tags';
-import { HiFilter } from 'react-icons/hi';
-import { RiFilter2Fill } from 'react-icons/ri';
 import { test_fetchRandomMediaContent } from 'app/_tests_/api/content';
 
 const LibraryPage: React.FC = (props) => {
@@ -15,8 +13,8 @@ const LibraryPage: React.FC = (props) => {
   test_fetchRandomMediaContent();
 
   return (
-    <main className="overflow-y-scroll h-[calc(100vh_-_62px)]">
-      <div className="overflow-x-scroll flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
+    <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
+      <div className="overflow-x-scroll custom-scrollbar flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
         <Badge key={'All'} className="h-full" href="#">
           All
         </Badge>
