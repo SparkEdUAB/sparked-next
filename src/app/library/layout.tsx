@@ -15,11 +15,11 @@ export default function LibraryLayout({ children }: { children: ReactNode | Reac
   const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
 
   return (
-    <div>
+    <div className="h-[calc(100vh_-_62px)]">
       <LibraryNavbar toggleSidebar={toggleSidebar} sidebarIsCollapsed={sidebarIsCollapsed} />
-      <div className="md:grid md:grid-cols-[256px_calc(100%_-_256px)]">
+      <div className="md:grid md:grid-cols-[256px_calc(100%_-_256px)] h-[calc(100vh_-_62px)]">
         <LibrarySidebar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
-        <div className="p-2">{children}</div>
+        <div className="max-h-full overflow-y-hidden">{children}</div>
       </div>
     </div>
   );
@@ -81,7 +81,7 @@ function LibrarySidebar({
   return (
     <>
       <div
-        className={`fixed top-14 inset-0 z-50 h-full w-64 flex-none md:static md:block md:h-auto md:overflow-y-visible ${
+        className={`fixed top-14 md:top-0 inset-0 z-50 h-full w-64 flex-none md:sticky md:block max-h-full md:overflow-y-scroll ${
           sidebarIsCollapsed ? 'hidden' : ''
         }`}
       >

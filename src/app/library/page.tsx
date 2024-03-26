@@ -1,10 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import LibraryLayout from '@components/layouts/library';
 import { bookTitles } from '@components/layouts/library/book-titles';
 import ContentCardView from '@components/layouts/library/content-card';
-import { Badge, Button, Label, Modal, Select } from 'flowbite-react';
+import { Badge, Label, Modal, Select } from 'flowbite-react';
 import { libraryTags } from '@components/layouts/library/tags';
 import { HiFilter } from 'react-icons/hi';
 import { RiFilter2Fill } from 'react-icons/ri';
@@ -16,8 +15,8 @@ const LibraryPage: React.FC = (props) => {
   test_fetchRandomMediaContent();
 
   return (
-    <main>
-      <div className="overflow-x-scroll flex flex-row gap-2">
+    <main className="overflow-y-scroll h-[calc(100vh_-_62px)]">
+      <div className="overflow-x-scroll flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
         <Badge key={'All'} className="h-full" href="#">
           All
         </Badge>
@@ -27,9 +26,9 @@ const LibraryPage: React.FC = (props) => {
           </Badge>
         ))}
       </div>
-      <div className="grid py-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+      <div className="grid pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         {new Array(20).fill('i').map((i, index) => (
-          <div style={{ padding: '8px 0' }} key={index} className="gutter-row px-2">
+          <div style={{ padding: '8px 0' }} key={index} className="gutter-row px-2 h-full">
             <ContentCardView title={bookTitles[index]} />
           </div>
         ))}
