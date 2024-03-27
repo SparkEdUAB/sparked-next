@@ -1,8 +1,6 @@
-"use client";
-
-import { ReactNode, FC } from "react";
-import { Navbar } from "flowbite-react";
-import AppLogo from "@components/logo";
+import { ReactNode, FC } from 'react';
+import { Navbar } from 'flowbite-react';
+import AppLogo from '@components/logo';
 
 const PortalLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (

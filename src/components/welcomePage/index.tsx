@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import FooterSection from './FooterSection';
 import HeroSection from './HeroSection';

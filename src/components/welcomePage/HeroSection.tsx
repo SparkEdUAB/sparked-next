@@ -1,9 +1,4 @@
-import { Button, Flex } from 'antd';
-import Image from 'next/image';
 import Link from 'next/link';
-//import { Outfit } from 'next/font/google';
-
-//const montserrat = Outfit({ subsets: ['latin'] });
 
 const HeroSection = () => {
   return (
