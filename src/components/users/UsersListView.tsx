@@ -14,6 +14,7 @@ import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import { T_UserFields } from '@hooks/useUser/types';
 import CreateUserView from './create-user-view';
 import EditUserView from './edit-unit-view';
+import ContentPlaceholder from '@components/atom/ContentPlaceholder/ContentPlaceholder';
 
 const UsersListView = observer(() => {
   const {
@@ -45,7 +46,9 @@ const UsersListView = observer(() => {
     <>
       <AdminPageTitle title={i18next.t('users')} />
 
-      <TextInput
+      <ContentPlaceholder message="User management has not been implemented yet" />
+
+      {/* <TextInput
         onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
@@ -66,7 +69,7 @@ const UsersListView = observer(() => {
         createNew={() => setCreatingUser(true)}
         editItem={(id) => setEdittingUserWithId(id)}
         columns={userTableColumns}
-      />
+      /> */}
       {/*<Modal dismissible show={creatingUser} onClose={() => setCreatingUser(false)} popup>
         <Modal.Header />
         <Modal.Body>
