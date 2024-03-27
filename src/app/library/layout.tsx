@@ -87,7 +87,7 @@ function LibrarySidebar({
           sidebarIsCollapsed ? 'hidden' : ''
         }`}
       >
-        <Sidebar className={`${styles.sidebar} w-full custom-scrollbar overflow-y-scroll h-[calc(100vh_-_62px)]`}>
+        <Sidebar className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)]`}>
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Collapse icon={BsFire} label="Trending">
