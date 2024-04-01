@@ -87,7 +87,9 @@ function LibrarySidebar({
           sidebarIsCollapsed ? 'hidden' : ''
         }`}
       >
-        <Sidebar className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)]`}>
+        <Sidebar
+          className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)] bg-white dark:bg-gray-800`}
+        >
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Collapse icon={BsFire} label="Trending">
@@ -120,7 +122,7 @@ function LibrarySidebar({
         <div
           onClick={toggleSidebar}
           onKeyUp={(key) => key.code === 'Escape' && toggleSidebar()}
-          className="fixed cursor-pointer inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 lg:hidden"
+          className="fixed cursor-pointer inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:hidden"
         />
       )}
     </>
