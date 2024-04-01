@@ -1,14 +1,15 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
-import { Badge, Spinner } from 'flowbite-react';
+import { Badge } from 'flowbite-react';
 import { libraryTags } from '@components/layouts/library/tags';
 import { T_RawMediaContentFields } from 'types/media-content';
 import i18next from 'i18next';
 import { API_LINKS } from 'app/links';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
-import { CiFileOff } from 'react-icons/ci';
+import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
+import LibraryLoader from '@components/library/LibraryLoader';
 
 const fetchRandomMediaContent = async () => {
   const url = API_LINKS.FETCH_RANDOM_MEDIA_CONTENT;
@@ -70,25 +71,17 @@ const LibraryPage = () => {
         ))}
       </div>
       {mediaContent === null ? (
-        <div className="flex items-center justify-center h-[500px] w-full">
-          <Spinner size="xl" />
-        </div>
+        <LibraryLoader />
       ) : mediaContent === false || !(mediaContent instanceof Array) ? (
-        <div className="h-full flex flex-col items-center justify-center text-red-500">
-          <IoIosCloseCircleOutline className="text-6xl mb-3" />
-          <p className="text-lg">An error occured while fetching data</p>
-        </div>
+        <LibraryErrorMessage>An error occured while fetching data</LibraryErrorMessage>
       ) : mediaContent.length === 0 ? (
-        <div className="h-full flex flex-col items-center justify-center text-gray-500">
-          <CiFileOff className="text-6xl mb-3" />
-          <p className="text-lg">There is nothing here yet</p>
-        </div>
+        <EmptyContentIndicator>There is nothing here yet</EmptyContentIndicator>
       ) : (
         <div className="grid pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
           {mediaContent.map((item) => (
             <div style={{ padding: '8px 0' }} key={item._id} className="gutter-row px-2 h-full">
               <ContentCardView
-                url="#"
+                url={`/library/media/${item._id}`}
                 image={item.file_url || '/assets/images/no picture yet.svg'}
                 title={item.name}
                 description={item.description}
@@ -102,3 +95,12 @@ const LibraryPage = () => {
 };
 
 export default LibraryPage;
+
+function LibraryErrorMessage({ children }: { children: ReactNode | ReactNode[] }) {
+  return (
+    <div className="h-full min-h-[500px] w-full flex flex-col items-center justify-center text-red-500">
+      <IoIosCloseCircleOutline className="text-6xl mb-3" />
+      <p className="text-lg">{children}</p>
+    </div>
+  );
+}

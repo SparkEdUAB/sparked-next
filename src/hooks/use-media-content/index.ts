@@ -186,7 +186,6 @@ const useMediaContent = (form?: any) => {
     try {
       setLoaderStatus(true);
       const resp = await fetch(url, formData);
-      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -231,9 +230,10 @@ const useMediaContent = (form?: any) => {
         return null;
       }
     } catch (err: any) {
-      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
+    } finally {
+      setLoaderStatus(false);
     }
   };
 
