@@ -32,9 +32,6 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
   const { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
 
-  // const { selectedMediaContent } = MediaContentStore;
-  // const { fileUrl } = FileUploadStore;
-
   useEffect(() => {
     fetchSchools({});
     fetchPrograms({});
