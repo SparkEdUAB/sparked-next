@@ -89,7 +89,7 @@ const LibraryPage = () => {
             <div style={{ padding: '8px 0' }} key={item._id} className="gutter-row px-2 h-full">
               <ContentCardView
                 url="#"
-                image={'/assets/images/no picture yet.svg'}
+                image={item.file_url || '/assets/images/no picture yet.svg'}
                 title={item.name}
                 description={item.description}
               />
