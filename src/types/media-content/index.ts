@@ -56,7 +56,7 @@ export type T_RawMediaContentFields = {
   _id: string;
   name: string;
   description: string;
-  file_url: string;
+  file_url: string | null;
 
   created_at: string;
   updated_at: string;

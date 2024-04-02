@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
 import { T_CreateResourceFields, T_FetchTopic } from './types';
 import { T_RawMediaContentFields, T_MediaContentFields } from 'types/media-content';
-import FileUploadStore from '@state/mobx/fileUploadStore';
 import { T_React_key } from 'app/types';
 
 const useMediaContent = (form?: any) => {
@@ -22,20 +21,15 @@ const useMediaContent = (form?: any) => {
   const [tempMediaContent, setTempMediaContent] = useState<Array<T_MediaContentFields>>([]);
   const [targetMediaContent, setTargetMediaContent] = useState<T_MediaContentFields | null>(null);
   const [selectedMediaContentIds, setSelectedMediaContentIds] = useState<T_React_key[]>([]);
-  const { fileUrl } = FileUploadStore;
 
   useEffect(() => {
     UiStore.confirmDialogStatus && selectedMediaContentIds.length && deleteMediaContent();
   }, [UiStore.confirmDialogStatus]);
 
-  const createResource = async (
-    fields: T_CreateResourceFields,
-    optionalFileUrl?: string,
-    onSuccessfullyDone?: () => void,
-  ) => {
+  const createResource = async (fields: T_CreateResourceFields, fileUrl: string, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_MEDIA_CONTENT;
     const formData = {
-      body: JSON.stringify({ ...fields, fileUrl: fileUrl || optionalFileUrl }),
+      body: JSON.stringify({ ...fields, fileUrl: fileUrl, file_url: fileUrl }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -68,11 +62,7 @@ const useMediaContent = (form?: any) => {
     }
   };
 
-  const editMediaContent = async (
-    fields: T_MediaContentFields,
-    optionalFileUrl?: string,
-    onSuccessfullyDone?: () => void,
-  ) => {
+  const editMediaContent = async (fields: T_MediaContentFields, fileUrl?: string, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_MEDIA_CONTENT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -80,7 +70,8 @@ const useMediaContent = (form?: any) => {
         ...targetMediaContent,
         ...fields,
         mediaContentId: targetMediaContent?._id,
-        fileUrl: fileUrl || optionalFileUrl ? fileUrl || optionalFileUrl : targetMediaContent?.fileUrl,
+        fileUrl: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
+        file_url: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
       }),
       method: 'post',
       headers: {
@@ -148,7 +139,7 @@ const useMediaContent = (form?: any) => {
             key: i._id,
             _id: i._id,
             name: i.name,
-            fileUrl: i.file_url,
+            fileUrl: i.file_url || undefined,
             description: i.description,
             courseId: i.course._id,
             school: i.school,
@@ -195,7 +186,6 @@ const useMediaContent = (form?: any) => {
     try {
       setLoaderStatus(true);
       const resp = await fetch(url, formData);
-      setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -228,7 +218,7 @@ const useMediaContent = (form?: any) => {
           programName: mediaContent.program.name,
           unitName: mediaContent.unit.name,
           topicName: mediaContent.topic.name,
-          fileUrl: mediaContent.file_url,
+          fileUrl: mediaContent.file_url || undefined,
           file_url: mediaContent.file_url,
           updated_at: mediaContent.updated_at,
         };
@@ -240,9 +230,10 @@ const useMediaContent = (form?: any) => {
         return null;
       }
     } catch (err: any) {
-      setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
+    } finally {
+      setLoaderStatus(false);
     }
   };
 

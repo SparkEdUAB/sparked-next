@@ -1,5 +1,3 @@
-'use client';
-
 import WelcomePage from '@components/welcomePage';
 import React from 'react';
 

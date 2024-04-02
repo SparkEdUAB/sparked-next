@@ -1,6 +1,4 @@
 'use client';
-import { bookTitles } from '@components/layouts/library/book-titles';
-import AppLogo from '@components/logo';
 import { DarkThemeToggle, Navbar, Sidebar, TextInput } from 'flowbite-react';
 import Link from 'next/link';
 import { ReactNode, useState } from 'react';
@@ -10,16 +8,20 @@ import { HiSearch, HiX } from 'react-icons/hi';
 import { IoStar } from 'react-icons/io5';
 import { MdMenu } from 'react-icons/md';
 
+import styles from './Layout.module.css';
+import { bookTitles } from '@components/layouts/library/book-titles';
+import AppLogo from '@components/logo';
+
 export default function LibraryLayout({ children }: { children: ReactNode | ReactNode[] }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
   const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
 
   return (
-    <div>
+    <div className="h-[calc(100vh_-_62px)]">
       <LibraryNavbar toggleSidebar={toggleSidebar} sidebarIsCollapsed={sidebarIsCollapsed} />
-      <div className="md:grid md:grid-cols-[256px_calc(100%_-_256px)]">
+      <div className="md:grid md:grid-cols-[300px_calc(100%_-_300px)] h-[calc(100vh_-_62px)]">
         <LibrarySidebar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
-        <div className="p-2">{children}</div>
+        <div className="max-h-full overflow-y-hidden">{children}</div>
       </div>
     </div>
   );
@@ -81,11 +83,13 @@ function LibrarySidebar({
   return (
     <>
       <div
-        className={`fixed top-14 inset-0 z-50 h-full w-64 flex-none md:static md:block md:h-auto md:overflow-y-visible ${
+        className={`fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] flex-none md:sticky md:block h-[calc(100vh_-_62px)] overflow-y-clip ${
           sidebarIsCollapsed ? 'hidden' : ''
         }`}
       >
-        <Sidebar>
+        <Sidebar
+          className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)] bg-white dark:bg-gray-800`}
+        >
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Collapse icon={BsFire} label="Trending">
@@ -118,7 +122,7 @@ function LibrarySidebar({
         <div
           onClick={toggleSidebar}
           onKeyUp={(key) => key.code === 'Escape' && toggleSidebar()}
-          className="fixed cursor-pointer inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 lg:hidden"
+          className="fixed cursor-pointer inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:hidden"
         />
       )}
     </>

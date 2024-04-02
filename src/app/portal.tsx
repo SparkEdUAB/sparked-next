@@ -1,7 +1,5 @@
-"use client";
-
-import WelcomePage from "@components/welcomePage";
-import React from "react";
+import WelcomePage from '@components/welcomePage';
+import React from 'react';
 
 const Home: React.FC = (props) => {
   return <WelcomePage />;

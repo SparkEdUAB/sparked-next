@@ -46,7 +46,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
         rowSelection={rowSelection}
         toggleDeletionWarning={toggleDeletionWarning}
       />
-      <div className="w-full overflow-x-scroll rounded-lg drop-shadow-md">
+      <div className="w-full overflow-x-scroll rounded-lg drop-shadow-md custom-scrollbar">
         <Table>
           <Table.Head>
             <Table.HeadCell className="p-4 bg-gray-100">

@@ -1,23 +1,66 @@
 'use client';
 
-import React, { useState } from 'react';
-import LibraryLayout from '@components/layouts/library';
-import { bookTitles } from '@components/layouts/library/book-titles';
+import React, { ReactNode, useEffect, useState } from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
-import { Badge, Button, Label, Modal, Select } from 'flowbite-react';
+import { Badge } from 'flowbite-react';
 import { libraryTags } from '@components/layouts/library/tags';
-import { HiFilter } from 'react-icons/hi';
-import { RiFilter2Fill } from 'react-icons/ri';
-import { test_fetchRandomMediaContent } from 'app/_tests_/api/content';
+import { T_RawMediaContentFields } from 'types/media-content';
+import i18next from 'i18next';
+import { API_LINKS } from 'app/links';
+import { IoIosCloseCircleOutline } from 'react-icons/io';
+import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
+import LibraryLoader from '@components/library/LibraryLoader';
 
-const LibraryPage: React.FC = (props) => {
-  const [filtering, setFiltering] = useState(false);
+const fetchRandomMediaContent = async () => {
+  const url = API_LINKS.FETCH_RANDOM_MEDIA_CONTENT;
+  const requestOptions = {
+    params: JSON.stringify({
+      limit: 1000,
+    }),
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
 
-  test_fetchRandomMediaContent();
+  try {
+    const resp = await fetch(url, requestOptions);
+
+    console.log(resp);
+    console.log('resp.ok:', resp.ok);
+
+    if (!resp.ok) {
+      console.error(i18next.t('unknown_error'));
+      return false;
+    }
+
+    const responseData = await resp.json();
+    console.log('responseData.isError:', responseData.isError);
+    console.log(responseData);
+
+    if (responseData.isError) {
+      console.error(responseData.code);
+      return false;
+    }
+    console.log('fetchRandomMediaContent =>', responseData.mediaContent);
+
+    return responseData.mediaContent as T_RawMediaContentFields[];
+  } catch (err: any) {
+    console.error(err, `${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+    return false;
+  }
+};
+
+const LibraryPage = () => {
+  let [mediaContent, setMediaContent] = useState<T_RawMediaContentFields[] | null | false>(null);
+
+  useEffect(() => {
+    fetchRandomMediaContent().then(setMediaContent);
+  }, []);
 
   return (
-    <main>
-      <div className="overflow-x-scroll flex flex-row gap-2">
+    <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
+      <div className="overflow-x-scroll custom-scrollbar flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
         <Badge key={'All'} className="h-full" href="#">
           All
         </Badge>
@@ -27,44 +70,37 @@ const LibraryPage: React.FC = (props) => {
           </Badge>
         ))}
       </div>
-      <div className="grid py-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-        {new Array(20).fill('i').map((i, index) => (
-          <div style={{ padding: '8px 0' }} key={index} className="gutter-row px-2">
-            <ContentCardView title={bookTitles[index]} />
-          </div>
-        ))}
-      </div>
-      <FilteringModal filtering={filtering} setFiltering={setFiltering} />
+      {mediaContent === null ? (
+        <LibraryLoader />
+      ) : mediaContent === false || !(mediaContent instanceof Array) ? (
+        <LibraryErrorMessage>An error occured while fetching data</LibraryErrorMessage>
+      ) : mediaContent.length === 0 ? (
+        <EmptyContentIndicator>There is nothing here yet</EmptyContentIndicator>
+      ) : (
+        <div className="grid pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+          {mediaContent.map((item) => (
+            <div style={{ padding: '8px 0' }} key={item._id} className="gutter-row px-2 h-full">
+              <ContentCardView
+                url={`/library/media/${item._id}`}
+                image={item.file_url || '/assets/images/no picture yet.svg'}
+                title={item.name}
+                description={item.description}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </main>
   );
 };
 
 export default LibraryPage;
 
-function FilteringModal({
-  filtering,
-  setFiltering,
-}: {
-  filtering: boolean;
-  setFiltering: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+function LibraryErrorMessage({ children }: { children: ReactNode | ReactNode[] }) {
   return (
-    <Modal show={filtering} onClose={() => setFiltering(false)} dismissible position="center">
-      <Modal.Header>
-        <h1 className="text-3xl font-semibold text-gray-700 dark:text-gray-300">Filter</h1>
-      </Modal.Header>
-      <Modal.Body>
-        <table>
-          <tr>
-            <td>
-              <Label htmlFor="school" value="School:" />
-            </td>
-            <td>
-              <Select />
-            </td>
-          </tr>
-        </table>
-      </Modal.Body>
-    </Modal>
+    <div className="h-full min-h-[500px] w-full flex flex-col items-center justify-center text-red-500">
+      <IoIosCloseCircleOutline className="text-6xl mb-3" />
+      <p className="text-lg">{children}</p>
+    </div>
   );
 }

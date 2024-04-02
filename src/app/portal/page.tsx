@@ -1,7 +1,5 @@
-"use client";
-
-import PortalLayout from "@components/layouts/portalLayout";
-import React from "react";
+import PortalLayout from '@components/layouts/portalLayout';
+import React from 'react';
 
 const Home: React.FC = (props) => {
   return (

@@ -1,0 +1,4 @@
+.sidebar > div {
+  height: fit-content;
+  background-color: transparent;
+}
