@@ -35,8 +35,6 @@ const useFileUpload = () => {
         return false;
       }
 
-      message.success(i18next.t('file_uploaded'));
-
       const fileUrl: string = resp.data.url;
 
       console.log('fileUrl', fileUrl);

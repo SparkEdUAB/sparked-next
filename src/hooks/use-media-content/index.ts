@@ -26,10 +26,15 @@ const useMediaContent = (form?: any) => {
     UiStore.confirmDialogStatus && selectedMediaContentIds.length && deleteMediaContent();
   }, [UiStore.confirmDialogStatus]);
 
-  const createResource = async (fields: T_CreateResourceFields, fileUrl: string, onSuccessfullyDone?: () => void) => {
+  const createResource = async (
+    fields: T_CreateResourceFields,
+    fileUrl: string,
+    thumbnailUrl: string,
+    onSuccessfullyDone?: () => void,
+  ) => {
     const url = API_LINKS.CREATE_MEDIA_CONTENT;
     const formData = {
-      body: JSON.stringify({ ...fields, fileUrl: fileUrl, file_url: fileUrl }),
+      body: JSON.stringify({ ...fields, fileUrl: fileUrl, file_url: fileUrl, thumbnailUrl }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +67,12 @@ const useMediaContent = (form?: any) => {
     }
   };
 
-  const editMediaContent = async (fields: T_MediaContentFields, fileUrl?: string, onSuccessfullyDone?: () => void) => {
+  const editMediaContent = async (
+    fields: T_MediaContentFields,
+    fileUrl?: string,
+    thumbnailUrl?: string,
+    onSuccessfullyDone?: () => void,
+  ) => {
     const url = API_LINKS.EDIT_MEDIA_CONTENT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -72,6 +82,7 @@ const useMediaContent = (form?: any) => {
         mediaContentId: targetMediaContent?._id,
         fileUrl: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
         file_url: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
+        thumbnailUrl: thumbnailUrl ? thumbnailUrl : targetMediaContent?.thumbnailUrl,
       }),
       method: 'post',
       headers: {
@@ -140,6 +151,7 @@ const useMediaContent = (form?: any) => {
             _id: i._id,
             name: i.name,
             fileUrl: i.file_url || undefined,
+            thumbnailUrl: i.thumbnailUrl,
             description: i.description,
             courseId: i.course._id,
             school: i.school,
@@ -220,6 +232,7 @@ const useMediaContent = (form?: any) => {
           topicName: mediaContent.topic.name,
           fileUrl: mediaContent.file_url || undefined,
           file_url: mediaContent.file_url,
+          thumbnailUrl: mediaContent.thumbnailUrl,
           updated_at: mediaContent.updated_at,
         };
 

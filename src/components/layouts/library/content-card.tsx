@@ -1,6 +1,7 @@
 import { Card } from 'flowbite-react';
 import Link from 'next/link';
 import React from 'react';
+import { truncateText } from 'utils/helpers';
 
 const ContentDetailsCardView = ({
   image,
@@ -16,7 +17,7 @@ const ContentDetailsCardView = ({
   <Link href={url} className="h-full">
     <Card className="max-w-sm mx-2 my-1 dark:bg-gray-700 h-full" imgAlt={title} imgSrc={image}>
       <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{title}</h5>
-      <p className="font-normal text-gray-700 dark:text-gray-400">{description}</p>
+      <p className="font-normal text-gray-700 dark:text-gray-400">{truncateText(description, 80)}</p>
     </Card>
   </Link>
 );
