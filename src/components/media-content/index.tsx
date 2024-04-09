@@ -17,18 +17,18 @@ export const mediaContentTableColumns: T_ColumnData<T_MediaContentFields>[] = [
     key: 'name',
     render: (text) => <StyledTableLinkView>{text}</StyledTableLinkView>,
   },
-  {
-    title: 'School',
-    dataIndex: 'schoolName',
-    key: 'school',
-    render: (text) => <StyledTableLinkView>{text || i18next.t('not_linked')}</StyledTableLinkView>,
-  },
-  {
-    title: 'Program',
-    dataIndex: 'programName',
-    key: 'Program',
-    render: (text) => <StyledTableLinkView>{text || i18next.t('not_linked')}</StyledTableLinkView>,
-  },
+  // {
+  //   title: 'School',
+  //   dataIndex: 'schoolName',
+  //   key: 'school',
+  //   render: (text) => <StyledTableLinkView>{text || i18next.t('not_linked')}</StyledTableLinkView>,
+  // },
+  // {
+  //   title: 'Program',
+  //   dataIndex: 'programName',
+  //   key: 'Program',
+  //   render: (text) => <StyledTableLinkView>{text || i18next.t('not_linked')}</StyledTableLinkView>,
+  // },
   {
     title: 'Course',
     dataIndex: 'courseName',

@@ -59,13 +59,17 @@ export default function MediaContentPage({ params }: { params: { id: string } })
           </a>
           <div>
             <h1 className="my-6 font-bold text-3xl">{targetMediaContent.name}</h1>
-            <p className="text-lg">{targetMediaContent.description}</p>
+            <p className="text-lg whitespace-pre-wrap">{targetMediaContent.description}</p>
             <div className="my-6 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
-              <IconWithLabel icon={<FaSchool className="text-2xl" />} label={targetMediaContent.schoolName} />
-              <IconWithLabel icon={<IoMdSchool className="text-2xl" />} label={targetMediaContent.programName} />
-              <IconWithLabel icon={<ImBooks className="text-2xl" />} label={targetMediaContent.courseName} />
-              <IconWithLabel icon={<FaBook />} label={targetMediaContent.unitName} />
-              <IconWithLabel icon={<FaBookmark />} label={targetMediaContent.topicName} />
+              {/* <IconWithLabel icon={<FaSchool className="text-2xl" />} label={targetMediaContent.schoolName} />
+              <IconWithLabel icon={<IoMdSchool className="text-2xl" />} label={targetMediaContent.programName} /> */}
+              <IconWithLabel
+                title="Course"
+                icon={<ImBooks className="text-2xl" />}
+                label={targetMediaContent.courseName}
+              />
+              <IconWithLabel title="Unit" icon={<FaBook />} label={targetMediaContent.unitName} />
+              <IconWithLabel title="Topic" icon={<FaBookmark />} label={targetMediaContent.topicName} />
             </div>
           </div>
         </div>
@@ -74,11 +78,11 @@ export default function MediaContentPage({ params }: { params: { id: string } })
   );
 }
 
-function IconWithLabel({ icon, label }: { label: string; icon: ReactNode }) {
-  return (
-    <div className="flex flex-row items-center gap-2">
+function IconWithLabel({ icon, label, title }: { label?: string; icon: ReactNode; title: string }) {
+  return label ? (
+    <div className="flex flex-row items-center gap-2" title={title}>
       {icon}
       {label}
     </div>
-  );
+  ) : null;
 }
