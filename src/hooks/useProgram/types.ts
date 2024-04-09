@@ -13,11 +13,14 @@ export type T_ProgramFields = {
   key: string;
   _id: string;
   name: string;
+  description: string;
+
   schoolName: string | undefined;
   schoolId: string | undefined;
-  description: string;
-  created_by: string;
+
+  created_by?: string;
   created_at: string;
+
   user?: {
     name: string;
     email: string;
@@ -35,13 +38,15 @@ export type T_RawProgramFields = {
   _id: string;
   name: string;
   description: string;
+
   created_at: string;
   updated_at: string;
-  user: {
+
+  user?: {
     _id: string;
     email: string;
   };
-  school: {
+  school?: {
     _id: string;
     name: string;
   };

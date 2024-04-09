@@ -18,15 +18,15 @@ export type T_UnitFields = {
   name: string;
   description: string;
 
-  schoolId: string;
-  programId: string;
-  courseId: string;
+  schoolId?: string;
+  programId?: string;
+  courseId?: string;
 
-  schoolName: string;
-  programName: string;
-  courseName: string;
+  schoolName?: string;
+  programName?: string;
+  courseName?: string;
 
-  created_by: string;
+  created_by?: string;
   created_at: string;
 
   user?: {
@@ -58,19 +58,19 @@ export type T_RawUnitFields = {
   created_at: string;
   updated_at: string;
 
-  user: {
+  user?: {
     _id: string;
     email: string;
   };
-  school: {
+  school?: {
     _id: string;
     name: string;
   };
-  program: {
+  program?: {
     _id: string;
     name: string;
   };
-  course: {
+  course?: {
     _id: string;
     name: string;
   };

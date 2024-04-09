@@ -15,11 +15,11 @@ export type T_MediaContentFields = {
   unitId?: string;
   topicId?: string;
 
-  schoolName: string;
-  programName: string;
-  courseName: string;
-  unitName: string;
-  topicName: string;
+  schoolName?: string;
+  programName?: string;
+  courseName?: string;
+  unitName?: string;
+  topicName?: string;
 
   created_by?: string;
   created_at?: string;
@@ -63,27 +63,27 @@ export type T_RawMediaContentFields = {
   created_at: string;
   updated_at: string;
 
-  user: {
+  user?: {
     _id: string;
     email: string;
   };
-  school: {
+  school?: {
     _id: string;
     name: string;
   };
-  program: {
+  program?: {
     _id: string;
     name: string;
   };
-  course: {
+  course?: {
     _id: string;
     name: string;
   };
-  unit: {
+  unit?: {
     _id: string;
     name: string;
   };
-  topic: {
+  topic?: {
     _id: string;
     name: string;
   };
