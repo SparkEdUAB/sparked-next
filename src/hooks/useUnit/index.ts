@@ -133,7 +133,7 @@ const useUnit = (form?: FormInstance) => {
 
         schoolId: i.school?._id,
         programId: i.program?._id,
-        courseId: i.course._id,
+        courseId: i.course?._id,
 
         schoolName: i.school?.name,
         programName: i.program?.name,
@@ -153,6 +153,8 @@ const useUnit = (form?: FormInstance) => {
       return _units;
     } catch (err: any) {
       setLoaderStatus(false);
+      console.log(err);
+      console.error(err);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }

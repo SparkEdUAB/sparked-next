@@ -14,15 +14,17 @@ export type T_FetchCourses = {
  */
 export type T_RawCourseFields = {
   key: string;
-  name: string;
   _id: string;
-  created_by: string;
+  name: string;
   description: string;
+
+  created_by: string;
+  created_at: string;
+
   schoolId: string;
   programId: string;
 
-  created_at: string;
-  user: {
+  user?: {
     name: string;
     email: string;
   };
@@ -35,22 +37,27 @@ export type T_RawCourseFields = {
     _id: string;
   };
 };
+
 export type T_CourseFields = {
   index: number;
   key: string;
   _id: string;
   name: string;
   description: string;
+
   school:
     | {
         name: string;
         _id: string;
       }
     | undefined;
+
   schoolId: string | undefined;
+  programId: string | undefined;
+
   schoolName: string | undefined;
   programName: string | undefined;
-  programId: string | undefined;
-  created_by: string;
+
+  created_by?: string;
   created_at: string;
 };

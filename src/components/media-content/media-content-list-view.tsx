@@ -73,7 +73,7 @@ const MediaContentListView: React.FC = observer(() => {
       />
       <Modal dismissible show={creatingResource} onClose={() => setCreatingResource(false)} popup>
         <Modal.Header />
-        <Modal.Body>
+        <Modal.Body className="custom-scrollbar">
           <CreateMediaContentView
             onSuccessfullyDone={() => {
               fetchMediaContent({});
@@ -84,7 +84,7 @@ const MediaContentListView: React.FC = observer(() => {
       </Modal>
       <Modal dismissible show={!!edittingResourceWithId} onClose={() => setEdittingResourceWithId(null)} popup>
         <Modal.Header />
-        <Modal.Body>
+        <Modal.Body className="custom-scrollbar">
           {edittingResourceWithId ? (
             <EditMediaContentView
               resourceId={edittingResourceWithId}

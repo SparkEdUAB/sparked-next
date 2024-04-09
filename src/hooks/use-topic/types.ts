@@ -26,6 +26,7 @@ export type T_RawTopicFields = {
   unitId: string;
 
   created_at: string;
+
   user?: {
     name: string;
     email: string;
@@ -42,7 +43,7 @@ export type T_RawTopicFields = {
     name: string;
     _id: string;
   };
-  unit: {
+  unit?: {
     name: string;
     _id: string;
   };
@@ -53,19 +54,23 @@ export type T_TopicFields = {
   key: string;
   _id: string;
   name: string;
+  description: string;
+
   school?: {
     name: string;
     _id: string;
   };
+
   schoolId: string | undefined;
   unitId: string | undefined;
-  description: string;
-  schoolName: string | undefined;
   programId: string | undefined;
-  programName: string | undefined;
   courseId: string | undefined;
+
+  schoolName: string | undefined;
+  programName: string | undefined;
   courseName: string | undefined;
-  unitName: string;
+  unitName: string | undefined;
+
   created_by: string | undefined;
   created_at: string;
 };

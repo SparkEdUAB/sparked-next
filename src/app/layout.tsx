@@ -24,7 +24,7 @@ const RootLayout = ({ children, pageProps }: I_RootLayoutProps) => {
       <head>
         <ThemeModeScript />
       </head>
-      <body className={`${inter.className} dark:bg-gray-800 dark:text-white`}>
+      <body className={`${inter.className} custom-scrollbar dark:bg-gray-800 dark:text-white`}>
         <AppProviders session={pageProps?.session}>{children}</AppProviders>
       </body>
     </html>

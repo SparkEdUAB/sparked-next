@@ -10,6 +10,7 @@ import { API_LINKS } from 'app/links';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
 import LibraryLoader from '@components/library/LibraryLoader';
+import { determineFileType } from 'utils/helpers';
 
 const fetchRandomMediaContent = async () => {
   const url = API_LINKS.FETCH_RANDOM_MEDIA_CONTENT;
@@ -82,7 +83,12 @@ const LibraryPage = () => {
             <div style={{ padding: '8px 0' }} key={item._id} className="gutter-row px-2 h-full">
               <ContentCardView
                 url={`/library/media/${item._id}`}
-                image={item.thumbnailUrl || '/assets/images/no picture yet.svg'}
+                image={
+                  item.thumbnailUrl ||
+                  (item.file_url && determineFileType(item.file_url) === 'image'
+                    ? item.file_url
+                    : '/assets/images/no picture yet.svg')
+                }
                 title={item.name}
                 description={item.description}
               />

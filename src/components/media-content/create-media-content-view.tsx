@@ -30,15 +30,15 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
 
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
+  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
   const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
   const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
   const { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
 
   useEffect(() => {
-    fetchSchools({});
-    fetchPrograms({});
+    // fetchSchools({});
+    // fetchPrograms({});
     fetchCourses({});
     fetchUnits({});
     fetchTopics({});
@@ -50,8 +50,8 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
     const keys = [
       MEDIA_CONTENT_FORM_FIELDS.name.key,
       MEDIA_CONTENT_FORM_FIELDS.description.key,
-      MEDIA_CONTENT_FORM_FIELDS.school.key,
-      MEDIA_CONTENT_FORM_FIELDS.program.key,
+      // MEDIA_CONTENT_FORM_FIELDS.school.key,
+      // MEDIA_CONTENT_FORM_FIELDS.program.key,
       MEDIA_CONTENT_FORM_FIELDS.course.key,
       MEDIA_CONTENT_FORM_FIELDS.unit.key,
       MEDIA_CONTENT_FORM_FIELDS.topic.key,
@@ -115,7 +115,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           rows={4}
         />
 
-        <AdminFormSelector
+        {/* <AdminFormSelector
           loadingItems={loadingSchools}
           disabled={isLoading || loadingSchools}
           options={schools}
@@ -129,7 +129,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           options={programs}
           label={MEDIA_CONTENT_FORM_FIELDS.program.label}
           name={MEDIA_CONTENT_FORM_FIELDS.program.key}
-        />
+        /> */}
 
         <AdminFormSelector
           loadingItems={loadingCourses}

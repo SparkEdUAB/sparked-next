@@ -200,7 +200,7 @@ const useTopic = (form?: any) => {
           schoolName: topic.school?.name,
           programName: topic.program?.name,
           courseName: topic.course?.name,
-          unitName: topic.unit.name,
+          unitName: topic.unit?.name,
           created_by: topic.created_by,
           created_at: topic.created_at,
         };

@@ -19,6 +19,7 @@ import useFileUpload from '@hooks/use-file-upload';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { FileUploadSection } from './FileUploadSection';
+import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
 
 const EditMediaContentView = ({
   resourceId,
@@ -36,8 +37,8 @@ const EditMediaContentView = ({
 
   const { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
   const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
+  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
   const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
 
   const searchParams = useSearchParams();
@@ -48,8 +49,8 @@ const EditMediaContentView = ({
       withMetaData: true,
     });
 
-    fetchPrograms({});
-    fetchSchools({});
+    // fetchPrograms({});
+    // fetchSchools({});
     fetchCourses({});
     fetchUnits({});
     fetchTopics({});
@@ -61,8 +62,8 @@ const EditMediaContentView = ({
     const keys = [
       MEDIA_CONTENT_FORM_FIELDS.name.key,
       MEDIA_CONTENT_FORM_FIELDS.description.key,
-      MEDIA_CONTENT_FORM_FIELDS.school.key,
-      MEDIA_CONTENT_FORM_FIELDS.program.key,
+      // MEDIA_CONTENT_FORM_FIELDS.school.key,
+      // MEDIA_CONTENT_FORM_FIELDS.program.key,
       MEDIA_CONTENT_FORM_FIELDS.course.key,
       MEDIA_CONTENT_FORM_FIELDS.unit.key,
       MEDIA_CONTENT_FORM_FIELDS.topic.key,
@@ -106,15 +107,16 @@ const EditMediaContentView = ({
             required
           />
 
-          <AdminFormInput
+          <AdminFormTextarea
             disabled={isLoading}
             name={MEDIA_CONTENT_FORM_FIELDS.description.key}
             defaultValue={targetMediaContent.description}
             label={MEDIA_CONTENT_FORM_FIELDS.description.label}
             required
+            rows={4}
           />
 
-          <AdminFormSelector
+          {/* <AdminFormSelector
             loadingItems={loadingSchools}
             disabled={isLoading || loadingSchools}
             options={schools}
@@ -130,7 +132,7 @@ const EditMediaContentView = ({
             label={MEDIA_CONTENT_FORM_FIELDS.program.label}
             name={MEDIA_CONTENT_FORM_FIELDS.program.key}
             defaultValue={targetMediaContent.programId}
-          />
+          /> */}
 
           <AdminFormSelector
             loadingItems={loadingCourses}
