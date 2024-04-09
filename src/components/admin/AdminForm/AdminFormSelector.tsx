@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
+import { RedAsterisk } from '@components/atom';
 import { Label, Select, Spinner } from 'flowbite-react';
 import { useState } from 'react';
 
@@ -35,7 +36,7 @@ export function AdminFormSelector({
     <div>
       <div className="mb-2 block">
         <Label htmlFor={name}>
-          {label} {required ? <span className="text-red-500">*</span> : undefined}
+          {label} {required ? <RedAsterisk /> : undefined}
         </Label>
       </div>
       {

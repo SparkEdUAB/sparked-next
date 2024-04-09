@@ -8,7 +8,7 @@ import useCourse from '@hooks/useCourse';
 import useProgram from '@hooks/useProgram';
 import useSchool from '@hooks/useSchool';
 import useUnit from '@hooks/useUnit';
-import { Button, FileInput, Label, Spinner } from 'flowbite-react';
+import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
 import { FormEventHandler, useEffect, useState } from 'react';
@@ -19,11 +19,15 @@ import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import useFileUpload from '@hooks/use-file-upload';
 import { message } from 'antd';
+import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
+import { FileUploadSection } from './FileUploadSection';
 
 const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createResource, isLoading: loadingResource } = useMediaContent();
   const { uploadFile } = useFileUpload();
 
+  const [file, setFile] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
 
   const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
@@ -55,23 +59,26 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
 
     let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
 
-    const form = e.target as HTMLFormElement;
-    const files = (form.elements.namedItem('file') as HTMLInputElement).files;
-
-    if (!files) {
+    if (!file || !thumbnail) {
       return message.error(i18next.t('no_file'));
     }
 
     try {
       setUploadingFile(true);
-      let fileUrl = await uploadFile(files[0]);
 
+      let fileUrl = await uploadFile(file);
       if (!fileUrl) {
         setUploadingFile(false);
         return message.error(i18next.t('failed_to_upload'));
       }
 
-      createResource(result, fileUrl, onSuccessfullyDone);
+      let thumbnailUrl = await uploadFile(thumbnail);
+      if (!thumbnailUrl) {
+        setUploadingFile(false);
+        return message.error(i18next.t('failed_to_upload'));
+      }
+
+      createResource(result, fileUrl, thumbnailUrl, onSuccessfullyDone);
     } finally {
       setUploadingFile(false);
     }
@@ -84,6 +91,15 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
       <AdminPageTitle title={i18next.t('create_resource')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
+        <FileUploadSection
+          isLoading={isLoading}
+          file={file}
+          setFile={setFile}
+          thumbnail={thumbnail}
+          setThumbnail={setThumbnail}
+          required
+        />
+
         <AdminFormInput
           disabled={isLoading}
           name={MEDIA_CONTENT_FORM_FIELDS.name.key}
@@ -91,11 +107,12 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           required
         />
 
-        <AdminFormInput
+        <AdminFormTextarea
           disabled={isLoading}
           name={MEDIA_CONTENT_FORM_FIELDS.description.key}
           label={MEDIA_CONTENT_FORM_FIELDS.description.label}
           required
+          rows={4}
         />
 
         <AdminFormSelector
@@ -137,13 +154,6 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           label={MEDIA_CONTENT_FORM_FIELDS.topic.label}
           name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
         />
-
-        <div id="fileUpload" className="w-full">
-          <div className="mb-2 block">
-            <Label htmlFor="file" value={i18next.t('upload_file')} />
-          </div>
-          <FileInput id="file" required name="file" disabled={isLoading} />
-        </div>
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
           {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}

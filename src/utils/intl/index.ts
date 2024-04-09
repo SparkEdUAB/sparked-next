@@ -61,6 +61,7 @@ i18next.init({
 
         submit: 'Submit',
         upload_file: 'Upload File',
+        upload_thumbnail: 'Upload Thumbnail',
 
         users: 'Users',
         units: 'Units',

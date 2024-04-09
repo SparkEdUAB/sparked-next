@@ -1,13 +1,14 @@
 'use client';
 
+import PdfViewer from '@components/layouts/library/PdfViewer/PdfViewer';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
 import LibraryLoader from '@components/library/LibraryLoader';
 import useMediaContent from '@hooks/use-media-content';
-import { Button } from 'flowbite-react';
 import { ReactNode, useEffect } from 'react';
 import { FaBook, FaBookmark, FaSchool } from 'react-icons/fa';
 import { ImBooks } from 'react-icons/im';
-import { IoMdDownload, IoMdSchool } from 'react-icons/io';
+import { IoIosCloseCircleOutline, IoMdDownload, IoMdSchool } from 'react-icons/io';
+import { determineFileType } from 'utils/helpers';
 
 export default function MediaContentPage({ params }: { params: { id: string } }) {
   let { fetchMediaContentById, isLoading, targetMediaContent } = useMediaContent();
@@ -15,6 +16,8 @@ export default function MediaContentPage({ params }: { params: { id: string } })
   useEffect(() => {
     fetchMediaContentById({ mediaContentId: params.id, withMetaData: true });
   }, []);
+
+  const fileType = determineFileType(targetMediaContent?.fileUrl || '');
 
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] py-6 px-4">
@@ -27,7 +30,24 @@ export default function MediaContentPage({ params }: { params: { id: string } })
       ) : (
         <div>
           <div>
-            <img className="max-h-[500px] max-w-full" src={targetMediaContent.fileUrl} alt={targetMediaContent.name} />
+            {!targetMediaContent.fileUrl ? (
+              <div className="w-full flex flex-col items-center justify-center text-red-500 p-10">
+                <IoIosCloseCircleOutline className="text-6xl mb-3" />
+                <p className="text-lg">
+                  The <code>fileUrl</code> property is <code>null</code>
+                </p>
+              </div>
+            ) : fileType === 'image' ? (
+              <img
+                src={targetMediaContent.fileUrl}
+                alt={targetMediaContent.name}
+                className="max-h-[500px] max-w-full"
+              />
+            ) : fileType === 'video' ? (
+              <video src={targetMediaContent.fileUrl} className="max-h-[500px] max-w-full" controls></video>
+            ) : fileType === 'pdf' ? (
+              <PdfViewer file={targetMediaContent.fileUrl} />
+            ) : null}
           </div>
           <a
             className="mt-6 group inline-flex items-center justify-center px-4 py-2 text-center font-medium relative focus:z-10 focus:outline-none text-white bg-cyan-700 border border-transparent enabled:hover:bg-cyan-800 focus:ring-cyan-300 dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700 dark:focus:ring-cyan-800 rounded-lg focus:ring-2"

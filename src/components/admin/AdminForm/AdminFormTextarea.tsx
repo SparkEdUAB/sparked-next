@@ -1,19 +1,21 @@
 'use client';
 import { RedAsterisk } from '@components/atom';
-import { Label, TextInput } from 'flowbite-react';
+import { Label, Textarea } from 'flowbite-react';
 
-export function AdminFormInput({
+export function AdminFormTextarea({
   disabled,
   name,
   label,
   defaultValue,
   required,
+  rows,
 }: {
   disabled: boolean;
   name: string;
   label: string;
   defaultValue?: string;
   required?: boolean;
+  rows?: number;
 }) {
   console.log(arguments);
   return (
@@ -23,13 +25,14 @@ export function AdminFormInput({
           {label} {required ? <RedAsterisk /> : undefined}
         </Label>
       </div>
-      <TextInput
+      <Textarea
         defaultValue={defaultValue}
         id={name}
         name={name}
         placeholder={label}
         disabled={disabled}
         required={required}
+        rows={rows}
       />
     </div>
   );

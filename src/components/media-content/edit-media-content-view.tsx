@@ -18,6 +18,7 @@ import { T_MediaContentFields } from 'types/media-content';
 import useFileUpload from '@hooks/use-file-upload';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
+import { FileUploadSection } from './FileUploadSection';
 
 const EditMediaContentView = ({
   resourceId,
@@ -26,14 +27,11 @@ const EditMediaContentView = ({
   resourceId?: string;
   onSuccessfullyDone?: () => void;
 }) => {
-  // const [form] = Form.useForm();
-
-  // const { fileUrl } = FileUploadStore;
-  // const { selectedMediaContent } = MediaContentStore;
-
   const { editMediaContent, fetchMediaContentById, targetMediaContent, isLoading: loadingResource } = useMediaContent();
   const { uploadFile } = useFileUpload();
 
+  const [file, setFile] = useState<File | null>(null);
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
 
   const { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
@@ -72,21 +70,12 @@ const EditMediaContentView = ({
 
     let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
 
-    const form = e.target as HTMLFormElement;
-    const files = (form.elements.namedItem('file') as HTMLInputElement).files;
+    setUploadingFile(true);
 
-    let fileUrl: string | false | undefined = undefined;
+    let fileUrl = file ? await uploadFile(file) : undefined;
+    let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
-    if (files?.[0]) {
-      try {
-        setUploadingFile(true);
-        fileUrl = await uploadFile(files[0]);
-      } finally {
-        setUploadingFile(false);
-      }
-    }
-
-    editMediaContent(result, fileUrl || undefined, onSuccessfullyDone);
+    editMediaContent(result, fileUrl || undefined, thumbnailUrl || undefined, onSuccessfullyDone);
   };
 
   const isLoading = uploadingFile || loadingResource;
@@ -101,6 +90,14 @@ const EditMediaContentView = ({
         </div>
       ) : (
         <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
+          <FileUploadSection
+            isLoading={isLoading}
+            file={file}
+            setFile={setFile}
+            thumbnail={thumbnail}
+            setThumbnail={setThumbnail}
+          />
+
           <AdminFormInput
             disabled={isLoading}
             name={MEDIA_CONTENT_FORM_FIELDS.name.key}
@@ -161,13 +158,6 @@ const EditMediaContentView = ({
             name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
             defaultValue={targetMediaContent.topicId}
           />
-
-          <div id="fileUpload" className="w-full">
-            <div className="mb-2 block">
-              <Label htmlFor="file" value={i18next.t('upload_file')} />
-            </div>
-            <FileInput id="file" name="file" disabled={isLoading} />
-          </div>
 
           <Button type="submit" className="mt-2" disabled={isLoading}>
             {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}

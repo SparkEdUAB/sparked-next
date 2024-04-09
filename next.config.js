@@ -3,6 +3,7 @@ const nextConfig = {
   env: {},
   webpack: (config) => {
     config.externals = [...config.externals, { realm: 'realm' }]; // required to make realm
+    config.resolve.alias.canvas = false;
     return config;
   },
   images: {

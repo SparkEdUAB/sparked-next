@@ -7,6 +7,7 @@ export type T_MediaContentFields = {
   name: string;
   description: string;
   fileUrl?: string;
+  thumbnailUrl?: string;
 
   schoolId?: string;
   programId?: string;
@@ -57,6 +58,7 @@ export type T_RawMediaContentFields = {
   name: string;
   description: string;
   file_url: string | null;
+  thumbnailUrl?: string;
 
   created_at: string;
   updated_at: string;
