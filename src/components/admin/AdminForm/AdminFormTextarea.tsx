@@ -17,7 +17,6 @@ export function AdminFormTextarea({
   required?: boolean;
   rows?: number;
 }) {
-  console.log(arguments);
   return (
     <div>
       <div className="mb-2 block">
@@ -26,6 +25,7 @@ export function AdminFormTextarea({
         </Label>
       </div>
       <Textarea
+        className="custom-scrollbar"
         defaultValue={defaultValue}
         id={name}
         name={name}
