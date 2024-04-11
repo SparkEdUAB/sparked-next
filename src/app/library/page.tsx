@@ -16,7 +16,7 @@ const fetchRandomMediaContent = async () => {
   const url = API_LINKS.FETCH_RANDOM_MEDIA_CONTENT;
   const requestOptions = {
     params: JSON.stringify({
-      limit: 1000,
+      limit: 20,
     }),
     method: 'get',
     headers: {

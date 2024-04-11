@@ -49,14 +49,14 @@ export default function MediaContentPage({ params }: { params: { id: string } })
               <PdfViewer file={targetMediaContent.fileUrl} />
             ) : null}
           </div>
-          <a
+          {/* <a
             className="mt-6 group inline-flex items-center justify-center px-4 py-2 text-center font-medium relative focus:z-10 focus:outline-none text-white bg-cyan-700 border border-transparent enabled:hover:bg-cyan-800 focus:ring-cyan-300 dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700 dark:focus:ring-cyan-800 rounded-lg focus:ring-2"
             href={targetMediaContent.fileUrl}
             download
             target="_blank"
           >
             <IoMdDownload className="mr-2 text-xl" /> Download
-          </a>
+          </a> */}
           <div>
             <h1 className="my-6 font-bold text-3xl">{targetMediaContent.name}</h1>
             <p className="text-lg whitespace-pre-wrap">{targetMediaContent.description}</p>
