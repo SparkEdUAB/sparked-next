@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
 import { T_CreateResourceFields, T_FetchTopic } from './types';
 import { T_RawMediaContentFields, T_MediaContentFields } from 'types/media-content';
-import { T_React_key } from 'app/types';
+import { T_React_key } from 'types/navigation';
 
 const useMediaContent = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();

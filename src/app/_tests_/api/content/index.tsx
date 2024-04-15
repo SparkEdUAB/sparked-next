@@ -27,7 +27,6 @@ export const test_fetchRandomMediaContent = async () => {
       console.error(responseData.code);
       return false;
     }
-    console.log('test_fetchRandomMediaContent =>', responseData.mediaContent);
 
     return responseData.mediaContent;
   } catch (err: any) {

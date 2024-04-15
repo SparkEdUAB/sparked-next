@@ -1,4 +1,4 @@
-import { T_MenuItemLink } from 'types/links';
+import { T_MenuItemLink } from 'types/navigation/links';
 import React from 'react';
 import {
   DashboardOutlined,

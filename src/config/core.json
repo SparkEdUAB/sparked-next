@@ -1,0 +1,8 @@
+{
+    "schoolName": "Inspired",
+    "tagline": "To Inspire",
+    "isUserAuth": false,
+    "isHighSchool": false,
+    "isConfigured": true,
+    "serverUrl": "http://localhost:3000"
+}

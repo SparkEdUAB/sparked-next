@@ -1,15 +1,12 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { Session } from "next-auth";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import MEDIA_CONTENT_PROCESS_CODES from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { Session } from 'next-auth';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import MEDIA_CONTENT_PROCESS_CODES from './processCodes';
 
-export default async function editMediaContent_(
-  request: Request,
-  session?: Session
-) {
+export default async function editMediaContent_(request: Request, session?: Session) {
   const schema = zfd.formData({
     mediaContentId: zfd.text(),
     name: zfd.text(),
@@ -23,17 +20,8 @@ export default async function editMediaContent_(
   });
   const formBody = await request.json();
 
-  const {
-    name,
-    description,
-    schoolId,
-    programId,
-    courseId,
-    unitId,
-    topicId,
-    fileUrl,
-    mediaContentId,
-  } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId, topicId, fileUrl, mediaContentId } =
+    schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -48,36 +36,32 @@ export default async function editMediaContent_(
       });
     }
 
+    const mediaContent = mediaContentId
+      ? await db.collection(dbCollections.media_content.name).findOne(
+          {
+            _id: new BSON.ObjectId(mediaContentId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
 
+    if (!mediaContent) {
+      const response = {
+        isError: true,
+        code: MEDIA_CONTENT_PROCESS_CODES.MEDIA_CONTENT_NOT_FOUND,
+      };
 
-
-        const mediaContent = mediaContentId
-          ? await db.collection(dbCollections.media_content.name).findOne(
-              {
-                _id: new BSON.ObjectId(mediaContentId),
-              },
-              { projection: { _id: 1 } }
-            )
-          : null;
-
-        if (!mediaContent) {
-          const response = {
-            isError: true,
-            code: MEDIA_CONTENT_PROCESS_CODES.MEDIA_CONTENT_NOT_FOUND,
-          };
-
-          return new Response(JSON.stringify(response), {
-            status: 200,
-          });
-        }
-
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
 
     const topic = topicId
       ? await db.collection(dbCollections.topics.name).findOne(
           {
             _id: new BSON.ObjectId(topicId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -97,7 +81,7 @@ export default async function editMediaContent_(
           {
             _id: new BSON.ObjectId(schoolId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -117,7 +101,7 @@ export default async function editMediaContent_(
           {
             _id: new BSON.ObjectId(programId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -137,7 +121,7 @@ export default async function editMediaContent_(
           {
             _id: new BSON.ObjectId(courseId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -156,7 +140,7 @@ export default async function editMediaContent_(
       {
         _id: new BSON.ObjectId(unitId),
       },
-      { projection: { _id: 1 } }
+      { projection: { _id: 1 } },
     );
 
     if (!unit) {
@@ -169,9 +153,9 @@ export default async function editMediaContent_(
         status: 200,
       });
     }
-        const query = {
-          _id: new BSON.ObjectId(mediaContentId),
-        };
+    const query = {
+      _id: new BSON.ObjectId(mediaContentId),
+    };
 
     const updateQuery = {
       name,
@@ -200,10 +184,7 @@ export default async function editMediaContent_(
       status: 200,
     });
   } catch (error) {
-
-
-    console.log("error", error);
-      const resp = {
+    const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
     };
