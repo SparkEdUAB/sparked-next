@@ -86,12 +86,12 @@ const useAuth = () => {
 
       const { user } = responseData;
 
-      const respd = await signIn('credentials', {
+      await signIn('credentials', {
         redirect: false,
         user: JSON.stringify(user),
       });
 
-      router.replace('/');
+      router.replace('/admin');
 
       message.success(i18next.t('logged_in'));
     } catch (err: any) {
