@@ -1,9 +1,6 @@
-'use client';
-
 import { Inter } from 'next/font/google';
 import './custom.css';
 import './globals.css';
-import 'utils/intl';
 import { Session } from 'next-auth';
 import { ReactNode } from 'react';
 import { ThemeModeScript } from 'flowbite-react';
