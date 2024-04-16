@@ -39,14 +39,18 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
     const keys = [
       TOPIC_FORM_FIELDS.name.key,
       TOPIC_FORM_FIELDS.description.key,
-      TOPIC_FORM_FIELDS.school.key,
-      TOPIC_FORM_FIELDS.program.key,
-      TOPIC_FORM_FIELDS.course.key,
+      // TOPIC_FORM_FIELDS.school.key,
+      // TOPIC_FORM_FIELDS.program.key,
+      // TOPIC_FORM_FIELDS.course.key,
       TOPIC_FORM_FIELDS.unit.key,
     ];
 
-    let result = extractValuesFromFormEvent<T_CreateTopicFields>(e, keys);
-    createTopic(result, onSuccessfullyDone);
+    let result = extractValuesFromFormEvent<Omit<T_CreateTopicFields, 'schoolId' | 'programId' | 'courseId'>>(e, keys);
+    let unit = units.find((unit) => unit._id === result.unitId);
+    createTopic(
+      { ...result, programId: unit?.programId, courseId: unit?.courseId, schoolId: unit?.schoolId },
+      onSuccessfullyDone,
+    );
   };
 
   // const [form] = Form.useForm();
@@ -70,7 +74,7 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
           required
         />
 
-        <AdminFormSelector
+        {/* <AdminFormSelector
           loadingItems={loadingSchools}
           disabled={isLoading || loadingSchools}
           options={schools}
@@ -92,7 +96,7 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
           options={courses}
           label={TOPIC_FORM_FIELDS.course.label}
           name={TOPIC_FORM_FIELDS.course.key}
-        />
+        /> */}
 
         <AdminFormSelector
           loadingItems={loadingUnits}

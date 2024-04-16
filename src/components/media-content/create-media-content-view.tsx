@@ -52,12 +52,16 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
       MEDIA_CONTENT_FORM_FIELDS.description.key,
       // MEDIA_CONTENT_FORM_FIELDS.school.key,
       // MEDIA_CONTENT_FORM_FIELDS.program.key,
-      MEDIA_CONTENT_FORM_FIELDS.course.key,
-      MEDIA_CONTENT_FORM_FIELDS.unit.key,
+      // MEDIA_CONTENT_FORM_FIELDS.course.key,
+      // MEDIA_CONTENT_FORM_FIELDS.unit.key,
       MEDIA_CONTENT_FORM_FIELDS.topic.key,
     ];
 
-    let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
+    let result = extractValuesFromFormEvent<
+      Omit<T_MediaContentFields, 'schoolId' | 'programId' | 'courseId' | 'unitId'>
+    >(e, keys);
+
+    let topic = topics.find((topic) => topic._id === result.topicId);
 
     if (!file || !thumbnail) {
       return message.error(i18next.t('no_file'));
@@ -78,7 +82,18 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
         return message.error(i18next.t('failed_to_upload'));
       }
 
-      createResource(result, fileUrl, thumbnailUrl, onSuccessfullyDone);
+      createResource(
+        {
+          ...result,
+          schoolId: topic?.schoolId,
+          programId: topic?.programId,
+          courseId: topic?.courseId,
+          unitId: topic?.unitId,
+        },
+        fileUrl,
+        thumbnailUrl,
+        onSuccessfullyDone,
+      );
     } finally {
       setUploadingFile(false);
     }
@@ -131,7 +146,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           name={MEDIA_CONTENT_FORM_FIELDS.program.key}
         /> */}
 
-        <AdminFormSelector
+        {/* <AdminFormSelector
           loadingItems={loadingCourses}
           disabled={isLoading || loadingCourses}
           options={courses}
@@ -145,7 +160,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           options={units}
           label={MEDIA_CONTENT_FORM_FIELDS.unit.label}
           name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
-        />
+        /> */}
 
         <AdminFormSelector
           loadingItems={loadingTopics}
