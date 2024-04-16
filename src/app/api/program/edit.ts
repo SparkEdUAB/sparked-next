@@ -1,10 +1,10 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { Session } from "next-auth";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import PROGRAM_PROCESS_CODES from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { Session } from 'next-auth';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import PROGRAM_PROCESS_CODES from './processCodes';
 
 export default async function editProgram_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -30,12 +30,11 @@ export default async function editProgram_(request: Request, session?: Session) 
       });
     }
 
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
     const program = await db.collection(dbCollections.programs.name).findOne({
-      name: { $regex: regexPattern},
+      name: { $regex: regexPattern },
       _id: { $ne: new BSON.ObjectId(_id) },
-      
     });
 
     if (program) {
@@ -49,7 +48,6 @@ export default async function editProgram_(request: Request, session?: Session) 
       });
     }
 
-
     const query = {
       _id: new BSON.ObjectId(_id),
     };
@@ -58,7 +56,7 @@ export default async function editProgram_(request: Request, session?: Session) 
       {
         _id: new BSON.ObjectId(schoolId),
       },
-      { projection: { _id: 1 } }
+      { projection: { _id: 1 } },
     );
 
     if (!school) {

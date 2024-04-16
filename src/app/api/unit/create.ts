@@ -1,10 +1,10 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { Session } from "next-auth";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { default as UNIT_PROCESS_CODES } from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { Session } from 'next-auth';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { default as UNIT_PROCESS_CODES } from './processCodes';
 
 export default async function createUnit_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -16,8 +16,7 @@ export default async function createUnit_(request: Request, session?: Session) {
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId } =
-    schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -31,7 +30,7 @@ export default async function createUnit_(request: Request, session?: Session) {
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
     const unit = await db.collection(dbCollections.units.name).findOne({
       name: { $regex: regexPattern },
@@ -53,7 +52,7 @@ export default async function createUnit_(request: Request, session?: Session) {
           {
             _id: new BSON.ObjectId(schoolId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -73,7 +72,7 @@ export default async function createUnit_(request: Request, session?: Session) {
           {
             _id: new BSON.ObjectId(programId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -93,7 +92,7 @@ export default async function createUnit_(request: Request, session?: Session) {
           {
             _id: new BSON.ObjectId(courseId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 

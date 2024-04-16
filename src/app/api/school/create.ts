@@ -1,18 +1,12 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import {
-  default as AUTH_PROCESS_CODES,
-  default as SCHOOL_PROCESS_CODES,
-} from "./processCodes";
-import { Session } from "next-auth";
-import { BSON } from "mongodb";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { default as AUTH_PROCESS_CODES, default as SCHOOL_PROCESS_CODES } from './processCodes';
+import { Session } from 'next-auth';
+import { BSON } from 'mongodb';
 
-export default async function createSchool_(
-  request: Request,
-  session?: Session
-) {
+export default async function createSchool_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
@@ -33,7 +27,7 @@ export default async function createSchool_(
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
     const school = await db.collection(dbCollections.schools.name).findOne({
       name: { $regex: regexPattern },
