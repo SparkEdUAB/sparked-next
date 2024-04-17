@@ -49,6 +49,9 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: yarn install
 
+      - name: Install rsync
+        run: sudo apt-get update && sudo apt-get install -y rsync
+
       - name: Create Local Build
         if: steps.tests.exit_code == 0
         id: build
