@@ -73,11 +73,12 @@ jobs:
       - name: Compress Files
         run: |
           yarn_cache_dir=$(yarn cache dir)
-          tar -czf archive.tar.gz --exclude='./node_modules' --exclude='./archive.tar.gz' ./
+          mkdir -p ../temp
+          tar -czf ../temp/archive.tar.gz --exclude='./node_modules' --exclude='./archive.tar.gz' ./
 
       - name: Transfer build to remote server
         run: |
-          scp -i ./deploy_key -o StrictHostKeyChecking=no archive.tar.gz ${{env.REMOTE}}:${{secrets.DESTINATION}}
+          scp -i ./deploy_key -o StrictHostKeyChecking=no ../temp/archive.tar.gz ${{env.REMOTE}}:${{secrets.DESTINATION}}
 
       - name: Clean Up
         run: |
@@ -87,10 +88,10 @@ jobs:
         run: |
           ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} '
             cd ${{secrets.DESTINATION}};
-            tar -xzvf archive.tar.gz;  # Decompress the archive
-            rm archive.tar.gz;         # Optional: Remove the archive after decompressing
-            yarn;                      # Install dependencies
-            pm2 restart 0;             # Restart the application
+            tar -xzvf ../temp/archive.tar.gz;  # Decompress the archive
+            rm ../temp/archive.tar.gz;         # Optional: Remove the archive after decompressing
+            yarn;                              # Install dependencies
+            pm2 restart 0;                     # Restart the application
           '
       # - name: Deploy Build
       #   if: steps.build.exit_code == 0
