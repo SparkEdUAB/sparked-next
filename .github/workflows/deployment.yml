@@ -3,7 +3,7 @@ name: Deployment
 "on":
   push:
     branches:
-      - main
+      - release
 env:
   REMOTE: ${{secrets.USERNAME}}@${{secrets.HOST}}
 
@@ -67,14 +67,30 @@ jobs:
 
       - name: Deploy Build
         if: steps.build.exit_code == 0
-        #run: find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
         run: |
-          echo "list of all your files"
-          ls -la
-          find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
           echo '${{secrets.DEPLOYKEY}}' > deploy_key
           chmod 600 ./deploy_key
-          find . -type d \( -path './node_modules'\) -prune -o -type f -print | xargs scp -i ./deploy_key -o StrictHostKeyChecking=no -r ${{env.REMOTE}}:${{secrets.DESTINATION}}
+          for file in ./deploy_key /node_modules/ '$(yarn cache dir)'; do
+            if [ ! -e "$file" ]; then
+              echo "File not found: $file"
+            else
+              rsync -chav --delete --exclude='$(yarn cache dir)' \
+                -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' \
+                --exclude /deploy_key \
+                --exclude /node_modules/ \
+                --exclude '$(yarn cache dir)' \
+                "$file" ${{env.REMOTE}}:${{secrets.DESTINATION}}
+            fi
+          done
+        
+        #run: find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
+        # run: |
+        #   echo "list of all your files"
+        #   ls -la
+        #   find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
+        #   echo '${{secrets.DEPLOYKEY}}' > deploy_key
+        #   chmod 600 ./deploy_key
+        #   find . -type d \( -path './node_modules'\) -prune -o -type f -print | xargs scp -i ./deploy_key -o StrictHostKeyChecking=no -r ${{env.REMOTE}}:${{secrets.DESTINATION}}
 
       - name: Restart Application
         run: ssh -i ./deploy_key -o 'StrictHostKeyChecking no' -v ${{env.REMOTE}} 'cd ${{secrets.DESTINATION}};yarn;pm2 restart 0'
