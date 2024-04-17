@@ -70,13 +70,11 @@ jobs:
         run: |
           echo '${{secrets.DEPLOYKEY}}' > deploy_key
           chmod 600 ./deploy_key
-          rsync -chav --delete --exclude prod.json --exclude /env/ --exclude='$(yarn cache dir)' \
+          rsync -chav --delete --exclude='$(yarn cache dir)' \
             -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' \
             --exclude /deploy_key \
             --exclude /.git/ \
             --exclude /node_modules/ \
-            --exclude /prod.json/ \
-            --exclude /env/ \
             --exclude '$(yarn cache dir)' \
             ./ ${{env.REMOTE}}:${{secrets.DESTINATION}}
 
