@@ -8,14 +8,15 @@ import AppProviders from 'providers/AppProviders';
 
 const inter = Inter({ subsets: ['latin'] });
 
-interface I_RootLayoutProps {
+const RootLayout = ({
+  children,
+  pageProps,
+}: {
   children: ReactNode;
   pageProps?: {
     session?: Session;
   };
-}
-
-const RootLayout = ({ children, pageProps }: I_RootLayoutProps) => {
+}) => {
   return (
     <html lang="en">
       <head>

@@ -1,23 +1,26 @@
 'use client';
 
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
-import { Badge } from 'flowbite-react';
-import { libraryTags } from '@components/layouts/library/tags';
 import { T_RawMediaContentFields } from 'types/media-content';
-import i18next from 'i18next';
 import { API_LINKS } from 'app/links';
-import { IoIosCloseCircleOutline } from 'react-icons/io';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
 import LibraryLoader from '@components/library/LibraryLoader';
 import { determineFileType } from 'utils/helpers';
+import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage';
+import useSearchFilters, { Filters } from '@hooks/useLibrary/useSearchFilters';
+import useTopic from '@hooks/use-topic';
+import LibraryBadge from '@components/library/LibraryBadge';
 
-const fetchRandomMediaContent = async () => {
-  const url = API_LINKS.FETCH_RANDOM_MEDIA_CONTENT;
-  const requestOptions = {
-    params: JSON.stringify({
-      limit: 20,
-    }),
+const fetchRandomMediaContent = async (filters: Filters) => {
+  const params = new URLSearchParams({
+    limit: '20',
+    ...filters,
+  }).toString();
+
+  const url = API_LINKS.FETCH_RANDOM_MEDIA_CONTENT + '?' + params;
+
+  const requestOptions: RequestInit = {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
@@ -27,27 +30,18 @@ const fetchRandomMediaContent = async () => {
   try {
     const resp = await fetch(url, requestOptions);
 
-    console.log(resp);
-    console.log('resp.ok:', resp.ok);
-
     if (!resp.ok) {
-      console.error(i18next.t('unknown_error'));
       return false;
     }
 
     const responseData = await resp.json();
-    console.log('responseData.isError:', responseData.isError);
-    console.log(responseData);
 
     if (responseData.isError) {
-      console.error(responseData.code);
       return false;
     }
-    console.log('fetchRandomMediaContent =>', responseData.mediaContent);
 
     return responseData.mediaContent as T_RawMediaContentFields[];
   } catch (err: any) {
-    console.error(err, `${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
     return false;
   }
 };
@@ -55,21 +49,42 @@ const fetchRandomMediaContent = async () => {
 const LibraryPage = () => {
   let [mediaContent, setMediaContent] = useState<T_RawMediaContentFields[] | null | false>(null);
 
+  let filters = useSearchFilters();
+
+  let { fetchTopics, topics } = useTopic();
+
   useEffect(() => {
-    fetchRandomMediaContent().then(setMediaContent);
-  }, []);
+    setMediaContent(null);
+    fetchRandomMediaContent(filters).then(setMediaContent);
+    fetchTopics({});
+  }, [filters]);
 
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
       <div className="overflow-x-scroll custom-scrollbar flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
-        <Badge key={'All'} className="h-full" href="#">
-          All
-        </Badge>
-        {libraryTags.map((tag) => (
-          <Badge key={tag} className="h-full" href="#" color="gray">
-            {tag}
-          </Badge>
-        ))}
+        <LibraryBadge
+          key={'Any topic'}
+          href={filters.unit_id ? '/library?unit_id=' + filters.unit_id : '/library'}
+          color={filters.topic_id ? 'gray' : undefined}
+        >
+          Any topic
+        </LibraryBadge>
+        {(filters.unit_id ? topics.filter((topic) => topic.unitId === filters.unit_id) : topics)
+          .sort((a, b) => (a._id === filters.topic_id ? -1 : b._id === filters.topic_id ? 1 : 0))
+          .map((topic) => (
+            <LibraryBadge
+              key={topic._id}
+              href={
+                '/library?' +
+                new URLSearchParams(
+                  filters.unit_id ? { unit_id: filters.unit_id, topic_id: topic._id } : { topic_id: topic._id },
+                ).toString()
+              }
+              color={filters.topic_id && filters.topic_id === topic._id ? undefined : 'gray'}
+            >
+              {topic.name}
+            </LibraryBadge>
+          ))}
       </div>
       {mediaContent === null ? (
         <LibraryLoader />

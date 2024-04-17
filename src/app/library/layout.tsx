@@ -1,16 +1,18 @@
 'use client';
+
 import { DarkThemeToggle, Navbar, Sidebar, TextInput } from 'flowbite-react';
 import Link from 'next/link';
-import { ReactNode, useState } from 'react';
-import { BiSolidLike } from 'react-icons/bi';
-import { BsFire } from 'react-icons/bs';
+import { ReactNode, useEffect, useState } from 'react';
 import { HiSearch, HiX } from 'react-icons/hi';
-import { IoStar } from 'react-icons/io5';
 import { MdMenu } from 'react-icons/md';
 
 import styles from './Layout.module.css';
-import { bookTitles } from '@components/layouts/library/book-titles';
 import AppLogo from '@components/logo';
+import { extractValuesFromFormEvent } from 'utils/helpers';
+import useNavigation from '@hooks/useNavigation';
+import useCourse from '@hooks/useCourse';
+import useUnit from '@hooks/useUnit';
+import LibraryLoader from '@components/library/LibraryLoader';
 
 export default function LibraryLayout({ children }: { children: ReactNode | ReactNode[] }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
@@ -35,6 +37,7 @@ function LibraryNavbar({
   sidebarIsCollapsed: boolean;
 }) {
   let [searching, setSearching] = useState(false);
+  let { router } = useNavigation();
 
   return (
     <Navbar fluid rounded className="sticky top-0 z-[60]">
@@ -50,17 +53,28 @@ function LibraryNavbar({
             <HiX aria-label="Close sidebar" className="h-6 w-6 cursor-pointer text-gray-500 dark:text-gray-400" />
           )}
         </button>
-        <Navbar.Brand as={Link} href="/">
+        <Navbar.Brand as={Link} href="/library">
           <AppLogo />
         </Navbar.Brand>
       </div>
       <div className={`flex flex-row gap-4 ${searching ? 'w-full md:w-fit' : ''}`}>
-        <TextInput
-          className={`w-full ${searching ? '' : 'hidden md:block'}`}
-          type="search"
-          placeholder="Search"
-          icon={HiSearch}
-        />
+        <form
+          action="/"
+          method="get"
+          onSubmit={(e) => {
+            e.preventDefault();
+            let { q } = extractValuesFromFormEvent<{ q: string }>(e, ['q']);
+            router.push(`/library/search?${new URLSearchParams({ q }).toString()}`);
+          }}
+        >
+          <TextInput
+            className={`w-full ${searching ? '' : 'hidden md:block'}`}
+            type="search"
+            placeholder="Search"
+            name="q"
+            icon={HiSearch}
+          />
+        </form>
         <button
           onClick={() => setSearching((value) => !value)}
           className="rounded-lg md:hidden p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
@@ -80,6 +94,14 @@ function LibrarySidebar({
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
 }) {
+  let { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
+  let { fetchUnits, units } = useUnit();
+
+  useEffect(() => {
+    fetchUnits({});
+    fetchCourses({});
+  }, []);
+
   return (
     <>
       <div
@@ -90,31 +112,30 @@ function LibrarySidebar({
         <Sidebar
           className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)] bg-white dark:bg-gray-800`}
         >
-          <Sidebar.Items>
-            <Sidebar.ItemGroup>
-              <Sidebar.Collapse icon={BsFire} label="Trending">
-                {bookTitles.slice(0, 6).map((title) => (
-                  <Sidebar.Item href="#" key={title}>
-                    {title}
-                  </Sidebar.Item>
+          {loadingCourses ? (
+            <LibraryLoader />
+          ) : (
+            <Sidebar.Items>
+              <Sidebar.ItemGroup>
+                {courses.map((course) => (
+                  <Sidebar.Collapse className={styles.collapsible} key={course._id} label={course.name}>
+                    {units
+                      .filter((unit) => unit.courseId === course._id)
+                      .map((unit) => (
+                        <Sidebar.Item
+                          className={styles.item}
+                          as={Link}
+                          href={`/library?unit_id=${unit._id}`}
+                          key={unit._id}
+                        >
+                          {unit.name}
+                        </Sidebar.Item>
+                      ))}
+                  </Sidebar.Collapse>
                 ))}
-              </Sidebar.Collapse>
-              <Sidebar.Collapse icon={BiSolidLike} label="Recommended">
-                {bookTitles.slice(0, 6).map((title) => (
-                  <Sidebar.Item href="#" key={title}>
-                    {title}
-                  </Sidebar.Item>
-                ))}
-              </Sidebar.Collapse>
-              <Sidebar.Collapse icon={IoStar} label="Favorites">
-                {bookTitles.slice(0, 6).map((title) => (
-                  <Sidebar.Item href="#" key={title}>
-                    {title}
-                  </Sidebar.Item>
-                ))}
-              </Sidebar.Collapse>
-            </Sidebar.ItemGroup>
-          </Sidebar.Items>
+              </Sidebar.ItemGroup>
+            </Sidebar.Items>
+          )}
         </Sidebar>
       </div>
 
