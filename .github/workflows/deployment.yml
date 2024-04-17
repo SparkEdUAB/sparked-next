@@ -98,7 +98,7 @@ jobs:
             tar -xzvf archive.tar.gz;  # Decompress the archive
             rm archive.tar.gz;         # Optional: Remove the archive after decompressing
             yarn;                              # Install dependencies
-            pm2 restart 0;                     # Restart the application
+            forever start -c "yarn start" ./;  # Restart the application
           '
       # - name: Deploy Build
       #   if: steps.build.exit_code == 0
@@ -117,5 +117,5 @@ jobs:
         #   chmod 600 ./deploy_key
         #   find . -type d \( -path './node_modules'\) -prune -o -type f -print | xargs scp -i ./deploy_key -o StrictHostKeyChecking=no -r ${{env.REMOTE}}:${{secrets.DESTINATION}}
 
-      - name: Restart Application
-        run: ssh -i ./deploy_key -o 'StrictHostKeyChecking no' -v ${{env.REMOTE}} 'cd ${{secrets.DESTINATION}};yarn;pm2 restart 0'
+      # - name: Restart Application
+      #   run: ssh -i ./deploy_key -o 'StrictHostKeyChecking no' -v ${{env.REMOTE}} 'cd ${{secrets.DESTINATION}};yarn;pm2 restart 0'
