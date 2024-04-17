@@ -10,7 +10,9 @@ env:
 jobs:
   deploy:
     if: "!contains(github.event.commits[0].message, '[skip-ci]')"
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
+    container: 
+      image: debian:latest
 
     steps:
       - name: Checkout
