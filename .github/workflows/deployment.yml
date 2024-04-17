@@ -70,13 +70,7 @@ jobs:
         run: |
           echo '${{secrets.DEPLOYKEY}}' > deploy_key
           chmod 600 ./deploy_key
-          rsync -chav --delete --exclude='$(yarn cache dir)' \
-            -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' \
-            --exclude /deploy_key \
-            --exclude /.git/ \
-            --exclude /node_modules/ \
-            --exclude '$(yarn cache dir)' \
-            ./ ${{env.REMOTE}}:${{secrets.DESTINATION}}
+          find . -type d \( -path './node_modules' -o -path './.git' -o -path './.next/cache' \) -prune -o -type f -print | xargs scp -i ./deploy_key -o StrictHostKeyChecking=no -r ${{env.REMOTE}}:${{secrets.DESTINATION}}
 
       - name: Restart Application
         run: ssh -i ./deploy_key -o 'StrictHostKeyChecking no' -v ${{env.REMOTE}} 'cd ${{secrets.DESTINATION}};yarn;pm2 restart 0'
