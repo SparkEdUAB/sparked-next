@@ -87,6 +87,8 @@ jobs:
 
       - name: Decompress and restart application
         run: |
+          echo '${{secrets.DEPLOYKEY}}' > deploy_key
+          chmod 400 ./deploy_key
           ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} '
             cd ${{secrets.DESTINATION}};
             tar -xzvf ../temp/archive.tar.gz;  # Decompress the archive
