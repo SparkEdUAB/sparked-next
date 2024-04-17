@@ -1,4 +1,4 @@
-import { TProcessCode } from "app/types";
+import { TProcessCode } from 'types/navigation';
 
 //1400 - 1599
 const UNIT_PROCESS_CODES: TProcessCode = {

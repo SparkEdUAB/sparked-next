@@ -46,6 +46,9 @@ export type T_link = {
   FETCH_RANDOM_MEDIA_CONTENT: string;
   //users
   CREATE_USER: string;
+
+  //config
+  READ_CONFIG_FILE: string;
 };
 
 export type TProcessCode = {

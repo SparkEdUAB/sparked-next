@@ -320,9 +320,7 @@ const useUsers = (form?: any) => {
     router.push(getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${selectedUserIds[0]}`);
   };
 
-  const onEmailPasswordChange: CheckboxProps['onChange'] = (e) => {
-    console.log(`checked = ${e.target.checked}`);
-  };
+  const onEmailPasswordChange: CheckboxProps['onChange'] = (e) => {};
 
   return {
     createUser,
