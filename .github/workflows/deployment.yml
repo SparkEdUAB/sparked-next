@@ -65,14 +65,41 @@ jobs:
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
           REALM_APP_ID: ${{ secrets.REALM_APP_ID }}
 
-      - name: Deploy Build
-        if: steps.build.exit_code == 0
+      - name: Prepare SSH Key
         run: |
           echo '${{secrets.DEPLOYKEY}}' > deploy_key
           chmod 600 ./deploy_key
-          rsync -chav --exclude='node_modules/' \
-            -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' \
-            ./ ${{env.REMOTE}}:${{secrets.DESTINATION}}        
+
+      - name: Compress Files
+        run: |
+          yarn_cache_dir=$(yarn cache dir)
+          tar -czvf archive.tar.gz --exclude='./node_modules' --exclude="./$yarn_cache_dir" --exclude='./deploy_key' ./
+
+      - name: Transfer build to remote server
+        run: |
+          scp -i ./deploy_key -o StrictHostKeyChecking=no archive.tar.gz ${{env.REMOTE}}:${{secrets.DESTINATION}}
+
+      - name: Clean Up
+        run: |
+          rm archive.tar.gz deploy_key
+
+      - name: Decompress and restart application
+        run: |
+          ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} '
+            cd ${{secrets.DESTINATION}};
+            tar -xzvf archive.tar.gz;  # Decompress the archive
+            rm archive.tar.gz;         # Optional: Remove the archive after decompressing
+            yarn;                      # Install dependencies
+            pm2 restart 0;             # Restart the application
+          '
+      # - name: Deploy Build
+      #   if: steps.build.exit_code == 0
+      #   run: |
+      #     echo '${{secrets.DEPLOYKEY}}' > deploy_key
+      #     chmod 600 ./deploy_key
+      #     rsync -chav --exclude='node_modules/' \
+      #       -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' \
+      #       ./ ${{env.REMOTE}}:${{secrets.DESTINATION}}        
         #run: find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
         # run: |
         #   echo "list of all your files"
