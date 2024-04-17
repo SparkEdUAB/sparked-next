@@ -50,7 +50,7 @@ jobs:
         run: yarn install
 
       - name: Install rsync
-        run: sudo apt-get update && sudo apt-get install -y rsync
+        run: apt-get update && apt-get install -y rsync
 
       - name: Create Local Build
         if: steps.tests.exit_code == 0
