@@ -50,7 +50,7 @@ jobs:
         run: yarn install
 
       - name: Install rsync
-        run: apt-get update && apt-get install -y rsync
+        run: apt-get update && apt-get install -y rsync && apt-get install -y openssh-client
 
       - name: Create Local Build
         if: steps.tests.exit_code == 0
@@ -74,7 +74,8 @@ jobs:
         run: |
           yarn_cache_dir=$(yarn cache dir)
           mkdir -p ../temp
-          tar -czf ../temp/archive.tar.gz --exclude='./node_modules' --exclude='./archive.tar.gz' ./
+          tar -czf ../temp/archive.tar.gz --exclude='./node_modules' ./
+          ls ../temp
 
       - name: Transfer build to remote server
         run: |
