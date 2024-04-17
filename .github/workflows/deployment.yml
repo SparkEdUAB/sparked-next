@@ -73,7 +73,7 @@ jobs:
       - name: Compress Files
         run: |
           yarn_cache_dir=$(yarn cache dir)
-          tar -czvf archive.tar.gz --exclude='./node_modules' --exclude="./$yarn_cache_dir" --exclude='./deploy_key' ./
+          tar -czf archive.tar.gz --exclude='./node_modules' ./
 
       - name: Transfer build to remote server
         run: |
