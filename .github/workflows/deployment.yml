@@ -83,7 +83,7 @@ jobs:
 
       - name: Clean Up
         run: |
-          rm archive.tar.gz deploy_key
+          rm ../temp/archive.tar.gz deploy_key
 
       - name: Decompress and restart application
         run: |
