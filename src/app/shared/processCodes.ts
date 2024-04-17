@@ -1,4 +1,4 @@
-import { TProcessCode } from 'app/types';
+import { TProcessCode } from 'types/navigation';
 
 //100 - 499
 const SPARKED_PROCESS_CODES = {

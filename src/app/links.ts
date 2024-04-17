@@ -1,4 +1,4 @@
-import { T_link } from './types';
+import { T_link } from '../types/navigation';
 
 export const API_LINKS: T_link = {
   SIGNUP: '/api/authentication/signup',
@@ -57,4 +57,5 @@ export const API_LINKS: T_link = {
 
   //   resources
   FILE_UPLOAD: '/api/file-upload/uploadFile',
+  READ_CONFIG_FILE: '/api/config/readConfigFile',
 };

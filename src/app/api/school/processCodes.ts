@@ -1,4 +1,4 @@
-import { TProcessCode } from 'app/types';
+import { TProcessCode } from 'types/navigation';
 
 //800 - 999
 const SCHOOL_PROCESS_CODES = {

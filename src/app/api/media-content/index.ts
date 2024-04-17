@@ -235,8 +235,6 @@ export async function findMediaContentByName_(request: Request) {
       status: 200,
     });
   } catch (error) {
-    console.log('error', error);
-
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -292,8 +290,6 @@ export async function fetchRandomMediaContent_(request: Request) {
       status: 200,
     });
   } catch (error) {
-    console.log('error', error);
-
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

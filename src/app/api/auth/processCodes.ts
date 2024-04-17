@@ -1,4 +1,4 @@
-import { TProcessCode } from 'app/types';
+import { TProcessCode } from 'types/navigation';
 
 //500 - 799
 const AUTH_PROCESS_CODES = {

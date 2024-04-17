@@ -1,0 +1,80 @@
+name: Deployment
+
+"on":
+  push:
+    branches:
+      - main
+env:
+  REMOTE: ${{secrets.USERNAME}}@${{secrets.HOST}}
+
+jobs:
+  deploy:
+    if: "!contains(github.event.commits[0].message, '[skip-ci]')"
+    runs-on: ubuntu-latest
+    container: 
+      image: debian:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install Yarn
+        run: npm install -g yarn
+
+      - name: Yarn Cache Directory
+        id: yarn-cache-dir-path
+        run: echo '::set-output name=dir::$(yarn cache dir)'
+
+      - name: Utilize Yarn Cache Directory
+        uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Utilize Next Cache Directory
+        uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn install
+
+      - name: Install rsync
+        run: apt-get update && apt-get install -y rsync
+
+      - name: Create Local Build
+        if: steps.tests.exit_code == 0
+        id: build
+        run: yarn build
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
+          MONGODB_DB: ${{ secrets.MONGODB_DB }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          REALM_APP_ID: ${{ secrets.REALM_APP_ID }}
+
+      - name: Deploy Build
+        if: steps.build.exit_code == 0
+        #run: find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
+        run: |
+          echo "list of all your files"
+          ls -la
+          find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
+          echo '${{secrets.DEPLOYKEY}}' > deploy_key
+          chmod 600 ./deploy_key
+          find . -type d \( -path './node_modules'\) -prune -o -type f -print | xargs scp -i ./deploy_key -o StrictHostKeyChecking=no -r ${{env.REMOTE}}:${{secrets.DESTINATION}}
+
+      - name: Restart Application
+        run: ssh -i ./deploy_key -o 'StrictHostKeyChecking no' -v ${{env.REMOTE}} 'cd ${{secrets.DESTINATION}};yarn;pm2 restart 0'

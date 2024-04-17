@@ -1,4 +1,4 @@
-import { TProcessCode } from 'app/types';
+import { TProcessCode } from 'types/navigation';
 
 // 2100 - 2599
 const MEDIA_CONTENT_PROCESS_CODES = {

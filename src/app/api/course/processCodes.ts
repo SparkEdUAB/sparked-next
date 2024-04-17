@@ -1,4 +1,4 @@
-import { TProcessCode } from 'app/types';
+import { TProcessCode } from 'types/navigation';
 
 //1200 - 1399
 const COURSE_PROCESS_CODES = {
