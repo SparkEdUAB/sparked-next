@@ -67,7 +67,11 @@ jobs:
 
       - name: Deploy Build
         if: steps.build.exit_code == 0
+        #run: find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
         run: |
+          echo "list of all your files"
+          ls -la
+          find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
           echo '${{secrets.DEPLOYKEY}}' > deploy_key
           chmod 600 ./deploy_key
           find . -type d \( -path './node_modules' -o -path './.git' -o -path './.next/cache' \) -prune -o -type f -print | xargs scp -i ./deploy_key -o StrictHostKeyChecking=no -r ${{env.REMOTE}}:${{secrets.DESTINATION}}
