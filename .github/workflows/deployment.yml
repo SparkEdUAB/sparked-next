@@ -70,19 +70,9 @@ jobs:
         run: |
           echo '${{secrets.DEPLOYKEY}}' > deploy_key
           chmod 600 ./deploy_key
-          for file in ./deploy_key /node_modules/ '$(yarn cache dir)'; do
-            if [ ! -e "$file" ]; then
-              echo "File not found: $file"
-            else
-              rsync -chav --delete --exclude='$(yarn cache dir)' \
-                -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' \
-                --exclude /deploy_key \
-                --exclude /node_modules/ \
-                --exclude '$(yarn cache dir)' \
-                "$file" ${{env.REMOTE}}:${{secrets.DESTINATION}}
-            fi
-          done
-        
+          rsync -chav --exclude='node_modules/' \
+            -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' \
+            ./ ${{env.REMOTE}}:${{secrets.DESTINATION}}        
         #run: find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
         # run: |
         #   echo "list of all your files"
