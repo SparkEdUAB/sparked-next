@@ -3,11 +3,11 @@
 import React, { useEffect } from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
-import LibraryLoader from '@components/library/LibraryLoader';
 import { determineFileType } from 'utils/helpers';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage';
 import { useSearchParams } from 'next/navigation';
 import useMediaContent from '@hooks/use-media-content';
+import { LibraryGridSkeletonLoader } from '@components/library/LibraryGridSkeletonLoader';
 
 const LibrarySearchPage = () => {
   let searchParams = useSearchParams();
@@ -21,7 +21,7 @@ const LibrarySearchPage = () => {
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
       {isLoading ? (
-        <LibraryLoader />
+        <LibraryGridSkeletonLoader />
       ) : !(mediaContent instanceof Array) ? (
         <LibraryErrorMessage>An error occured while fetching data</LibraryErrorMessage>
       ) : mediaContent.length === 0 ? (
