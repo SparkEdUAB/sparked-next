@@ -3,49 +3,15 @@
 import React, { useEffect, useState } from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
 import { T_RawMediaContentFields } from 'types/media-content';
-import { API_LINKS } from 'app/links';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
 import { determineFileType } from 'utils/helpers';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage';
-import useSearchFilters, { Filters } from '@hooks/useLibrary/useSearchFilters';
+import useSearchFilters from '@hooks/useLibrary/useSearchFilters';
 import useTopic from '@hooks/use-topic';
 import LibraryBadge from '@components/library/LibraryBadge';
 import SkeletonLoaderElement from '@components/skeletonLoader/SkeletonLoaderElement';
 import { LibraryGridSkeletonLoader } from '../../components/library/LibraryGridSkeletonLoader';
-
-const fetchRandomMediaContent = async (filters: Filters) => {
-  const params = new URLSearchParams({
-    limit: '20',
-    ...filters,
-  }).toString();
-
-  const url = API_LINKS.FETCH_RANDOM_MEDIA_CONTENT + '?' + params;
-
-  const requestOptions: RequestInit = {
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  try {
-    const resp = await fetch(url, requestOptions);
-
-    if (!resp.ok) {
-      return false;
-    }
-
-    const responseData = await resp.json();
-
-    if (responseData.isError) {
-      return false;
-    }
-
-    return responseData.mediaContent as T_RawMediaContentFields[];
-  } catch (err: any) {
-    return false;
-  }
-};
+import { fetchRandomMediaContent } from '../../hooks/use-media-content/fetchRandomMediaContent';
 
 const LibraryPage = () => {
   let [mediaContent, setMediaContent] = useState<T_RawMediaContentFields[] | null | false>(null);
