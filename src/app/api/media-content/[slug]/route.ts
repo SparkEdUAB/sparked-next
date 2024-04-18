@@ -10,6 +10,9 @@ import fetchMediaContent_, {
 import { authOptions } from '../../auth/constants';
 import createMediaContent_ from '../create';
 import editMediaContent_ from '../edit';
+import { dbClient } from '@app/api/lib/db';
+import { dbCollections } from '@app/api/lib/db/collections';
+import { type NextRequest } from 'next/server';
 
 const schoolPostApiHandler_ = async function POST(
   req: Request,
@@ -24,7 +27,7 @@ const schoolPostApiHandler_ = async function POST(
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createMediaContent: createMediaContent_,
-    fetchMediaContent: fetchMediaContent_,
+    // fetchMediaContent: fetchMediaContent_,
     fetchMediaContentById: fetchMediaContentById_,
     editMediaContent: editMediaContent_,
     deleteMediaContentByIds: deleteMediaContentByIds_,
@@ -45,32 +48,36 @@ const schoolPostApiHandler_ = async function POST(
   }
 };
 
-const schoolGetApiHandler_ = async function GET(
-  req: Request,
+const schoolGetApiHandler_ = async function GET(req: NextRequest) {
+  const searchParams = req.nextUrl.searchParams;
+  const limit = searchParams.get('limit');
+  const skip = searchParams.get('skip');
 
-  { params }: { params: { slug: string } },
-) {
-  const session = await getServerSession(authOptions);
+  try {
+    const db = await dbClient();
 
-  const slug = params.slug;
+    if (!db) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+      };
+      return Response.json(response);
+    }
 
-  const schoolFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
-  } = {
-    fetchRandomMediaContent: fetchRandomMediaContent_,
-  };
+    const mediaContent = await db.collection(dbCollections.media_content.name).find({}).toArray();
 
-  if (schoolFunctions[slug] && session) {
-    return schoolFunctions[slug](req, session);
-  } else {
     const response = {
-      isError: true,
-      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+      isError: false,
+      mediaContent,
     };
 
-    return new Response(JSON.stringify(response), {
-      status: 200,
-    });
+    return Response.json(response);
+  } catch (error) {
+    const resp = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+    };
+    return Response.json(resp);
   }
 };
 
