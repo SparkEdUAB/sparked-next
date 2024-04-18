@@ -27,14 +27,13 @@ const MediaContentListView: React.FC = observer(() => {
     triggerEdit,
     findMediaContentByName,
     onSearchQueryChange,
-    isLoading,
     deleteMediaContent,
   } = useMediaContent();
   const { router, getChildLinkByKey } = useNavigation();
   const [creatingResource, setCreatingResource] = useState(false);
   const [edittingResourceWithId, setEdittingResourceWithId] = useState<string | null>(null);
 
-  const { data, isLoading: loading, mutate } = useFetch(API_LINKS.FETCH_MEDIA_CONTENT);
+  const { data, isLoading, mutate } = useFetch(API_LINKS.FETCH_MEDIA_CONTENT);
 
   const mediaContent = useMemo(() => {
     return (
