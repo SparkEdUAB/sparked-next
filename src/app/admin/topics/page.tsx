@@ -3,8 +3,8 @@
 import TopicsListView from '@components/topic/topics-list-view';
 import React from 'react';
 
-const AdminSchools: React.FC = (props) => {
+const TopicsList: React.FC = (props) => {
   return <TopicsListView />;
 };
 
-export default AdminSchools;
+export default TopicsList;

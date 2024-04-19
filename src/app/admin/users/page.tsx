@@ -3,8 +3,8 @@
 import UsersListView from '@components/users/UsersListView';
 import React from 'react';
 
-const AdminSchools: React.FC = (props) => {
+const UsersList: React.FC = (props) => {
   return <UsersListView />;
 };
 
-export default AdminSchools;
+export default UsersList;

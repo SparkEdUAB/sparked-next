@@ -3,8 +3,8 @@
 import CreateUserView from '@components/users/create-user-view';
 import React from 'react';
 
-const CreateProgram: React.FC = (props) => {
+const CreateUser: React.FC = (props) => {
   return <CreateUserView />;
 };
 
-export default CreateProgram;
+export default CreateUser;

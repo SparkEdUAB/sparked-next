@@ -3,8 +3,8 @@
 import EditUnitView from '@components/units/edit-unit-view';
 import React from 'react';
 
-const EditSchool: React.FC = (props) => {
+const EditUser: React.FC = (props) => {
   return <EditUnitView />;
 };
 
-export default EditSchool;
+export default EditUser;

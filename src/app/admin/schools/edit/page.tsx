@@ -3,8 +3,8 @@
 import EditSchoolView from '@components/school/editSchoolView';
 import React from 'react';
 
-const CreateSchool: React.FC = (props) => {
+const EditSchool: React.FC = (props) => {
   return <EditSchoolView />;
 };
 
-export default CreateSchool;
+export default EditSchool;
