@@ -10,28 +10,25 @@ import { authOptions } from "../../auth/constants";
 import createTopic_ from "../create";
 import editTopic_ from "../edit";
 
-const schoolApiHandler_ = async function POST(
+const topicPostApiHandler_ = async function POST(
   req: Request,
 
-  { params }: { params: { slug: string } }
+  { params }: { params: { slug: string } },
 ) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
 
-  const schoolFunctions: {
+  const topicFunctions: {
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createTopic: createTopic_,
-    fetchTopics: fetchTopics_,
-    fetchTopicById: fetchTopicById_,
     editTopic: editTopic_,
     deleteTopics: deleteTopics_,
-    findTopicsByName: findTopicsByName_,
   };
 
-  if (schoolFunctions[slug] && session) {
-    return schoolFunctions[slug](req, session);
+  if (topicFunctions[slug] && session) {
+    return topicFunctions[slug](req, session);
   } else {
     const response = {
       isError: true,
@@ -44,4 +41,35 @@ const schoolApiHandler_ = async function POST(
   }
 };
 
-export { schoolApiHandler_ as POST };
+const topicGetApiHandler_ = async function GET(
+  req: Request,
+
+  { params }: { params: { slug: string } },
+) {
+  const session = await getServerSession(authOptions);
+
+  const slug = params.slug;
+
+  const topicFunctions: {
+    [key: string]: (request: Request, session?: Session) => {};
+  } = {
+    fetchTopics: fetchTopics_,
+    fetchTopicById: fetchTopicById_,
+    findTopicsByName: findTopicsByName_,
+  };
+
+  if (topicFunctions[slug] && session) {
+    return topicFunctions[slug](req, session);
+  } else {
+    const response = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  }
+};
+
+export { topicPostApiHandler_ as POST, topicGetApiHandler_ as GET };
