@@ -6,15 +6,19 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent } from './pipelines';
 
-export default async function fetchMediaContent_(request: Request) {
+export default async function fetchMediaContent_(request: any) {
   const schema = zfd.formData({
-    limit: zfd.numeric(),
-    skip: zfd.numeric(),
-    withMetaData: z.boolean().optional(),
+    limit: zfd.text(),
+    skip: zfd.text(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData } = schema.parse(formBody);
+  const { limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
+
+  const _limit = parseInt(limit);
+  const _skip = parseInt(skip);
 
   try {
     const db = await dbClient();
@@ -31,7 +35,7 @@ export default async function fetchMediaContent_(request: Request) {
 
     let mediaContent = [];
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
         .aggregate(p_fetchMediaContentWithMetaData({ query: {} }))
@@ -42,8 +46,8 @@ export default async function fetchMediaContent_(request: Request) {
         .find(
           {},
           {
-            limit,
-            skip,
+            limit: _limit,
+            skip: _skip,
           },
         )
         .toArray();
@@ -69,14 +73,15 @@ export default async function fetchMediaContent_(request: Request) {
   }
 }
 
-export async function fetchMediaContentById_(request: Request) {
+export async function fetchMediaContentById_(request: any) {
   const schema = zfd.formData({
     mediaContentId: zfd.text(),
-    withMetaData: z.boolean(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { mediaContentId, withMetaData } = schema.parse(formBody);
+  const { mediaContentId, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -93,7 +98,7 @@ export async function fetchMediaContentById_(request: Request) {
 
     let mediaContent: { [key: string]: string } | null;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       const mediaContentList = await db
         .collection(dbCollections.media_content.name)
         .aggregate(
@@ -179,16 +184,18 @@ export async function deleteMediaContentByIds_(request: Request) {
   }
 }
 
-export async function findMediaContentByName_(request: Request) {
+export async function findMediaContentByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
     limit: zfd.numeric(),
-    withMetaData: z.boolean(),
+    withMetaData: zfd.text().optional(),
   });
   const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, withMetaData } = schema.parse(formBody);
+  const { name, limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -206,7 +213,7 @@ export async function findMediaContentByName_(request: Request) {
 
     let mediaContent = null;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
         .aggregate(
@@ -246,16 +253,16 @@ export async function findMediaContentByName_(request: Request) {
   }
 }
 
-export async function fetchRandomMediaContent_(request: Request) {
+export async function fetchRandomMediaContent_(request: any) {
   const schema = zfd.formData({
-    limit: zfd.numeric(),
+    limit: zfd.text(),
   });
 
-  const formBody = request.text();
+  const params = request.nextUrl.searchParams;
 
-  // let { limit } = schema.parse(formBody);
+  const { limit } = schema.parse(params);
 
-  const limit = 1000;
+  const _limit = parseInt(limit);
 
   try {
     const db = await dbClient();
@@ -276,7 +283,7 @@ export async function fetchRandomMediaContent_(request: Request) {
       .collection(dbCollections.media_content.name)
       .aggregate(
         p_fetchRandomMediaContent({
-          limit,
+          limit: _limit,
         }),
       )
       .toArray();
