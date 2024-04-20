@@ -1,15 +1,12 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { Session } from "next-auth";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { default as COURSE_PROCESS_CODES } from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { Session } from 'next-auth';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { default as COURSE_PROCESS_CODES } from './processCodes';
 
-export default async function createCourse_(
-  request: Request,
-  session?: Session
-) {
+export default async function createCourse_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
@@ -32,7 +29,7 @@ export default async function createCourse_(
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
     const course = await db.collection(dbCollections.courses.name).findOne({
       name: { $regex: regexPattern },
@@ -54,7 +51,7 @@ export default async function createCourse_(
           {
             _id: new BSON.ObjectId(schoolId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -74,7 +71,7 @@ export default async function createCourse_(
           {
             _id: new BSON.ObjectId(programId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 

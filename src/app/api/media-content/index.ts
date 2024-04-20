@@ -11,10 +11,15 @@ export default async function fetchMediaContent_(request: Request) {
     limit: zfd.numeric(),
     skip: zfd.numeric(),
     withMetaData: z.boolean().optional(),
+    school_id: z.string().optional(),
+    program_id: z.string().optional(),
+    course_id: z.string().optional(),
+    unit_id: z.string().optional(),
+    topic_id: z.string().optional(),
   });
   const formBody = await request.json();
 
-  const { limit, skip, withMetaData } = schema.parse(formBody);
+  const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -31,21 +36,26 @@ export default async function fetchMediaContent_(request: Request) {
 
     let mediaContent = [];
 
+    let query: { [key: string]: BSON.ObjectId } = {};
+
+    if (school_id) query.school_id = new BSON.ObjectId(school_id);
+    if (program_id) query.program_id = new BSON.ObjectId(program_id);
+    if (course_id) query.course_id = new BSON.ObjectId(course_id);
+    if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
+    if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+
     if (withMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .aggregate(p_fetchMediaContentWithMetaData({ query: {} }))
+        .aggregate(p_fetchMediaContentWithMetaData({ query }))
         .toArray();
     } else {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .find(
-          {},
-          {
-            limit,
-            skip,
-          },
-        )
+        .find(query, {
+          limit,
+          skip,
+        })
         .toArray();
     }
 
@@ -185,10 +195,16 @@ export async function findMediaContentByName_(request: Request) {
     skip: zfd.numeric(),
     limit: zfd.numeric(),
     withMetaData: z.boolean(),
+    school_id: z.string().optional(),
+    program_id: z.string().optional(),
+    course_id: z.string().optional(),
+    unit_id: z.string().optional(),
+    topic_id: z.string().optional(),
   });
   const formBody = await request.json();
 
-  const { name, limit, skip, withMetaData } = schema.parse(formBody);
+  const { name, limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id } =
+    schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -206,6 +222,14 @@ export async function findMediaContentByName_(request: Request) {
 
     let mediaContent = null;
 
+    let query: { [key: string]: BSON.ObjectId } = {};
+
+    if (school_id) query.school_id = new BSON.ObjectId(school_id);
+    if (program_id) query.program_id = new BSON.ObjectId(program_id);
+    if (course_id) query.course_id = new BSON.ObjectId(course_id);
+    if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
+    if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+
     if (withMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
@@ -213,6 +237,7 @@ export async function findMediaContentByName_(request: Request) {
           p_fetchMediaContentWithMetaData({
             query: {
               name: { $regex: regexPattern },
+              ...query,
             },
           }),
         )
@@ -222,6 +247,7 @@ export async function findMediaContentByName_(request: Request) {
         .collection(dbCollections.media_content.name)
         .find({
           name: { $regex: regexPattern },
+          ...query,
         })
         .toArray();
     }
@@ -247,15 +273,14 @@ export async function findMediaContentByName_(request: Request) {
 }
 
 export async function fetchRandomMediaContent_(request: Request) {
-  const schema = zfd.formData({
-    limit: zfd.numeric(),
-  });
+  const urlParams = new URLSearchParams(request.url.split('?')[1]);
 
-  const formBody = request.text();
-
-  // let { limit } = schema.parse(formBody);
-
-  const limit = 1000;
+  const limit = Number(urlParams.get('limit')) || 20;
+  const school_id = urlParams.get('school_id');
+  const program_id = urlParams.get('program_id');
+  const course_id = urlParams.get('course_id');
+  const unit_id = urlParams.get('unit_id');
+  const topic_id = urlParams.get('topic_id');
 
   try {
     const db = await dbClient();
@@ -272,11 +297,20 @@ export async function fetchRandomMediaContent_(request: Request) {
 
     let mediaContent = null;
 
+    let query: { [key: string]: BSON.ObjectId } = {};
+
+    if (school_id) query.school_id = new BSON.ObjectId(school_id);
+    if (program_id) query.program_id = new BSON.ObjectId(program_id);
+    if (course_id) query.course_id = new BSON.ObjectId(course_id);
+    if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
+    if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+
     mediaContent = await db
       .collection(dbCollections.media_content.name)
       .aggregate(
         p_fetchRandomMediaContent({
           limit,
+          query,
         }),
       )
       .toArray();

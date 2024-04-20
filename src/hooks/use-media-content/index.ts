@@ -307,17 +307,23 @@ const useMediaContent = (form?: any) => {
       return false;
     }
   };
-  const findMediaContentByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
+  const findMediaContentByName = async ({
+    withMetaData = false,
+    searchText,
+  }: {
+    withMetaData?: boolean;
+    searchText?: string;
+  }) => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
-    } else if (!searchQuery.trim().length) {
+    } else if (!searchQuery.trim().length && (!searchText || !searchText.trim().length)) {
       return message.warning(i18next.t('search_empty'));
     }
 
     const url = API_LINKS.FIND_MEDIA_CONTENT_BY_NAME;
     const formData = {
       body: JSON.stringify({
-        name: searchQuery.trim(),
+        name: (searchQuery || searchText || '').trim(),
         limit: 1000,
         skip: 0,
         withMetaData,

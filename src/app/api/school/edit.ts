@@ -1,10 +1,10 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { Session } from "next-auth";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { default as SCHOOL_PROCESS_CODES } from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { Session } from 'next-auth';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { default as SCHOOL_PROCESS_CODES } from './processCodes';
 
 export default async function editSchool_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -29,7 +29,7 @@ export default async function editSchool_(request: Request, session?: Session) {
       });
     }
 
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
     const _school = await db.collection(dbCollections.schools.name).findOne({
       name: { $regex: regexPattern },
@@ -51,9 +51,7 @@ export default async function editSchool_(request: Request, session?: Session) {
       _id: new BSON.ObjectId(_id),
     };
 
-    const school = await db
-      .collection(dbCollections.schools.name)
-      .findOne(query);
+    const school = await db.collection(dbCollections.schools.name).findOne(query);
 
     if (!school) {
       const response = {

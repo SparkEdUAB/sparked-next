@@ -1,7 +1,7 @@
 import { TProcessCode } from 'types/navigation';
 
 //1600 - 1099
-const TOPIC_PROCESS_CODES: TProcessCode = {
+const TOPIC_PROCESS_CODES = {
   TOPIC_EXIST: 1600,
   COURSE_NOT_FOUND: 1601,
   TOPIC_EDITED: 1602,
@@ -10,6 +10,6 @@ const TOPIC_PROCESS_CODES: TProcessCode = {
   PROGRAM_NOT_FOUND: 1605,
   TOPIC_NOT_FOUND: 1606,
   UNIT_NOT_FOUND: 1606,
-};
+} satisfies TProcessCode;
 
 export default TOPIC_PROCESS_CODES;

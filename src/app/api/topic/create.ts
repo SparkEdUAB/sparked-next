@@ -1,10 +1,10 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { Session } from "next-auth";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { default as TOPIC_PROCESS_CODES } from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { Session } from 'next-auth';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { default as TOPIC_PROCESS_CODES } from './processCodes';
 
 export default async function createTopic_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -17,8 +17,7 @@ export default async function createTopic_(request: Request, session?: Session) 
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId } =
-    schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -32,16 +31,16 @@ export default async function createTopic_(request: Request, session?: Session) 
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const topic = await db.collection(dbCollections.units.name).findOne({
+    const topic = await db.collection(dbCollections.topics.name).findOne({
       name: { $regex: regexPattern },
     });
 
     if (topic) {
       const response = {
         isError: true,
-        code: TOPIC_PROCESS_CODES.UNIT_EXIST,
+        code: TOPIC_PROCESS_CODES.TOPIC_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
@@ -54,7 +53,7 @@ export default async function createTopic_(request: Request, session?: Session) 
           {
             _id: new BSON.ObjectId(schoolId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -74,7 +73,7 @@ export default async function createTopic_(request: Request, session?: Session) 
           {
             _id: new BSON.ObjectId(programId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -94,7 +93,7 @@ export default async function createTopic_(request: Request, session?: Session) 
           {
             _id: new BSON.ObjectId(courseId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -109,24 +108,23 @@ export default async function createTopic_(request: Request, session?: Session) 
       });
     }
 
-        const unit =  await db.collection(dbCollections.units.name).findOne(
-              {
-                _id: new BSON.ObjectId(unitId),
-              },
-              { projection: { _id: 1 } }
-            )
-        
+    const unit = await db.collection(dbCollections.units.name).findOne(
+      {
+        _id: new BSON.ObjectId(unitId),
+      },
+      { projection: { _id: 1 } },
+    );
 
-        if (!unit) {
-          const response = {
-            isError: true,
-            code: TOPIC_PROCESS_CODES.UNIT_NOT_FOUND,
-          };
+    if (!unit) {
+      const response = {
+        isError: true,
+        code: TOPIC_PROCESS_CODES.UNIT_NOT_FOUND,
+      };
 
-          return new Response(JSON.stringify(response), {
-            status: 200,
-          });
-        }
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
 
     await db.collection(dbCollections.topics.name).insertOne({
       name,
@@ -143,7 +141,7 @@ export default async function createTopic_(request: Request, session?: Session) 
 
     const response = {
       isError: false,
-      code: TOPIC_PROCESS_CODES.UNIT_CREATED,
+      code: TOPIC_PROCESS_CODES.TOPIC_CREATED,
     };
 
     return new Response(JSON.stringify(response), {

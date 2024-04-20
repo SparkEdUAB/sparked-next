@@ -4,6 +4,7 @@ import PdfViewer from '@components/layouts/library/PdfViewer/PdfViewer';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
 import LibraryLoader from '@components/library/LibraryLoader';
 import useMediaContent from '@hooks/use-media-content';
+import Link from 'next/link';
 import { ReactNode, useEffect } from 'react';
 import { FaBook, FaBookmark, FaSchool } from 'react-icons/fa';
 import { ImBooks } from 'react-icons/im';
@@ -63,13 +64,19 @@ export default function MediaContentPage({ params }: { params: { id: string } })
             <div className="my-6 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
               {/* <IconWithLabel icon={<FaSchool className="text-2xl" />} label={targetMediaContent.schoolName} />
               <IconWithLabel icon={<IoMdSchool className="text-2xl" />} label={targetMediaContent.programName} /> */}
-              <IconWithLabel
-                title="Course"
-                icon={<ImBooks className="text-2xl" />}
-                label={targetMediaContent.courseName}
-              />
-              <IconWithLabel title="Unit" icon={<FaBook />} label={targetMediaContent.unitName} />
-              <IconWithLabel title="Topic" icon={<FaBookmark />} label={targetMediaContent.topicName} />
+              <Link href={`/library?course_id=${targetMediaContent.courseId}`}>
+                <IconWithLabel
+                  title="Course"
+                  icon={<ImBooks className="text-2xl" />}
+                  label={targetMediaContent.courseName}
+                />
+              </Link>
+              <Link href={`/library?unit_id=${targetMediaContent.unitId}`}>
+                <IconWithLabel title="Unit" icon={<FaBook />} label={targetMediaContent.unitName} />
+              </Link>
+              <Link href={`/library?topic_id=${targetMediaContent.topicId}`}>
+                <IconWithLabel title="Topic" icon={<FaBookmark />} label={targetMediaContent.topicName} />
+              </Link>
             </div>
           </div>
         </div>

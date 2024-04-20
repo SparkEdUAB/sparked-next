@@ -38,13 +38,14 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
     const keys = [
       UNIT_FORM_FIELDS.name.key,
       UNIT_FORM_FIELDS.description.key,
-      UNIT_FORM_FIELDS.school.key,
-      UNIT_FORM_FIELDS.program.key,
+      // UNIT_FORM_FIELDS.school.key,
+      // UNIT_FORM_FIELDS.program.key,
       UNIT_FORM_FIELDS.course.key,
     ];
 
-    let result = extractValuesFromFormEvent<T_CreateUnitFields>(e, keys);
-    createUnit(result, onSuccessfullyDone);
+    let result = extractValuesFromFormEvent<Omit<T_CreateUnitFields, 'schoolId' | 'programId'>>(e, keys);
+    let course = courses.find((course) => course._id === result.courseId);
+    createUnit({ ...result, programId: course?.programId, schoolId: course?.schoolId }, onSuccessfullyDone);
   };
 
   return (
@@ -66,7 +67,7 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
           required
         />
 
-        <AdminFormSelector
+        {/* <AdminFormSelector
           loadingItems={loadingSchools}
           disabled={isLoading || loadingSchools}
           options={schools}
@@ -80,7 +81,7 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
           options={programs}
           label={UNIT_FORM_FIELDS.program.label}
           name={UNIT_FORM_FIELDS.program.key}
-        />
+        /> */}
 
         <AdminFormSelector
           loadingItems={loadingCourses}
