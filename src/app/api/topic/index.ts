@@ -1,20 +1,20 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { z } from "zod";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { p_fetchTopicsWithMetaData } from "./pipelines";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { p_fetchTopicsWithMetaData } from './pipelines';
 
-export default async function fetchTopics_(request: Request) {
+export default async function fetchTopics_(request: any) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
-    withMetaData: z.boolean().optional(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData } = schema.parse(formBody);
+  const { limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -31,7 +31,7 @@ export default async function fetchTopics_(request: Request) {
 
     let units = [];
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       units = await db
         .collection(dbCollections.topics.name)
         .aggregate(p_fetchTopicsWithMetaData({ query: {} }))
@@ -44,7 +44,7 @@ export default async function fetchTopics_(request: Request) {
           {
             limit,
             skip,
-          }
+          },
         )
         .toArray();
     }
@@ -69,14 +69,15 @@ export default async function fetchTopics_(request: Request) {
   }
 }
 
-export async function fetchTopicById_(request: Request) {
+export async function fetchTopicById_(request: any) {
   const schema = zfd.formData({
     topicId: zfd.text(),
-    withMetaData: z.boolean(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { topicId, withMetaData } = schema.parse(formBody);
+  const { topicId, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -93,7 +94,7 @@ export async function fetchTopicById_(request: Request) {
 
     let topic: { [key: string]: string } | null;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       const topics = await db
         .collection(dbCollections.topics.name)
         .aggregate(
@@ -101,17 +102,14 @@ export async function fetchTopicById_(request: Request) {
             query: {
               _id: new BSON.ObjectId(topicId),
             },
-          })
+          }),
         )
         .toArray();
 
       topic = topics.length ? topics[0] : {};
     } else {
-      topic = await db
-        .collection(dbCollections.topics.name)
-        .findOne({ _id: new BSON.ObjectId(topicId) });
+      topic = await db.collection(dbCollections.topics.name).findOne({ _id: new BSON.ObjectId(topicId) });
     }
-
 
     const response = {
       isError: false,
@@ -180,16 +178,17 @@ export async function deleteTopics_(request: Request) {
   }
 }
 
-export async function findTopicsByName_(request: Request) {
+export async function findTopicsByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
     limit: zfd.numeric(),
-    withMetaData: z.boolean(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, withMetaData } = schema.parse(formBody);
+  const { name, limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -203,11 +202,11 @@ export async function findTopicsByName_(request: Request) {
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(name, 'i');
 
     let topics = null;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       topics = await db
         .collection(dbCollections.topics.name)
         .aggregate(
@@ -215,7 +214,7 @@ export async function findTopicsByName_(request: Request) {
             query: {
               name: { $regex: regexPattern },
             },
-          })
+          }),
         )
         .toArray();
     } else {
