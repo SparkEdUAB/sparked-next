@@ -44,7 +44,7 @@ const coursePostApiHandler_ = async function POST(
   }
 };
 
-const courseGetApiHandler_ = async function POST(
+const courseGetApiHandler_ = async function GET(
   req: Request,
 
   { params }: { params: { slug: string } },
