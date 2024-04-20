@@ -10,28 +10,55 @@ import { authOptions } from "../../auth/constants";
 import createUnit_ from "../create";
 import editUnit_ from "../edit";
 
-const schoolApiHandler_ = async function POST(
+const unitPostApiHandler_ = async function POST(
   req: Request,
 
-  { params }: { params: { slug: string } }
+  { params }: { params: { slug: string } },
 ) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
 
-  const schoolFunctions: {
+  const unitFunctions: {
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createUnit: createUnit_,
-    fetchUnits: fetchUnits_,
-    fetchUnitById: fetchUnitById_,
     editUnit: editUnit_,
     deleteUnits: deleteUnits_,
+  };
+
+  if (unitFunctions[slug] && session) {
+    return unitFunctions[slug](req, session);
+  } else {
+    const response = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  }
+};
+const unitGetApiHandler_ = async function GET(
+  req: Request,
+
+  { params }: { params: { slug: string } },
+) {
+  const session = await getServerSession(authOptions);
+
+  const slug = params.slug;
+
+  const unitFunctions: {
+    [key: string]: (request: Request, session?: Session) => {};
+  } = {
+    fetchUnits: fetchUnits_,
+    fetchUnitById: fetchUnitById_,
     findUnitsByName: findUnitsByName_,
   };
 
-  if (schoolFunctions[slug] && session) {
-    return schoolFunctions[slug](req, session);
+  if (unitFunctions[slug] && session) {
+    return unitFunctions[slug](req, session);
   } else {
     const response = {
       isError: true,
@@ -44,4 +71,4 @@ const schoolApiHandler_ = async function POST(
   }
 };
 
-export { schoolApiHandler_ as POST };
+export { unitPostApiHandler_ as POST, unitGetApiHandler_ as GET };
