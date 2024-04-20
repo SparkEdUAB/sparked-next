@@ -36,3 +36,4 @@ next-env.d.ts
 mongodb-realm
 .env
 .env.test
+package-lock.json
