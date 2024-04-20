@@ -1,20 +1,20 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { z } from "zod";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { p_fetchCoursesWithMetaData } from "./pipelines";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { p_fetchCoursesWithMetaData } from './pipelines';
 
-export default async function fetchCourses_(request: Request) {
+export default async function fetchCourses_(request: any) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
-    withMetaData: z.boolean().optional(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData } = schema.parse(formBody);
+  const { limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -31,7 +31,7 @@ export default async function fetchCourses_(request: Request) {
 
     let courses = [];
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       courses = await db
         .collection(dbCollections.courses.name)
         .aggregate(p_fetchCoursesWithMetaData({ query: {} }))
@@ -44,7 +44,7 @@ export default async function fetchCourses_(request: Request) {
           {
             limit,
             skip,
-          }
+          },
         )
         .toArray();
     }
@@ -69,14 +69,16 @@ export default async function fetchCourses_(request: Request) {
   }
 }
 
-export async function fetchCourseById_(request: Request) {
+export async function fetchCourseById_(request: any) {
   const schema = zfd.formData({
     courseId: zfd.text(),
-    withMetaData: z.boolean(),
+    withMetaData: zfd.text(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { courseId, withMetaData } = schema.parse(formBody);
+  const { courseId, withMetaData } = schema.parse(params);
+
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -93,7 +95,7 @@ export async function fetchCourseById_(request: Request) {
 
     let course;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       course = await db
         .collection(dbCollections.courses.name)
         .aggregate(
@@ -101,15 +103,13 @@ export async function fetchCourseById_(request: Request) {
             query: {
               _id: new BSON.ObjectId(courseId),
             },
-          })
+          }),
         )
         .toArray();
 
       course = course.length ? course[0] : null;
     } else {
-      course = await db
-        .collection(dbCollections.courses.name)
-        .findOne({ _id: new BSON.ObjectId(courseId) });
+      course = await db.collection(dbCollections.courses.name).findOne({ _id: new BSON.ObjectId(courseId) });
     }
 
     const response = {
@@ -153,13 +153,11 @@ export async function deleteCourse_(request: Request) {
       });
     }
 
-    const results = await db
-      .collection(dbCollections.courses.name)
-      .deleteMany({
-        _id: {
-          $in: courseIds.map((i) => new BSON.ObjectId(i)),
-        },
-      });
+    const results = await db.collection(dbCollections.courses.name).deleteMany({
+      _id: {
+        $in: courseIds.map((i) => new BSON.ObjectId(i)),
+      },
+    });
 
     const response = {
       isError: false,
@@ -181,16 +179,17 @@ export async function deleteCourse_(request: Request) {
   }
 }
 
-export async function findCourseByName_(request: Request) {
+export async function findCourseByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
     limit: zfd.numeric(),
-    withMetaData: z.boolean(),
+    withMetaData: zfd.text(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, withMetaData } = schema.parse(formBody);
+  const { name, limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -204,11 +203,11 @@ export async function findCourseByName_(request: Request) {
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(name, 'i');
 
     let courses = null;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       courses = await db
         .collection(dbCollections.courses.name)
         .aggregate(
@@ -216,7 +215,7 @@ export async function findCourseByName_(request: Request) {
             query: {
               name: { $regex: regexPattern },
             },
-          })
+          }),
         )
         .toArray();
     } else {

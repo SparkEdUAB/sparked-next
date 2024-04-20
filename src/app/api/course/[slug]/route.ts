@@ -10,16 +10,16 @@ import { authOptions } from "../../auth/constants";
 import editCourse_ from "../edit";
 import createCourse_ from "../create";
 
-const schoolApiHandler_ = async function POST(
+const coursePostApiHandler_ = async function POST(
   req: Request,
 
-  { params }: { params: { slug: string } }
+  { params }: { params: { slug: string } },
 ) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
 
-  const schoolFunctions: {
+  const CourseFunctions: {
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createCourse: createCourse_,
@@ -30,8 +30,8 @@ const schoolApiHandler_ = async function POST(
     findCourseByName: findCourseByName_,
   };
 
-  if (schoolFunctions[slug] && session) {
-    return schoolFunctions[slug](req, session);
+  if (CourseFunctions[slug] && session) {
+    return CourseFunctions[slug](req, session);
   } else {
     const response = {
       isError: true,
@@ -44,4 +44,35 @@ const schoolApiHandler_ = async function POST(
   }
 };
 
-export { schoolApiHandler_ as POST };
+const courseGetApiHandler_ = async function POST(
+  req: Request,
+
+  { params }: { params: { slug: string } },
+) {
+  const session = await getServerSession(authOptions);
+
+  const slug = params.slug;
+
+  const CourseFunctions: {
+    [key: string]: (request: Request, session?: Session) => {};
+  } = {
+    fetchCourses: fetchCourses_,
+    fetchCourseById: fetchCourseById_,
+    findCourseByName: findCourseByName_,
+  };
+
+  if (CourseFunctions[slug] && session) {
+    return CourseFunctions[slug](req, session);
+  } else {
+    const response = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  }
+};
+
+export { coursePostApiHandler_ as POST, courseGetApiHandler_ as GET };

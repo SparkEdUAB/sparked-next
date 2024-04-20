@@ -25,7 +25,7 @@ export const API_LINKS: T_link = {
   FETCH_COURSE_BY_ID: '/api/course/fetchCourseById',
   EDIT_COURSE: '/api/course/editCourse',
   DELETE_COURSES: '/api/course/deleteCourse',
-  FIND_COURSE_BY_NAME: '/api/course/findCourseByName',
+  FIND_COURSE_BY_NAME: '/api/course/findCourseByName?',
   // unit  links
   CREATE_UNIT: '/api/unit/createUnit',
   FETCH_UNIT: '/api/unit/fetchUnits',
