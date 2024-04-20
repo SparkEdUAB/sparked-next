@@ -11,7 +11,7 @@ import { authOptions } from '../../auth/constants';
 import createMediaContent_ from '../create';
 import editMediaContent_ from '../edit';
 
-const schoolPostApiHandler_ = async function POST(
+const mediaContentPostApiHandler_ = async function POST(
   req: Request,
 
   { params }: { params: { slug: string } },
@@ -24,10 +24,39 @@ const schoolPostApiHandler_ = async function POST(
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createMediaContent: createMediaContent_,
-    fetchMediaContent: fetchMediaContent_,
-    fetchMediaContentById: fetchMediaContentById_,
     editMediaContent: editMediaContent_,
     deleteMediaContentByIds: deleteMediaContentByIds_,
+  };
+
+  if (schoolFunctions[slug] && session) {
+    return schoolFunctions[slug](req, session);
+  } else {
+    const response = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  }
+};
+
+const mediaContentGetApiHandler_ = async function GET(
+  req: Request,
+
+  { params }: { params: { slug: string } },
+) {
+  const session = await getServerSession(authOptions);
+
+  const slug = params.slug;
+
+  const schoolFunctions: {
+    [key: string]: (request: Request, session?: Session) => {};
+  } = {
+    fetchRandomMediaContent: fetchRandomMediaContent_,
+    fetchMediaContent: fetchMediaContent_,
+    fetchMediaContentById: fetchMediaContentById_,
     findMediaContentByName: findMediaContentByName_,
   };
 
@@ -45,33 +74,4 @@ const schoolPostApiHandler_ = async function POST(
   }
 };
 
-const schoolGetApiHandler_ = async function GET(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
-  const session = await getServerSession(authOptions);
-
-  const slug = params.slug;
-
-  const schoolFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
-  } = {
-    fetchRandomMediaContent: fetchRandomMediaContent_,
-  };
-
-  if (schoolFunctions[slug] && session) {
-    return schoolFunctions[slug](req, session);
-  } else {
-    const response = {
-      isError: true,
-      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
-    };
-
-    return new Response(JSON.stringify(response), {
-      status: 200,
-    });
-  }
-};
-
-export { schoolGetApiHandler_ as GET, schoolPostApiHandler_ as POST };
+export { mediaContentGetApiHandler_ as GET, mediaContentPostApiHandler_ as POST };
