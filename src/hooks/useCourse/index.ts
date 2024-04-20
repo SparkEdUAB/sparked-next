@@ -240,22 +240,17 @@ const useCourse = (form?: any) => {
     }
 
     const url = API_LINKS.FIND_COURSE_BY_NAME;
-    const formData = {
-      body: JSON.stringify({
-        name: searchQuery.trim(),
-        limit: 1000,
-        skip: 0,
-        withMetaData,
-      }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+
+    const params = new URLSearchParams({
+      name: searchQuery.trim(),
+      limit: '1000',
+      skip: '0',
+      withMetaData: 'true',
+    });
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + params);
       setLoaderStatus(false);
 
       if (!resp.ok) {
