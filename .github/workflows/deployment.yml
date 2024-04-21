@@ -83,8 +83,14 @@ jobs:
       - name: Clone or pull repository on remote server
         run: |
           ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} '
-            mv "${{env.DESTINATION}}/sparked-next" "${{env.DESTINATION}}/sparked-next-old";
-            cd "${{env.DESTINATION}}" && git clone --single-branch --branch release https://github.com/olivierjm/sparked-next.git;
-            echo "Running deployment script...";
-            cd "${{env.DESTINATION}}/sparked-next" && ./deployment/deploy.sh;
+            if [ -d "~/htdocs/sparked-next" ]; then
+              mv "~/htdocs/sparked-next" "~/htdocs/sparked-next-old" || echo "Failed to move ~/htdocs/sparked-next directory";
+            fi
+            cd "~/htdocs" && git clone --single-branch --branch release https://github.com/olivierjm/sparked-next.git || echo "Failed to clone repository";
+            if [ -d "~/htdocs/sparked-next" ]; then
+              echo "Running deployment script...";
+              cd "~/htdocs/sparked-next" && ./deployment/deploy.sh || echo "Failed to run deployment script";
+            else
+              echo "~/htdocs/sparked-next directory does not exist";
+            fi
           '
