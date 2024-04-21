@@ -80,17 +80,20 @@ jobs:
           echo '${{secrets.DEPLOYKEY}}' > deploy_key
           chmod 400 ./deploy_key
 
-      - name: Clone or pull repository on remote server
+      - name: Compress Files
         run: |
-          ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} '
-            if [ -d "~/htdocs/sparked-next" ]; then
-              mv "~/htdocs/sparked-next" "~/htdocs/sparked-next-old" || echo "Failed to move ~/htdocs/sparked-next directory";
-            fi
-            cd "~/htdocs" && git clone --single-branch --branch release https://github.com/olivierjm/sparked-next.git || echo "Failed to clone repository";
-            if [ -d "~/htdocs/sparked-next" ]; then
-              echo "Running deployment script...";
-              cd "~/htdocs/sparked-next" && ./deployment/deploy.sh || echo "Failed to run deployment script";
-            else
-              echo "~/htdocs/sparked-next directory does not exist";
-            fi
-          '
+          yarn_cache_dir=$(yarn cache dir)
+          mkdir -p ../temp
+          tar -czf ../temp/archive.tar.gz *
+          # ls ../temp
+
+      - name: Transfer build to remote server
+        run: |
+          scp -i ./deploy_key -o StrictHostKeyChecking=no ../temp/archive.tar.gz ${{env.REMOTE}}:${{secrets.DESTINATION}}
+
+      - name: Clean Up
+        run: |
+          rm ../temp/archive.tar.gz
+      - name: Run deploy.sh script on remote server
+        run: |
+          ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} 'bash ~/deploy.sh'
