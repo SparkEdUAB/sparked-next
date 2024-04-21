@@ -94,9 +94,6 @@ jobs:
       - name: Clean Up
         run: |
           rm ../temp/archive.tar.gz
-      - name: Transfer script to remote server
-        run: |
-          scp -i ./deploy_key -o StrictHostKeyChecking=no ../deployment/deploy.sh ${{env.REMOTE}}:${{secrets.DESTINATION}}
 
       - name: Execute script on remote server
         run: |
