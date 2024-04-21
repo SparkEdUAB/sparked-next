@@ -80,23 +80,11 @@ jobs:
           echo '${{secrets.DEPLOYKEY}}' > deploy_key
           chmod 400 ./deploy_key
 
-      - name: Compress Files
-        run: |
-          yarn_cache_dir=$(yarn cache dir)
-          mkdir -p ../temp
-          tar -czf ../temp/archive.tar.gz --exclude='./node_modules' ../
-          ls ../temp
-
-      - name: Transfer build to remote server
-        run: |
-          scp -i ./deploy_key -o StrictHostKeyChecking=no ../temp/archive.tar.gz ${{env.REMOTE}}:${{secrets.DESTINATION}}
-
-      - name: Clean Up
-        run: |
-          rm ../temp/archive.tar.gz
-
-      - name: Execute script on remote server
+      - name: Clone or pull repository on remote server
         run: |
           ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} '
-            ~/deploy.sh;
+            mv "${{env.DESTINATION}}/sparked-next" "${{env.DESTINATION}}/sparked-next-old";
+            cd "${{env.DESTINATION}}" && git clone --single-branch --branch release https://github.com/olivierjm/sparked-next.git;
+            echo "Running deployment script...";
+            cd "${{env.DESTINATION}}/sparked-next" && ./deployment/deploy.sh;
           '
