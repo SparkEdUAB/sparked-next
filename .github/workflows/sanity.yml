@@ -2,9 +2,9 @@ name: Check code sanity
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
   pull_request:
-    branches: ["main"]
+    branches: ['main']
 
 jobs:
   build:
@@ -39,3 +39,15 @@ jobs:
             ${{ runner.os }}-yarn-
       - run: yarn install --frozen-lockfile
       - run: yarn lint
+      - name: Create Local Build
+        if: steps.tests.exit_code == 0
+        id: build
+        run: yarn build
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
+          MONGODB_DB: ${{ secrets.MONGODB_DB }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          REALM_APP_ID: ${{ secrets.REALM_APP_ID }}

@@ -1,9 +1,8 @@
 name: Deployment
 
-"on":
-  push:
-    branches:
-      - release
+on:
+  release:
+    types: [published]
 env:
   REMOTE: ${{secrets.USERNAME}}@${{secrets.HOST}}
 
@@ -11,7 +10,7 @@ jobs:
   deploy:
     if: "!contains(github.event.commits[0].message, '[skip-ci]')"
     runs-on: ubuntu-latest
-    container: 
+    container:
       image: debian:latest
 
     steps:
@@ -100,22 +99,3 @@ jobs:
             yarn;                              # Install dependencies
             forever start -c "yarn start" ./;  # Restart the application
           '
-      # - name: Deploy Build
-      #   if: steps.build.exit_code == 0
-      #   run: |
-      #     echo '${{secrets.DEPLOYKEY}}' > deploy_key
-      #     chmod 600 ./deploy_key
-      #     rsync -chav --exclude='node_modules/' \
-      #       -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' \
-      #       ./ ${{env.REMOTE}}:${{secrets.DESTINATION}}        
-        #run: find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
-        # run: |
-        #   echo "list of all your files"
-        #   ls -la
-        #   find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
-        #   echo '${{secrets.DEPLOYKEY}}' > deploy_key
-        #   chmod 600 ./deploy_key
-        #   find . -type d \( -path './node_modules'\) -prune -o -type f -print | xargs scp -i ./deploy_key -o StrictHostKeyChecking=no -r ${{env.REMOTE}}:${{secrets.DESTINATION}}
-
-      # - name: Restart Application
-      #   run: ssh -i ./deploy_key -o 'StrictHostKeyChecking no' -v ${{env.REMOTE}} 'cd ${{secrets.DESTINATION}};yarn;pm2 restart 0'
