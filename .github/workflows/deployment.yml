@@ -1,8 +1,13 @@
 name: Deployment
 
+# on:
+#   release:
+#     types: [published]
+
 on:
-  release:
-    types: [published]
+  push:
+    branches:
+      - release
 env:
   REMOTE: ${{secrets.USERNAME}}@${{secrets.HOST}}
 
@@ -89,13 +94,13 @@ jobs:
       - name: Clean Up
         run: |
           rm ../temp/archive.tar.gz
+      - name: Transfer script to remote server
+        run: |
+          scp -i ./deploy_key -o StrictHostKeyChecking=no ../deployment/deploy.sh ${{env.REMOTE}}:${{secrets.DESTINATION}}
 
-      - name: Decompress and restart application
+      - name: Execute script on remote server
         run: |
           ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} '
-            cd ${{secrets.DESTINATION}};
-            tar -xzvf archive.tar.gz;  # Decompress the archive
-            rm archive.tar.gz;         # Optional: Remove the archive after decompressing
-            yarn;                              # Install dependencies
-            forever start -c "yarn start" ./;  # Restart the application
+            chmod +x deploy.sh;
+            ./deploy.sh;
           '
