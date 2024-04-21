@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# This scripts runs on the server to deploy the application, this is saved here for tracking and reference purposes
+# If updated here make sure it reflects on the server
+
+cd htdocs/
 # Create the releases directory if it doesn't exist
 mkdir -p releases;
 

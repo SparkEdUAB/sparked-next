@@ -101,6 +101,5 @@ jobs:
       - name: Execute script on remote server
         run: |
           ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} '
-            chmod +x deploy.sh;
-            ./deploy.sh;
+            ~/deploy.sh;
           '
