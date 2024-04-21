@@ -84,7 +84,7 @@ jobs:
         run: |
           yarn_cache_dir=$(yarn cache dir)
           mkdir -p ../temp
-          tar -czf ../temp/archive.tar.gz --exclude='./node_modules' ./
+          tar -czf ../temp/archive.tar.gz --exclude='./node_modules' ../
           ls ../temp
 
       - name: Transfer build to remote server

@@ -24,6 +24,7 @@ fi
 # Move into the new directory and run yarn
 cd sparked-next;
 yarn;
+yarn build;
 
 # Move sparked-next-old to the releases directory
 if [ -d "../sparked-next-old" ]; then
