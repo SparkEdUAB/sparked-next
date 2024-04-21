@@ -155,34 +155,6 @@ export const p_fetchRandomMediaContent = ({
   },
   {
     $lookup: {
-      from: dbCollections.schools.name,
-      localField: 'school_id',
-      foreignField: '_id',
-      as: 'school',
-    },
-  },
-  {
-    $unwind: {
-      path: '$school',
-      preserveNullAndEmptyArrays: true,
-    },
-  },
-  {
-    $lookup: {
-      from: dbCollections.programs.name,
-      localField: 'program_id',
-      foreignField: '_id',
-      as: 'program',
-    },
-  },
-  {
-    $unwind: {
-      path: '$program',
-      preserveNullAndEmptyArrays: true,
-    },
-  },
-  {
-    $lookup: {
       from: dbCollections.courses.name,
       localField: 'course_id',
       foreignField: '_id',
@@ -234,10 +206,6 @@ export const p_fetchRandomMediaContent = ({
       'user._id': 1,
       'user.name': 1,
       'user.email': 1,
-      'school.name': 1,
-      'school._id': 1,
-      'program.name': 1,
-      'program._id': 1,
       'course._id': 1,
       'course.name': 1,
       'unit.name': 1,
