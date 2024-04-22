@@ -18,6 +18,7 @@ import CreateMediaContentView from './create-media-content-view';
 import EditMediaContentView from './edit-media-content-view';
 import { useFetch } from '@hooks/use-swr';
 import { API_LINKS } from 'app/links';
+import NETWORK_UTILS from 'utils/network';
 
 const MediaContentListView: React.FC = observer(() => {
   const {
@@ -35,7 +36,11 @@ const MediaContentListView: React.FC = observer(() => {
   const [creatingResource, setCreatingResource] = useState(false);
   const [edittingResourceWithId, setEdittingResourceWithId] = useState<string | null>(null);
 
-  const { data, isLoading: loading, mutate } = useFetch(API_LINKS.FETCH_MEDIA_CONTENT);
+  const {
+    data,
+    isLoading: loading,
+    mutate,
+  } = useFetch(API_LINKS.FETCH_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ params: { limit: '20', skip: '0' } }));
 
   const mediaContent = useMemo(() => {
     return (
