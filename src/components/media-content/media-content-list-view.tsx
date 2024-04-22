@@ -29,7 +29,6 @@ const MediaContentListView: React.FC = observer(() => {
     onSearchQueryChange,
     isLoading,
     deleteMediaContent,
-    mediaContent,
     fetchMediaContent,
   } = useMediaContent();
   const { router, getChildLinkByKey } = useNavigation();
@@ -38,33 +37,29 @@ const MediaContentListView: React.FC = observer(() => {
 
   const { data, isLoading: loading, mutate } = useFetch(API_LINKS.FETCH_MEDIA_CONTENT);
 
-  useEffect(() => {
-    fetchMediaContent({});
-  }, []);
-
-  // const mediaContent = useMemo(() => {
-  //   return (
-  //     // @ts-expect-error we can also add this mediaContent as the return type of the useFetch hook
-  //     (data?.mediaContent as any[])?.map<T_MediaContentFields>(
-  //       (i, index: number) =>
-  //         ({
-  //           index: index + 1,
-  //           key: i._id,
-  //           _id: i._id,
-  //           name: i.name,
-  //           fileUrl: i.file_url || undefined,
-  //           thumbnailUrl: i.thumbnailUrl,
-  //           description: i.description,
-  //           unitId: i.course?._id,
-  //           unitName: i.unit?.name,
-  //           topicId: i.topic?._id,
-  //           topicName: i.topic?.name,
-  //           created_by: i.user?.email,
-  //           created_at: new Date(i.created_at as string).toDateString(),
-  //         } satisfies T_MediaContentFields),
-  //     ) || []
-  //   );
-  // }, [data]);
+  const mediaContent = useMemo(() => {
+    return (
+      // @ts-expect-error we can also add this mediaContent as the return type of the useFetch hook
+      (data?.mediaContent as any[])?.map<T_MediaContentFields>(
+        (i, index: number) =>
+          ({
+            index: index + 1,
+            key: i._id,
+            _id: i._id,
+            name: i.name,
+            fileUrl: i.file_url || undefined,
+            thumbnailUrl: i.thumbnailUrl,
+            description: i.description,
+            unitId: i.course?._id,
+            unitName: i.unit?.name,
+            topicId: i.topic?._id,
+            topicName: i.topic?.name,
+            created_by: i.user?.email,
+            created_at: new Date(i.created_at as string).toDateString(),
+          } satisfies T_MediaContentFields),
+      ) || []
+    );
+  }, [data]);
 
   const rowSelection = {
     selectedRowKeys: selectedMediaContentIds,
