@@ -1,9 +1,9 @@
 name: Deployment
 
-"on":
-  push:
-    branches:
-      - release
+on:
+  release:
+    types: [published]
+
 env:
   REMOTE: ${{secrets.USERNAME}}@${{secrets.HOST}}
 
@@ -11,7 +11,7 @@ jobs:
   deploy:
     if: "!contains(github.event.commits[0].message, '[skip-ci]')"
     runs-on: ubuntu-latest
-    container: 
+    container:
       image: debian:latest
 
     steps:
@@ -80,42 +80,21 @@ jobs:
         run: |
           yarn_cache_dir=$(yarn cache dir)
           mkdir -p ../temp
-          tar -czf ../temp/archive.tar.gz --exclude='./node_modules' ./
-          ls ../temp
+          tar -czf ../temp/archive.tar.gz --exclude=../temp/archive.tar.gz * .[!.]*
+          # ls ../temp
 
-      - name: Transfer build to remote server
+      - name: Securely Copy Build Archive to Remote Server
         run: |
+          # Use secure copy (scp) with the deployment key to transfer the compressed build archive
           scp -i ./deploy_key -o StrictHostKeyChecking=no ../temp/archive.tar.gz ${{env.REMOTE}}:${{secrets.DESTINATION}}
 
+      - name: Securely Copy .next Directory to Remote Server
+        run: |
+          # Use secure copy (scp) with the deployment key to transfer the .next directory
+          scp -r -i ./deploy_key -o StrictHostKeyChecking=no .next ${{env.REMOTE}}:${{secrets.DESTINATION}}
       - name: Clean Up
         run: |
           rm ../temp/archive.tar.gz
-
-      - name: Decompress and restart application
+      - name: Run deploy.sh script on remote server
         run: |
-          ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} '
-            cd ${{secrets.DESTINATION}};
-            tar -xzvf archive.tar.gz;  # Decompress the archive
-            rm archive.tar.gz;         # Optional: Remove the archive after decompressing
-            yarn;                              # Install dependencies
-            forever start -c "yarn start" ./;  # Restart the application
-          '
-      # - name: Deploy Build
-      #   if: steps.build.exit_code == 0
-      #   run: |
-      #     echo '${{secrets.DEPLOYKEY}}' > deploy_key
-      #     chmod 600 ./deploy_key
-      #     rsync -chav --exclude='node_modules/' \
-      #       -e 'ssh -i ./deploy_key -o StrictHostKeyChecking=no' \
-      #       ./ ${{env.REMOTE}}:${{secrets.DESTINATION}}        
-        #run: find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
-        # run: |
-        #   echo "list of all your files"
-        #   ls -la
-        #   find . -type f ! -path './node_modules/*' ! -path './.git/*' ! -path './.next/cache/*' -print
-        #   echo '${{secrets.DEPLOYKEY}}' > deploy_key
-        #   chmod 600 ./deploy_key
-        #   find . -type d \( -path './node_modules'\) -prune -o -type f -print | xargs scp -i ./deploy_key -o StrictHostKeyChecking=no -r ${{env.REMOTE}}:${{secrets.DESTINATION}}
-
-      # - name: Restart Application
-      #   run: ssh -i ./deploy_key -o 'StrictHostKeyChecking no' -v ${{env.REMOTE}} 'cd ${{secrets.DESTINATION}};yarn;pm2 restart 0'
+          ssh -i ./deploy_key -o 'StrictHostKeyChecking=no' -v ${{env.REMOTE}} 'bash ~/deploy.sh'

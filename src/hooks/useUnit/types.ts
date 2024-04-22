@@ -1,9 +1,9 @@
 export type T_CreateUnitFields = {
   name: string;
   description: string;
-  schoolId: string;
+  schoolId?: string;
   courseId: string;
-  programId: string;
+  programId?: string;
 };
 
 export type T_FetchUnits = {

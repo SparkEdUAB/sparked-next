@@ -1,7 +1,7 @@
 import { TProcessCode } from 'types/navigation';
 
 // 2100 - 2599
-const MEDIA_CONTENT_PROCESS_CODES: TProcessCode = {
+const MEDIA_CONTENT_PROCESS_CODES = {
   RESOURCE_EXIST: 2100,
   COURSE_NOT_FOUND: 2101,
   RESOURCE_EDITED: 2102,
@@ -13,6 +13,6 @@ const MEDIA_CONTENT_PROCESS_CODES: TProcessCode = {
   TOPIC_NOT_FOUND: 2108,
   MEDIA_CONTENT_NOT_FOUND: 2109,
   MEDIA_CONTENT_EDITED: 2110,
-};
+} satisfies TProcessCode;
 
 export default MEDIA_CONTENT_PROCESS_CODES;

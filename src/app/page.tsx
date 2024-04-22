@@ -1,7 +1,7 @@
 import WelcomePage from '@components/welcomePage';
 import React from 'react';
 
-const Home: React.FC = (props) => {
+const Home = () => {
   return <WelcomePage />;
 };
 

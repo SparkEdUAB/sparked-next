@@ -27,6 +27,7 @@ export function AdminTableButtonGroup({
         {i18next.t('new')}
       </Button>
       <Button
+        disabled={rowSelection.selectedRowKeys.length === 0}
         onClick={() =>
           rowSelection.selectedRowKeys.length === 0
             ? message.warning(i18next.t('select_items'))

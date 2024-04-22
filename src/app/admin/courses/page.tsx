@@ -1,15 +1,10 @@
-"use client";
+'use client';
 
-import CourseListView from "@components/courses/courseListView";
-import AdminLayout from "@components/layouts/adminLayout";
-import React from "react";
+import CourseListView from '@components/courses/courseListView';
+import React from 'react';
 
-const AdminSchools: React.FC = (props) => {
-  return (
-    <AdminLayout>
-      <CourseListView />
-    </AdminLayout>
-  );
+const AdminSchools = ({ params: { lng } }: { params: { lng: string } }) => {
+  return <CourseListView />;
 };
 
 export default AdminSchools;

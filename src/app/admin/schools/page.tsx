@@ -1,15 +1,10 @@
-"use client";
+'use client';
 
-import AdminLayout from "@components/layouts/adminLayout";
-import SchoolsListView from "@components/school/schoolsListView";
-import React from "react";
+import SchoolsListView from '@components/school/schoolsListView';
+import React from 'react';
 
 const AdminSchools: React.FC = (props) => {
-  return (
-    <AdminLayout>
-      <SchoolsListView />
-    </AdminLayout>
-  );
+  return <SchoolsListView />;
 };
 
 export default AdminSchools;

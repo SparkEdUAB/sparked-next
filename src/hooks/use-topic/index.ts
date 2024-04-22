@@ -126,28 +126,30 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      const _units = (responseData.units as T_RawTopicFields[])?.map<T_TopicFields>((i, index: number) => ({
+      const _topics = (responseData.units as T_RawTopicFields[])?.map<T_TopicFields>((i, index: number) => ({
         index: index + 1,
         key: i._id,
         _id: i._id,
         name: i.name,
-        school: i.school,
-        schoolId: i.school?._id,
         description: i.description,
+        school: i.school,
+        unitId: i.unit?._id,
+        schoolId: i.school?._id,
         courseId: i.course?._id,
-        unitId: i.course?._id,
+        programId: i.program?._id,
         schoolName: i.school?.name,
         programName: i.program?.name,
         courseName: i.course?.name,
         unitName: i.unit?.name,
-        programId: i.program?._id,
         created_by: i.user?.email,
         created_at: new Date(i.created_at).toDateString(),
       }));
 
-      setTopics(_units);
-      setOriginalTopics(_units);
-      return _units;
+      _topics.sort((a, b) => (a > b ? 1 : -1));
+
+      setTopics(_topics);
+      setOriginalTopics(_topics);
+      return _topics;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
