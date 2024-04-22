@@ -182,17 +182,11 @@ const useMediaContent = (form?: any) => {
     withMetaData: boolean;
   }) => {
     const url = API_LINKS.FETCH_MEDIA_CONTENT_BY_ID;
-    const formData = {
-      body: JSON.stringify({ mediaContentId, withMetaData }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { mediaContentId, withMetaData: `{withMetaData}` };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams({ params }));
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
