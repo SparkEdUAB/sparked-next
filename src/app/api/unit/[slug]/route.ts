@@ -1,16 +1,12 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { Session } from "next-auth";
-import { getServerSession } from "next-auth/next";
-import fetchUnits_, {
-  deleteUnits_,
-  fetchUnitById_,
-  findUnitsByName_,
-} from "..";
-import { authOptions } from "../../auth/constants";
-import createUnit_ from "../create";
-import editUnit_ from "../edit";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import fetchUnits_, { deleteUnits_, fetchUnitById_, findUnitsByName_ } from '..';
+import { authOptions } from '../../auth/constants';
+import createUnit_ from '../create';
+import editUnit_ from '../edit';
 
-const unitPostApiHandler_ = async function POST(
+export async function POST(
   req: Request,
 
   { params }: { params: { slug: string } },
@@ -39,14 +35,12 @@ const unitPostApiHandler_ = async function POST(
       status: 200,
     });
   }
-};
-const unitGetApiHandler_ = async function GET(
+}
+export async function GET(
   req: Request,
 
   { params }: { params: { slug: string } },
 ) {
-  const session = await getServerSession(authOptions);
-
   const slug = params.slug;
 
   const unitFunctions: {
@@ -57,8 +51,8 @@ const unitGetApiHandler_ = async function GET(
     findUnitsByName: findUnitsByName_,
   };
 
-  if (unitFunctions[slug] && session) {
-    return unitFunctions[slug](req, session);
+  if (unitFunctions[slug]) {
+    return unitFunctions[slug](req);
   } else {
     const response = {
       isError: true,
@@ -69,6 +63,4 @@ const unitGetApiHandler_ = async function GET(
       status: 200,
     });
   }
-};
-
-export { unitPostApiHandler_ as POST, unitGetApiHandler_ as GET };
+}

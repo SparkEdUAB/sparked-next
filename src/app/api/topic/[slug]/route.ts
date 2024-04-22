@@ -1,16 +1,12 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { Session } from "next-auth";
-import { getServerSession } from "next-auth/next";
-import fetchTopics_, {
-  deleteTopics_,
-  fetchTopicById_,
-  findTopicsByName_,
-} from "..";
-import { authOptions } from "../../auth/constants";
-import createTopic_ from "../create";
-import editTopic_ from "../edit";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import fetchTopics_, { deleteTopics_, fetchTopicById_, findTopicsByName_ } from '..';
+import { authOptions } from '../../auth/constants';
+import createTopic_ from '../create';
+import editTopic_ from '../edit';
 
-const topicPostApiHandler_ = async function POST(
+export async function POST(
   req: Request,
 
   { params }: { params: { slug: string } },
@@ -39,15 +35,13 @@ const topicPostApiHandler_ = async function POST(
       status: 200,
     });
   }
-};
+}
 
-const topicGetApiHandler_ = async function GET(
+export async function GET(
   req: Request,
 
   { params }: { params: { slug: string } },
 ) {
-  const session = await getServerSession(authOptions);
-
   const slug = params.slug;
 
   const topicFunctions: {
@@ -58,8 +52,8 @@ const topicGetApiHandler_ = async function GET(
     findTopicsByName: findTopicsByName_,
   };
 
-  if (topicFunctions[slug] && session) {
-    return topicFunctions[slug](req, session);
+  if (topicFunctions[slug]) {
+    return topicFunctions[slug](req);
   } else {
     const response = {
       isError: true,
@@ -70,6 +64,4 @@ const topicGetApiHandler_ = async function GET(
       status: 200,
     });
   }
-};
-
-export { topicPostApiHandler_ as POST, topicGetApiHandler_ as GET };
+}

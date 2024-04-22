@@ -280,11 +280,11 @@ export async function findMediaContentByName_(request: any) {
 export async function fetchRandomMediaContent_(request: any) {
   const schema = zfd.formData({
     limit: zfd.text(),
-    school_id: zfd.text(),
-    program_id: zfd.text(),
-    course_id: zfd.text(),
-    unit_id: zfd.text(),
-    topic_id: zfd.text(),
+    school_id: zfd.text().optional(),
+    program_id: zfd.text().optional(),
+    course_id: zfd.text().optional(),
+    unit_id: zfd.text().optional(),
+    topic_id: zfd.text().optional(),
   });
 
   const params = request.nextUrl.searchParams;

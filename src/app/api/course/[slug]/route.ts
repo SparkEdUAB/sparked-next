@@ -1,16 +1,12 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { Session } from "next-auth";
-import { getServerSession } from "next-auth/next";
-import fetchCourses_, {
-  deleteCourse_,
-  fetchCourseById_,
-  findCourseByName_,
-} from "..";
-import { authOptions } from "../../auth/constants";
-import editCourse_ from "../edit";
-import createCourse_ from "../create";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import fetchCourses_, { deleteCourse_, fetchCourseById_, findCourseByName_ } from '..';
+import { authOptions } from '../../auth/constants';
+import editCourse_ from '../edit';
+import createCourse_ from '../create';
 
-const coursePostApiHandler_ = async function POST(
+export async function POST(
   req: Request,
 
   { params }: { params: { slug: string } },
@@ -23,11 +19,8 @@ const coursePostApiHandler_ = async function POST(
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createCourse: createCourse_,
-    fetchCourses: fetchCourses_,
-    fetchCourseById: fetchCourseById_,
     editCourse: editCourse_,
     deleteCourse: deleteCourse_,
-    findCourseByName: findCourseByName_,
   };
 
   if (CourseFunctions[slug] && session) {
@@ -42,15 +35,13 @@ const coursePostApiHandler_ = async function POST(
       status: 200,
     });
   }
-};
+}
 
-const courseGetApiHandler_ = async function GET(
+export async function GET(
   req: Request,
 
   { params }: { params: { slug: string } },
 ) {
-  const session = await getServerSession(authOptions);
-
   const slug = params.slug;
 
   const CourseFunctions: {
@@ -61,8 +52,8 @@ const courseGetApiHandler_ = async function GET(
     findCourseByName: findCourseByName_,
   };
 
-  if (CourseFunctions[slug] && session) {
-    return CourseFunctions[slug](req, session);
+  if (CourseFunctions[slug]) {
+    return CourseFunctions[slug](req);
   } else {
     const response = {
       isError: true,
@@ -73,6 +64,4 @@ const courseGetApiHandler_ = async function GET(
       status: 200,
     });
   }
-};
-
-export { coursePostApiHandler_ as POST, courseGetApiHandler_ as GET };
+}

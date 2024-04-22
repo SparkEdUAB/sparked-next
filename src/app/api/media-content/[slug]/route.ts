@@ -11,7 +11,7 @@ import { authOptions } from '../../auth/constants';
 import createMediaContent_ from '../create';
 import editMediaContent_ from '../edit';
 
-const mediaContentPostApiHandler_ = async function POST(
+export async function POST(
   req: Request,
 
   { params }: { params: { slug: string } },
@@ -40,19 +40,17 @@ const mediaContentPostApiHandler_ = async function POST(
       status: 200,
     });
   }
-};
+}
 
-const mediaContentGetApiHandler_ = async function GET(
+export async function GET(
   req: Request,
 
   { params }: { params: { slug: string } },
 ) {
-  const session = await getServerSession(authOptions);
-
   const slug = params.slug;
 
   const schoolFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session | undefined) => {};
   } = {
     fetchRandomMediaContent: fetchRandomMediaContent_,
     fetchMediaContent: fetchMediaContent_,
@@ -60,11 +58,11 @@ const mediaContentGetApiHandler_ = async function GET(
     findMediaContentByName: findMediaContentByName_,
   };
 
-  if (schoolFunctions[slug] && session) {
-    return schoolFunctions[slug](req, session);
+  if (schoolFunctions[slug]) {
+    return schoolFunctions[slug](req);
   } else {
     const response = {
-      isError: true,
+      isError: 'true',
       code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
     };
 
@@ -74,4 +72,3 @@ const mediaContentGetApiHandler_ = async function GET(
   }
 };
 
-export { mediaContentGetApiHandler_ as GET, mediaContentPostApiHandler_ as POST };
