@@ -14,6 +14,8 @@ export default async function fetchMediaContent_(request: any) {
   });
   const params = request.nextUrl.searchParams;
 
+  console.log('params', params);
+
   const { limit, skip, withMetaData } = schema.parse(params);
   const isWithMetaData = Boolean(withMetaData);
 
