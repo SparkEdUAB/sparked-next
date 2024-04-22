@@ -1,13 +1,9 @@
 name: Deployment
 
-# on:
-#   release:
-#     types: [published]
-
 on:
-  push:
-    branches:
-      - release
+  release:
+    types: [published]
+
 env:
   REMOTE: ${{secrets.USERNAME}}@${{secrets.HOST}}
 
