@@ -1,53 +1,37 @@
 'use client';
 
-import React, { ReactNode, useEffect, useState } from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
-import { Badge } from 'flowbite-react';
 import { libraryTags } from '@components/layouts/library/tags';
-import { T_RawMediaContentFields } from 'types/media-content';
-import i18next from 'i18next';
-import { API_LINKS } from 'app/links';
-import { IoIosCloseCircleOutline } from 'react-icons/io';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
 import LibraryLoader from '@components/library/LibraryLoader';
+import { API_LINKS } from 'app/links';
+import { Badge } from 'flowbite-react';
+import { ReactNode, useEffect, useState } from 'react';
+import { IoIosCloseCircleOutline } from 'react-icons/io';
+import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers';
+import NETWORK_UTILS from 'utils/network';
 
 const fetchRandomMediaContent = async () => {
   const url = API_LINKS.FETCH_RANDOM_MEDIA_CONTENT;
-  const requestOptions = {
-    params: JSON.stringify({
-      limit: 20,
-    }),
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  const params = {
+    limit: '20',
   };
 
   try {
-    const resp = await fetch(url, requestOptions);
-
-    console.log(resp);
-    console.log('resp.ok:', resp.ok);
+    const resp = await fetch(url + NETWORK_UTILS.formatGetParams({ params }));
 
     if (!resp.ok) {
-      console.error(i18next.t('unknown_error'));
       return false;
     }
 
     const responseData = await resp.json();
-    console.log('responseData.isError:', responseData.isError);
-    console.log(responseData);
-
     if (responseData.isError) {
-      console.error(responseData.code);
       return false;
     }
-    console.log('fetchRandomMediaContent =>', responseData.mediaContent);
 
     return responseData.mediaContent as T_RawMediaContentFields[];
   } catch (err: any) {
-    console.error(err, `${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
     return false;
   }
 };

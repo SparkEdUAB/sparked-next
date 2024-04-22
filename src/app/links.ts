@@ -53,7 +53,7 @@ export const API_LINKS: T_link = {
   EDIT_MEDIA_CONTENT: '/api/media-content/editMediaContent',
   FIND_MEDIA_CONTENT_BY_NAME: '/api/media-content/findMediaContentByName',
   DELETE_MEDIA_CONTENT: '/api/media-content/deleteMediaContentByIds',
-  FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
+  FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent?',
 
   //   resources
   FILE_UPLOAD: '/api/file-upload/uploadFile',

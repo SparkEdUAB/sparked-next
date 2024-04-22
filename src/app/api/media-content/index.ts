@@ -297,6 +297,7 @@ export async function fetchRandomMediaContent_(request: any) {
       status: 200,
     });
   } catch (error) {
+
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
