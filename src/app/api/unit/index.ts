@@ -6,15 +6,16 @@ import { dbClient } from "../lib/db";
 import { dbCollections } from "../lib/db/collections";
 import { p_fetchUnitsWithMetaData } from "./pipelines";
 
-export default async function fetchUnits_(request: Request) {
+export default async function fetchUnits_(request: any) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
-    withMetaData: z.boolean().optional(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData } = schema.parse(formBody);
+  const { limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -31,7 +32,7 @@ export default async function fetchUnits_(request: Request) {
 
     let units = [];
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       units = await db
         .collection(dbCollections.units.name)
         .aggregate(p_fetchUnitsWithMetaData({ query: {} }))
@@ -44,7 +45,7 @@ export default async function fetchUnits_(request: Request) {
           {
             limit,
             skip,
-          }
+          },
         )
         .toArray();
     }
@@ -69,14 +70,15 @@ export default async function fetchUnits_(request: Request) {
   }
 }
 
-export async function fetchUnitById_(request: Request) {
+export async function fetchUnitById_(request: any) {
   const schema = zfd.formData({
     unitId: zfd.text(),
-    withMetaData: z.boolean(),
+    withMetaData: z.boolean().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { unitId, withMetaData } = schema.parse(formBody);
+  const { unitId, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -93,7 +95,7 @@ export async function fetchUnitById_(request: Request) {
 
     let unit: { [key: string]: string } | null;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       const units = await db
         .collection(dbCollections.units.name)
         .aggregate(
@@ -101,17 +103,14 @@ export async function fetchUnitById_(request: Request) {
             query: {
               _id: new BSON.ObjectId(unitId),
             },
-          })
+          }),
         )
         .toArray();
 
       unit = units.length ? units[0] : {};
     } else {
-      unit = await db
-        .collection(dbCollections.units.name)
-        .findOne({ _id: new BSON.ObjectId(unitId) });
+      unit = await db.collection(dbCollections.units.name).findOne({ _id: new BSON.ObjectId(unitId) });
     }
-
 
     const response = {
       isError: false,
@@ -180,16 +179,17 @@ export async function deleteUnits_(request: Request) {
   }
 }
 
-export async function findUnitsByName_(request: Request) {
+export async function findUnitsByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
     limit: zfd.numeric(),
-    withMetaData: z.boolean(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, withMetaData } = schema.parse(formBody);
+  const { name, limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -203,11 +203,11 @@ export async function findUnitsByName_(request: Request) {
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(name, 'i');
 
     let courses = null;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       courses = await db
         .collection(dbCollections.units.name)
         .aggregate(
@@ -215,7 +215,7 @@ export async function findUnitsByName_(request: Request) {
             query: {
               name: { $regex: regexPattern },
             },
-          })
+          }),
         )
         .toArray();
     } else {

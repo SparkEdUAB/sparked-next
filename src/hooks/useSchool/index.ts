@@ -10,6 +10,7 @@ import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import { T_CreateSchoolFields, T_FetchSchools } from './types';
 import UiStore from '@state/mobx/uiStore';
+import NETWORK_UTILS from 'utils/network';
 
 const useSchool = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -99,17 +100,11 @@ const useSchool = (form?: any) => {
 
   const fetchSchools = async ({ limit = 1000, skip = 0 }: T_FetchSchools) => {
     const url = API_LINKS.FETCH_SCHOOLS;
-    const formData = {
-      body: JSON.stringify({ limit, skip }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { limit: limit.toString(), skip: skip.toString() };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -145,17 +140,11 @@ const useSchool = (form?: any) => {
 
   const fetchSchool = async (schoolId: string) => {
     const url = API_LINKS.FETCH_SCHOOL;
-    const formData = {
-      body: JSON.stringify({ schoolId }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { schoolId };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -249,21 +238,15 @@ const useSchool = (form?: any) => {
     }
 
     const url = API_LINKS.FIND_SCHOOLS_BY_NAME;
-    const formData = {
-      body: JSON.stringify({
-        name: searchQuery.trim(),
-        limit: 1000,
-        skip: 0,
-      }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const params = {
+      name: searchQuery.trim(),
+      limit: '1000',
+      skip: '0',
     };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {

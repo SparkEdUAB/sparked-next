@@ -51,10 +51,10 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
           <Table.Head>
             <Table.HeadCell className="p-4 bg-gray-100">
               <Checkbox
-                checked={rowSelection.selectedRowKeys.length === items.length && items.length !== 0}
+                checked={rowSelection.selectedRowKeys.length === items?.length && items?.length !== 0}
                 onChange={(event) =>
                   event.target.checked
-                    ? rowSelection.onChange(items.map((item) => item._id))
+                    ? rowSelection.onChange(items?.map((item) => item._id))
                     : rowSelection.onChange([])
                 }
               />
@@ -70,10 +70,10 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
           <Table.Body className="divide-y">
             {isLoading ? (
               <AdminTableLoadingSpinner colSpan={columns.length + 2} />
-            ) : items.length === 0 ? (
+            ) : items?.length === 0 ? (
               <NothingToShow colSpan={columns.length + 2} />
             ) : (
-              items.map((item) => (
+              items?.map((item) => (
                 <Table.Row key={item.key} className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell className="p-4">
                     <Checkbox

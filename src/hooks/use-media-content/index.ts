@@ -11,6 +11,7 @@ import UiStore from '@state/mobx/uiStore';
 import { T_CreateResourceFields, T_FetchTopic } from './types';
 import { T_RawMediaContentFields, T_MediaContentFields } from 'types/media-content';
 import { T_React_key } from 'types/navigation';
+import NETWORK_UTILS from 'utils/network';
 
 const useMediaContent = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -118,17 +119,11 @@ const useMediaContent = (form?: any) => {
 
   const fetchMediaContent = async ({ limit = 1000, skip = 0 }: T_FetchTopic) => {
     const url = API_LINKS.FETCH_MEDIA_CONTENT;
-    const formData = {
-      body: JSON.stringify({ limit, skip, withMetaData: true }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { limit: `${limit}`, skip: `${skip}`, withMetaData: 'true' };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -187,17 +182,11 @@ const useMediaContent = (form?: any) => {
     withMetaData: boolean;
   }) => {
     const url = API_LINKS.FETCH_MEDIA_CONTENT_BY_ID;
-    const formData = {
-      body: JSON.stringify({ mediaContentId, withMetaData }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { mediaContentId, withMetaData: `${withMetaData}` };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -321,22 +310,16 @@ const useMediaContent = (form?: any) => {
     }
 
     const url = API_LINKS.FIND_MEDIA_CONTENT_BY_NAME;
-    const formData = {
-      body: JSON.stringify({
-        name: (searchQuery || searchText || '').trim(),
-        limit: 1000,
-        skip: 0,
-        withMetaData,
-      }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const params = {
+      name: (searchQuery || searchText || '').trim(),
+      limit: '1000',
+      skip: '0',
+      withMetaData: withMetaData.toString(),
     };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {

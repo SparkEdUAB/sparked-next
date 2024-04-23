@@ -1,26 +1,24 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useMediaContent from '@hooks/use-media-content';
 import useNavigation from '@hooks/useNavigation';
-import { Table } from 'antd';
-import { Button, Modal, TextInput } from 'flowbite-react';
+import { Modal, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
-import { HiMagnifyingGlass, HiOutlineNewspaper, HiOutlinePencilSquare, HiTrash } from 'react-icons/hi2';
+import React, { useMemo, useState } from 'react';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { mediaContentTableColumns } from '.';
 import { T_MediaContentFields } from 'types/media-content';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { T_ItemTypeBase } from '@components/admin/AdminTable/types';
 import CreateMediaContentView from './create-media-content-view';
 import EditMediaContentView from './edit-media-content-view';
+import { useFetch } from '@hooks/use-swr';
+import { API_LINKS } from 'app/links';
+import NETWORK_UTILS from 'utils/network';
 
 const MediaContentListView: React.FC = observer(() => {
   const {
-    fetchMediaContent,
-    mediaContent,
     selectedMediaContentIds,
     setSelectedMediaContentIds,
     triggerDelete,
@@ -29,14 +27,41 @@ const MediaContentListView: React.FC = observer(() => {
     onSearchQueryChange,
     isLoading,
     deleteMediaContent,
+    fetchMediaContent,
   } = useMediaContent();
   const { router, getChildLinkByKey } = useNavigation();
   const [creatingResource, setCreatingResource] = useState(false);
   const [edittingResourceWithId, setEdittingResourceWithId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchMediaContent({});
-  }, []);
+  const {
+    data,
+    isLoading: loading,
+    mutate,
+  } = useFetch(API_LINKS.FETCH_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }));
+
+  const mediaContent = useMemo(() => {
+    return (
+      // @ts-expect-error we can also add this mediaContent as the return type of the useFetch hook
+      (data?.mediaContent as any[])?.map<T_MediaContentFields>(
+        (i, index: number) =>
+          ({
+            index: index + 1,
+            key: i._id,
+            _id: i._id,
+            name: i.name,
+            fileUrl: i.file_url || undefined,
+            thumbnailUrl: i.thumbnailUrl,
+            description: i.description,
+            unitId: i.course?._id,
+            unitName: i.unit?.name,
+            topicId: i.topic?._id,
+            topicName: i.topic?.name,
+            created_by: i.user?.email,
+            created_at: new Date(i.created_at as string).toDateString(),
+          } satisfies T_MediaContentFields),
+      ) || []
+    );
+  }, [data]);
 
   const rowSelection = {
     selectedRowKeys: selectedMediaContentIds,
@@ -76,7 +101,7 @@ const MediaContentListView: React.FC = observer(() => {
         <Modal.Body className="custom-scrollbar">
           <CreateMediaContentView
             onSuccessfullyDone={() => {
-              fetchMediaContent({});
+              mutate();
               setCreatingResource(false);
             }}
           />
@@ -89,7 +114,7 @@ const MediaContentListView: React.FC = observer(() => {
             <EditMediaContentView
               resourceId={edittingResourceWithId}
               onSuccessfullyDone={() => {
-                fetchMediaContent({});
+                mutate();
                 setEdittingResourceWithId(null);
               }}
             />

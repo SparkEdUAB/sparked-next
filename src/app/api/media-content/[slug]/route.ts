@@ -11,7 +11,7 @@ import { authOptions } from '../../auth/constants';
 import createMediaContent_ from '../create';
 import editMediaContent_ from '../edit';
 
-const schoolPostApiHandler_ = async function POST(
+export async function POST(
   req: Request,
 
   { params }: { params: { slug: string } },
@@ -24,11 +24,8 @@ const schoolPostApiHandler_ = async function POST(
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createMediaContent: createMediaContent_,
-    fetchMediaContent: fetchMediaContent_,
-    fetchMediaContentById: fetchMediaContentById_,
     editMediaContent: editMediaContent_,
     deleteMediaContentByIds: deleteMediaContentByIds_,
-    findMediaContentByName: findMediaContentByName_,
   };
 
   if (schoolFunctions[slug] && session) {
@@ -43,28 +40,29 @@ const schoolPostApiHandler_ = async function POST(
       status: 200,
     });
   }
-};
+}
 
-const schoolGetApiHandler_ = async function GET(
+export async function GET(
   req: Request,
 
   { params }: { params: { slug: string } },
 ) {
-  const session = await getServerSession(authOptions);
-
   const slug = params.slug;
 
   const schoolFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session | undefined) => {};
   } = {
     fetchRandomMediaContent: fetchRandomMediaContent_,
+    fetchMediaContent: fetchMediaContent_,
+    fetchMediaContentById: fetchMediaContentById_,
+    findMediaContentByName: findMediaContentByName_,
   };
 
-  if (schoolFunctions[slug] && session) {
-    return schoolFunctions[slug](req, session);
+  if (schoolFunctions[slug]) {
+    return schoolFunctions[slug](req);
   } else {
     const response = {
-      isError: true,
+      isError: 'true',
       code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
     };
 
@@ -74,4 +72,3 @@ const schoolGetApiHandler_ = async function GET(
   }
 };
 
-export { schoolGetApiHandler_ as GET, schoolPostApiHandler_ as POST };
