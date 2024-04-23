@@ -9,6 +9,7 @@ import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
 import { T_CreateUnitFields, T_FetchUnits, T_RawUnitFields, T_UnitFields } from './types';
+import NETWORK_UTILS from 'utils/network';
 
 const useUnit = (form?: FormInstance) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -99,17 +100,11 @@ const useUnit = (form?: FormInstance) => {
 
   const fetchUnits = async ({ limit = 1000, skip = 0 }: T_FetchUnits) => {
     const url = API_LINKS.FETCH_UNIT;
-    const formData = {
-      body: JSON.stringify({ limit, skip, withMetaData: true }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const formData = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(formData));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -162,16 +157,10 @@ const useUnit = (form?: FormInstance) => {
 
   const fetchUnitById = async ({ unitId, withMetaData = false }: { unitId: string; withMetaData: boolean }) => {
     const url = API_LINKS.FETCH_UNIT_BY_ID;
-    const formData = {
-      body: JSON.stringify({ unitId, withMetaData }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const formData = { unitId, withMetaData: withMetaData.toString() };
 
     try {
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(formData));
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -271,21 +260,15 @@ const useUnit = (form?: FormInstance) => {
 
     const url = API_LINKS.FIND_UNITS_BY_NAME;
     const formData = {
-      body: JSON.stringify({
-        name: searchQuery.trim(),
-        limit: 1000,
-        skip: 0,
-        withMetaData,
-      }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      name: searchQuery.trim(),
+      limit: '1000',
+      skip: '0',
+      withMetaData: withMetaData.toString(),
     };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(formData));
       setLoaderStatus(false);
 
       if (!resp.ok) {

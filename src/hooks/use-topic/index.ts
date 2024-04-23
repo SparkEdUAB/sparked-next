@@ -9,6 +9,7 @@ import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
 import { T_CreateTopicFields, T_FetchTopic, T_TopicFields, T_RawTopicFields } from './types';
+import NETWORK_UTILS from 'utils/network';
 
 const useTopic = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -99,19 +100,17 @@ const useTopic = (form?: any) => {
     }
   };
 
-  const fetchTopics = async ({ limit = 1000, skip = 0 }: T_FetchTopic) => {
+  const fetchTopics = async ({ limit = 20, skip = 0 }: T_FetchTopic) => {
     const url = API_LINKS.FETCH_TOPICS;
-    const formData = {
-      body: JSON.stringify({ limit, skip, withMetaData: true }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const params = {
+      limit: limit.toString(),
+      skip: skip.toString(),
+      withMetaData: true.toString(),
     };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -159,17 +158,11 @@ const useTopic = (form?: any) => {
 
   const fetchTopicById = async ({ topicId, withMetaData = false }: { topicId: string; withMetaData: boolean }) => {
     const url = API_LINKS.FETCH_TOPIC_BY_ID;
-    const formData = {
-      body: JSON.stringify({ topicId, withMetaData }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { topicId: topicId.toString(), withMetaData: withMetaData.toString() };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -281,22 +274,16 @@ const useTopic = (form?: any) => {
     }
 
     const url = API_LINKS.FIND_TOPIC_BY_NAME;
-    const formData = {
-      body: JSON.stringify({
-        name: searchQuery.trim(),
-        limit: 1000,
-        skip: 0,
-        withMetaData,
-      }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const params = {
+      name: searchQuery.trim(),
+      limit: '1000',
+      skip: '0',
+      withMetaData: withMetaData.toString(),
     };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {

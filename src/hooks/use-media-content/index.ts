@@ -123,7 +123,7 @@ const useMediaContent = (form?: any) => {
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams({ params }));
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -182,11 +182,11 @@ const useMediaContent = (form?: any) => {
     withMetaData: boolean;
   }) => {
     const url = API_LINKS.FETCH_MEDIA_CONTENT_BY_ID;
-    const params = { mediaContentId, withMetaData: `{withMetaData}` };
+    const params = { mediaContentId, withMetaData: `${withMetaData}` };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams({ params }));
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -310,22 +310,16 @@ const useMediaContent = (form?: any) => {
     }
 
     const url = API_LINKS.FIND_MEDIA_CONTENT_BY_NAME;
-    const formData = {
-      body: JSON.stringify({
-        name: (searchQuery || searchText || '').trim(),
-        limit: 1000,
-        skip: 0,
-        withMetaData,
-      }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const params = {
+      name: (searchQuery || searchText || '').trim(),
+      limit: '1000',
+      skip: '0',
+      withMetaData: withMetaData.toString(),
     };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {

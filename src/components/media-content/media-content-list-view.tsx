@@ -1,19 +1,16 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useMediaContent from '@hooks/use-media-content';
 import useNavigation from '@hooks/useNavigation';
-import { Table } from 'antd';
-import { Button, Modal, TextInput } from 'flowbite-react';
+import { Modal, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useMemo, useState } from 'react';
-import { HiMagnifyingGlass, HiOutlineNewspaper, HiOutlinePencilSquare, HiTrash } from 'react-icons/hi2';
+import React, { useMemo, useState } from 'react';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { mediaContentTableColumns } from '.';
 import { T_MediaContentFields } from 'types/media-content';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { T_ItemTypeBase } from '@components/admin/AdminTable/types';
 import CreateMediaContentView from './create-media-content-view';
 import EditMediaContentView from './edit-media-content-view';
 import { useFetch } from '@hooks/use-swr';
@@ -40,7 +37,7 @@ const MediaContentListView: React.FC = observer(() => {
     data,
     isLoading: loading,
     mutate,
-  } = useFetch(API_LINKS.FETCH_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ params: { limit: '20', skip: '0' } }));
+  } = useFetch(API_LINKS.FETCH_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }));
 
   const mediaContent = useMemo(() => {
     return (

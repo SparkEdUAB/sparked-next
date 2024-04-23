@@ -37,3 +37,4 @@ mongodb-realm
 .env
 .env.test
 package-lock.json
+yarn.lock

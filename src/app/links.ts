@@ -25,7 +25,7 @@ export const API_LINKS: T_link = {
   FETCH_COURSE_BY_ID: '/api/course/fetchCourseById',
   EDIT_COURSE: '/api/course/editCourse',
   DELETE_COURSES: '/api/course/deleteCourse',
-  FIND_COURSE_BY_NAME: '/api/course/findCourseByName?',
+  FIND_COURSE_BY_NAME: '/api/course/findCourseByName',
   // unit  links
   CREATE_UNIT: '/api/unit/createUnit',
   FETCH_UNIT: '/api/unit/fetchUnits',
@@ -47,13 +47,13 @@ export const API_LINKS: T_link = {
 
   //   Media content
   CREATE_MEDIA_CONTENT: '/api/media-content/createMediaContent',
-  FETCH_MEDIA_CONTENT: '/api/media-content/fetchMediaContent?',
+  FETCH_MEDIA_CONTENT: '/api/media-content/fetchMediaContent',
   DELETE_RESOURCES: '/api/media-content/deleteResources',
-  FETCH_MEDIA_CONTENT_BY_ID: '/api/media-content/fetchMediaContentById?',
+  FETCH_MEDIA_CONTENT_BY_ID: '/api/media-content/fetchMediaContentById',
   EDIT_MEDIA_CONTENT: '/api/media-content/editMediaContent',
   FIND_MEDIA_CONTENT_BY_NAME: '/api/media-content/findMediaContentByName',
   DELETE_MEDIA_CONTENT: '/api/media-content/deleteMediaContentByIds',
-  FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent?',
+  FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
 
   //   resources
   FILE_UPLOAD: '/api/file-upload/uploadFile',

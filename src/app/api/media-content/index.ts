@@ -197,19 +197,19 @@ export async function findMediaContentByName_(request: any) {
     name: zfd.text(),
     skip: zfd.text(),
     limit: zfd.text(),
-    withMetaData: z.boolean(),
+    // withMetaData: z.boolean(),
     school_id: z.string().optional(),
     program_id: z.string().optional(),
     course_id: z.string().optional(),
     unit_id: z.string().optional(),
     topic_id: z.string().optional(),
   });
-  const formBody = await request.json();
+  // const formBody = await request.json();
   const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id } =
-    schema.parse(formBody);
-  const isWithMetaData = Boolean(withMetaData);
+  const { name, limit, skip, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
+
+  const isWithMetaData = params.withMetaData == 'true' ? true : false;
 
   try {
     const db = await dbClient();
