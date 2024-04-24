@@ -63,7 +63,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
 
     let topic = topics.find((topic) => topic._id === result.topicId);
 
-    if (!file || !thumbnail) {
+    if (!file) {
       return message.error(i18next.t('no_file'));
     }
 
@@ -76,11 +76,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
         return message.error(i18next.t('failed_to_upload'));
       }
 
-      let thumbnailUrl = await uploadFile(thumbnail);
-      if (!thumbnailUrl) {
-        setUploadingFile(false);
-        return message.error(i18next.t('failed_to_upload'));
-      }
+      let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
       createResource(
         {
@@ -91,7 +87,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           unitId: topic?.unitId,
         },
         fileUrl,
-        thumbnailUrl,
+        thumbnailUrl || undefined,
         onSuccessfullyDone,
       );
     } finally {
