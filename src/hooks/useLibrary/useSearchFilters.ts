@@ -1,7 +1,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useMemo } from 'react';
 
-export type Filters = {
+export type T_Filters = {
   school_id?: string;
   program_id?: string;
   course_id?: string;
@@ -13,7 +13,7 @@ export default function useSearchFilters() {
   let params = useSearchParams();
 
   return useMemo(() => {
-    let filters: Filters = {};
+    let filters: T_Filters = {};
 
     if (params.get('school_id')) filters.school_id = params.get('school_id') as string;
     if (params.get('program_id')) filters.program_id = params.get('program_id') as string;

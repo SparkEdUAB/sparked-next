@@ -29,15 +29,15 @@ export default async function fetchTopics_(request: any) {
       });
     }
 
-    let units = [];
+    let topics = [];
 
     if (isWithMetaData) {
-      units = await db
+      topics = await db
         .collection(dbCollections.topics.name)
         .aggregate(p_fetchTopicsWithMetaData({ query: {} }))
         .toArray();
     } else {
-      units = await db
+      topics = await db
         .collection(dbCollections.topics.name)
         .find(
           {},
@@ -51,7 +51,7 @@ export default async function fetchTopics_(request: any) {
 
     const response = {
       isError: false,
-      units,
+      topics,
     };
 
     return new Response(JSON.stringify(response), {
@@ -219,7 +219,7 @@ export async function findTopicsByName_(request: any) {
         .toArray();
     } else {
       topics = await db
-        .collection(dbCollections.units.name)
+        .collection(dbCollections.topics.name)
         .find({
           name: { $regex: regexPattern },
         })
