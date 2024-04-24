@@ -20,15 +20,15 @@ const onFinishFailed = (errorInfo: any) => {};
 
 const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createUnit, isLoading } = useUnit();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
+  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
   const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
 
   const { selectedSchool } = SchoolStore;
 
   useEffect(() => {
-    fetchSchools({});
-    fetchPrograms({});
+    // fetchSchools({});
+    // fetchPrograms({});
     fetchCourses({});
   }, []);
 

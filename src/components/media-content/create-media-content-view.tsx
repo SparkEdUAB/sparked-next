@@ -32,15 +32,15 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
 
   // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
   // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
-  const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
-  const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
+  // const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
+  // const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
   const { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
 
   useEffect(() => {
     // fetchSchools({});
     // fetchPrograms({});
-    fetchCourses({});
-    fetchUnits({});
+    // fetchCourses({});
+    // fetchUnits({});
     fetchTopics({});
   }, []);
 
