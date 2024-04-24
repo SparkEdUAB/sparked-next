@@ -11,6 +11,8 @@ export type T_CONFIG_VARIABLES = {
   isHighSchool: Boolean;
   isConfigured: Boolean;
   serverUrl: string;
+  showSchool: Boolean;
+  showPrograms: Boolean;
 };
 
 //this is used to determine how a config variable will be stored.
