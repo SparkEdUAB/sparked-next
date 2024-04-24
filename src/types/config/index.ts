@@ -2,17 +2,24 @@ export type T_CONFIG = {
   isAutoLoadCoreConfig?: Boolean;
 };
 
-export type T_CONFIG_VARIABLE = Record<string, T_CONFIG_STORE_STATE>;
+
+
+export type T_CONFIG_VARIABLE = {
+  key: string;
+  value: string | number | Boolean;
+  label: string;
+  stateLocation: T_CONFIG_STORE_STATE;
+};
 
 export type T_CONFIG_VARIABLES = {
-  schoolName: string;
-  tagline: string;
-  isUserAuth: Boolean;
-  isHighSchool: Boolean;
-  isConfigured: Boolean;
-  serverUrl: string;
-  showSchool: Boolean;
-  showPrograms: Boolean;
+  schoolName: T_CONFIG_VARIABLE;
+  tagline: T_CONFIG_VARIABLE;
+  isUserAuth: T_CONFIG_VARIABLE;
+  isHighSchool: T_CONFIG_VARIABLE;
+  isConfigured: T_CONFIG_VARIABLE;
+  serverUrl: T_CONFIG_VARIABLE;
+  showSchool: T_CONFIG_VARIABLE;
+  showPrograms: T_CONFIG_VARIABLE;
 };
 
 //this is used to determine how a config variable will be stored.

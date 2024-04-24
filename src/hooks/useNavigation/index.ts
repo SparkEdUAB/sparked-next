@@ -4,22 +4,40 @@ import { T_BreadcrumbItems, T_MenuItemLink, T_MenuItemLinkParams } from 'types/n
 import { useParams, usePathname } from 'next/navigation';
 import axios from 'axios';
 import { useRouter } from 'next-nprogress-bar';
+import useConfig from '@hooks/use-config';
+import { T_CONFIG_VARIABLE } from 'types/config';
 
 const useNavigation = () => {
   const pathname = usePathname();
   const router = useRouter();
 
+  const { configs } = useConfig({ isAutoLoadCoreConfig: true });
+
   const { activeMenuItem } = NavigationStore;
 
   const fetchAdminMenuItems = () => {
     const menuItems: Array<T_MenuItemLinkParams> = [];
+    const filteredMenuItems: Array<string> = [];
 
     for (const menuItem in ADMIN_LINKS) {
       const entry = ADMIN_LINKS[menuItem as keyof T_MenuItemLink];
       menuItems.push(entry);
     }
 
-    return menuItems;
+    for (const key in configs) {
+      //@ts-ignore
+      const configVar = configs[key];
+      const configVarkey = `admin_${configVar.key}`;
+
+      const menuItemEntry = menuItems.filter((i) => i.key === configVarkey);
+
+      //check if this menu items is disabled in the config
+      if (menuItemEntry[0] && `admin_${configVar.key}` === menuItemEntry[0].key && configVar.value === 'false') {
+        filteredMenuItems.push(menuItemEntry[0].key);
+      }
+    }
+
+    return menuItems.filter((i) => filteredMenuItems.indexOf(i.key) === -1);
   };
 
   const isActiveMenuItem = (menuItem: T_MenuItemLinkParams): boolean => {

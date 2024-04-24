@@ -8,7 +8,7 @@ import { T_CONFIG, T_CONFIG_VARIABLES } from 'types/config';
 const useConfig = (props: T_CONFIG) => {
   const { isAutoLoadCoreConfig } = props;
 
-  const [schoolName, setSchoolName] = useState<string>('');
+  const [configs, setConfigs] = useState<T_CONFIG_VARIABLES | null>(null);
 
   useEffect(() => {
     isAutoLoadCoreConfig && loadConfigFile({});
@@ -39,9 +39,9 @@ const useConfig = (props: T_CONFIG) => {
         return false;
       }
 
-      const { schoolName }: T_CONFIG_VARIABLES = JSON.parse(responseData.configFile);
+      const _configs: T_CONFIG_VARIABLES = JSON.parse(responseData.configFile);
 
-      setSchoolName(schoolName);
+      setConfigs(_configs);
     } catch (err: any) {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
@@ -50,7 +50,7 @@ const useConfig = (props: T_CONFIG) => {
 
   return {
     loadConfigFile,
-    schoolName,
+    configs,
   };
 };
 
