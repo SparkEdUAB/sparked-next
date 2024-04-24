@@ -8,6 +8,7 @@ import { T_ColumnData, T_ItemTypeBase } from './types';
 import { DeletionWarningModal } from './DeletionWarningModal';
 import { AdminTableButtonGroup } from './AdminTableButtonGroup';
 import { MdEdit } from 'react-icons/md';
+import useConfig from '@hooks/use-config';
 
 export function AdminTable<ItemType extends T_ItemTypeBase>({
   rowSelection,
@@ -37,6 +38,10 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
+  const { configs, getDisabledConfigItems } = useConfig({ isAutoLoadCoreConfig: true });
+
+  const disabledConfigItems: Array<string> = configs ? getDisabledConfigItems({ configs }) : [];
+
   return (
     <>
       <AdminTableButtonGroup
@@ -59,11 +64,13 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                 }
               />
             </Table.HeadCell>
-            {columns.map((column) => (
-              <Table.HeadCell key={column.key} className="bg-gray-100">
-                {column.title?.toString()}
-              </Table.HeadCell>
-            ))}
+            {columns
+              .filter((i) => disabledConfigItems.indexOf(i.key) === -1)
+              .map((column) => (
+                <Table.HeadCell key={column.key} className="bg-gray-100">
+                  {column.title?.toString()}
+                </Table.HeadCell>
+              ))}
             <Table.HeadCell className="bg-gray-100"></Table.HeadCell>
           </Table.Head>
 

@@ -16,16 +16,9 @@ const useConfig = (props: T_CONFIG) => {
 
   const loadConfigFile = async ({}) => {
     const url = API_LINKS.READ_CONFIG_FILE;
-    const formData = {
-      body: JSON.stringify({}),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
 
     try {
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -48,9 +41,26 @@ const useConfig = (props: T_CONFIG) => {
     }
   };
 
+  const getDisabledConfigItems = ({ configs }: { configs: T_CONFIG_VARIABLES }) => {
+    const disabledConfigItems: Array<string> = [];
+
+    for (const key in configs) {
+      //@ts-ignore
+      const configVar = configs[key];
+      const configVarkey = configVar.key;
+
+      //check if this menu items is disabled in the config
+      if (configVar.value === 'false') {
+        disabledConfigItems.push(configVarkey);
+      }
+    }
+    return disabledConfigItems;
+  };
+
   return {
     loadConfigFile,
     configs,
+    getDisabledConfigItems,
   };
 };
 

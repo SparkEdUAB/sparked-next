@@ -16,13 +16,13 @@ export const courseTableColumns: T_ColumnData<T_CourseFields>[] = [
   {
     title: 'School',
     dataIndex: 'schoolName',
-    key: 'school',
+    key: 'schools',
     render: (text) => <a>{text || i18next.t('not_linked')}</a>,
   },
   {
     title: 'Program',
     dataIndex: 'programName',
-    key: 'program',
+    key: 'programs',
     render: (text) => <a>{text || i18next.t('not_linked')}</a>,
   },
   {
