@@ -42,6 +42,8 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
 
   const disabledConfigItems: Array<string> = configs ? getDisabledConfigItems({ configs }) : [];
 
+  const filteredColumns = columns.filter((i) => disabledConfigItems.indexOf(i.key) === -1);
+
   return (
     <>
       <AdminTableButtonGroup
@@ -64,21 +66,19 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                 }
               />
             </Table.HeadCell>
-            {columns
-              .filter((i) => disabledConfigItems.indexOf(i.key) === -1)
-              .map((column) => (
-                <Table.HeadCell key={column.key} className="bg-gray-100">
-                  {column.title?.toString()}
-                </Table.HeadCell>
-              ))}
+            {filteredColumns.map((column) => (
+              <Table.HeadCell key={column.key} className="bg-gray-100">
+                {column.title?.toString()}
+              </Table.HeadCell>
+            ))}
             <Table.HeadCell className="bg-gray-100"></Table.HeadCell>
           </Table.Head>
 
           <Table.Body className="divide-y">
             {isLoading ? (
-              <AdminTableLoadingSpinner colSpan={columns.length + 2} />
+              <AdminTableLoadingSpinner colSpan={filteredColumns.length + 2} />
             ) : items?.length === 0 ? (
-              <NothingToShow colSpan={columns.length + 2} />
+              <NothingToShow colSpan={filteredColumns.length + 2} />
             ) : (
               items?.map((item) => (
                 <Table.Row key={item.key} className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -92,7 +92,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                       }
                     />
                   </Table.Cell>
-                  {columns.map((column) => {
+                  {filteredColumns.map((column) => {
                     const text = item[column.dataIndex as keyof ItemType] as string;
                     return <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>;
                   })}

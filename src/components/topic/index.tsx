@@ -25,7 +25,7 @@ export const topicTableColumns: T_ColumnData<T_TopicFields>[] = [
   {
     title: 'Program',
     dataIndex: 'programName',
-    key: 'schools',
+    key: 'programs',
     render: (text) => <a>{text || i18next.t('not_linked')}</a>,
   },
   {
