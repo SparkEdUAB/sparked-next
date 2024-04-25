@@ -2,7 +2,11 @@ export type T_CONFIG = {
   isAutoLoadCoreConfig?: Boolean;
 };
 
-
+export type T_CONFIG_DB_VARIABLE = {
+  key?: string;
+  value?: number;
+  fieldName: string;
+};
 
 export type T_CONFIG_VARIABLE = {
   key: string;

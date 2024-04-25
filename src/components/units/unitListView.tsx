@@ -1,7 +1,7 @@
 'use client';
 
+import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import { AdminPageTitle } from '@components/layouts';
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import useUnit from '@hooks/useUnit';
 import { Modal, TextInput } from 'flowbite-react';
@@ -10,7 +10,6 @@ import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { unitTableColumns } from '.';
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import CreateUnitView from './create-unit-view';
 import EditUnitView from './edit-unit-view';
 

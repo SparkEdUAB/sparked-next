@@ -4,6 +4,11 @@ import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchCoursesWithMetaData } from './pipelines';
+import { getDbFieldNamesConfigStatus } from '../config';
+import { COURSE_FIELD_NAMES_CONFIG } from './constants';
+import { T_RECORD } from 'types';
+
+const dbConfigData = COURSE_FIELD_NAMES_CONFIG;
 
 export default async function fetchCourses_(request: any) {
   const schema = zfd.formData({
@@ -31,10 +36,12 @@ export default async function fetchCourses_(request: any) {
 
     let courses = [];
 
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+
     if (isWithMetaData) {
       courses = await db
         .collection(dbCollections.courses.name)
-        .aggregate(p_fetchCoursesWithMetaData({ query: {} }))
+        .aggregate(p_fetchCoursesWithMetaData({ query: {}, project }))
         .toArray();
     } else {
       courses = await db
@@ -48,6 +55,7 @@ export default async function fetchCourses_(request: any) {
         )
         .toArray();
     }
+    console.log('courses', courses);
 
     const response = {
       isError: false,
@@ -58,6 +66,8 @@ export default async function fetchCourses_(request: any) {
       status: 200,
     });
   } catch (error) {
+    console.log('courses', error);
+
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -93,6 +103,8 @@ export async function fetchCourseById_(request: any) {
       });
     }
 
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+
     let course;
 
     if (isWithMetaData) {
@@ -100,6 +112,7 @@ export async function fetchCourseById_(request: any) {
         .collection(dbCollections.courses.name)
         .aggregate(
           p_fetchCoursesWithMetaData({
+            project,
             query: {
               _id: new BSON.ObjectId(courseId),
             },
@@ -204,6 +217,7 @@ export async function findCourseByName_(request: any) {
       });
     }
     const regexPattern = new RegExp(name, 'i');
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let courses = null;
 
@@ -212,6 +226,7 @@ export async function findCourseByName_(request: any) {
         .collection(dbCollections.courses.name)
         .aggregate(
           p_fetchCoursesWithMetaData({
+            project,
             query: {
               name: { $regex: regexPattern },
             },
