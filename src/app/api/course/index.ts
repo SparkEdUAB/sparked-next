@@ -6,7 +6,6 @@ import { dbCollections } from '../lib/db/collections';
 import { p_fetchCoursesWithMetaData } from './pipelines';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { COURSE_FIELD_NAMES_CONFIG } from './constants';
-import { T_RECORD } from 'types';
 
 const dbConfigData = COURSE_FIELD_NAMES_CONFIG;
 
