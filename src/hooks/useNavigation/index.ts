@@ -1,25 +1,30 @@
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+import useConfig from '@hooks/use-config';
 import NavigationStore from '@state/mobx/navigationStore';
-import { T_BreadcrumbItems, T_MenuItemLink, T_MenuItemLinkParams } from 'types/navigation/links';
-import { useParams, usePathname } from 'next/navigation';
 import axios from 'axios';
 import { useRouter } from 'next-nprogress-bar';
+import { useParams, usePathname } from 'next/navigation';
+import { T_BreadcrumbItems, T_MenuItemLink, T_MenuItemLinkParams } from 'types/navigation/links';
 
 const useNavigation = () => {
   const pathname = usePathname();
   const router = useRouter();
+
+  const { configs, getDisabledConfigItems } = useConfig({ isAutoLoadCoreConfig: true });
 
   const { activeMenuItem } = NavigationStore;
 
   const fetchAdminMenuItems = () => {
     const menuItems: Array<T_MenuItemLinkParams> = [];
 
+    const filteredMenuItems: Array<string> = configs ? getDisabledConfigItems({ configs }) : [];
+
     for (const menuItem in ADMIN_LINKS) {
       const entry = ADMIN_LINKS[menuItem as keyof T_MenuItemLink];
       menuItems.push(entry);
     }
 
-    return menuItems;
+    return menuItems.filter((i) => filteredMenuItems.indexOf(i.key.replace('admin_', '')) === -1);
   };
 
   const isActiveMenuItem = (menuItem: T_MenuItemLinkParams): boolean => {

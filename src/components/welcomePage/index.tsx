@@ -11,12 +11,12 @@ const ibmBlexSans = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400', '500', '
 
 // We should only show this if not logged in
 const WelcomePage: React.FC = () => {
-  const { schoolName } = useConfig({ isAutoLoadCoreConfig: true });
+  const { configs } = useConfig({ isAutoLoadCoreConfig: true });
 
   return (
     <>
       <Head>
-        <title>{schoolName}</title>
+        <title>{configs?.schoolName.label}</title>
       </Head>
       <div className={`${ibmBlexSans.className} text-[#36799d] dark:text-[#98bdd2]`}>
         <HeaderSection />

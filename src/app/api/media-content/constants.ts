@@ -1,31 +1,16 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import { T_CONFIG_DB_VARIABLE } from 'types/config';
 
-export const authOptions: NextAuthOptions = {
-  providers: [
-    CredentialsProvider({
-      name: "Credentials",
-
-      credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials, req) {
-        //@ts-ignore
-        const { user } = credentials;
-
-        if (user) {
-          return user;
-        } else {
-          return null;
-        }
-      },
-    }),
-  ],
-  theme: {
-    colorScheme: "light",
+export const MEDIAL_CONTENT_FIELD_NAMES_CONFIG: T_CONFIG_DB_VARIABLE[] = [
+  {
+    fieldName: 'school._id',
+    key: 'schools',
   },
-  callbacks: {},
-};
-
-export default NextAuth(authOptions);
+  {
+    fieldName: 'school.name',
+    key: 'schools',
+  },
+  {
+    fieldName: 'program.name',
+    key: 'programs',
+  },
+];

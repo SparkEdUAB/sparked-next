@@ -1,10 +1,15 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { z } from "zod";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { p_fetchUnitsWithMetaData } from "./pipelines";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { z } from 'zod';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { p_fetchUnitsWithMetaData } from './pipelines';
+import { UNIT_FIELD_NAMES_CONFIG } from './constants';
+import { getDbFieldNamesConfigStatus } from '../config';
+import { T_RECORD } from 'types';
+
+const dbConfigData = UNIT_FIELD_NAMES_CONFIG;
 
 export default async function fetchUnits_(request: any) {
   const schema = zfd.formData({
@@ -32,10 +37,12 @@ export default async function fetchUnits_(request: any) {
 
     let units = [];
 
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+
     if (isWithMetaData) {
       units = await db
         .collection(dbCollections.units.name)
-        .aggregate(p_fetchUnitsWithMetaData({ query: {} }))
+        .aggregate(p_fetchUnitsWithMetaData({ query: {}, project }))
         .toArray();
     } else {
       units = await db
@@ -92,14 +99,16 @@ export async function fetchUnitById_(request: any) {
         status: 200,
       });
     }
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
-    let unit: { [key: string]: string } | null;
+    let unit: T_RECORD | null;
 
     if (isWithMetaData) {
       const units = await db
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
+            project,
             query: {
               _id: new BSON.ObjectId(unitId),
             },
@@ -204,6 +213,7 @@ export async function findUnitsByName_(request: any) {
       });
     }
     const regexPattern = new RegExp(name, 'i');
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let courses = null;
 
@@ -212,6 +222,7 @@ export async function findUnitsByName_(request: any) {
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
+            project,
             query: {
               name: { $regex: regexPattern },
             },
