@@ -11,14 +11,12 @@ import { getMetadataGenerator } from 'utils/helpers';
 export async function generateMetadata(props: T_WelcomePageProps, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
 
-  const result = await fetcher<{ configFile: T_CONFIG_VARIABLES }>(BASE_URL + API_LINKS.READ_CONFIG_FILE, {
-    method: 'POST',
-  });
+  const result = await fetcher<{ configData: T_CONFIG_VARIABLES }>(BASE_URL + API_LINKS.READ_CONFIG_FILE);
 
-  if (result instanceof Error) {
+  if (result instanceof Error || !result.configData.schoolName || !result.configData.tagline) {
     return getMetadata('SparkEd', 'Your digital library - Easily manage your organization resources');
   } else {
-    return getMetadata(result.configFile.schoolName, result.configFile.tagline);
+    return getMetadata(result.configData.schoolName.value as string, result.configData.tagline.value as string);
   }
 }
 

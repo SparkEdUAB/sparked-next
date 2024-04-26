@@ -39,7 +39,7 @@ const useConfig = (props: T_CONFIG) => {
 
       setConfigs(_configs);
     } catch (err: any) {
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      // message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };
