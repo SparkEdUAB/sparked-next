@@ -1,5 +1,6 @@
 'use client';
 
+import useConfig from '@hooks/use-config';
 import useNavigation from '@hooks/useNavigation';
 import { Badge, Sidebar } from 'flowbite-react';
 import i18next from 'i18next';

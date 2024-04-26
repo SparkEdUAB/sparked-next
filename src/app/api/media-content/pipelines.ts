@@ -1,13 +1,16 @@
+import { T_RECORD } from 'types';
 import { dbCollections } from '../lib/db/collections';
 
 export const p_fetchMediaContentWithMetaData = ({
   query = {},
   skip = 0,
   limit = 1000,
+  project = [],
 }: {
   query?: object;
   limit?: number;
   skip?: number;
+  project: T_RECORD[];
 }) => [
   {
     $match: query,
@@ -105,10 +108,6 @@ export const p_fetchMediaContentWithMetaData = ({
       'user._id': 1,
       'user.name': 1,
       'user.email': 1,
-      'school.name': 1,
-      'school._id': 1,
-      'program.name': 1,
-      'program._id': 1,
       'course._id': 1,
       'course.name': 1,
       'unit.name': 1,
@@ -116,6 +115,7 @@ export const p_fetchMediaContentWithMetaData = ({
       'topic.name': 1,
       'topic._id': 1,
       file_url: 1,
+      ...project,
     },
   },
   {

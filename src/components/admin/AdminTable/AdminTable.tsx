@@ -8,6 +8,7 @@ import { T_ColumnData, T_ItemTypeBase } from './types';
 import { DeletionWarningModal } from './DeletionWarningModal';
 import { AdminTableButtonGroup } from './AdminTableButtonGroup';
 import { MdEdit } from 'react-icons/md';
+import useConfig from '@hooks/use-config';
 
 export function AdminTable<ItemType extends T_ItemTypeBase>({
   rowSelection,
@@ -37,6 +38,12 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
+  const { configs, getDisabledConfigItems } = useConfig({ isAutoLoadCoreConfig: true });
+
+  const disabledConfigItems: Array<string> = configs ? getDisabledConfigItems({ configs }) : [];
+
+  const filteredColumns = columns.filter((i) => disabledConfigItems.indexOf(i.key) === -1);
+
   return (
     <>
       <AdminTableButtonGroup
@@ -59,7 +66,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                 }
               />
             </Table.HeadCell>
-            {columns.map((column) => (
+            {filteredColumns.map((column) => (
               <Table.HeadCell key={column.key} className="bg-gray-100">
                 {column.title?.toString()}
               </Table.HeadCell>
@@ -69,9 +76,9 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
 
           <Table.Body className="divide-y">
             {isLoading ? (
-              <AdminTableLoadingSpinner colSpan={columns.length + 2} />
+              <AdminTableLoadingSpinner colSpan={filteredColumns.length + 2} />
             ) : items?.length === 0 ? (
-              <NothingToShow colSpan={columns.length + 2} />
+              <NothingToShow colSpan={filteredColumns.length + 2} />
             ) : (
               items?.map((item) => (
                 <Table.Row key={item.key} className="bg-white dark:border-gray-700 dark:bg-gray-800">
@@ -85,7 +92,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                       }
                     />
                   </Table.Cell>
-                  {columns.map((column) => {
+                  {filteredColumns.map((column) => {
                     const text = item[column.dataIndex as keyof ItemType] as string;
                     return <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>;
                   })}

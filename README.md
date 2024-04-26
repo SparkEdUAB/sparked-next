@@ -2,13 +2,7 @@
 
 # Sparked-next
 
-> Software for organizing and presenting educational and training content for delivery on most platforms.
-
-The first [version of SparkEd]((https://github.com/SparkEdUAB/SparkEd) was deployed on a server and loaded more than 1,500 resources. It has worked very well in an office setting and was tested with 20 hosts. We plan to deploy the system in a school with more than 600 students.
-
-To get started check out [our wiki](https://github.com/SparkEdUAB/SparkEd/wiki)
-
-[Check here](https://sparkeduab.github.io/sparked-manual/) for the online documentation how to use this project and a small demo here [https://sparkednext.app](https://sparkednext.app) accessible on big screens.
+This is an actively maintained new version of SparkEd, Your feedback & contributions are greatly appreciated. 
 
 **Note**: We only support Node^18  
 
@@ -63,7 +57,7 @@ Before pushing anything to your fork, always
 
 ### linting
 
-`npm run lint` or `yarn run lint`
+`yarn run lint`
 
 Before you make commit, make sure that the linting are passing, check with the eslintrc.yml to check the rules.
 

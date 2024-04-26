@@ -1,6 +1,7 @@
 'use client';
 import { message } from 'antd';
 import { API_LINKS } from 'app/links';
+import sharedConfig from 'app/shared/config';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import { T_CONFIG, T_CONFIG_VARIABLES } from 'types/config';
@@ -8,7 +9,9 @@ import { T_CONFIG, T_CONFIG_VARIABLES } from 'types/config';
 const useConfig = (props: T_CONFIG) => {
   const { isAutoLoadCoreConfig } = props;
 
-  const [schoolName, setSchoolName] = useState<string>('');
+  const { getDisabledConfigItems } = sharedConfig();
+
+  const [configs, setConfigs] = useState<T_CONFIG_VARIABLES | null>(null);
 
   useEffect(() => {
     isAutoLoadCoreConfig && loadConfigFile({});
@@ -16,16 +19,9 @@ const useConfig = (props: T_CONFIG) => {
 
   const loadConfigFile = async ({}) => {
     const url = API_LINKS.READ_CONFIG_FILE;
-    const formData = {
-      body: JSON.stringify({}),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
 
     try {
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -39,9 +35,9 @@ const useConfig = (props: T_CONFIG) => {
         return false;
       }
 
-      const { schoolName }: T_CONFIG_VARIABLES = JSON.parse(responseData.configFile);
+      const _configs: T_CONFIG_VARIABLES = JSON.parse(responseData.configData);
 
-      setSchoolName(schoolName);
+      setConfigs(_configs);
     } catch (err: any) {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
@@ -50,7 +46,8 @@ const useConfig = (props: T_CONFIG) => {
 
   return {
     loadConfigFile,
-    schoolName,
+    configs,
+    getDisabledConfigItems,
   };
 };
 

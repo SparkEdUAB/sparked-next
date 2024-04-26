@@ -4,6 +4,11 @@ import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchTopicsWithMetaData } from './pipelines';
+import { TOPIC_FIELD_NAMES_CONFIG } from './constants';
+import { getDbFieldNamesConfigStatus } from '../config';
+
+const dbConfigData = TOPIC_FIELD_NAMES_CONFIG;
+
 
 export default async function fetchTopics_(request: any) {
   const schema = zfd.formData({
@@ -28,13 +33,14 @@ export default async function fetchTopics_(request: any) {
         status: 200,
       });
     }
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let topics = [];
 
     if (isWithMetaData) {
       topics = await db
         .collection(dbCollections.topics.name)
-        .aggregate(p_fetchTopicsWithMetaData({ query: {} }))
+        .aggregate(p_fetchTopicsWithMetaData({ query: {}, project }))
         .toArray();
     } else {
       topics = await db
@@ -91,6 +97,7 @@ export async function fetchTopicById_(request: any) {
         status: 200,
       });
     }
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let topic: { [key: string]: string } | null;
 
@@ -99,6 +106,7 @@ export async function fetchTopicById_(request: any) {
         .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
+            project,
             query: {
               _id: new BSON.ObjectId(topicId),
             },
@@ -203,6 +211,7 @@ export async function findTopicsByName_(request: any) {
       });
     }
     const regexPattern = new RegExp(name, 'i');
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let topics = null;
 
@@ -211,6 +220,7 @@ export async function findTopicsByName_(request: any) {
         .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
+            project,
             query: {
               name: { $regex: regexPattern },
             },
