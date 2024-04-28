@@ -9,7 +9,7 @@ import { observer } from 'mobx-react-lite';
 import React, { useMemo, useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { mediaContentTableColumns } from '.';
-import { T_MediaContentFields } from 'types/media-content';
+import { T_MediaContentFields, T_RawMediaContentFields } from 'types/media-content';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import CreateMediaContentView from './create-media-content-view';
 import EditMediaContentView from './edit-media-content-view';
@@ -37,12 +37,13 @@ const MediaContentListView: React.FC = observer(() => {
     data,
     isLoading: loading,
     mutate,
-  } = useFetch(API_LINKS.FETCH_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }));
+  } = useFetch<{ mediaContent: T_RawMediaContentFields[] }>(
+    API_LINKS.FETCH_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }),
+  );
 
   const mediaContent = useMemo(() => {
     return (
-      // @ts-expect-error we can also add this mediaContent as the return type of the useFetch hook
-      (data?.mediaContent as any[])?.map<T_MediaContentFields>(
+      data?.mediaContent?.map<T_MediaContentFields>(
         (i, index: number) =>
           ({
             index: index + 1,
