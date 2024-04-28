@@ -21,6 +21,7 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
     BASE_URL +
       API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
       NETWORK_UTILS.formatGetParams({ mediaContentId: props.params.id, withMetaData: 'false' }),
+    { next: { revalidate: 3600 } },
   );
 
   if (result instanceof Error) {
@@ -42,6 +43,7 @@ export default async function MediaContentPage({ params }: T_MediaContentPagePro
     BASE_URL +
       API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
       NETWORK_UTILS.formatGetParams({ mediaContentId: params.id, withMetaData: 'false' }),
+    { next: { revalidate: 3600 } },
   );
 
   return (

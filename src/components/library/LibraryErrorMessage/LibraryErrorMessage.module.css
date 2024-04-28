@@ -3,3 +3,7 @@
   padding: 2px 4px 0 4px;
   border-radius: 2px;
 }
+
+[class='dark'] .container code {
+  background-color: rgb(119, 29, 29);
+}

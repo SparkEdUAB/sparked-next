@@ -105,7 +105,7 @@ const useTopic = (form?: any) => {
     const params = {
       limit: limit.toString(),
       skip: skip.toString(),
-      withMetaData: true.toString(),
+      withMetaData: 'true',
     };
 
     try {

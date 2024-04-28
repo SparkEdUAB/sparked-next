@@ -54,7 +54,6 @@ export default async function fetchCourses_(request: any) {
         )
         .toArray();
     }
-    console.log('courses', courses);
 
     const response = {
       isError: false,
@@ -65,8 +64,6 @@ export default async function fetchCourses_(request: any) {
       status: 200,
     });
   } catch (error) {
-    console.log('courses', error);
-
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

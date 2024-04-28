@@ -16,6 +16,6 @@ export async function fetcher<JSON = any>(input: RequestInfo, init?: RequestInit
   return data as JSON;
 }
 
-export const useFetch = (key: string) => {
-  return useSWR(key, fetcher);
+export const useFetch = <Data = any>(key: string) => {
+  return useSWR<Data>(key, fetcher as any);
 };

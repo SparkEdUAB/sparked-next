@@ -30,6 +30,7 @@ const LibrarySearchPage = async ({ params, searchParams }: T_LibrarySearchPagePr
         skip: '0',
         withMetaData: 'false',
       }),
+    { next: { revalidate: 3600 } },
   );
 
   return (

@@ -22,9 +22,11 @@ export async function generateMetadata(props: {}, parent: ResolvingMetadata): Pr
 const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
   const mediaResult = await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
     BASE_URL + API_LINKS.FETCH_RANDOM_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ ...searchParams, limit: '20' }),
+    { next: { revalidate: 3600 } },
   );
   const topicsResult = await fetcher<{ topics: T_RawTopicFields[] }>(
     BASE_URL + API_LINKS.FETCH_TOPICS + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }),
+    { next: { revalidate: 3600 } },
   );
 
   return (

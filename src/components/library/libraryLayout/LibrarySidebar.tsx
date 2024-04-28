@@ -3,10 +3,12 @@
 import styles from './Layout.module.css';
 import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
-import { useEffect } from 'react';
-import useCourse from '@hooks/useCourse';
-import useUnit from '@hooks/useUnit';
 import SkeletonLoaderElement from '@components/skeletonLoader/SkeletonLoaderElement';
+import { API_LINKS } from 'app/links';
+import { useFetch } from '@hooks/use-swr';
+import NETWORK_UTILS from 'utils/network';
+import { T_RawCourseFields } from '@hooks/useCourse/types';
+import { T_RawUnitFields } from '@hooks/useUnit/types';
 
 export function LibrarySidebar({
   sidebarIsCollapsed,
@@ -15,13 +17,13 @@ export function LibrarySidebar({
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
 }) {
-  let { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
-  let { fetchUnits, units } = useUnit();
+  const { data: coursesData, isLoading: coursesLoading } = useFetch<{ courses: T_RawCourseFields[] }>(
+    API_LINKS.FETCH_COURSES + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0', withMetaData: 'true' }),
+  );
 
-  useEffect(() => {
-    fetchUnits({});
-    fetchCourses({});
-  }, []);
+  const { data: unitsData } = useFetch<{ units: T_RawUnitFields[] }>(
+    API_LINKS.FETCH_UNITS + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0', withMetaData: 'true' }),
+  );
 
   return (
     <>
@@ -33,27 +35,31 @@ export function LibrarySidebar({
         <Sidebar
           className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)] bg-white dark:bg-gray-800`}
         >
-          {loadingCourses ? (
+          {coursesLoading ? (
             <SidebarSkeletonLoader />
           ) : (
             <Sidebar.Items>
               <Sidebar.ItemGroup>
-                {courses.map((course) => (
-                  <Sidebar.Collapse className={styles.collapsible} key={course._id} label={course.name}>
-                    {units
-                      .filter((unit) => unit.courseId === course._id)
-                      .map((unit) => (
-                        <Sidebar.Item
-                          className={styles.item}
-                          as={Link}
-                          href={`/library?unit_id=${unit._id}`}
-                          key={unit._id}
-                        >
-                          {unit.name}
-                        </Sidebar.Item>
-                      ))}
-                  </Sidebar.Collapse>
-                ))}
+                {coursesData &&
+                  !(coursesData instanceof Error) &&
+                  coursesData.courses.map((course) => (
+                    <Sidebar.Collapse className={styles.collapsible} key={course._id} label={course.name}>
+                      {unitsData &&
+                        !(unitsData instanceof Error) &&
+                        unitsData.units
+                          .filter((unit) => unit.course?._id === course._id)
+                          .map((unit) => (
+                            <Sidebar.Item
+                              className={styles.item}
+                              as={Link}
+                              href={`/library?unit_id=${unit._id}`}
+                              key={unit._id}
+                            >
+                              {unit.name}
+                            </Sidebar.Item>
+                          ))}
+                    </Sidebar.Collapse>
+                  ))}
               </Sidebar.ItemGroup>
             </Sidebar.Items>
           )}

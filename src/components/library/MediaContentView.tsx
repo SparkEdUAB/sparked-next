@@ -6,6 +6,7 @@ import { ImBooks } from 'react-icons/im';
 import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers';
+import { LibraryErrorMessage } from './LibraryErrorMessage/LibraryErrorMessage';
 
 export function MediaContentView({ mediaContent }: { mediaContent: T_RawMediaContentFields }) {
   const fileType = determineFileType(mediaContent?.file_url || '');
@@ -14,12 +15,9 @@ export function MediaContentView({ mediaContent }: { mediaContent: T_RawMediaCon
     <div>
       <div>
         {!mediaContent.file_url ? (
-          <div className="w-full flex flex-col items-center justify-center text-red-500 p-10">
-            <IoIosCloseCircleOutline className="text-6xl mb-3" />
-            <p className="text-lg">
-              The <code>fileUrl</code> property is <code>null</code>
-            </p>
-          </div>
+          <LibraryErrorMessage className="h-fit min-h-0">
+            The <code>file_url</code> property is <code>null</code>
+          </LibraryErrorMessage>
         ) : fileType === 'image' ? (
           <img src={mediaContent.file_url} alt={mediaContent.name} className="max-h-[500px] max-w-full" />
         ) : fileType === 'video' ? (
