@@ -1,7 +1,7 @@
 import { CONFIG_CORE_PATH } from '@hooks/use-config/constants';
 import fs from 'fs';
 import { Session } from 'next-auth';
-import { T_RECORD, T_STRING_ARRAY, T_STRING_RECORD } from 'types';
+import { T_RECORD, T_STRING_ARRAY } from 'types';
 import CONFIG_PROCESS_CODES from './processCodes';
 import { T_CONFIG_DB_VARIABLE, T_CONFIG_VARIABLE, T_CONFIG_VARIABLES } from 'types/config';
 
