@@ -100,7 +100,7 @@ const useCourse = (form?: any) => {
 
   const fetchCourses = async ({ limit = 1000, skip = 0 }: T_FetchCourses) => {
     const url = API_LINKS.FETCH_COURSES;
-    const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: true.toString() };
+    const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
 
     try {
       setLoaderStatus(true);

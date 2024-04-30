@@ -99,7 +99,7 @@ const useUnit = (form?: FormInstance) => {
   };
 
   const fetchUnits = async ({ limit = 1000, skip = 0 }: T_FetchUnits) => {
-    const url = API_LINKS.FETCH_UNIT;
+    const url = API_LINKS.FETCH_UNITS;
     const formData = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
 
     try {

@@ -1,8 +1,8 @@
 import { T_RawMediaContentFields } from 'types/media-content';
 import { API_LINKS } from 'app/links';
-import { Filters } from '@hooks/useLibrary/useSearchFilters';
+import { T_Filters } from '@hooks/useLibrary/useSearchFilters';
 
-export const fetchRandomMediaContent = async (filters: Filters) => {
+export const fetchRandomMediaContent = async (filters: T_Filters) => {
   const params = new URLSearchParams({
     limit: '20',
     ...filters,

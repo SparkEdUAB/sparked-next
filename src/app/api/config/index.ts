@@ -1,19 +1,19 @@
 import { CONFIG_CORE_PATH } from '@hooks/use-config/constants';
 import fs from 'fs';
 import { Session } from 'next-auth';
-import { T_RECORD, T_STRING_ARRAY } from 'types';
+import { T_RECORD } from 'types';
 import CONFIG_PROCESS_CODES from './processCodes';
 import { T_CONFIG_DB_VARIABLE, T_CONFIG_VARIABLE, T_CONFIG_VARIABLES } from 'types/config';
 
 const fsPromises = fs.promises;
 
 export default async function readConfigFile_(req: Request, session?: Session) {
-  const configData = getConfigFile();
+  const configData = await getConfigFile();
 
   try {
     const response = {
       isError: false,
-      configData,
+      configData: JSON.parse(configData),
       code: CONFIG_PROCESS_CODES.FILE_READ,
     };
 

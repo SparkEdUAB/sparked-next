@@ -50,11 +50,10 @@ export function FileUploadSection({
 
       <div id="thumbnailUpload" className="w-full mb-2">
         <div className="mb-2 block">
-          <Label htmlFor="thumbnail" value={i18next.t('upload_thumbnail')} /> {required ? <RedAsterisk /> : null}
+          <Label htmlFor="thumbnail" value={i18next.t('upload_thumbnail')} />
         </div>
         <FileInput
           id="thumbnail"
-          required={required}
           name="thumbnail"
           disabled={isLoading}
           multiple={false}

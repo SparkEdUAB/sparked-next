@@ -105,7 +105,7 @@ const useTopic = (form?: any) => {
     const params = {
       limit: limit.toString(),
       skip: skip.toString(),
-      withMetaData: true.toString(),
+      withMetaData: 'true',
     };
 
     try {
@@ -125,7 +125,7 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      const _topics = (responseData.units as T_RawTopicFields[])?.map<T_TopicFields>((i, index: number) => ({
+      const _topics = (responseData.topics as T_RawTopicFields[])?.map<T_TopicFields>((i, index: number) => ({
         index: index + 1,
         key: i._id,
         _id: i._id,

@@ -16,11 +16,11 @@ import { T_CreateCourseFields } from '@hooks/useCourse/types';
 
 const CreateCourseView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createCourse, isLoading } = useCourse();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
   const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
 
   useEffect(() => {
-    fetchSchools({});
+    // fetchSchools({});
     fetchPrograms({});
   }, []);
 

@@ -1,57 +1,63 @@
-'use client';
-
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
 import { T_RawMediaContentFields } from 'types/media-content';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
-import { determineFileType } from 'utils/helpers';
-import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage';
-import useSearchFilters from '@hooks/useLibrary/useSearchFilters';
-import useTopic from '@hooks/use-topic';
+import { determineFileType, getMetadataGenerator } from 'utils/helpers';
+import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import LibraryBadge from '@components/library/LibraryBadge';
-import SkeletonLoaderElement from '@components/skeletonLoader/SkeletonLoaderElement';
-import { LibraryGridSkeletonLoader } from '../../components/library/LibraryGridSkeletonLoader';
-import { fetchRandomMediaContent } from '../../hooks/use-media-content/fetchRandomMediaContent';
+import { Metadata, ResolvingMetadata } from 'next';
+import { fetcher } from '@hooks/use-swr';
+import { BASE_URL } from 'app/shared/constants';
+import { API_LINKS } from 'app/links';
+import NETWORK_UTILS from 'utils/network';
+import { T_LibraryPageProps } from '@components/library/types';
+import { T_RawTopicFields } from '@hooks/use-topic/types';
 
-const LibraryPage = () => {
-  let [mediaContent, setMediaContent] = useState<T_RawMediaContentFields[] | null | false>(null);
+export async function generateMetadata(props: {}, parent: ResolvingMetadata): Promise<Metadata> {
+  const getMetadata = await getMetadataGenerator(parent);
 
-  let filters = useSearchFilters();
+  return getMetadata('Library Content', 'View the list of media content on the site');
+}
 
-  let { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
-
-  useEffect(() => {
-    setMediaContent(null);
-    fetchRandomMediaContent(filters).then(setMediaContent);
-    fetchTopics({});
-  }, [filters]);
+const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
+  const mediaResult = await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
+    BASE_URL + API_LINKS.FETCH_RANDOM_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ ...searchParams, limit: '20' }),
+    { next: { revalidate: 3600 } },
+  );
+  const topicsResult = await fetcher<{ topics: T_RawTopicFields[] }>(
+    BASE_URL + API_LINKS.FETCH_TOPICS + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }),
+    { next: { revalidate: 3600 } },
+  );
 
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
       <div className="overflow-x-scroll custom-scrollbar flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
-        {loadingTopics ? (
-          new Array(10).fill(0).map((_, index) => <SkeletonLoaderElement key={index} className="h-7 w-32" />)
-        ) : (
+        {topicsResult instanceof Error ? null : (
           <>
             <LibraryBadge
               key={'Any topic'}
-              href={filters.unit_id ? '/library?unit_id=' + filters.unit_id : '/library'}
-              color={filters.topic_id ? 'gray' : undefined}
+              href={searchParams.unit_id ? '/library?unit_id=' + searchParams.unit_id : '/library'}
+              color={searchParams.topic_id ? 'gray' : undefined}
             >
               Any topic
             </LibraryBadge>
-            {(filters.unit_id ? topics.filter((topic) => topic.unitId === filters.unit_id) : topics)
-              .sort((a, b) => (a._id === filters.topic_id ? -1 : b._id === filters.topic_id ? 1 : 0))
+            {(searchParams.unit_id
+              ? topicsResult.topics.filter((topic) => topic.unit_id === searchParams.unit_id)
+              : topicsResult.topics
+            )
+              .sort((a, b) => (a._id === searchParams.topic_id ? -1 : b._id === searchParams.topic_id ? 1 : 0))
               .map((topic) => (
                 <LibraryBadge
                   key={topic._id}
                   href={
                     '/library?' +
                     new URLSearchParams(
-                      filters.unit_id ? { unit_id: filters.unit_id, topic_id: topic._id } : { topic_id: topic._id },
+                      searchParams.unit_id
+                        ? { unit_id: searchParams.unit_id, topic_id: topic._id }
+                        : { topic_id: topic._id },
                     ).toString()
                   }
-                  color={filters.topic_id && filters.topic_id === topic._id ? undefined : 'gray'}
+                  color={searchParams.topic_id && searchParams.topic_id === topic._id ? undefined : 'gray'}
                 >
                   {topic.name}
                 </LibraryBadge>
@@ -59,15 +65,18 @@ const LibraryPage = () => {
           </>
         )}
       </div>
-      {mediaContent === null ? (
-        <LibraryGridSkeletonLoader />
-      ) : mediaContent === false || !(mediaContent instanceof Array) ? (
-        <LibraryErrorMessage>An error occured while fetching data</LibraryErrorMessage>
-      ) : mediaContent.length === 0 ? (
+      {mediaResult instanceof Error ? (
+        <LibraryErrorMessage>{mediaResult.message}</LibraryErrorMessage>
+      ) : !(mediaResult.mediaContent instanceof Array) ? (
+        <LibraryErrorMessage>
+          An error occured while fetching data (Unexpected data received):{' '}
+          <code>{JSON.stringify(mediaResult, null, 4)}</code>
+        </LibraryErrorMessage>
+      ) : mediaResult.mediaContent.length === 0 ? (
         <EmptyContentIndicator>There is nothing here yet</EmptyContentIndicator>
       ) : (
         <div className="grid pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {mediaContent.map((item) => (
+          {mediaResult.mediaContent.map((item) => (
             <div style={{ padding: '8px 0' }} key={item._id} className="gutter-row px-2 h-full">
               <ContentCardView
                 url={`/library/media/${item._id}`}

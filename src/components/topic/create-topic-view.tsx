@@ -19,17 +19,17 @@ import { T_CreateTopicFields } from '@hooks/use-topic/types';
 
 const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createTopic, isLoading } = useTopic();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
-  const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
+  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
+  // const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
   const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
 
   const { selectedSchool } = SchoolStore;
 
   useEffect(() => {
-    fetchSchools({});
-    fetchPrograms({});
-    fetchCourses({});
+    // fetchSchools({});
+    // fetchPrograms({});
+    // fetchCourses({});
     fetchUnits({});
   }, []);
 

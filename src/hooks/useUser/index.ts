@@ -95,7 +95,7 @@ const useUsers = (form?: any) => {
   };
 
   const fetchUnits = async ({ limit = 1000, skip = 0 }: T_FetchUsers) => {
-    const url = API_LINKS.FETCH_UNIT;
+    const url = API_LINKS.FETCH_UNITS;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
       method: 'post',

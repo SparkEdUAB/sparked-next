@@ -30,7 +30,7 @@ const useMediaContent = (form?: any) => {
   const createResource = async (
     fields: T_CreateResourceFields,
     fileUrl: string,
-    thumbnailUrl: string,
+    thumbnailUrl?: string,
     onSuccessfullyDone?: () => void,
   ) => {
     const url = API_LINKS.CREATE_MEDIA_CONTENT;
