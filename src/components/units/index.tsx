@@ -13,16 +13,16 @@ export const unitTableColumns: T_ColumnData<T_UnitFields>[] = [
     dataIndex: 'name',
     key: 'name',
   },
-  {
-    title: 'School',
-    dataIndex: 'schoolName',
-    key: 'schools',
-  },
-  {
-    title: 'Program',
-    dataIndex: 'programName',
-    key: 'programs',
-  },
+  // {
+  //   title: 'School',
+  //   dataIndex: 'schoolName',
+  //   key: 'schools',
+  // },
+  // {
+  //   title: 'Program',
+  //   dataIndex: 'programName',
+  //   key: 'programs',
+  // },
   {
     title: 'Course',
     dataIndex: 'courseName',

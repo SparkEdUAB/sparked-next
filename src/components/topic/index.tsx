@@ -16,18 +16,18 @@ export const topicTableColumns: T_ColumnData<T_TopicFields>[] = [
     key: 'name',
     render: (text) => <a>{text}</a>,
   },
-  {
-    title: 'School',
-    dataIndex: 'schoolName',
-    key: 'schools',
-    render: (text) => <a>{text || i18next.t('not_linked')}</a>,
-  },
-  {
-    title: 'Program',
-    dataIndex: 'programName',
-    key: 'programs',
-    render: (text) => <a>{text || i18next.t('not_linked')}</a>,
-  },
+  // {
+  //   title: 'School',
+  //   dataIndex: 'schoolName',
+  //   key: 'schools',
+  //   render: (text) => <a>{text || i18next.t('not_linked')}</a>,
+  // },
+  // {
+  //   title: 'Program',
+  //   dataIndex: 'programName',
+  //   key: 'programs',
+  //   render: (text) => <a>{text || i18next.t('not_linked')}</a>,
+  // },
   {
     title: 'Course',
     dataIndex: 'courseName',
