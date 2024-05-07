@@ -1,4 +1,5 @@
 export type T_SchoolFields = {
+  index: number;
   key: string;
   _id: string;
   name: string;

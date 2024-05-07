@@ -119,14 +119,7 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      const _schools = responseData.schools?.map((i: T_SchoolFields, index: number) => ({
-        index: index + 1,
-        key: i._id,
-        _id: i._id,
-        name: i.name,
-        created_by: i.user.email,
-        created_at: new Date(i.created_at).toDateString(),
-      }));
+      const _schools = responseData.schools?.map(transformRawSchool);
 
       setSchools(_schools);
       setTempSchools(_schools);
@@ -280,15 +273,15 @@ const useSchool = (form?: any) => {
     }
   };
 
-  const triggerEdit = async () => {
-    if (!selectedSchoolIds.length) {
-      return message.warning(i18next.t('select_item'));
-    } else if (selectedSchoolIds.length > 1) {
-      return message.warning(i18next.t('select_one_item'));
-    }
+  // const triggerEdit = async () => {
+  //   if (!selectedSchoolIds.length) {
+  //     return message.warning(i18next.t('select_item'));
+  //   } else if (selectedSchoolIds.length > 1) {
+  //     return message.warning(i18next.t('select_one_item'));
+  //   }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.schools) + `?schoolId=${selectedSchoolIds[0]}`);
-  };
+  //   router.push(getChildLinkByKey('edit', ADMIN_LINKS.schools) + `?schoolId=${selectedSchoolIds[0]}`);
+  // };
 
   return {
     createSchool,
@@ -298,7 +291,7 @@ const useSchool = (form?: any) => {
     setSelectedSchoolIds,
     selectedSchoolIds,
     triggerDelete,
-    triggerEdit,
+    // triggerEdit,
     fetchSchool,
     router,
     school,
@@ -311,5 +304,18 @@ const useSchool = (form?: any) => {
     deleteSchools,
   };
 };
+
+export function transformRawSchool(i: T_SchoolFields, index: number): T_SchoolFields {
+  return {
+    index: index + 1,
+    key: i._id,
+    _id: i._id,
+    name: i.name,
+    created_by: i.user.email,
+    created_at: new Date(i.created_at).toDateString(),
+    description: i.description,
+    user: i.user,
+  };
+}
 
 export default useSchool;

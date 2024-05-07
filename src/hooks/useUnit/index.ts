@@ -119,29 +119,7 @@ const useUnit = (form?: FormInstance) => {
         return false;
       }
 
-      const _units = (responseData.units as T_RawUnitFields[])?.map<T_UnitFields>((i, index: number) => ({
-        index: index + 1,
-        key: i._id,
-        _id: i._id,
-        name: i.name,
-        description: i.description,
-
-        schoolId: i.school?._id,
-        programId: i.program?._id,
-        courseId: i.course?._id,
-
-        schoolName: i.school?.name,
-        programName: i.program?.name,
-        courseName: i.course?.name,
-
-        created_by: i.user?.email,
-        created_at: new Date(i.created_at).toDateString(),
-
-        school: i.school,
-        course: i.course,
-        program: i.program,
-        user: i.user,
-      }));
+      const _units = (responseData.units as T_RawUnitFields[])?.map<T_UnitFields>(transformRawUnit);
 
       setUnits(_units);
       setTempUnits(_units);
@@ -175,18 +153,8 @@ const useUnit = (form?: FormInstance) => {
       }
 
       if (responseData.unit) {
-        const { _id, name, description, school, program, course } = responseData.unit as T_UnitFields;
-
-        const _unit = {
-          _id,
-          name,
-          description,
-          schoolId: school?._id,
-          programId: program?._id,
-          courseId: course?._id,
-        };
-
-        setUnit(_unit as T_UnitFields);
+        const _unit = transformRawUnit(responseData.unit, 0);
+        setUnit(_unit);
         form && form.setFieldsValue(_unit);
         return _unit;
       } else {
@@ -333,5 +301,27 @@ const useUnit = (form?: FormInstance) => {
     deleteUnits,
   };
 };
+
+export function transformRawUnit(i: T_RawUnitFields, index: number): T_UnitFields {
+  return {
+    index: index + 1,
+    key: i._id,
+    _id: i._id,
+    name: i.name,
+    description: i.description,
+    schoolId: i.school?._id,
+    programId: i.program?._id,
+    courseId: i.course?._id,
+    schoolName: i.school?.name,
+    programName: i.program?.name,
+    courseName: i.course?.name,
+    created_by: i.user?.email,
+    created_at: new Date(i.created_at).toDateString(),
+    school: i.school,
+    course: i.course,
+    program: i.program,
+    user: i.user,
+  };
+}
 
 export default useUnit;

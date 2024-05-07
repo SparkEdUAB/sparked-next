@@ -1,5 +1,5 @@
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
-import { fetcher } from '@hooks/use-swr';
+import { fetcher } from '@hooks/use-swr/fetcher';
 import { API_LINKS } from 'app/links';
 import { BASE_URL } from 'app/shared/constants';
 import { Metadata, ResolvingMetadata } from 'next';

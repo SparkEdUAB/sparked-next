@@ -2,41 +2,48 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useProgram from '@hooks/useProgram';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useEffect } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
-import useSchool from '@hooks/useSchool';
-import useUnit from '@hooks/useUnit';
-import useCourse from '@hooks/useCourse';
-import useTopic from '@hooks/use-topic';
+import useProgram from '@hooks/useProgram';
+import useSchool, { transformRawSchool } from '@hooks/useSchool';
+import useUnit, { transformRawUnit } from '@hooks/useUnit';
+import useCourse, { transformRawCourse } from '@hooks/useCourse';
+import useTopic, { transformRawTopic } from '@hooks/use-topic';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 
 const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSuccessfullyDone?: () => void }) => {
-  const { editTopic, fetchTopicById, topic, isLoading } = useTopic();
-  const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
-  const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
+  const { editTopic } = useTopic();
 
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    fetchTopicById({
-      topicId: topicId || (searchParams.get('topicId') as string),
-      withMetaData: true,
-    });
+  const { item: topic, isLoading } = useAdminItemById(
+    API_LINKS.FETCH_TOPIC_BY_ID,
+    topicId || (searchParams.get('topicId') as string),
+    'topic',
+    transformRawTopic,
+  );
 
-    fetchPrograms({});
-    fetchSchools({});
-    fetchCourses({});
-    fetchUnits({});
-  }, []);
+  const { items: units, isLoading: loadingUnits } = useAdminListViewData(
+    API_LINKS.FETCH_UNITS,
+    'units',
+    transformRawUnit,
+  );
+
+  const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
+    API_LINKS.FETCH_COURSES,
+    'courses',
+    transformRawCourse,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -62,6 +69,8 @@ const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSu
         <div className="flex items-center justify-center h-[400px]">
           <Spinner size="xl" />
         </div>
+      ) : topic instanceof Error ? (
+        <LibraryErrorMessage>{topic.message}</LibraryErrorMessage>
       ) : (
         <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
           <AdminFormInput
@@ -78,24 +87,6 @@ const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSu
             label={TOPIC_FORM_FIELDS.description.label}
             defaultValue={topic.description}
             required
-          />
-
-          <AdminFormSelector
-            loadingItems={loadingSchools}
-            disabled={isLoading || loadingSchools}
-            options={schools}
-            label={TOPIC_FORM_FIELDS.school.label}
-            name={TOPIC_FORM_FIELDS.school.key}
-            defaultValue={topic.schoolId}
-          />
-
-          <AdminFormSelector
-            loadingItems={loadingPrograms}
-            disabled={isLoading || loadingPrograms}
-            options={programs}
-            label={TOPIC_FORM_FIELDS.program.label}
-            name={TOPIC_FORM_FIELDS.program.key}
-            defaultValue={topic.programId}
           />
 
           <AdminFormSelector

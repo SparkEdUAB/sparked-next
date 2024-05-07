@@ -2,35 +2,28 @@
 
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import { AdminPageTitle } from '@components/layouts';
-import useNavigation from '@hooks/useNavigation';
-import useUnit from '@hooks/useUnit';
-import { Modal, TextInput } from 'flowbite-react';
+import useUnit, { transformRawUnit } from '@hooks/useUnit';
+import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
+import React, { useState } from 'react';
 import { unitTableColumns } from '.';
 import CreateUnitView from './create-unit-view';
 import EditUnitView from './edit-unit-view';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
+import { T_UnitFields } from '@hooks/useUnit/types';
 
 const UnitListView: React.FC = observer(() => {
-  const {
-    fetchUnits,
-    units,
-    selectedUnitIds,
-    setSelectedProgramIds,
-    findUnitsByName,
-    onSearchQueryChange,
-    deleteUnits,
-    isLoading,
-  } = useUnit();
-  const { router, getChildLinkByKey } = useNavigation();
+  const { selectedUnitIds, setSelectedProgramIds, searchQuery, onSearchQueryChange, deleteUnits } = useUnit();
   const [creatingUnit, setCreatingUnit] = useState(false);
   const [edittingUnitWithId, setEdittingUnitWithId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchUnits({});
-  }, []);
+  const {
+    items: units,
+    isLoading,
+    mutate,
+  } = useAdminListViewData(API_LINKS.FETCH_UNITS, 'units', transformRawUnit, searchQuery);
 
   const rowSelection = {
     selectedRowKeys: selectedUnitIds,
@@ -43,34 +36,22 @@ const UnitListView: React.FC = observer(() => {
     <>
       <AdminPageTitle title={i18next.t('units')} />
 
-      <TextInput
-        onChange={(e) => onSearchQueryChange(e.target.value)}
-        icon={HiMagnifyingGlass}
-        className="table-search-box"
-        placeholder={i18next.t('search_units')}
-        required
-        type="text"
-        onKeyDown={(e) => {
-          e.keyCode === 13 ? findUnitsByName({ withMetaData: true }) : null;
-        }}
-      />
-      <AdminTable
+      <AdminTable<T_UnitFields>
         deleteItems={deleteUnits}
         rowSelection={rowSelection}
         items={units}
         isLoading={isLoading}
-        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.units)}
-        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${id}`}
         createNew={() => setCreatingUnit(true)}
         editItem={(id) => setEdittingUnitWithId(id)}
         columns={unitTableColumns}
+        onSearchQueryChange={onSearchQueryChange}
       />
       <Modal dismissible show={creatingUnit} onClose={() => setCreatingUnit(false)} popup>
         <Modal.Header />
         <Modal.Body>
           <CreateUnitView
             onSuccessfullyDone={() => {
-              fetchUnits({});
+              mutate();
               setCreatingUnit(false);
             }}
           />
@@ -83,7 +64,7 @@ const UnitListView: React.FC = observer(() => {
             <EditUnitView
               unitId={edittingUnitWithId}
               onSuccessfullyDone={() => {
-                fetchUnits({});
+                mutate();
                 setEdittingUnitWithId(null);
               }}
             />

@@ -125,24 +125,7 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      const _topics = (responseData.topics as T_RawTopicFields[])?.map<T_TopicFields>((i, index: number) => ({
-        index: index + 1,
-        key: i._id,
-        _id: i._id,
-        name: i.name,
-        description: i.description,
-        school: i.school,
-        unitId: i.unit?._id,
-        schoolId: i.school?._id,
-        courseId: i.course?._id,
-        programId: i.program?._id,
-        schoolName: i.school?.name,
-        programName: i.program?.name,
-        courseName: i.course?.name,
-        unitName: i.unit?.name,
-        created_by: i.user?.email,
-        created_at: new Date(i.created_at).toDateString(),
-      }));
+      const _topics = (responseData.topics as T_RawTopicFields[])?.map<T_TopicFields>(transformRawTopic);
 
       _topics.sort((a, b) => (a > b ? 1 : -1));
 
@@ -179,26 +162,8 @@ const useTopic = (form?: any) => {
 
       if (responseData.topic) {
         const topic: T_RawTopicFields = responseData.topic;
-        const { _id, name, description, school, program, course, unit } = topic;
 
-        const _topic: T_TopicFields = {
-          _id,
-          name,
-          description,
-          schoolId: school?._id,
-          programId: program?._id,
-          courseId: course?._id,
-          unitId: unit?._id,
-          index: 1,
-          key: topic.key,
-          school: topic.school,
-          schoolName: topic.school?.name,
-          programName: topic.program?.name,
-          courseName: topic.course?.name,
-          unitName: topic.unit?.name,
-          created_by: topic.created_by,
-          created_at: topic.created_at,
-        };
+        const _topic = transformRawTopic(topic, 0);
 
         setTopic(_topic);
         form && form.setFieldsValue(_topic);
@@ -348,5 +313,26 @@ const useTopic = (form?: any) => {
     originalTopics,
   };
 };
+
+export function transformRawTopic(i: T_RawTopicFields, index: number): T_TopicFields {
+  return {
+    index: index + 1,
+    key: i._id,
+    _id: i._id,
+    name: i.name,
+    description: i.description,
+    school: i.school,
+    unitId: i.unit?._id,
+    schoolId: i.school?._id,
+    courseId: i.course?._id,
+    programId: i.program?._id,
+    schoolName: i.school?.name,
+    programName: i.program?.name,
+    courseName: i.course?.name,
+    unitName: i.unit?.name,
+    created_by: i.user?.email,
+    created_at: new Date(i.created_at).toDateString(),
+  };
+}
 
 export default useTopic;

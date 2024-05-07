@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FaBook, FaBookmark } from 'react-icons/fa';
 import { ImBooks } from 'react-icons/im';
-import { IoIosCloseCircleOutline } from 'react-icons/io';
 import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers';
 import { LibraryErrorMessage } from './LibraryErrorMessage/LibraryErrorMessage';

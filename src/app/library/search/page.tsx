@@ -3,7 +3,7 @@ import ContentCardView from '@components/layouts/library/content-card';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
 import { determineFileType, getMetadataGenerator } from 'utils/helpers';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
-import { fetcher } from '@hooks/use-swr';
+import { fetcher } from '@hooks/use-swr/fetcher';
 import { T_RawMediaContentFields } from 'types/media-content';
 import NETWORK_UTILS from 'utils/network';
 import { API_LINKS } from 'app/links';

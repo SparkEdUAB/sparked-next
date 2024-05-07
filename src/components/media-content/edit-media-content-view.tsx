@@ -2,17 +2,15 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useMediaContent from '@hooks/use-media-content';
-import useCourse from '@hooks/useCourse';
-import useProgram from '@hooks/useProgram';
-import useSchool from '@hooks/useSchool';
-import useUnit from '@hooks/useUnit';
-import { Button, FileInput, Label, Spinner } from 'flowbite-react';
+import useMediaContent, { transformRawMediaContent } from '@hooks/use-media-content';
+import { transformRawCourse } from '@hooks/useCourse';
+import { transformRawUnit } from '@hooks/useUnit';
+import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
-import useTopic from '@hooks/use-topic';
+import { transformRawTopic } from '@hooks/use-topic';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_MediaContentFields } from 'types/media-content';
 import useFileUpload from '@hooks/use-file-upload';
@@ -20,6 +18,10 @@ import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { FileUploadSection } from './FileUploadSection';
 import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
+import { API_LINKS } from 'app/links';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 
 const EditMediaContentView = ({
   resourceId,
@@ -28,33 +30,39 @@ const EditMediaContentView = ({
   resourceId?: string;
   onSuccessfullyDone?: () => void;
 }) => {
-  const { editMediaContent, fetchMediaContentById, targetMediaContent, isLoading: loadingResource } = useMediaContent();
+  const { editMediaContent } = useMediaContent();
   const { uploadFile } = useFileUpload();
 
   const [file, setFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
 
-  const { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
-  const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
-  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
-  const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
-
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    fetchMediaContentById({
-      mediaContentId: resourceId || (searchParams.get('mediaContentId') as string),
-      withMetaData: true,
-    });
+  const { item: mediaContent, isLoading: loadingResource } = useAdminItemById(
+    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID,
+    resourceId || (searchParams.get('mediaContentId') as string),
+    'mediaContent',
+    transformRawMediaContent,
+  );
 
-    // fetchPrograms({});
-    // fetchSchools({});
-    fetchCourses({});
-    fetchUnits({});
-    fetchTopics({});
-  }, []);
+  const { items: topics, isLoading: loadingTopics } = useAdminListViewData(
+    API_LINKS.FETCH_TOPICS,
+    'topics',
+    transformRawTopic,
+  );
+
+  const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
+    API_LINKS.FETCH_COURSES,
+    'courses',
+    transformRawCourse,
+  );
+
+  const { items: units, isLoading: loadingUnits } = useAdminListViewData(
+    API_LINKS.FETCH_UNITS,
+    'units',
+    transformRawUnit,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -62,8 +70,6 @@ const EditMediaContentView = ({
     const keys = [
       MEDIA_CONTENT_FORM_FIELDS.name.key,
       MEDIA_CONTENT_FORM_FIELDS.description.key,
-      // MEDIA_CONTENT_FORM_FIELDS.school.key,
-      // MEDIA_CONTENT_FORM_FIELDS.program.key,
       MEDIA_CONTENT_FORM_FIELDS.course.key,
       MEDIA_CONTENT_FORM_FIELDS.unit.key,
       MEDIA_CONTENT_FORM_FIELDS.topic.key,
@@ -85,10 +91,12 @@ const EditMediaContentView = ({
     <>
       <AdminPageTitle title={i18next.t('edit_media_content')} />
 
-      {!targetMediaContent ? (
+      {!mediaContent ? (
         <div className="flex items-center justify-center h-[400px]">
           <Spinner size="xl" />
         </div>
+      ) : mediaContent instanceof Error ? (
+        <LibraryErrorMessage>{mediaContent.message}</LibraryErrorMessage>
       ) : (
         <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
           <FileUploadSection
@@ -102,7 +110,7 @@ const EditMediaContentView = ({
           <AdminFormInput
             disabled={isLoading}
             name={MEDIA_CONTENT_FORM_FIELDS.name.key}
-            defaultValue={targetMediaContent.name}
+            defaultValue={mediaContent.name}
             label={MEDIA_CONTENT_FORM_FIELDS.name.label}
             required
           />
@@ -110,7 +118,7 @@ const EditMediaContentView = ({
           <AdminFormTextarea
             disabled={isLoading}
             name={MEDIA_CONTENT_FORM_FIELDS.description.key}
-            defaultValue={targetMediaContent.description}
+            defaultValue={mediaContent.description}
             label={MEDIA_CONTENT_FORM_FIELDS.description.label}
             required
             rows={4}
@@ -122,7 +130,7 @@ const EditMediaContentView = ({
             options={schools}
             label={MEDIA_CONTENT_FORM_FIELDS.school.label}
             name={MEDIA_CONTENT_FORM_FIELDS.school.key}
-            defaultValue={targetMediaContent.schoolId}
+            defaultValue={mediaContent.schoolId}
           />
 
           <AdminFormSelector
@@ -131,7 +139,7 @@ const EditMediaContentView = ({
             options={programs}
             label={MEDIA_CONTENT_FORM_FIELDS.program.label}
             name={MEDIA_CONTENT_FORM_FIELDS.program.key}
-            defaultValue={targetMediaContent.programId}
+            defaultValue={mediaContent.programId}
           /> */}
 
           <AdminFormSelector
@@ -140,7 +148,7 @@ const EditMediaContentView = ({
             options={courses}
             label={MEDIA_CONTENT_FORM_FIELDS.course.label}
             name={MEDIA_CONTENT_FORM_FIELDS.course.key}
-            defaultValue={targetMediaContent.courseId}
+            defaultValue={mediaContent.courseId}
           />
 
           <AdminFormSelector
@@ -149,7 +157,7 @@ const EditMediaContentView = ({
             options={units}
             label={MEDIA_CONTENT_FORM_FIELDS.unit.label}
             name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
-            defaultValue={targetMediaContent.unitId}
+            defaultValue={mediaContent.unitId}
           />
 
           <AdminFormSelector
@@ -158,7 +166,7 @@ const EditMediaContentView = ({
             options={topics}
             label={MEDIA_CONTENT_FORM_FIELDS.topic.label}
             name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
-            defaultValue={targetMediaContent.topicId}
+            defaultValue={mediaContent.topicId}
           />
 
           <Button type="submit" className="mt-2" disabled={isLoading}>

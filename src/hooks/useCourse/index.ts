@@ -301,9 +301,7 @@ const useCourse = (form?: any) => {
   };
 };
 
-export default useCourse;
-
-function transformRawCourse(course: T_RawCourseFields, index: number = 0): T_CourseFields {
+export function transformRawCourse(course: T_RawCourseFields, index: number = 0): T_CourseFields {
   return {
     index: index + 1,
     key: course._id,
@@ -319,3 +317,5 @@ function transformRawCourse(course: T_RawCourseFields, index: number = 0): T_Cou
     created_at: new Date(course.created_at).toDateString(),
   };
 }
+
+export default useCourse;

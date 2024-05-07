@@ -6,7 +6,7 @@ import { determineFileType, getMetadataGenerator } from 'utils/helpers';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import LibraryBadge from '@components/library/LibraryBadge';
 import { Metadata, ResolvingMetadata } from 'next';
-import { fetcher } from '@hooks/use-swr';
+import { fetcher } from '@hooks/use-swr/fetcher';
 import { BASE_URL } from 'app/shared/constants';
 import { API_LINKS } from 'app/links';
 import NETWORK_UTILS from 'utils/network';

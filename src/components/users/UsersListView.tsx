@@ -31,9 +31,9 @@ const UsersListView = observer(() => {
   const [creatingUser, setCreatingUser] = useState(false);
   const [edittingUserWithId, setEdittingUserWithId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchUnits({});
-  }, []);
+  // useEffect(() => {
+  //   fetchUnits({});
+  // }, []);
 
   const rowSelection = {
     selectedRowKeys: selectedUserIds,
