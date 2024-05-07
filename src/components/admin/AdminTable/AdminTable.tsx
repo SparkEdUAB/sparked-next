@@ -47,14 +47,15 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   return (
     <>
       <TextInput
-        onChange={(e) => onSearchQueryChange(e.target.value)}
         icon={HiMagnifyingGlass}
         className="table-search-box"
         placeholder={i18next.t('search_units')}
         required
         type="text"
         onKeyDown={(e) => {
-          e.keyCode === 13 || e.currentTarget.value.trim() === '' ? onSearchQueryChange(e.currentTarget.value) : null;
+          e.keyCode === 13 || (e.target as HTMLInputElement).value.trim() === ''
+            ? onSearchQueryChange((e.target as HTMLInputElement).value)
+            : null;
         }}
       />
       <AdminTableButtonGroup
