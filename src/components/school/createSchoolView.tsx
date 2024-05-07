@@ -6,18 +6,13 @@ import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { SCHOOL_FORM_FIELDS } from './constants';
 import { AdminPageTitle } from '@components/layouts';
-import SchoolStore from '@state/mobx/scholStore';
 import { FormEventHandler } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_SchoolFields } from './types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
-const onFinishFailed = (errorInfo: any) => {};
-
 const CreateSchoolView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createSchool, isLoading } = useSchool();
-
-  const { selectedSchool } = SchoolStore;
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -27,8 +22,6 @@ const CreateSchoolView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => v
     let result = extractValuesFromFormEvent<T_SchoolFields>(e, keys);
     createSchool(result, onSuccessfullyDone);
   };
-
-  // const [form] = Form.useForm();
 
   return (
     <>

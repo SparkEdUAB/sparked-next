@@ -2,35 +2,46 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useProgram from '@hooks/useProgram';
+import { transformRawProgram } from '@hooks/useProgram';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useEffect } from 'react';
 import { COURSE_FORM_FIELDS } from './constants';
-import useSchool from '@hooks/useSchool';
-import useCourse from '@hooks/useCourse';
+import { transformRawSchool } from '@hooks/useSchool';
+import useCourse, { transformRawCourse } from '@hooks/useCourse';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_CourseFields } from '@hooks/useCourse/types';
+import { API_LINKS } from 'app/links';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 
 const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; onSuccessfullyDone?: () => void }) => {
-  const { editCourse, fetchCourseById, course, isLoading } = useCourse();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
+  const { editCourse } = useCourse();
 
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    fetchCourseById({
-      courseId: courseId || (searchParams.get('courseId') as string),
-      withMetaData: true,
-    });
+  const { item: course, isLoading } = useAdminItemById(
+    API_LINKS.FETCH_COURSE_BY_ID,
+    courseId || (searchParams.get('courseId') as string),
+    'course',
+    transformRawCourse,
+  );
 
-    fetchPrograms({});
-    fetchSchools({});
-  }, []);
+  const { items: schools, isLoading: loadingSchools } = useAdminListViewData(
+    API_LINKS.FETCH_SCHOOLS,
+    'schools',
+    transformRawSchool,
+  );
+
+  const { items: programs, isLoading: loadingPrograms } = useAdminListViewData(
+    API_LINKS.FETCH_PROGRAMS,
+    'programs',
+    transformRawProgram,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -43,7 +54,7 @@ const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; o
     ];
 
     let result = extractValuesFromFormEvent<T_CourseFields>(e, keys);
-    editCourse(result, onSuccessfullyDone);
+    editCourse({ ...course, ...result }, onSuccessfullyDone);
   };
 
   return (
@@ -54,6 +65,8 @@ const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; o
         <div className="flex items-center justify-center h-[400px]">
           <Spinner size="xl" />
         </div>
+      ) : course instanceof Error ? (
+        <LibraryErrorMessage>{course.message}</LibraryErrorMessage>
       ) : (
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 max-w-xl w-full">

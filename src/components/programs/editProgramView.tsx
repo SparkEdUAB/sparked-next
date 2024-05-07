@@ -2,17 +2,21 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useProgram from '@hooks/useProgram';
+import useProgram, { transformRawProgram } from '@hooks/useProgram';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect } from 'react';
+import { FormEventHandler } from 'react';
 import { PROGRAM_FORM_FIELDS } from './constants';
-import useSchool from '@hooks/useSchool';
+import { transformRawSchool } from '@hooks/useSchool';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_ProgramFields } from '@hooks/useProgram/types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
+import { API_LINKS } from 'app/links';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 
 const EditProgramView = ({
   programId,
@@ -21,19 +25,22 @@ const EditProgramView = ({
   programId?: string;
   onSuccessfullyDone?: () => void;
 }) => {
-  const { editProgram, fetchProgramById, program, isLoading } = useProgram();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  const { editProgram } = useProgram();
 
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    fetchProgramById({
-      programId: programId || (searchParams.get('programId') as string),
-      withMetaData: true,
-    });
+  const { item: program, isLoading } = useAdminItemById(
+    API_LINKS.FETCH_PROGRAM_BY_ID,
+    programId || (searchParams.get('programId') as string),
+    'program',
+    transformRawProgram,
+  );
 
-    fetchSchools({});
-  }, []);
+  const { items: schools, isLoading: loadingSchools } = useAdminListViewData(
+    API_LINKS.FETCH_SCHOOLS,
+    'schools',
+    transformRawSchool,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -41,7 +48,7 @@ const EditProgramView = ({
     const keys = [PROGRAM_FORM_FIELDS.name.key, PROGRAM_FORM_FIELDS.description.key, PROGRAM_FORM_FIELDS.school.key];
 
     let result = extractValuesFromFormEvent<T_ProgramFields>(e, keys);
-    editProgram(result, onSuccessfullyDone);
+    editProgram({ ...program, ...result }, onSuccessfullyDone);
   };
 
   return (
@@ -52,6 +59,8 @@ const EditProgramView = ({
         <div className="flex items-center justify-center h-[400px]">
           <Spinner size="xl" />
         </div>
+      ) : program instanceof Error ? (
+        <LibraryErrorMessage>{program.message}</LibraryErrorMessage>
       ) : (
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 max-w-xl w-full">

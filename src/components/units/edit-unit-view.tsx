@@ -9,46 +9,40 @@ import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useEffect } from 'react';
 import { UNIT_FORM_FIELDS } from './constants';
 import useSchool from '@hooks/useSchool';
-import useUnit from '@hooks/useUnit';
-import useCourse from '@hooks/useCourse';
+import useUnit, { transformRawUnit } from '@hooks/useUnit';
+import useCourse, { transformRawCourse } from '@hooks/useCourse';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { T_UnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 
 const EditUnitView = ({ unitId, onSuccessfullyDone }: { unitId?: string; onSuccessfullyDone?: () => void }) => {
-  // const [form] = Form.useForm();
-  const { editUnit, fetchUnitById, unit, isLoading } = useUnit();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
-  const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
+  const { editUnit } = useUnit();
 
   const searchParams = useSearchParams();
 
-  useEffect(() => {
-    fetchUnitById({
-      unitId: unitId || (searchParams.get('unitId') as string),
-      withMetaData: true,
-    });
+  const { item: unit, isLoading } = useAdminItemById(
+    API_LINKS.FETCH_UNIT_BY_ID,
+    unitId || (searchParams.get('unitId') as string),
+    'unit',
+    transformRawUnit,
+  );
 
-    fetchPrograms({});
-    fetchSchools({});
-    fetchCourses({});
-  }, []);
+  const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
+    API_LINKS.FETCH_COURSES,
+    'courses',
+    transformRawCourse,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-
-    const keys = [
-      UNIT_FORM_FIELDS.name.key,
-      UNIT_FORM_FIELDS.description.key,
-      UNIT_FORM_FIELDS.school.key,
-      UNIT_FORM_FIELDS.program.key,
-      UNIT_FORM_FIELDS.course.key,
-    ];
-
+    const keys = [UNIT_FORM_FIELDS.name.key, UNIT_FORM_FIELDS.description.key, UNIT_FORM_FIELDS.course.key];
     let result = extractValuesFromFormEvent<T_UnitFields>(e, keys);
-    editUnit(result, onSuccessfullyDone);
+    editUnit({ ...unit, ...result }, onSuccessfullyDone);
   };
 
   return (
@@ -59,6 +53,8 @@ const EditUnitView = ({ unitId, onSuccessfullyDone }: { unitId?: string; onSucce
         <div className="flex items-center justify-center h-[400px]">
           <Spinner size="xl" />
         </div>
+      ) : unit instanceof Error ? (
+        <LibraryErrorMessage>{unit.message}</LibraryErrorMessage>
       ) : (
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 md:max-w-xl w-full">
@@ -76,24 +72,6 @@ const EditUnitView = ({ unitId, onSuccessfullyDone }: { unitId?: string; onSucce
               label={UNIT_FORM_FIELDS.description.label}
               required
               defaultValue={unit.description}
-            />
-
-            <AdminFormSelector
-              loadingItems={loadingSchools}
-              disabled={isLoading || loadingSchools}
-              options={schools}
-              label={UNIT_FORM_FIELDS.school.label}
-              name={UNIT_FORM_FIELDS.school.key}
-              defaultValue={unit.schoolId}
-            />
-
-            <AdminFormSelector
-              loadingItems={loadingPrograms}
-              disabled={isLoading || loadingPrograms}
-              options={programs}
-              label={UNIT_FORM_FIELDS.program.label}
-              name={UNIT_FORM_FIELDS.program.key}
-              defaultValue={unit.programId}
             />
 
             <AdminFormSelector

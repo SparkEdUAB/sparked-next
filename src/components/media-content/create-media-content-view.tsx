@@ -3,15 +3,11 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useMediaContent from '@hooks/use-media-content';
-import useTopic from '@hooks/use-topic';
-import useCourse from '@hooks/useCourse';
-import useProgram from '@hooks/useProgram';
-import useSchool from '@hooks/useSchool';
-import useUnit from '@hooks/useUnit';
+import { transformRawTopic } from '@hooks/use-topic';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_MediaContentFields } from 'types/media-content';
@@ -21,6 +17,8 @@ import useFileUpload from '@hooks/use-file-upload';
 import { message } from 'antd';
 import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
 import { FileUploadSection } from './FileUploadSection';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
 
 const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createResource, isLoading: loadingResource } = useMediaContent();
@@ -30,19 +28,11 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
 
-  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
-  // const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
-  // const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
-  const { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
-
-  useEffect(() => {
-    // fetchSchools({});
-    // fetchPrograms({});
-    // fetchCourses({});
-    // fetchUnits({});
-    fetchTopics({});
-  }, []);
+  const { items: topics, isLoading: loadingTopics } = useAdminListViewData(
+    API_LINKS.FETCH_TOPICS,
+    'topics',
+    transformRawTopic,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -50,10 +40,6 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
     const keys = [
       MEDIA_CONTENT_FORM_FIELDS.name.key,
       MEDIA_CONTENT_FORM_FIELDS.description.key,
-      // MEDIA_CONTENT_FORM_FIELDS.school.key,
-      // MEDIA_CONTENT_FORM_FIELDS.program.key,
-      // MEDIA_CONTENT_FORM_FIELDS.course.key,
-      // MEDIA_CONTENT_FORM_FIELDS.unit.key,
       MEDIA_CONTENT_FORM_FIELDS.topic.key,
     ];
 

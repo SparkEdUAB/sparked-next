@@ -139,29 +139,7 @@ const useMediaContent = (form?: any) => {
       }
 
       const _mediaContent = (responseData.mediaContent as T_RawMediaContentFields[])?.map<T_MediaContentFields>(
-        (i, index: number) =>
-          ({
-            index: index + 1,
-            key: i._id,
-            _id: i._id,
-            name: i.name,
-            fileUrl: i.file_url || undefined,
-            thumbnailUrl: i.thumbnailUrl,
-            description: i.description,
-            courseId: i.course?._id,
-            school: i.school,
-            schoolId: i.school?._id,
-            unitId: i.course?._id,
-            schoolName: i.school?.name,
-            programName: i.program?.name,
-            courseName: i.course?.name,
-            unitName: i.unit?.name,
-            programId: i.program?._id,
-            topicId: i.topic?._id,
-            topicName: i.topic?.name,
-            created_by: i.user?.email,
-            created_at: new Date(i.created_at as string).toDateString(),
-          } satisfies T_MediaContentFields),
+        transformRawMediaContent,
       );
 
       setMediaContent(_mediaContent);
@@ -384,5 +362,30 @@ const useMediaContent = (form?: any) => {
     deleteMediaContent,
   };
 };
+
+export function transformRawMediaContent(i: T_RawMediaContentFields, index: number): T_MediaContentFields {
+  return {
+    index: index + 1,
+    key: i._id,
+    _id: i._id,
+    name: i.name,
+    fileUrl: i.file_url || undefined,
+    thumbnailUrl: i.thumbnailUrl,
+    description: i.description,
+    courseId: i.course?._id,
+    school: i.school,
+    schoolId: i.school?._id,
+    unitId: i.course?._id,
+    schoolName: i.school?.name,
+    programName: i.program?.name,
+    courseName: i.course?.name,
+    unitName: i.unit?.name,
+    programId: i.program?._id,
+    topicId: i.topic?._id,
+    topicName: i.topic?.name,
+    created_by: i.user?.email,
+    created_at: new Date(i.created_at as string).toDateString(),
+  };
+}
 
 export default useMediaContent;

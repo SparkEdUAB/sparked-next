@@ -1,7 +1,7 @@
 'use client';
 
 import useNavigation from '@hooks/useNavigation';
-import { Checkbox, Spinner, Table } from 'flowbite-react';
+import { Checkbox, Spinner, Table, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { IoFileTrayOutline } from 'react-icons/io5';
 import { T_ColumnData, T_ItemTypeBase } from './types';
@@ -9,14 +9,15 @@ import { DeletionWarningModal } from './DeletionWarningModal';
 import { AdminTableButtonGroup } from './AdminTableButtonGroup';
 import { MdEdit } from 'react-icons/md';
 import useConfig from '@hooks/use-config';
+import { HiMagnifyingGlass } from 'react-icons/hi2';
+import i18next from 'i18next';
 
 export function AdminTable<ItemType extends T_ItemTypeBase>({
   rowSelection,
   items,
   isLoading,
-  // createNewUrl,
+  onSearchQueryChange,
   createNew,
-  // getEditUrl,
   editItem,
   columns,
   deleteItems,
@@ -28,9 +29,8 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   };
   items: ItemType[];
   isLoading: boolean;
-  // createNewUrl: string;
+  onSearchQueryChange: (text: string) => void;
   createNew: () => void;
-  // getEditUrl: (id: string) => string;
   editItem: (id: string) => void;
   columns: T_ColumnData<ItemType>[];
 }) {
@@ -46,9 +46,20 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
 
   return (
     <>
+      <TextInput
+        icon={HiMagnifyingGlass}
+        className="table-search-box"
+        placeholder={i18next.t('search_units')}
+        required
+        type="text"
+        onKeyDown={(e) => {
+          e.keyCode === 13 || (e.target as HTMLInputElement).value.trim() === ''
+            ? onSearchQueryChange((e.target as HTMLInputElement).value)
+            : null;
+        }}
+      />
       <AdminTableButtonGroup
         router={router}
-        // createNewUrl={createNewUrl}
         createNew={createNew}
         rowSelection={rowSelection}
         toggleDeletionWarning={toggleDeletionWarning}
@@ -97,17 +108,11 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                     return <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>;
                   })}
                   <Table.Cell>
-                    {/* <a
-                      // href={getEditUrl(item._id)}
-                      onClick={() => editItem(item._id)}
-                      className="font-medium text-cyan-600 dark:text-cyan-500"
-                    > */}
                     <MdEdit
                       size={18}
                       onClick={() => editItem(item._id)}
                       className="cursor-pointer font-medium text-cyan-600 dark:text-cyan-500"
                     />
-                    {/* </a> */}
                   </Table.Cell>
                 </Table.Row>
               ))

@@ -1,37 +1,29 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useNavigation from '@hooks/useNavigation';
-import { Modal, TextInput } from 'flowbite-react';
+import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
-import useCourse from '@hooks/useCourse';
+import React, { useState } from 'react';
+import useCourse, { transformRawCourse } from '@hooks/useCourse';
 import { T_CourseFields } from '@hooks/useCourse/types';
 import { AdminTable } from '../admin/AdminTable/AdminTable';
 import { courseTableColumns } from '.';
 import EditCourseView from './editCourseView';
 import CreateCourseView from './createCourseView';
+import { API_LINKS } from 'app/links';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 
 const CourseListView: React.FC = observer(() => {
-  const {
-    fetchCourses,
-    courses,
-    selectedCourseIds,
-    setSelectedCourseIds,
-    findCourseByName,
-    onSearchQueryChange,
-    isLoading,
-    deleteCourse,
-  } = useCourse();
-  const { getChildLinkByKey } = useNavigation();
+  const { selectedCourseIds, setSelectedCourseIds, onSearchQueryChange, deleteCourse, searchQuery } = useCourse();
   const [creatingCourse, setCreatingCourse] = useState(false);
   const [edittingCourseWithId, setEdittingCourseWithId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchCourses({});
-  }, [0]);
+  const {
+    items: courses,
+    isLoading,
+    mutate,
+  } = useAdminListViewData(API_LINKS.FETCH_COURSES, 'courses', transformRawCourse, searchQuery);
 
   const rowSelection = {
     selectedRowKeys: selectedCourseIds,
@@ -44,34 +36,22 @@ const CourseListView: React.FC = observer(() => {
     <>
       <AdminPageTitle title={i18next.t('courses')} />
 
-      <TextInput
-        onChange={(e) => onSearchQueryChange(e.target.value)}
-        icon={HiMagnifyingGlass}
-        className="table-search-box"
-        placeholder={i18next.t('search_courses')}
-        required
-        type="text"
-        onKeyDown={(e) => {
-          e.keyCode === 13 ? findCourseByName({ withMetaData: true }) : null;
-        }}
-      />
       <AdminTable<T_CourseFields>
         deleteItems={deleteCourse}
         rowSelection={rowSelection}
         items={courses}
         isLoading={isLoading}
-        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.courses)}
-        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.courses) + `?courseId=${id}`}
         createNew={() => setCreatingCourse(true)}
         editItem={(id) => setEdittingCourseWithId(id)}
         columns={courseTableColumns}
+        onSearchQueryChange={onSearchQueryChange}
       />
       <Modal dismissible show={creatingCourse} onClose={() => setCreatingCourse(false)} popup>
         <Modal.Header />
         <Modal.Body>
           <CreateCourseView
             onSuccessfullyDone={() => {
-              fetchCourses({});
+              mutate();
               setCreatingCourse(false);
             }}
           />
@@ -84,7 +64,7 @@ const CourseListView: React.FC = observer(() => {
             <EditCourseView
               courseId={edittingCourseWithId}
               onSuccessfullyDone={() => {
-                fetchCourses({});
+                mutate();
                 setEdittingCourseWithId(null);
               }}
             />

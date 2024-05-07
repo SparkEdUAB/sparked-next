@@ -14,7 +14,7 @@ export default async function fetchMediaContent_(request: any) {
   const schema = zfd.formData({
     limit: zfd.text(),
     skip: zfd.text(),
-    withMetaData: z.boolean().optional(),
+    withMetaData: zfd.text().optional(),
     school_id: z.string().optional(),
     program_id: z.string().optional(),
     course_id: z.string().optional(),
