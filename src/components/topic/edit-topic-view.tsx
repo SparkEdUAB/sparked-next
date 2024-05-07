@@ -58,7 +58,7 @@ const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSu
     ];
 
     let result = extractValuesFromFormEvent<T_TopicFields>(e, keys);
-    editTopic(result, onSuccessfullyDone);
+    editTopic({ ...topic, ...result }, onSuccessfullyDone);
   };
 
   return (

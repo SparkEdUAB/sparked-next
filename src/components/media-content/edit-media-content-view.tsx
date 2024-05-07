@@ -82,7 +82,12 @@ const EditMediaContentView = ({
     let fileUrl = file ? await uploadFile(file) : undefined;
     let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
-    editMediaContent(result, fileUrl || undefined, thumbnailUrl || undefined, onSuccessfullyDone);
+    editMediaContent(
+      { ...mediaContent, ...result },
+      fileUrl || undefined,
+      thumbnailUrl || undefined,
+      onSuccessfullyDone,
+    );
   };
 
   const isLoading = uploadingFile || loadingResource;

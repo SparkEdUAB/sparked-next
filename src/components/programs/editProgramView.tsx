@@ -48,7 +48,7 @@ const EditProgramView = ({
     const keys = [PROGRAM_FORM_FIELDS.name.key, PROGRAM_FORM_FIELDS.description.key, PROGRAM_FORM_FIELDS.school.key];
 
     let result = extractValuesFromFormEvent<T_ProgramFields>(e, keys);
-    editProgram(result, onSuccessfullyDone);
+    editProgram({ ...program, ...result }, onSuccessfullyDone);
   };
 
   return (
