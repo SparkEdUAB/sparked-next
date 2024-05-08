@@ -52,6 +52,20 @@ i18next.init({
         edit_program: 'Edit a Program',
         edit_media_content: 'Edit Media Content',
 
+        unit_created: 'Unit created successfully',
+        topic_created: 'Topic created successfully',
+        school_created: 'School created successfully',
+        course_created: 'Course created successfully',
+        program_created: 'Program created successfully',
+        resource_created: 'Resource created successfully',
+
+        topics_found: 'topics found',
+        media_content_found: 'media content found',
+        units_found: 'units found',
+        programs_found: 'programs found',
+        schools_found: 'schools found',
+        users_found: 'users found',
+
         name: 'Name',
         description: 'Description',
         school: 'School',
@@ -72,6 +86,15 @@ i18next.init({
 
         new: 'New',
         delete: 'Delete',
+
+        select_items: 'Select some items',
+        select_one_item: 'Select one item',
+        search_empty: 'Please enter some search text',
+        wait: 'Please wait for the current operation to complete',
+        success: 'The operation was successfully completed',
+        no_file: 'No file was provided',
+        failed_to_upload: 'Failed to upload',
+        failed_with_error_code: 'The operation failed with an error code',
       },
     },
   },
