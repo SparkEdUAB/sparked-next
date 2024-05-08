@@ -31,7 +31,7 @@ const useConfig = (props: T_CONFIG) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -39,7 +39,7 @@ const useConfig = (props: T_CONFIG) => {
 
       setConfigs(_configs);
     } catch (err: any) {
-      // message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
   };

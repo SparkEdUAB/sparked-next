@@ -46,9 +46,7 @@ const useAuth = () => {
         return false;
       }
       message.success(
-        responseData.code === AUTH_PROCESS_CODES.USER_CREATED
-          ? i18next.t('account_created')
-          : i18next.t('unknown_error'),
+        responseData.code === AUTH_PROCESS_CODES.USER_CREATED ? i18next.t('user_created') : i18next.t('unknown_error'),
       );
       router.replace('/');
     } catch (err: any) {
@@ -80,7 +78,7 @@ const useAuth = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
