@@ -57,6 +57,11 @@ export type T_RawUnitFields = {
 
   created_at: string;
   updated_at: string;
+  created_by_id?: string;
+
+  school_id?: string;
+  program_id?: string;
+  course_id?: string;
 
   user?: {
     _id: string;
