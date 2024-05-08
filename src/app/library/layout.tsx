@@ -20,9 +20,10 @@ export default async function Layout({ children }: { children: ReactNode | React
 
   return (
     <LibraryLayout
-      children={children}
       courses={coursesResult instanceof Error ? [] : coursesResult.courses}
       units={unitsResult instanceof Error ? [] : unitsResult.units}
-    />
+    >
+      {children}
+    </LibraryLayout>
   );
 }
