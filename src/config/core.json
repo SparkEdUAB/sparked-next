@@ -1,0 +1,50 @@
+{
+    "schoolName": {
+        "key": "",
+        "value": "Inspired",
+        "label": "",
+        "stateLocation": ""
+    },
+    "showSchools": {
+        "key": "schools",
+        "value": "false",
+        "label": "",
+        "stateLocation": ""
+    },
+    "showPrograms": {
+        "key": "programs",
+        "value": "false",
+        "label": "",
+        "stateLocation": ""
+    },
+    "isHighSchool": {
+        "key": "",
+        "value": "false",
+        "label": "",
+        "stateLocation": ""
+    },
+    "isUserAuth": {
+        "key": "",
+        "value": "false",
+        "label": "",
+        "stateLocation": ""
+    },
+    "tagline": {
+        "key": "",
+        "value": "To Inspire",
+        "label": "",
+        "stateLocation": ""
+    },
+    "isConfigured": {
+        "key": "",
+        "value": "false",
+        "label": "",
+        "stateLocation": ""
+    },
+    "serverUrl": {
+        "key": "",
+        "value": "http://localhost:3000",
+        "label": "",
+        "stateLocation": ""
+    }
+}

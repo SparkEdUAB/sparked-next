@@ -1,85 +1,82 @@
-'use client';
-
-import React, { ReactNode, useEffect, useState } from 'react';
+import React from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
-import { Badge } from 'flowbite-react';
-import { libraryTags } from '@components/layouts/library/tags';
 import { T_RawMediaContentFields } from 'types/media-content';
-import i18next from 'i18next';
-import { API_LINKS } from 'app/links';
-import { IoIosCloseCircleOutline } from 'react-icons/io';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
-import LibraryLoader from '@components/library/LibraryLoader';
-import { determineFileType } from 'utils/helpers';
+import { determineFileType, getMetadataGenerator } from 'utils/helpers';
+import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
+import LibraryBadge from '@components/library/LibraryBadge';
+import { Metadata, ResolvingMetadata } from 'next';
+import { fetcher } from '@hooks/use-swr';
+import { BASE_URL } from 'app/shared/constants';
+import { API_LINKS } from 'app/links';
+import NETWORK_UTILS from 'utils/network';
+import { T_LibraryPageProps } from '@components/library/types';
+import { T_RawTopicFields } from '@hooks/use-topic/types';
 
-const fetchRandomMediaContent = async () => {
-  const url = API_LINKS.FETCH_RANDOM_MEDIA_CONTENT;
-  const requestOptions = {
-    params: JSON.stringify({
-      limit: 20,
-    }),
-    method: 'get',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
+export async function generateMetadata(props: {}, parent: ResolvingMetadata): Promise<Metadata> {
+  const getMetadata = await getMetadataGenerator(parent);
 
-  try {
-    const resp = await fetch(url, requestOptions);
+  return getMetadata('Library Content', 'View the list of media content on the site');
+}
 
-    console.log(resp);
-    console.log('resp.ok:', resp.ok);
-
-    if (!resp.ok) {
-      console.error(i18next.t('unknown_error'));
-      return false;
-    }
-
-    const responseData = await resp.json();
-    console.log('responseData.isError:', responseData.isError);
-    console.log(responseData);
-
-    if (responseData.isError) {
-      console.error(responseData.code);
-      return false;
-    }
-    console.log('fetchRandomMediaContent =>', responseData.mediaContent);
-
-    return responseData.mediaContent as T_RawMediaContentFields[];
-  } catch (err: any) {
-    console.error(err, `${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-    return false;
-  }
-};
-
-const LibraryPage = () => {
-  let [mediaContent, setMediaContent] = useState<T_RawMediaContentFields[] | null | false>(null);
-
-  useEffect(() => {
-    fetchRandomMediaContent().then(setMediaContent);
-  }, []);
+const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
+  const mediaResult = await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
+    BASE_URL + API_LINKS.FETCH_RANDOM_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ ...searchParams, limit: '20' }),
+    { next: { revalidate: 3600 } },
+  );
+  const topicsResult = await fetcher<{ topics: T_RawTopicFields[] }>(
+    BASE_URL + API_LINKS.FETCH_TOPICS + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }),
+    { next: { revalidate: 3600 } },
+  );
 
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
       <div className="overflow-x-scroll custom-scrollbar flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
-        <Badge key={'All'} className="h-full" href="#">
-          All
-        </Badge>
-        {libraryTags.map((tag) => (
-          <Badge key={tag} className="h-full" href="#" color="gray">
-            {tag}
-          </Badge>
-        ))}
+        {topicsResult instanceof Error ? null : (
+          <>
+            <LibraryBadge
+              key={'Any topic'}
+              href={searchParams.unit_id ? '/library?unit_id=' + searchParams.unit_id : '/library'}
+              color={searchParams.topic_id ? 'gray' : undefined}
+            >
+              Any topic
+            </LibraryBadge>
+            {(searchParams.unit_id
+              ? topicsResult.topics.filter((topic) => topic.unit_id === searchParams.unit_id)
+              : topicsResult.topics
+            )
+              .sort((a, b) => (a._id === searchParams.topic_id ? -1 : b._id === searchParams.topic_id ? 1 : 0))
+              .map((topic) => (
+                <LibraryBadge
+                  key={topic._id}
+                  href={
+                    '/library?' +
+                    new URLSearchParams(
+                      searchParams.unit_id
+                        ? { unit_id: searchParams.unit_id, topic_id: topic._id }
+                        : { topic_id: topic._id },
+                    ).toString()
+                  }
+                  color={searchParams.topic_id && searchParams.topic_id === topic._id ? undefined : 'gray'}
+                >
+                  {topic.name}
+                </LibraryBadge>
+              ))}
+          </>
+        )}
       </div>
-      {mediaContent === null ? (
-        <LibraryLoader />
-      ) : mediaContent === false || !(mediaContent instanceof Array) ? (
-        <LibraryErrorMessage>An error occured while fetching data</LibraryErrorMessage>
-      ) : mediaContent.length === 0 ? (
+      {mediaResult instanceof Error ? (
+        <LibraryErrorMessage>{mediaResult.message}</LibraryErrorMessage>
+      ) : !(mediaResult.mediaContent instanceof Array) ? (
+        <LibraryErrorMessage>
+          An error occured while fetching data (Unexpected data received):{' '}
+          <code>{JSON.stringify(mediaResult, null, 4)}</code>
+        </LibraryErrorMessage>
+      ) : mediaResult.mediaContent.length === 0 ? (
         <EmptyContentIndicator>There is nothing here yet</EmptyContentIndicator>
       ) : (
         <div className="grid pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {mediaContent.map((item) => (
+          {mediaResult.mediaContent.map((item) => (
             <div style={{ padding: '8px 0' }} key={item._id} className="gutter-row px-2 h-full">
               <ContentCardView
                 url={`/library/media/${item._id}`}
@@ -101,12 +98,3 @@ const LibraryPage = () => {
 };
 
 export default LibraryPage;
-
-function LibraryErrorMessage({ children }: { children: ReactNode | ReactNode[] }) {
-  return (
-    <div className="h-full min-h-[500px] w-full flex flex-col items-center justify-center text-red-500">
-      <IoIosCloseCircleOutline className="text-6xl mb-3" />
-      <p className="text-lg">{children}</p>
-    </div>
-  );
-}

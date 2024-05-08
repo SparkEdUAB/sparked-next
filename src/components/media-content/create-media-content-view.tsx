@@ -32,15 +32,15 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
 
   // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
   // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
-  const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
-  const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
+  // const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
+  // const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
   const { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
 
   useEffect(() => {
     // fetchSchools({});
     // fetchPrograms({});
-    fetchCourses({});
-    fetchUnits({});
+    // fetchCourses({});
+    // fetchUnits({});
     fetchTopics({});
   }, []);
 
@@ -52,14 +52,18 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
       MEDIA_CONTENT_FORM_FIELDS.description.key,
       // MEDIA_CONTENT_FORM_FIELDS.school.key,
       // MEDIA_CONTENT_FORM_FIELDS.program.key,
-      MEDIA_CONTENT_FORM_FIELDS.course.key,
-      MEDIA_CONTENT_FORM_FIELDS.unit.key,
+      // MEDIA_CONTENT_FORM_FIELDS.course.key,
+      // MEDIA_CONTENT_FORM_FIELDS.unit.key,
       MEDIA_CONTENT_FORM_FIELDS.topic.key,
     ];
 
-    let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
+    let result = extractValuesFromFormEvent<
+      Omit<T_MediaContentFields, 'schoolId' | 'programId' | 'courseId' | 'unitId'>
+    >(e, keys);
 
-    if (!file || !thumbnail) {
+    let topic = topics.find((topic) => topic._id === result.topicId);
+
+    if (!file) {
       return message.error(i18next.t('no_file'));
     }
 
@@ -72,13 +76,20 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
         return message.error(i18next.t('failed_to_upload'));
       }
 
-      let thumbnailUrl = await uploadFile(thumbnail);
-      if (!thumbnailUrl) {
-        setUploadingFile(false);
-        return message.error(i18next.t('failed_to_upload'));
-      }
+      let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
-      createResource(result, fileUrl, thumbnailUrl, onSuccessfullyDone);
+      createResource(
+        {
+          ...result,
+          schoolId: topic?.schoolId,
+          programId: topic?.programId,
+          courseId: topic?.courseId,
+          unitId: topic?.unitId,
+        },
+        fileUrl,
+        thumbnailUrl || undefined,
+        onSuccessfullyDone,
+      );
     } finally {
       setUploadingFile(false);
     }
@@ -131,7 +142,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           name={MEDIA_CONTENT_FORM_FIELDS.program.key}
         /> */}
 
-        <AdminFormSelector
+        {/* <AdminFormSelector
           loadingItems={loadingCourses}
           disabled={isLoading || loadingCourses}
           options={courses}
@@ -145,7 +156,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           options={units}
           label={MEDIA_CONTENT_FORM_FIELDS.unit.label}
           name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
-        />
+        /> */}
 
         <AdminFormSelector
           loadingItems={loadingTopics}

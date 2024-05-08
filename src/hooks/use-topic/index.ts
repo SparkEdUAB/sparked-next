@@ -9,6 +9,7 @@ import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
 import { T_CreateTopicFields, T_FetchTopic, T_TopicFields, T_RawTopicFields } from './types';
+import NETWORK_UTILS from 'utils/network';
 
 const useTopic = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -99,19 +100,17 @@ const useTopic = (form?: any) => {
     }
   };
 
-  const fetchTopics = async ({ limit = 1000, skip = 0 }: T_FetchTopic) => {
+  const fetchTopics = async ({ limit = 20, skip = 0 }: T_FetchTopic) => {
     const url = API_LINKS.FETCH_TOPICS;
-    const formData = {
-      body: JSON.stringify({ limit, skip, withMetaData: true }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const params = {
+      limit: limit.toString(),
+      skip: skip.toString(),
+      withMetaData: 'true',
     };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -126,28 +125,30 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      const _units = (responseData.units as T_RawTopicFields[])?.map<T_TopicFields>((i, index: number) => ({
+      const _topics = (responseData.topics as T_RawTopicFields[])?.map<T_TopicFields>((i, index: number) => ({
         index: index + 1,
         key: i._id,
         _id: i._id,
         name: i.name,
-        school: i.school,
-        schoolId: i.school?._id,
         description: i.description,
+        school: i.school,
+        unitId: i.unit?._id,
+        schoolId: i.school?._id,
         courseId: i.course?._id,
-        unitId: i.course?._id,
+        programId: i.program?._id,
         schoolName: i.school?.name,
         programName: i.program?.name,
         courseName: i.course?.name,
         unitName: i.unit?.name,
-        programId: i.program?._id,
         created_by: i.user?.email,
         created_at: new Date(i.created_at).toDateString(),
       }));
 
-      setTopics(_units);
-      setOriginalTopics(_units);
-      return _units;
+      _topics.sort((a, b) => (a > b ? 1 : -1));
+
+      setTopics(_topics);
+      setOriginalTopics(_topics);
+      return _topics;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -157,17 +158,11 @@ const useTopic = (form?: any) => {
 
   const fetchTopicById = async ({ topicId, withMetaData = false }: { topicId: string; withMetaData: boolean }) => {
     const url = API_LINKS.FETCH_TOPIC_BY_ID;
-    const formData = {
-      body: JSON.stringify({ topicId, withMetaData }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { topicId: topicId.toString(), withMetaData: withMetaData.toString() };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -279,22 +274,16 @@ const useTopic = (form?: any) => {
     }
 
     const url = API_LINKS.FIND_TOPIC_BY_NAME;
-    const formData = {
-      body: JSON.stringify({
-        name: searchQuery.trim(),
-        limit: 1000,
-        skip: 0,
-        withMetaData,
-      }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const params = {
+      name: searchQuery.trim(),
+      limit: '1000',
+      skip: '0',
+      withMetaData: withMetaData.toString(),
     };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {

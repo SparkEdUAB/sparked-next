@@ -9,6 +9,7 @@ import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
 import { T_CreateProgramFields, T_FetchPrograms, T_ProgramFields, T_RawProgramFields } from './types';
+import NETWORK_UTILS from 'utils/network';
 
 const useProgram = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -100,17 +101,11 @@ const useProgram = (form?: any) => {
 
   const fetchPrograms = async ({ limit = 1000, skip = 0 }: T_FetchPrograms) => {
     const url = API_LINKS.FETCH_PROGRAMS;
-    const formData = {
-      body: JSON.stringify({ limit, skip }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { limit: limit.toString(), skip: skip.toString() };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -156,17 +151,11 @@ const useProgram = (form?: any) => {
     withMetaData: boolean;
   }) => {
     const url = API_LINKS.FETCH_PROGRAM_BY_ID;
-    const formData = {
-      body: JSON.stringify({ programId, withMetaData }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { programId, withMetaData: withMetaData.toString() };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -257,6 +246,7 @@ const useProgram = (form?: any) => {
       return false;
     }
   };
+
   const findProgramsByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
@@ -265,22 +255,16 @@ const useProgram = (form?: any) => {
     }
 
     const url = API_LINKS.FIND_PROGRAMS_BY_NAME;
-    const formData = {
-      body: JSON.stringify({
-        name: searchQuery.trim(),
-        limit: 1000,
-        skip: 0,
-        withMetaData,
-      }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    const params = {
+      name: searchQuery.trim(),
+      limit: '1000',
+      skip: '0',
+      withMetaData: withMetaData.toString(),
     };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {

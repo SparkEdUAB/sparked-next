@@ -1,20 +1,26 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { z } from "zod";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { p_fetchUnitsWithMetaData } from "./pipelines";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { z } from 'zod';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { p_fetchUnitsWithMetaData } from './pipelines';
+import { UNIT_FIELD_NAMES_CONFIG } from './constants';
+import { getDbFieldNamesConfigStatus } from '../config';
+import { T_RECORD } from 'types';
 
-export default async function fetchUnits_(request: Request) {
+const dbConfigData = UNIT_FIELD_NAMES_CONFIG;
+
+export default async function fetchUnits_(request: any) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
-    withMetaData: z.boolean().optional(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData } = schema.parse(formBody);
+  const { limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -31,10 +37,12 @@ export default async function fetchUnits_(request: Request) {
 
     let units = [];
 
-    if (withMetaData) {
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+
+    if (isWithMetaData) {
       units = await db
         .collection(dbCollections.units.name)
-        .aggregate(p_fetchUnitsWithMetaData({ query: {} }))
+        .aggregate(p_fetchUnitsWithMetaData({ query: {}, project }))
         .toArray();
     } else {
       units = await db
@@ -44,7 +52,7 @@ export default async function fetchUnits_(request: Request) {
           {
             limit,
             skip,
-          }
+          },
         )
         .toArray();
     }
@@ -69,14 +77,15 @@ export default async function fetchUnits_(request: Request) {
   }
 }
 
-export async function fetchUnitById_(request: Request) {
+export async function fetchUnitById_(request: any) {
   const schema = zfd.formData({
     unitId: zfd.text(),
-    withMetaData: z.boolean(),
+    withMetaData: z.boolean().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { unitId, withMetaData } = schema.parse(formBody);
+  const { unitId, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -90,28 +99,27 @@ export async function fetchUnitById_(request: Request) {
         status: 200,
       });
     }
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
-    let unit: { [key: string]: string } | null;
+    let unit: T_RECORD | null;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       const units = await db
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
+            project,
             query: {
               _id: new BSON.ObjectId(unitId),
             },
-          })
+          }),
         )
         .toArray();
 
       unit = units.length ? units[0] : {};
     } else {
-      unit = await db
-        .collection(dbCollections.units.name)
-        .findOne({ _id: new BSON.ObjectId(unitId) });
+      unit = await db.collection(dbCollections.units.name).findOne({ _id: new BSON.ObjectId(unitId) });
     }
-
 
     const response = {
       isError: false,
@@ -180,16 +188,17 @@ export async function deleteUnits_(request: Request) {
   }
 }
 
-export async function findUnitsByName_(request: Request) {
+export async function findUnitsByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
     limit: zfd.numeric(),
-    withMetaData: z.boolean(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, withMetaData } = schema.parse(formBody);
+  const { name, limit, skip, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -203,19 +212,21 @@ export async function findUnitsByName_(request: Request) {
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(name, 'i');
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let courses = null;
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       courses = await db
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
+            project,
             query: {
               name: { $regex: regexPattern },
             },
-          })
+          }),
         )
         .toArray();
     } else {

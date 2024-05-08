@@ -4,7 +4,6 @@
 import { AdminPageTitle } from '@components/layouts';
 import useCourse from '@hooks/useCourse';
 import useSchool from '@hooks/useSchool';
-import SchoolStore from '@state/mobx/scholStore';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useEffect } from 'react';
@@ -12,33 +11,29 @@ import { COURSE_FORM_FIELDS } from './constants';
 import useProgram from '@hooks/useProgram';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
-import { T_CreateUnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers';
+import { T_CreateCourseFields } from '@hooks/useCourse/types';
 
 const CreateCourseView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createCourse, isLoading } = useCourse();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
+  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
   const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
 
-  const { selectedSchool } = SchoolStore;
-
   useEffect(() => {
-    fetchSchools({});
+    // fetchSchools({});
     fetchPrograms({});
   }, []);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const keys = [
-      COURSE_FORM_FIELDS.name.key,
-      COURSE_FORM_FIELDS.description.key,
-      COURSE_FORM_FIELDS.school.key,
-      COURSE_FORM_FIELDS.program.key,
-    ];
+    const keys = [COURSE_FORM_FIELDS.name.key, COURSE_FORM_FIELDS.description.key, COURSE_FORM_FIELDS.program.key];
 
-    let result = extractValuesFromFormEvent<T_CreateUnitFields>(e, keys);
-    createCourse(result, onSuccessfullyDone);
+    let result = extractValuesFromFormEvent<Omit<T_CreateCourseFields, 'schoolId'>>(e, keys);
+    createCourse(
+      { ...result, schoolId: programs.find((value) => value._id === result.programId)?.schoolId },
+      onSuccessfullyDone,
+    );
   };
 
   return (
@@ -60,13 +55,13 @@ const CreateCourseView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => v
           required
         />
 
-        <AdminFormSelector
+        {/* <AdminFormSelector
           loadingItems={loadingSchools}
           disabled={isLoading || loadingSchools}
           options={schools}
           label={COURSE_FORM_FIELDS.school.label}
           name={COURSE_FORM_FIELDS.school.key}
-        />
+        /> */}
 
         <AdminFormSelector
           loadingItems={loadingPrograms}

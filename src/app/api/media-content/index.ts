@@ -5,17 +5,28 @@ import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent } from './pipelines';
+import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
+import { getDbFieldNamesConfigStatus } from '../config';
 
-export default async function fetchMediaContent_(request: Request) {
+const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
+
+export default async function fetchMediaContent_(request: any) {
   const schema = zfd.formData({
-    limit: zfd.numeric(),
-    skip: zfd.numeric(),
+    limit: zfd.text(),
+    skip: zfd.text(),
     withMetaData: z.boolean().optional(),
+    school_id: z.string().optional(),
+    program_id: z.string().optional(),
+    course_id: z.string().optional(),
+    unit_id: z.string().optional(),
+    topic_id: z.string().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData } = schema.parse(formBody);
-
+  const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
+  const _limit = parseInt(limit);
+  const _skip = parseInt(skip);
   try {
     const db = await dbClient();
 
@@ -30,22 +41,28 @@ export default async function fetchMediaContent_(request: Request) {
     }
 
     let mediaContent = [];
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
-    if (withMetaData) {
+    let query: { [key: string]: BSON.ObjectId } = {};
+
+    if (school_id) query.school_id = new BSON.ObjectId(school_id);
+    if (program_id) query.program_id = new BSON.ObjectId(program_id);
+    if (course_id) query.course_id = new BSON.ObjectId(course_id);
+    if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
+    if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+
+    if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .aggregate(p_fetchMediaContentWithMetaData({ query: {} }))
+        .aggregate(p_fetchMediaContentWithMetaData({ query, project }))
         .toArray();
     } else {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .find(
-          {},
-          {
-            limit,
-            skip,
-          },
-        )
+        .find(query, {
+          limit: _limit,
+          skip: _skip,
+        })
         .toArray();
     }
 
@@ -69,14 +86,15 @@ export default async function fetchMediaContent_(request: Request) {
   }
 }
 
-export async function fetchMediaContentById_(request: Request) {
+export async function fetchMediaContentById_(request: any) {
   const schema = zfd.formData({
     mediaContentId: zfd.text(),
-    withMetaData: z.boolean(),
+    withMetaData: zfd.text().optional(),
   });
-  const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { mediaContentId, withMetaData } = schema.parse(formBody);
+  const { mediaContentId, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
 
   try {
     const db = await dbClient();
@@ -92,12 +110,14 @@ export async function fetchMediaContentById_(request: Request) {
     }
 
     let mediaContent: { [key: string]: string } | null;
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
-    if (withMetaData) {
+    if (isWithMetaData) {
       const mediaContentList = await db
         .collection(dbCollections.media_content.name)
         .aggregate(
           p_fetchMediaContentWithMetaData({
+            project,
             query: {
               _id: new BSON.ObjectId(mediaContentId),
             },
@@ -179,16 +199,24 @@ export async function deleteMediaContentByIds_(request: Request) {
   }
 }
 
-export async function findMediaContentByName_(request: Request) {
+export async function findMediaContentByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
-    skip: zfd.numeric(),
-    limit: zfd.numeric(),
-    withMetaData: z.boolean(),
+    skip: zfd.text(),
+    limit: zfd.text(),
+    // withMetaData: z.boolean(),
+    school_id: z.string().optional(),
+    program_id: z.string().optional(),
+    course_id: z.string().optional(),
+    unit_id: z.string().optional(),
+    topic_id: z.string().optional(),
   });
-  const formBody = await request.json();
+  // const formBody = await request.json();
+  const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, withMetaData } = schema.parse(formBody);
+  const { name, limit, skip, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
+
+  const isWithMetaData = params.withMetaData == 'true' ? true : false;
 
   try {
     const db = await dbClient();
@@ -206,13 +234,24 @@ export async function findMediaContentByName_(request: Request) {
 
     let mediaContent = null;
 
-    if (withMetaData) {
+    let query: { [key: string]: BSON.ObjectId } = {};
+
+    if (school_id) query.school_id = new BSON.ObjectId(school_id);
+    if (program_id) query.program_id = new BSON.ObjectId(program_id);
+    if (course_id) query.course_id = new BSON.ObjectId(course_id);
+    if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
+    if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+
+    if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
         .aggregate(
           p_fetchMediaContentWithMetaData({
+            project,
             query: {
               name: { $regex: regexPattern },
+              ...query,
             },
           }),
         )
@@ -222,6 +261,7 @@ export async function findMediaContentByName_(request: Request) {
         .collection(dbCollections.media_content.name)
         .find({
           name: { $regex: regexPattern },
+          ...query,
         })
         .toArray();
     }
@@ -235,8 +275,6 @@ export async function findMediaContentByName_(request: Request) {
       status: 200,
     });
   } catch (error) {
-    console.log('error', error);
-
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -248,16 +286,21 @@ export async function findMediaContentByName_(request: Request) {
   }
 }
 
-export async function fetchRandomMediaContent_(request: Request) {
+export async function fetchRandomMediaContent_(request: any) {
   const schema = zfd.formData({
-    limit: zfd.numeric(),
+    limit: zfd.text(),
+    school_id: zfd.text().optional(),
+    program_id: zfd.text().optional(),
+    course_id: zfd.text().optional(),
+    unit_id: zfd.text().optional(),
+    topic_id: zfd.text().optional(),
   });
 
-  const formBody = request.text();
+  const params = request.nextUrl.searchParams;
 
-  // let { limit } = schema.parse(formBody);
+  const { limit, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
 
-  const limit = 1000;
+  const _limit = parseInt(limit);
 
   try {
     const db = await dbClient();
@@ -274,11 +317,20 @@ export async function fetchRandomMediaContent_(request: Request) {
 
     let mediaContent = null;
 
+    let query: { [key: string]: BSON.ObjectId } = {};
+
+    if (school_id) query.school_id = new BSON.ObjectId(school_id);
+    if (program_id) query.program_id = new BSON.ObjectId(program_id);
+    if (course_id) query.course_id = new BSON.ObjectId(course_id);
+    if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
+    if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+
     mediaContent = await db
       .collection(dbCollections.media_content.name)
       .aggregate(
         p_fetchRandomMediaContent({
-          limit,
+          limit: _limit,
+          query,
         }),
       )
       .toArray();
@@ -292,8 +344,6 @@ export async function fetchRandomMediaContent_(request: Request) {
       status: 200,
     });
   } catch (error) {
-    console.log('error', error);
-
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

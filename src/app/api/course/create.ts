@@ -1,24 +1,21 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { Session } from "next-auth";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { default as COURSE_PROCESS_CODES } from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { Session } from 'next-auth';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { default as COURSE_PROCESS_CODES } from './processCodes';
 
-export default async function createCourse_(
-  request: Request,
-  session?: Session
-) {
+export default async function createCourse_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
-    schoolId: zfd.text().optional(),
-    programId: zfd.text().optional(),
+    // schoolId: zfd.text().optional(),
+    // programId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId } = schema.parse(formBody);
+  const { name, description } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -32,7 +29,7 @@ export default async function createCourse_(
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
     const course = await db.collection(dbCollections.courses.name).findOne({
       name: { $regex: regexPattern },
@@ -49,45 +46,45 @@ export default async function createCourse_(
       });
     }
 
-    const school = schoolId
-      ? await db.collection(dbCollections.schools.name).findOne(
-          {
-            _id: new BSON.ObjectId(schoolId),
-          },
-          { projection: { _id: 1 } }
-        )
-      : null;
+    // const school = schoolId
+    //   ? await db.collection(dbCollections.schools.name).findOne(
+    //       {
+    //         _id: new BSON.ObjectId(schoolId),
+    //       },
+    //       { projection: { _id: 1 } },
+    //     )
+    //   : null;
 
-    if (!school && schoolId) {
-      const response = {
-        isError: true,
-        code: COURSE_PROCESS_CODES.SCHOOL_NOT_FOUND,
-      };
+    // if (!school && schoolId) {
+    //   const response = {
+    //     isError: true,
+    //     code: COURSE_PROCESS_CODES.SCHOOL_NOT_FOUND,
+    //   };
 
-      return new Response(JSON.stringify(response), {
-        status: 200,
-      });
-    }
+    //   return new Response(JSON.stringify(response), {
+    //     status: 200,
+    //   });
+    // }
 
-    const program = programId
-      ? await db.collection(dbCollections.programs.name).findOne(
-          {
-            _id: new BSON.ObjectId(programId),
-          },
-          { projection: { _id: 1 } }
-        )
-      : null;
+    // const program = programId
+    //   ? await db.collection(dbCollections.programs.name).findOne(
+    //       {
+    //         _id: new BSON.ObjectId(programId),
+    //       },
+    //       { projection: { _id: 1 } },
+    //     )
+    //   : null;
 
-    if (!program && programId) {
-      const response = {
-        isError: true,
-        code: COURSE_PROCESS_CODES.PROGRAM_NOT_FOUND,
-      };
+    // if (!program && programId) {
+    //   const response = {
+    //     isError: true,
+    //     code: COURSE_PROCESS_CODES.PROGRAM_NOT_FOUND,
+    //   };
 
-      return new Response(JSON.stringify(response), {
-        status: 200,
-      });
-    }
+    //   return new Response(JSON.stringify(response), {
+    //     status: 200,
+    //   });
+    // }
 
     await db.collection(dbCollections.courses.name).insertOne({
       name,
@@ -96,8 +93,8 @@ export default async function createCourse_(
       updated_at: new Date(),
       //@ts-ignore
       created_by_id: new BSON.ObjectId(session?.user?.id),
-      school_id: new BSON.ObjectId(schoolId),
-      program_id: new BSON.ObjectId(programId),
+      // school_id: new BSON.ObjectId(schoolId),
+      // program_id: new BSON.ObjectId(programId),
     });
 
     const response = {

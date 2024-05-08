@@ -1,7 +1,8 @@
 export type T_CreateCourseFields = {
   name: string;
   description: string;
-  schoolId: string;
+  schoolId?: string;
+  programId?: string;
 };
 
 export type T_FetchCourses = {

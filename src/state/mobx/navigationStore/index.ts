@@ -1,4 +1,4 @@
-import { T_ChildMenuItemLinkParams, T_MenuItemLinkParams } from 'types/links';
+import { T_ChildMenuItemLinkParams, T_MenuItemLinkParams } from 'types/navigation/links';
 
 class navigationStore {
   activeMenuItem: T_MenuItemLinkParams | T_ChildMenuItemLinkParams | null = null;

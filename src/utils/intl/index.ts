@@ -15,7 +15,7 @@ i18next.init({
         form: 'Form',
         email_error: 'Please input your email',
         password_error: 'Please input your password!',
-        unknown_error: 'Sorry something went wrong',
+        unknown_error: 'Sorry, something went wrong',
         user_created: 'Account successfully created',
         user_exist: 'Sorry account already exits',
         user_exist2: 'Sorry account already exits. Please sign in',
@@ -61,7 +61,7 @@ i18next.init({
 
         submit: 'Submit',
         upload_file: 'Upload File',
-        upload_thumbnail: 'Upload Thumbnail',
+        upload_thumbnail: 'Upload Thumbnail (optional)',
 
         users: 'Users',
         units: 'Units',

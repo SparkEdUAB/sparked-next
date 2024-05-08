@@ -24,7 +24,7 @@ export type T_link = {
   DELETE_COURSES: string;
   FIND_COURSE_BY_NAME: string;
   CREATE_UNIT: string;
-  FETCH_UNIT: string;
+  FETCH_UNITS: string;
   DELETE_UNITS: string;
   FETCH_UNIT_BY_ID: string;
   EDIT_UNIT: string;
@@ -46,6 +46,9 @@ export type T_link = {
   FETCH_RANDOM_MEDIA_CONTENT: string;
   //users
   CREATE_USER: string;
+
+  //config
+  READ_CONFIG_FILE: string;
 };
 
 export type TProcessCode = {

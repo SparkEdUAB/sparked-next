@@ -1,15 +1,12 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { Session } from "next-auth";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { default as PROGRAM_PROCESS_CODES } from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { Session } from 'next-auth';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { default as PROGRAM_PROCESS_CODES } from './processCodes';
 
-export default async function createProgram_(
-  request: Request,
-  session?: Session
-) {
+export default async function createProgram_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
@@ -31,7 +28,7 @@ export default async function createProgram_(
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
     const program = await db.collection(dbCollections.programs.name).findOne({
       name: { $regex: regexPattern },
@@ -48,25 +45,23 @@ export default async function createProgram_(
       });
     }
 
-
     const school = await db.collection(dbCollections.schools.name).findOne(
       {
         _id: new BSON.ObjectId(schoolId),
       },
-      { projection: { _id: 1 } }
+      { projection: { _id: 1 } },
     );
 
+    if (!school) {
+      const response = {
+        isError: true,
+        code: PROGRAM_PROCESS_CODES.SCHOOL_NOT_FOUND,
+      };
 
-       if (!school) {
-         const response = {
-           isError: true,
-           code: PROGRAM_PROCESS_CODES.SCHOOL_NOT_FOUND,
-         };
-
-         return new Response(JSON.stringify(response), {
-           status: 200,
-         });
-       }
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
 
     await db.collection(dbCollections.programs.name).insertOne({
       name,

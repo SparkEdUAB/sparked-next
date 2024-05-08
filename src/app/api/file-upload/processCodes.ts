@@ -1,9 +1,9 @@
-import { TProcessCode } from "app/types";
+import { TProcessCode } from 'types/navigation';
 
 // 2600 - 3099
-const MEDIA_PROCESS_CODES: TProcessCode = {
+const MEDIA_PROCESS_CODES = {
   MEDIA_UPLOADED_OK: 2600,
   MEDIA_UPLOAD_FAILED: 2601,
-};
+} satisfies TProcessCode;
 
 export default MEDIA_PROCESS_CODES;

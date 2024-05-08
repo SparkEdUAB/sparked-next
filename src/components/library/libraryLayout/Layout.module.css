@@ -1,0 +1,11 @@
+.sidebar > div {
+  height: fit-content;
+  background-color: transparent;
+}
+
+.sidebar .collapsible span,
+.sidebar .item span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

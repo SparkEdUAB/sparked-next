@@ -1,4 +1,4 @@
-import { T_link } from './types';
+import { T_link } from '../types/navigation';
 
 export const API_LINKS: T_link = {
   SIGNUP: '/api/authentication/signup',
@@ -28,7 +28,7 @@ export const API_LINKS: T_link = {
   FIND_COURSE_BY_NAME: '/api/course/findCourseByName',
   // unit  links
   CREATE_UNIT: '/api/unit/createUnit',
-  FETCH_UNIT: '/api/unit/fetchUnits',
+  FETCH_UNITS: '/api/unit/fetchUnits',
   DELETE_UNITS: '/api/unit/deleteUnits',
   FETCH_UNIT_BY_ID: '/api/unit/fetchUnitById',
   EDIT_UNIT: '/api/unit/editUnit',
@@ -57,4 +57,5 @@ export const API_LINKS: T_link = {
 
   //   resources
   FILE_UPLOAD: '/api/file-upload/uploadFile',
+  READ_CONFIG_FILE: '/api/config/readConfigFile',
 };

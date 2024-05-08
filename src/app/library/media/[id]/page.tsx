@@ -1,88 +1,58 @@
-'use client';
+import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
+import { fetcher } from '@hooks/use-swr';
+import { API_LINKS } from 'app/links';
+import { BASE_URL } from 'app/shared/constants';
+import { Metadata, ResolvingMetadata } from 'next';
+import { T_RawMediaContentFields } from 'types/media-content';
+import { determineFileType, getMetadataGenerator } from 'utils/helpers';
+import NETWORK_UTILS from 'utils/network';
+import { MediaContentView } from '../../../../components/library/MediaContentView';
 
-import PdfViewer from '@components/layouts/library/PdfViewer/PdfViewer';
-import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
-import LibraryLoader from '@components/library/LibraryLoader';
-import useMediaContent from '@hooks/use-media-content';
-import { ReactNode, useEffect } from 'react';
-import { FaBook, FaBookmark, FaSchool } from 'react-icons/fa';
-import { ImBooks } from 'react-icons/im';
-import { IoIosCloseCircleOutline, IoMdDownload, IoMdSchool } from 'react-icons/io';
-import { determineFileType } from 'utils/helpers';
+type T_MediaContentPageProps = {
+  params: {
+    id: string;
+  };
+};
 
-export default function MediaContentPage({ params }: { params: { id: string } }) {
-  let { fetchMediaContentById, isLoading, targetMediaContent } = useMediaContent();
+export async function generateMetadata(props: T_MediaContentPageProps, parent: ResolvingMetadata): Promise<Metadata> {
+  const getMetadata = await getMetadataGenerator(parent);
 
-  useEffect(() => {
-    fetchMediaContentById({ mediaContentId: params.id, withMetaData: true });
-  }, []);
+  const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
+    BASE_URL +
+      API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+      NETWORK_UTILS.formatGetParams({ mediaContentId: props.params.id, withMetaData: 'false' }),
+    { next: { revalidate: 3600 } },
+  );
 
-  const fileType = determineFileType(targetMediaContent?.fileUrl || '');
+  if (result instanceof Error) {
+    return getMetadata('Media Content View', 'Shows details about the selected media content file');
+  } else {
+    const mediaContent = result.mediaContent;
+    const thumbnail =
+      mediaContent.thumbnailUrl ||
+      (mediaContent.file_url && determineFileType(mediaContent.file_url) === 'image'
+        ? mediaContent.file_url
+        : undefined);
+
+    return getMetadata(mediaContent.name, mediaContent.description, thumbnail);
+  }
+}
+
+export default async function MediaContentPage({ params }: T_MediaContentPageProps) {
+  const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
+    BASE_URL +
+      API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+      NETWORK_UTILS.formatGetParams({ mediaContentId: params.id, withMetaData: 'false' }),
+    { next: { revalidate: 3600 } },
+  );
 
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] py-6 px-4">
-      {targetMediaContent === null ? (
-        isLoading ? (
-          <LibraryLoader />
-        ) : (
-          <EmptyContentIndicator>Nothing to show</EmptyContentIndicator>
-        )
+      {result instanceof Error ? (
+        <LibraryErrorMessage>{result.message}</LibraryErrorMessage>
       ) : (
-        <div>
-          <div>
-            {!targetMediaContent.fileUrl ? (
-              <div className="w-full flex flex-col items-center justify-center text-red-500 p-10">
-                <IoIosCloseCircleOutline className="text-6xl mb-3" />
-                <p className="text-lg">
-                  The <code>fileUrl</code> property is <code>null</code>
-                </p>
-              </div>
-            ) : fileType === 'image' ? (
-              <img
-                src={targetMediaContent.fileUrl}
-                alt={targetMediaContent.name}
-                className="max-h-[500px] max-w-full"
-              />
-            ) : fileType === 'video' ? (
-              <video src={targetMediaContent.fileUrl} className="max-h-[500px] max-w-full" controls></video>
-            ) : fileType === 'pdf' ? (
-              <PdfViewer file={targetMediaContent.fileUrl} />
-            ) : null}
-          </div>
-          {/* <a
-            className="mt-6 group inline-flex items-center justify-center px-4 py-2 text-center font-medium relative focus:z-10 focus:outline-none text-white bg-cyan-700 border border-transparent enabled:hover:bg-cyan-800 focus:ring-cyan-300 dark:bg-cyan-600 dark:enabled:hover:bg-cyan-700 dark:focus:ring-cyan-800 rounded-lg focus:ring-2"
-            href={targetMediaContent.fileUrl}
-            download
-            target="_blank"
-          >
-            <IoMdDownload className="mr-2 text-xl" /> Download
-          </a> */}
-          <div>
-            <h1 className="my-6 font-bold text-3xl">{targetMediaContent.name}</h1>
-            <p className="text-lg whitespace-pre-wrap">{targetMediaContent.description}</p>
-            <div className="my-6 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
-              {/* <IconWithLabel icon={<FaSchool className="text-2xl" />} label={targetMediaContent.schoolName} />
-              <IconWithLabel icon={<IoMdSchool className="text-2xl" />} label={targetMediaContent.programName} /> */}
-              <IconWithLabel
-                title="Course"
-                icon={<ImBooks className="text-2xl" />}
-                label={targetMediaContent.courseName}
-              />
-              <IconWithLabel title="Unit" icon={<FaBook />} label={targetMediaContent.unitName} />
-              <IconWithLabel title="Topic" icon={<FaBookmark />} label={targetMediaContent.topicName} />
-            </div>
-          </div>
-        </div>
+        <MediaContentView mediaContent={result.mediaContent} />
       )}
     </main>
   );
-}
-
-function IconWithLabel({ icon, label, title }: { label?: string; icon: ReactNode; title: string }) {
-  return label ? (
-    <div className="flex flex-row items-center gap-2" title={title}>
-      {icon}
-      {label}
-    </div>
-  ) : null;
 }

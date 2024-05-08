@@ -95,7 +95,7 @@ const useUsers = (form?: any) => {
   };
 
   const fetchUnits = async ({ limit = 1000, skip = 0 }: T_FetchUsers) => {
-    const url = API_LINKS.FETCH_UNIT;
+    const url = API_LINKS.FETCH_UNITS;
     const formData = {
       body: JSON.stringify({ limit, skip, withMetaData: true }),
       method: 'post',
@@ -320,9 +320,7 @@ const useUsers = (form?: any) => {
     router.push(getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${selectedUserIds[0]}`);
   };
 
-  const onEmailPasswordChange: CheckboxProps['onChange'] = (e) => {
-    console.log(`checked = ${e.target.checked}`);
-  };
+  const onEmailPasswordChange: CheckboxProps['onChange'] = (e) => {};
 
   return {
     createUser,

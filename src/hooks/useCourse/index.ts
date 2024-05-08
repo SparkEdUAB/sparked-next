@@ -9,6 +9,7 @@ import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import UiStore from '@state/mobx/uiStore';
 import { T_CreateCourseFields, T_FetchCourses, T_CourseFields, T_RawCourseFields } from './types';
+import NETWORK_UTILS from 'utils/network';
 
 const useCourse = (form?: any) => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -99,17 +100,11 @@ const useCourse = (form?: any) => {
 
   const fetchCourses = async ({ limit = 1000, skip = 0 }: T_FetchCourses) => {
     const url = API_LINKS.FETCH_COURSES;
-    const formData = {
-      body: JSON.stringify({ limit, skip, withMetaData: true }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -138,17 +133,11 @@ const useCourse = (form?: any) => {
 
   const fetchCourseById = async ({ courseId, withMetaData = false }: { courseId: string; withMetaData: boolean }) => {
     const url = API_LINKS.FETCH_COURSE_BY_ID;
-    const formData = {
-      body: JSON.stringify({ courseId, withMetaData }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+    const params = { courseId: courseId.toString(), withMetaData: withMetaData.toString() };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -240,22 +229,12 @@ const useCourse = (form?: any) => {
     }
 
     const url = API_LINKS.FIND_COURSE_BY_NAME;
-    const formData = {
-      body: JSON.stringify({
-        name: searchQuery.trim(),
-        limit: 1000,
-        skip: 0,
-        withMetaData,
-      }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+
+    const params = { name: searchQuery.trim(), limit: '1000', skip: '0', withMetaData: 'true' };
 
     try {
       setLoaderStatus(true);
-      const resp = await fetch(url, formData);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
       if (!resp.ok) {

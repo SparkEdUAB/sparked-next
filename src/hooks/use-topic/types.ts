@@ -20,10 +20,10 @@ export type T_RawTopicFields = {
   _id: string;
   created_by: string;
   description: string;
-  schoolId: string;
-  programId: string;
-  courseId: string;
-  unitId: string;
+  school_id: string;
+  program_id: string;
+  course_id: string;
+  unit_id: string;
 
   created_at: string;
 
