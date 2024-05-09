@@ -66,6 +66,8 @@ i18next.init({
         schools_found: 'schools found',
         users_found: 'users found',
 
+        search_items: 'Search Items',
+
         name: 'Name',
         description: 'Description',
         school: 'School',
