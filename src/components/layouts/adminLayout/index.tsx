@@ -11,15 +11,14 @@ import { AdminNavbar } from './AdminNavbar';
 
 const AdminLayout: FC<T_AdminLayout> = observer(({ children, withBreadcrumb = true }) => {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
-
   const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
 
   return (
-    <main className="admin-content-page">
+    <main className="h-[calc(100vh_-_62px)]">
       <AdminNavbar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
-      <div className="md:grid md:grid-cols-[256px_calc(100%_-_256px)]">
+      <div className="md:grid md:grid-cols-[256px_calc(100%_-_256px)]  h-[calc(100vh_-_62px)]">
         <AdminSidebar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
-        <div className="p-6">
+        <div className="p-6 max-h-full overflow-y-scroll">
           {withBreadcrumb && <AdminHeader menuItems={ADMIN_LINKS} />}
           <div className="py-6">{children}</div>
         </div>
