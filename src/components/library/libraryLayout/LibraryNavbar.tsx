@@ -7,7 +7,7 @@ import { HiSearch, HiX } from 'react-icons/hi';
 import { MdMenu } from 'react-icons/md';
 import AppLogo from '@components/logo';
 import { extractValuesFromFormEvent } from 'utils/helpers';
-import useNavigation from '@hooks/useNavigation';
+import { useRouter } from 'next-nprogress-bar';
 
 export function LibraryNavbar({
   toggleSidebar,
@@ -17,7 +17,7 @@ export function LibraryNavbar({
   sidebarIsCollapsed: boolean;
 }) {
   let [searching, setSearching] = useState(false);
-  let { router } = useNavigation();
+  let router = useRouter();
 
   return (
     <Navbar fluid rounded className="sticky top-0 z-[60]">

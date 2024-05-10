@@ -49,7 +49,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
       <TextInput
         icon={HiMagnifyingGlass}
         className="table-search-box"
-        placeholder={i18next.t('search_units')}
+        placeholder={i18next.t('search_items')}
         required
         type="text"
         onKeyDown={(e) => {

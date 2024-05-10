@@ -1,8 +1,9 @@
+import { DEBUG } from 'app/shared/constants';
 import i18next from 'i18next';
 
 i18next.init({
   lng: 'en', // if you're using a language detector, do not define the lng option
-  debug: true,
+  debug: DEBUG,
   saveMissing: true,
   resources: {
     en: {
@@ -65,6 +66,8 @@ i18next.init({
         programs_found: 'programs found',
         schools_found: 'schools found',
         users_found: 'users found',
+
+        search_items: 'Search Items',
 
         name: 'Name',
         description: 'Description',

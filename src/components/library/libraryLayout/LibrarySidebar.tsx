@@ -3,7 +3,6 @@
 import styles from './Layout.module.css';
 import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
-import SkeletonLoaderElement from '@components/skeletonLoader/SkeletonLoaderElement';
 import { T_RawCourseFields } from '@hooks/useCourse/types';
 import { T_RawUnitFields } from '@hooks/useUnit/types';
 
