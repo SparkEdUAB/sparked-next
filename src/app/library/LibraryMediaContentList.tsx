@@ -31,7 +31,7 @@ export default function LibraryMediaContentList({
         setHasMore(false);
       } else if (result.mediaContent.length === 0) {
         setHasMore(false);
-      } else {
+      } else if (!(result instanceof Error)) {
         setMediaContent((existing) => [...existing, ...result.mediaContent]);
       }
     } catch {
