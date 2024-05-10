@@ -31,8 +31,9 @@ export default function LibraryMediaContentList({
         setHasMore(false);
       } else if (result.mediaContent.length === 0) {
         setHasMore(false);
-      } else if (!(result instanceof Error)) {
-        setMediaContent((existing) => [...existing, ...result.mediaContent]);
+      } else {
+        const newItems = (result as { mediaContent: T_RawMediaContentFields[] }).mediaContent;
+        setMediaContent((existing) => [...existing, ...newItems]);
       }
     } catch {
       setError(true);
