@@ -7,12 +7,13 @@ export function useAdminListViewData<Result extends object, RawData extends obje
   url: string,
   field: string,
   transformRawData: (i: RawData, index: number) => Result,
+  searchUrl?: string,
   searchQuery?: string,
 ) {
-  const searchQueryObject: { name: string } | {} = searchQuery ? { name: searchQuery } : {};
-
   const { data, isLoading, mutate } = useFetch(
-    url + NETWORK_UTILS.formatGetParams({ ...searchQueryObject, limit: '100', skip: '0', withMetaData: 'false' }),
+    searchQuery && searchUrl
+      ? searchUrl + NETWORK_UTILS.formatGetParams({ name: searchQuery, limit: '100', skip: '0', withMetaData: 'false' })
+      : url + NETWORK_UTILS.formatGetParams({ limit: '100', skip: '0', withMetaData: 'false' }),
   );
 
   const items: Result[] = useMemo(() => {

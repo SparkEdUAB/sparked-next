@@ -29,7 +29,13 @@ const TopicsListView: React.FC = observer(() => {
     items: topics,
     isLoading,
     mutate,
-  } = useAdminListViewData(API_LINKS.FETCH_TOPICS, 'topics', transformRawTopic, searchQuery);
+  } = useAdminListViewData(
+    API_LINKS.FETCH_TOPICS,
+    'topics',
+    transformRawTopic,
+    API_LINKS.FIND_TOPIC_BY_NAME,
+    searchQuery,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedTopicIds,
