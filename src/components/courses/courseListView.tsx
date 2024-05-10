@@ -23,7 +23,13 @@ const CourseListView: React.FC = observer(() => {
     items: courses,
     isLoading,
     mutate,
-  } = useAdminListViewData(API_LINKS.FETCH_COURSES, 'courses', transformRawCourse, searchQuery);
+  } = useAdminListViewData(
+    API_LINKS.FETCH_COURSES,
+    'courses',
+    transformRawCourse,
+    API_LINKS.FIND_COURSE_BY_NAME,
+    searchQuery,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedCourseIds,
