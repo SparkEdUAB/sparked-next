@@ -5,7 +5,6 @@ import useMediaContent from '@hooks/use-media-content';
 import { transformRawTopic } from '@hooks/use-topic';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
 import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers';
@@ -160,4 +159,4 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   );
 };
 
-export default observer(CreateMediaContentView);
+export default CreateMediaContentView;
