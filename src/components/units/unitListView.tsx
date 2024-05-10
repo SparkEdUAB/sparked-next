@@ -23,7 +23,7 @@ const UnitListView: React.FC = observer(() => {
     items: units,
     isLoading,
     mutate,
-  } = useAdminListViewData(API_LINKS.FETCH_UNITS, 'units', transformRawUnit, searchQuery);
+  } = useAdminListViewData(API_LINKS.FETCH_UNITS, 'units', transformRawUnit, API_LINKS.FIND_UNITS_BY_NAME, searchQuery);
 
   const rowSelection = {
     selectedRowKeys: selectedUnitIds,

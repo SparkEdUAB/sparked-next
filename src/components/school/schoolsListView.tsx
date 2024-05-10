@@ -23,7 +23,13 @@ const SchoolsListView: React.FC = () => {
     items: schools,
     isLoading,
     mutate,
-  } = useAdminListViewData(API_LINKS.FETCH_SCHOOLS, 'schools', transformRawSchool, searchQuery);
+  } = useAdminListViewData(
+    API_LINKS.FETCH_SCHOOLS,
+    'schools',
+    transformRawSchool,
+    API_LINKS.FIND_SCHOOLS_BY_NAME,
+    searchQuery,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedSchoolIds,

@@ -24,7 +24,13 @@ const MediaContentListView: React.FC = observer(() => {
     items: mediaContent,
     isLoading,
     mutate,
-  } = useAdminListViewData(API_LINKS.FETCH_MEDIA_CONTENT, 'mediaContent', transformRawMediaContent, searchQuery);
+  } = useAdminListViewData(
+    API_LINKS.FETCH_MEDIA_CONTENT,
+    'mediaContent',
+    transformRawMediaContent,
+    API_LINKS.FIND_MEDIA_CONTENT_BY_NAME,
+    searchQuery,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedMediaContentIds,

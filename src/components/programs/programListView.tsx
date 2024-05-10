@@ -23,7 +23,13 @@ const ProgramsListView: React.FC = observer(() => {
     items: programs,
     isLoading,
     mutate,
-  } = useAdminListViewData(API_LINKS.FETCH_PROGRAMS, 'programs', transformRawProgram, searchQuery);
+  } = useAdminListViewData(
+    API_LINKS.FETCH_PROGRAMS,
+    'programs',
+    transformRawProgram,
+    API_LINKS.FIND_PROGRAMS_BY_NAME,
+    searchQuery,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedProgramIds,
