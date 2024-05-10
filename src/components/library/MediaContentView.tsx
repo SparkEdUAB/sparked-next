@@ -6,6 +6,7 @@ import { ImBooks } from 'react-icons/im';
 import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers';
 import { LibraryErrorMessage } from './LibraryErrorMessage/LibraryErrorMessage';
+import Image from 'next/image';
 
 export function MediaContentView({ mediaContent }: { mediaContent: T_RawMediaContentFields }) {
   const fileType = determineFileType(mediaContent?.file_url || '');
@@ -18,7 +19,13 @@ export function MediaContentView({ mediaContent }: { mediaContent: T_RawMediaCon
             The <code>file_url</code> property is <code>null</code>
           </LibraryErrorMessage>
         ) : fileType === 'image' ? (
-          <img src={mediaContent.file_url} alt={mediaContent.name} className="max-h-[500px] max-w-full" />
+          <Image
+            src={mediaContent.file_url}
+            alt={mediaContent.name}
+            className="max-h-[500px] max-w-full object-contain object-left"
+            width={800}
+            height={600}
+          />
         ) : fileType === 'video' ? (
           <video src={mediaContent.file_url} className="max-h-[500px] max-w-full" controls></video>
         ) : fileType === 'pdf' ? (

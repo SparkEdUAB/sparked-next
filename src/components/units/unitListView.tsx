@@ -5,7 +5,6 @@ import { AdminPageTitle } from '@components/layouts';
 import useUnit, { transformRawUnit } from '@hooks/useUnit';
 import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { unitTableColumns } from '.';
 import CreateUnitView from './create-unit-view';
@@ -14,7 +13,7 @@ import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
 import { T_UnitFields } from '@hooks/useUnit/types';
 
-const UnitListView: React.FC = observer(() => {
+const UnitListView: React.FC = () => {
   const { selectedUnitIds, setSelectedProgramIds, searchQuery, onSearchQueryChange, deleteUnits } = useUnit();
   const [creatingUnit, setCreatingUnit] = useState(false);
   const [edittingUnitWithId, setEdittingUnitWithId] = useState<string | null>(null);
@@ -73,6 +72,6 @@ const UnitListView: React.FC = observer(() => {
       </Modal>
     </>
   );
-});
+};
 
 export default UnitListView;

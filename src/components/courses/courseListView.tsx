@@ -3,7 +3,6 @@
 import { AdminPageTitle } from '@components/layouts';
 import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import useCourse, { transformRawCourse } from '@hooks/useCourse';
 import { T_CourseFields } from '@hooks/useCourse/types';
@@ -14,7 +13,7 @@ import CreateCourseView from './createCourseView';
 import { API_LINKS } from 'app/links';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 
-const CourseListView: React.FC = observer(() => {
+const CourseListView: React.FC = () => {
   const { selectedCourseIds, setSelectedCourseIds, onSearchQueryChange, deleteCourse, searchQuery } = useCourse();
   const [creatingCourse, setCreatingCourse] = useState(false);
   const [edittingCourseWithId, setEdittingCourseWithId] = useState<string | null>(null);
@@ -79,6 +78,6 @@ const CourseListView: React.FC = observer(() => {
       </Modal>
     </>
   );
-});
+};
 
 export default CourseListView;

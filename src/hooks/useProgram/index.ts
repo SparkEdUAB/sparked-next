@@ -7,12 +7,11 @@ import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
 import { T_CreateProgramFields, T_FetchPrograms, T_ProgramFields, T_RawProgramFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 
 const useProgram = (form?: any) => {
-  const { getChildLinkByKey, router } = useNavigation();
+  const { router } = useNavigation();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -20,10 +19,6 @@ const useProgram = (form?: any) => {
   const [tempPrograms, setTempPrograms] = useState<Array<T_ProgramFields>>([]);
   const [program, setSProgram] = useState<T_ProgramFields | null>(null);
   const [selectedProgramIds, setSelectedProgramIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedProgramIds.length && deletePrograms();
-  }, [UiStore.confirmDialogStatus]);
 
   const createProgram = async (fields: T_CreateProgramFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_PROGRAM;
@@ -186,13 +181,9 @@ const useProgram = (form?: any) => {
     if (!selectedProgramIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
   const deletePrograms = async () => {
-    if (UiStore.isLoading) return;
-
     const url = API_LINKS.DELETE_PROGRAMS;
     const formData = {
       body: JSON.stringify({ programIds: selectedProgramIds }),
@@ -204,10 +195,8 @@ const useProgram = (form?: any) => {
 
     try {
       setLoaderStatus(true);
-      UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -221,7 +210,6 @@ const useProgram = (form?: any) => {
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setPrograms(programs.filter((i) => selectedProgramIds.indexOf(i._id) == -1));
@@ -229,7 +217,6 @@ const useProgram = (form?: any) => {
       return responseData.results;
     } catch (err: any) {
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;

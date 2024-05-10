@@ -4,7 +4,6 @@ import { AdminPageTitle } from '@components/layouts';
 import useMediaContent, { transformRawMediaContent } from '@hooks/use-media-content';
 import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { mediaContentTableColumns } from '.';
 import { T_MediaContentFields } from 'types/media-content';
@@ -14,7 +13,7 @@ import EditMediaContentView from './edit-media-content-view';
 import { API_LINKS } from 'app/links';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 
-const MediaContentListView: React.FC = observer(() => {
+const MediaContentListView: React.FC = () => {
   const { selectedMediaContentIds, setSelectedMediaContentIds, onSearchQueryChange, deleteMediaContent, searchQuery } =
     useMediaContent();
   const [creatingResource, setCreatingResource] = useState(false);
@@ -80,6 +79,6 @@ const MediaContentListView: React.FC = observer(() => {
       </Modal>
     </>
   );
-});
+};
 
 export default MediaContentListView;

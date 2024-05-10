@@ -6,7 +6,6 @@ import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { schoolTableColumns } from '.';
-import { observer } from 'mobx-react-lite';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import CreateSchoolView from './createSchoolView';
 import EditSchoolView from './editSchoolView';
@@ -81,4 +80,4 @@ const SchoolsListView: React.FC = () => {
   );
 };
 
-export default observer(SchoolsListView);
+export default SchoolsListView;

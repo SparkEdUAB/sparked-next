@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import { T_SchoolFields } from '@components/school/types';
 import useNavigation from '@hooks/useNavigation';
 import { message } from 'antd';
@@ -9,7 +8,6 @@ import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import { T_CreateSchoolFields, T_FetchSchools } from './types';
-import UiStore from '@state/mobx/uiStore';
 import NETWORK_UTILS from 'utils/network';
 
 const useSchool = (form?: any) => {
@@ -21,10 +19,6 @@ const useSchool = (form?: any) => {
   const [tempSchools, setTempSchools] = useState<Array<T_SchoolFields>>([]);
   const [school, setSchool] = useState<T_SchoolFields | null>(null);
   const [selectedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedSchoolIds.length && deleteSchools();
-  }, [UiStore.confirmDialogStatus]);
 
   const createSchool = async (fields: T_CreateSchoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_SCHOOL;
@@ -174,13 +168,9 @@ const useSchool = (form?: any) => {
     if (!selectedSchoolIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
   const deleteSchools = async () => {
-    if (UiStore.isLoading) return;
-
     const url = API_LINKS.DELETE_SCHOOLS;
     const formData = {
       body: JSON.stringify({ schoolIds: selectedSchoolIds }),
@@ -192,10 +182,8 @@ const useSchool = (form?: any) => {
 
     try {
       setLoaderStatus(true);
-      UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -209,7 +197,6 @@ const useSchool = (form?: any) => {
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setSchools(schools.filter((i) => selectedSchoolIds.indexOf(i._id) == -1));
@@ -217,7 +204,6 @@ const useSchool = (form?: any) => {
       return responseData.results;
     } catch (err: any) {
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;

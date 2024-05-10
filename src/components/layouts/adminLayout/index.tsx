@@ -1,7 +1,6 @@
 'use client';
 
 import { FC, useState } from 'react';
-import { observer } from 'mobx-react-lite';
 
 import AdminSidebar from './sidebar';
 import { T_AdminLayout } from './types';
@@ -9,7 +8,7 @@ import AdminHeader from './AdminHeader';
 import { ADMIN_LINKS } from './links';
 import { AdminNavbar } from './AdminNavbar';
 
-const AdminLayout: FC<T_AdminLayout> = observer(({ children, withBreadcrumb = true }) => {
+const AdminLayout: FC<T_AdminLayout> = ({ children, withBreadcrumb = true }) => {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
   const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
 
@@ -25,6 +24,6 @@ const AdminLayout: FC<T_AdminLayout> = observer(({ children, withBreadcrumb = tr
       </div>
     </main>
   );
-});
+};
 
 export default AdminLayout;

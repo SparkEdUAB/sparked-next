@@ -7,7 +7,6 @@ import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
 import { T_CreateTopicFields, T_FetchTopic, T_TopicFields, T_RawTopicFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 
@@ -20,10 +19,6 @@ const useTopic = (form?: any) => {
   const [originalTopics, setOriginalTopics] = useState<Array<T_TopicFields>>([]);
   const [topic, setTopic] = useState<T_TopicFields | null>(null);
   const [selectedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedTopicIds.length && deleteTopics();
-  }, [UiStore.confirmDialogStatus]);
 
   const createTopic = async (fields: T_CreateTopicFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_TOPIC;
@@ -182,13 +177,9 @@ const useTopic = (form?: any) => {
     if (!selectedTopicIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
   const deleteTopics = async () => {
-    if (UiStore.isLoading) return;
-
     const url = API_LINKS.DELETE_TOPICS;
     const formData = {
       body: JSON.stringify({ topicIds: selectedTopicIds }),
@@ -200,10 +191,8 @@ const useTopic = (form?: any) => {
 
     try {
       setLoaderStatus(true);
-      UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -217,7 +206,6 @@ const useTopic = (form?: any) => {
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setTopics(topics.filter((i) => selectedTopicIds.indexOf(i._id) == -1));
@@ -225,7 +213,6 @@ const useTopic = (form?: any) => {
       return responseData.results;
     } catch (err: any) {
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;

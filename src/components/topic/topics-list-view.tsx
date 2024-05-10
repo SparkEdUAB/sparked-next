@@ -4,7 +4,6 @@ import { AdminPageTitle } from '@components/layouts';
 import useTopic, { transformRawTopic } from '@hooks/use-topic';
 import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { topicTableColumns } from '.';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
@@ -14,7 +13,7 @@ import EditTopicView from './edit-topic-view';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
 
-const TopicsListView: React.FC = observer(() => {
+const TopicsListView: React.FC = () => {
   const {
     selectedTopicIds: selectedTopicIds,
     setSelectedTopicIds,
@@ -85,6 +84,6 @@ const TopicsListView: React.FC = observer(() => {
       </Modal>
     </>
   );
-});
+};
 
 export default TopicsListView;

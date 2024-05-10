@@ -7,7 +7,6 @@ import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
 import { T_CreateCourseFields, T_FetchCourses, T_CourseFields, T_RawCourseFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 
@@ -20,10 +19,6 @@ const useCourse = (form?: any) => {
   const [originalCourses, setOriginalCourses] = useState<Array<T_CourseFields>>([]);
   const [course, setCourse] = useState<T_CourseFields | null>(null);
   const [selectedCourseIds, setSelectedCourseIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedCourseIds.length && deleteCourse();
-  }, [UiStore.confirmDialogStatus]);
 
   const createCourse = async (fields: T_CreateCourseFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_COURSE;
@@ -172,13 +167,9 @@ const useCourse = (form?: any) => {
     if (!selectedCourseIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
   const deleteCourse = async () => {
-    if (UiStore.isLoading) return;
-
     const url = API_LINKS.DELETE_COURSES;
     const formData = {
       body: JSON.stringify({ courseIds: selectedCourseIds }),
@@ -189,10 +180,8 @@ const useCourse = (form?: any) => {
     };
 
     try {
-      UiStore.setLoaderStatus(true);
       setLoaderStatus(true);
       const resp = await fetch(url, formData);
-      UiStore.setLoaderStatus(false);
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -207,14 +196,12 @@ const useCourse = (form?: any) => {
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setCourses(courses.filter((i) => selectedCourseIds.indexOf(i._id) == -1));
 
       return responseData.results;
     } catch (err: any) {
-      UiStore.setLoaderStatus(false);
       setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);

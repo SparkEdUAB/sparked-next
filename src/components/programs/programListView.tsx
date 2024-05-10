@@ -4,7 +4,6 @@ import { AdminPageTitle } from '@components/layouts';
 import useProgram, { transformRawProgram } from '@hooks/useProgram';
 import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
 import React, { useState } from 'react';
 import { programTableColumns } from '.';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
@@ -14,7 +13,7 @@ import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
 import { T_ProgramFields } from '@hooks/useProgram/types';
 
-const ProgramsListView: React.FC = observer(() => {
+const ProgramsListView: React.FC = () => {
   const { selectedProgramIds, setSelectedProgramIds, onSearchQueryChange, deletePrograms, searchQuery } = useProgram();
   const [creatingProgram, setCreatingProgram] = useState(false);
   const [edittingProgramWithId, setEdittingProgramWithId] = useState<string | null>(null);
@@ -79,6 +78,6 @@ const ProgramsListView: React.FC = observer(() => {
       </Modal>
     </>
   );
-});
+};
 
 export default ProgramsListView;

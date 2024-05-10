@@ -7,7 +7,6 @@ import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
 import { T_CreateResourceFields, T_FetchTopic } from './types';
 import { T_RawMediaContentFields, T_MediaContentFields } from 'types/media-content';
 import { T_React_key } from 'types/navigation';
@@ -22,10 +21,6 @@ const useMediaContent = (form?: any) => {
   const [tempMediaContent, setTempMediaContent] = useState<Array<T_MediaContentFields>>([]);
   const [targetMediaContent, setTargetMediaContent] = useState<T_MediaContentFields | null>(null);
   const [selectedMediaContentIds, setSelectedMediaContentIds] = useState<T_React_key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedMediaContentIds.length && deleteMediaContent();
-  }, [UiStore.confirmDialogStatus]);
 
   const createResource = async (
     fields: T_CreateResourceFields,
@@ -221,13 +216,9 @@ const useMediaContent = (form?: any) => {
     if (!selectedMediaContentIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
   const deleteMediaContent = async () => {
-    if (UiStore.isLoading) return;
-
     const url = API_LINKS.DELETE_MEDIA_CONTENT;
     const formData = {
       body: JSON.stringify({ mediaContentIds: selectedMediaContentIds }),
@@ -239,10 +230,8 @@ const useMediaContent = (form?: any) => {
 
     try {
       setLoaderStatus(true);
-      UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -256,7 +245,6 @@ const useMediaContent = (form?: any) => {
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       const newMediaContentIds = mediaContent.filter((i) => selectedMediaContentIds.indexOf(i._id) == -1);
@@ -268,7 +256,6 @@ const useMediaContent = (form?: any) => {
       return responseData.results;
     } catch (err: any) {
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
