@@ -1,8 +1,6 @@
 import React from 'react';
-import ContentCardView from '@components/layouts/library/content-card';
-import { T_RawMediaContentFields } from 'types/media-content';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
-import { determineFileType, getMetadataGenerator } from 'utils/helpers';
+import { getMetadataGenerator } from 'utils/helpers';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import LibraryBadge from '@components/library/LibraryBadge';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -12,6 +10,8 @@ import { API_LINKS } from 'app/links';
 import NETWORK_UTILS from 'utils/network';
 import { T_LibraryPageProps } from '@components/library/types';
 import { T_RawTopicFields } from '@hooks/use-topic/types';
+import LibraryMediaContentList from './LibraryMediaContentList';
+import { fetchMedia } from '../../components/library/fetchMedia';
 
 export async function generateMetadata(props: {}, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
@@ -20,19 +20,17 @@ export async function generateMetadata(props: {}, parent: ResolvingMetadata): Pr
 }
 
 const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
-  const mediaResult = await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
-    BASE_URL + API_LINKS.FETCH_RANDOM_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ ...searchParams, limit: '20' }),
-    { next: { revalidate: 3600 } },
-  );
+  const mediaResult = await fetchMedia(0, searchParams);
+
   const topicsResult = await fetcher<{ topics: T_RawTopicFields[] }>(
     BASE_URL + API_LINKS.FETCH_TOPICS + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }),
     { next: { revalidate: 3600 } },
   );
 
   return (
-    <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
+    <main id="scrollableDiv" className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
       <div className="overflow-x-scroll custom-scrollbar flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
-        {topicsResult instanceof Error ? null : (
+        {topicsResult instanceof Error || (topicsResult.topics.length === 0 && !searchParams.topic_id) ? null : (
           <>
             <LibraryBadge
               key={'Any topic'}
@@ -75,23 +73,7 @@ const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
       ) : mediaResult.mediaContent.length === 0 ? (
         <EmptyContentIndicator>There is nothing here yet</EmptyContentIndicator>
       ) : (
-        <div className="grid pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-          {mediaResult.mediaContent.map((item) => (
-            <div style={{ padding: '8px 0' }} key={item._id} className="gutter-row px-2 h-full">
-              <ContentCardView
-                url={`/library/media/${item._id}`}
-                image={
-                  item.thumbnailUrl ||
-                  (item.file_url && determineFileType(item.file_url) === 'image'
-                    ? item.file_url
-                    : '/assets/images/no picture yet.svg')
-                }
-                title={item.name}
-                description={item.description}
-              />
-            </div>
-          ))}
-        </div>
+        <LibraryMediaContentList initialMediaContent={mediaResult.mediaContent} />
       )}
     </main>
   );
