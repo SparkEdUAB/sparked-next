@@ -5,7 +5,7 @@ import { API_LINKS } from 'app/links';
 import NETWORK_UTILS from 'utils/network';
 import { MEDIA_CONTENT_LIMIT } from '@components/library/constants';
 
-export const searchMedia = async (skip: number, searchText: string) => {
+export async function searchMedia(skip: number, searchText: string) {
   return await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
     (BASE_URL || '') +
       API_LINKS.FIND_MEDIA_CONTENT_BY_NAME +
@@ -17,4 +17,4 @@ export const searchMedia = async (skip: number, searchText: string) => {
       }),
     { next: { revalidate: 3600 } },
   );
-};
+}

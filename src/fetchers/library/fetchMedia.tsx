@@ -6,7 +6,7 @@ import NETWORK_UTILS from 'utils/network';
 import { MEDIA_CONTENT_LIMIT } from '@components/library/constants';
 import { T_Filters } from '@hooks/useLibrary/useSearchFilters';
 
-export const fetchMedia = async (skip: number, filters: T_Filters) => {
+export async function fetchMedia(skip: number, filters: T_Filters) {
   return await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
     (BASE_URL || '') +
       API_LINKS.FETCH_MEDIA_CONTENT +
@@ -17,4 +17,4 @@ export const fetchMedia = async (skip: number, filters: T_Filters) => {
       }),
     { next: { revalidate: 3600 } },
   );
-};
+}

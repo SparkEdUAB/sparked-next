@@ -4,9 +4,14 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent } from './pipelines';
+import {
+  p_fetchMediaContentWithMetaData,
+  p_fetchRandomMediaContent,
+  p_fetchRelatedMediaContentPipeline,
+} from './pipelines';
 import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
+import { NextRequest } from 'next/server';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
 
@@ -338,6 +343,67 @@ export async function fetchRandomMediaContent_(request: any) {
     const response = {
       isError: false,
       mediaContent,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  } catch (error) {
+    const resp = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+    };
+
+    return new Response(JSON.stringify(resp), {
+      status: 200,
+    });
+  }
+}
+
+export async function fetchRelatedMediaContent_(request: NextRequest) {
+  const schema = zfd.formData({
+    media_content_id: zfd.text(),
+    topic_id: zfd.text().optional(),
+    unit_id: zfd.text().optional(),
+    course_id: zfd.text().optional(),
+    limit: zfd.text().optional(),
+    skip: zfd.text().optional(),
+  });
+
+  const params = request.nextUrl.searchParams;
+  const { media_content_id, topic_id, unit_id, course_id, limit, skip } = schema.parse(params);
+  const _limit = parseInt(limit || '10');
+  const _skip = parseInt(skip || '0');
+
+  try {
+    const db = await dbClient();
+
+    if (!db) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+      };
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
+    const query = {
+      ...(topic_id && { topic_id: new BSON.ObjectId(topic_id) }),
+      ...(unit_id && { unit_id: new BSON.ObjectId(unit_id) }),
+      ...(course_id && { course_id: new BSON.ObjectId(course_id) }),
+    };
+
+    const mediaContentId = new BSON.ObjectId(media_content_id);
+
+    const relatedMediaContent = await db
+      .collection(dbCollections.media_content.name)
+      .aggregate(p_fetchRelatedMediaContentPipeline({ query, mediaContentId, limit: _limit, skip: _skip }))
+      .toArray();
+
+    const response = {
+      isError: false,
+      mediaContent: relatedMediaContent,
     };
 
     return new Response(JSON.stringify(response), {

@@ -40,6 +40,7 @@ export type T_link = {
   FIND_MEDIA_CONTENT_BY_NAME: string;
   FILE_UPLOAD: string;
   FETCH_MEDIA_CONTENT: string;
+  FETCH_RELATED_MEDIA_CONTENT: string;
   FETCH_MEDIA_CONTENT_BY_ID: string;
   EDIT_MEDIA_CONTENT: string;
   DELETE_MEDIA_CONTENT: string;

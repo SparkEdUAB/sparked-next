@@ -1,5 +1,6 @@
 import { T_RECORD } from 'types';
 import { dbCollections } from '../lib/db/collections';
+import { BSON } from 'mongodb';
 
 export const p_fetchMediaContentWithMetaData = ({
   query = {},
@@ -217,5 +218,74 @@ export const p_fetchRandomMediaContent = ({
   },
   {
     $skip: skip,
+  },
+];
+
+export const p_fetchRelatedMediaContentPipeline = ({
+  query,
+  mediaContentId,
+  limit = 100,
+  skip = 0,
+}: {
+  query: {
+    topic_id?: BSON.ObjectId;
+    unit_id?: BSON.ObjectId;
+    course_id?: BSON.ObjectId;
+  };
+  mediaContentId: BSON.ObjectId;
+  limit: number;
+  skip: number;
+}) => [
+  {
+    $facet: {
+      sameTopic: [
+        {
+          $match: {
+            ...query,
+            topic_id: query.topic_id,
+            _id: { $ne: mediaContentId },
+          },
+        },
+        { $skip: skip },
+        { $limit: limit },
+      ],
+      sameUnit: [
+        {
+          $match: {
+            ...query,
+            unit_id: query.unit_id,
+            topic_id: { $ne: query.topic_id },
+            _id: { $ne: mediaContentId },
+          },
+        },
+        { $skip: skip },
+        { $limit: limit },
+      ],
+      sameCourse: [
+        {
+          $match: {
+            ...query,
+            course_id: query.course_id,
+            unit_id: { $ne: query.unit_id },
+            _id: { $ne: mediaContentId },
+          },
+        },
+        { $skip: skip },
+        { $limit: limit },
+      ],
+    },
+  },
+  {
+    $project: {
+      relatedMediaContent: {
+        $concatArrays: ['$sameTopic', '$sameUnit', '$sameCourse'],
+      },
+    },
+  },
+  {
+    $unwind: '$relatedMediaContent',
+  },
+  {
+    $replaceRoot: { newRoot: '$relatedMediaContent' },
   },
 ];
