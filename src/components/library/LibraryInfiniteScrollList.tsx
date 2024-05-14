@@ -1,10 +1,11 @@
 'use client';
+
 import React from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
 import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { Spinner } from 'flowbite-react';
+import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
 
 export function LibraryInfiniteScrollList({
   mediaContent,
@@ -24,7 +25,7 @@ export function LibraryInfiniteScrollList({
       hasMore={hasMore}
       loader={
         <div className="flex flex-row justify-center items-center my-4">
-          <Spinner size="md" />
+          <BouncingLoader />
         </div>
       }
       endMessage={
