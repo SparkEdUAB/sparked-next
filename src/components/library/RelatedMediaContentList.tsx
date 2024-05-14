@@ -15,7 +15,7 @@ export function RelatedMediaContentList({
           <h3 className="my-4 font-semibold text-xl">Related Media</h3>
           <List unstyled>
             {relatedMediaContent.map((item) => (
-              <List.Item>
+              <List.Item key={item._id}>
                 <Link href={`/library/media/${item._id}`} className="flex flex-row gap-2 mb-2">
                   <Image
                     src={item.thumbnailUrl || '/assets/images/no picture yet.svg'}
