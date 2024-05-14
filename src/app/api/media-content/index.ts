@@ -4,11 +4,7 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import {
-  p_fetchMediaContentWithMetaData,
-  p_fetchRandomMediaContent,
-  p_fetchRelatedMediaContentPipeline,
-} from './pipelines';
+import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent, p_fetchRelatedMediaContent } from './pipelines';
 import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { NextRequest } from 'next/server';
@@ -398,7 +394,7 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
 
     const relatedMediaContent = await db
       .collection(dbCollections.media_content.name)
-      .aggregate(p_fetchRelatedMediaContentPipeline({ query, mediaContentId, limit: _limit, skip: _skip }))
+      .aggregate(p_fetchRelatedMediaContent({ query, mediaContentId, limit: _limit, skip: _skip }))
       .toArray();
 
     const response = {

@@ -221,7 +221,7 @@ export const p_fetchRandomMediaContent = ({
   },
 ];
 
-export const p_fetchRelatedMediaContentPipeline = ({
+export const p_fetchRelatedMediaContent = ({
   query,
   mediaContentId,
   limit = 100,
