@@ -3,7 +3,7 @@ import { fetcher } from '@hooks/use-swr/fetcher';
 import { BASE_URL } from 'app/shared/constants';
 import { API_LINKS } from 'app/links';
 import NETWORK_UTILS from 'utils/network';
-import { MEDIA_CONTENT_LIMIT } from './constants';
+import { MEDIA_CONTENT_LIMIT } from '@components/library/constants';
 import { T_Filters } from '@hooks/useLibrary/useSearchFilters';
 
 export const fetchMedia = async (skip: number, filters: T_Filters) => {
