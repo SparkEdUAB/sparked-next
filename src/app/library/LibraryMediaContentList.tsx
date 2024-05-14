@@ -22,6 +22,13 @@ export default function LibraryMediaContentList({
 
   let filters = useSearchFilters();
 
+  useEffect(() => {
+    setMediaContent(initialMediaContent);
+    setOffset(MEDIA_CONTENT_LIMIT);
+    setHasMore(true);
+    setError(false);
+  }, [initialMediaContent]);
+
   const loadMore = async () => {
     try {
       let result = await fetchMedia(offset, filters);
