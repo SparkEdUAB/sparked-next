@@ -2,7 +2,7 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/constants';
-import createCourse_ from '../create';
+import createPageLink_ from '../create';
 
 export async function POST(
   req: Request,
@@ -16,7 +16,7 @@ export async function POST(
   const pageLinksFunctions: {
     [key: string]: (request: Request, session?: Session) => {};
   } = {
-    createCourse: createCourse_,
+    createPageLink: createPageLink_,
   };
 
   if (pageLinksFunctions[slug] && session) {

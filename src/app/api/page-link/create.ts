@@ -4,18 +4,18 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as COURSE_PROCESS_CODES } from './processCodes';
+import { default as PAGE_PROCESS_CODES } from './processCodes';
 
 export default async function createPageLink_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
-    // schoolId: zfd.text().optional(),
-    // programId: zfd.text().optional(),
+    pageLink: zfd.text(),
   });
+
   const formBody = await request.json();
 
-  const { name, description } = schema.parse(formBody);
+  const { name, description, pageLink } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -31,14 +31,21 @@ export default async function createPageLink_(request: Request, session?: Sessio
     }
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const course = await db.collection(dbCollections.courses.name).findOne({
-      name: { $regex: regexPattern },
-    });
+    const pageLinkData = await db.collection(dbCollections.page_links.name).findOne(
+      {
+        name: { $regex: regexPattern },
+      },
+      {
+        projection: {
+          _id: 1,
+        },
+      },
+    );
 
-    if (course) {
+    if (pageLinkData) {
       const response = {
         isError: true,
-        code: COURSE_PROCESS_CODES.COURSE_EXIST,
+        code: PAGE_PROCESS_CODES.PAGE_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
@@ -46,60 +53,21 @@ export default async function createPageLink_(request: Request, session?: Sessio
       });
     }
 
-    // const school = schoolId
-    //   ? await db.collection(dbCollections.schools.name).findOne(
-    //       {
-    //         _id: new BSON.ObjectId(schoolId),
-    //       },
-    //       { projection: { _id: 1 } },
-    //     )
-    //   : null;
+    const data = await db.collection(dbCollections.page_links.name).findOne();
 
-    // if (!school && schoolId) {
-    //   const response = {
-    //     isError: true,
-    //     code: COURSE_PROCESS_CODES.SCHOOL_NOT_FOUND,
-    //   };
-
-    //   return new Response(JSON.stringify(response), {
-    //     status: 200,
-    //   });
-    // }
-
-    // const program = programId
-    //   ? await db.collection(dbCollections.programs.name).findOne(
-    //       {
-    //         _id: new BSON.ObjectId(programId),
-    //       },
-    //       { projection: { _id: 1 } },
-    //     )
-    //   : null;
-
-    // if (!program && programId) {
-    //   const response = {
-    //     isError: true,
-    //     code: COURSE_PROCESS_CODES.PROGRAM_NOT_FOUND,
-    //   };
-
-    //   return new Response(JSON.stringify(response), {
-    //     status: 200,
-    //   });
-    // }
-
-    await db.collection(dbCollections.courses.name).insertOne({
+    await db.collection(dbCollections.page_links.name).insertOne({
       name,
       description,
+      link: pageLink,
       created_at: new Date(),
       updated_at: new Date(),
       //@ts-ignore
-      created_by_id: BSON.ObjectId(session?.user?.id),
-      // school_id:  BSON.ObjectId(schoolId),
-      // program_id:  BSON.ObjectId(programId),
+      created_by_id: new BSON.ObjectId(session?.user?.id),
     });
 
     const response = {
       isError: false,
-      code: COURSE_PROCESS_CODES.COURSE_CREATED,
+      code: PAGE_PROCESS_CODES.PAGE_CREATED,
     };
 
     return new Response(JSON.stringify(response), {
