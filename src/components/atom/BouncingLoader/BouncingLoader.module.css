@@ -1,0 +1,53 @@
+.container {
+  --unit-length: 5px;
+  --unit-time: 0.15s;
+
+  display: inline-block;
+  width: fit-content;
+  height: calc(5 * var(--unit-length));
+}
+
+.container div {
+  width: calc(1.3 * var(--unit-length));
+  height: calc(1.3 * var(--unit-length));
+  border-radius: 50%;
+  background-color: #9ed8e2;
+  /* background-color: #a2bfc4; */
+  /* background-color: #62b2c0; */
+  display: inline-block;
+  position: relative;
+  border-width: 0;
+  margin-top: calc(1 * var(--unit-length));
+  margin-right: calc(1 * var(--unit-length));
+  margin-left: calc(1 * var(--unit-length));
+  animation-name: up-and-down;
+  animation-duration: calc(var(--unit-time) * 6);
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+}
+
+.container .second {
+  animation-delay: var(--unit-time);
+}
+
+.container .third {
+  animation-delay: calc(var(--unit-time) * 2);
+}
+
+.container .fourth {
+  animation-delay: calc(var(--unit-time) * 3);
+}
+
+@keyframes up-and-down {
+  0% {
+    top: 0;
+  }
+
+  20% {
+    top: calc(-1.5 * var(--unit-length));
+  }
+
+  40% {
+    top: 0;
+  }
+}

@@ -11,7 +11,7 @@ import NETWORK_UTILS from 'utils/network';
 import { T_LibraryPageProps } from '@components/library/types';
 import { T_RawTopicFields } from '@hooks/use-topic/types';
 import LibraryMediaContentList from './LibraryMediaContentList';
-import { fetchMedia } from '../../components/library/fetchMedia';
+import { fetchMedia } from 'fetchers/library/fetchMedia';
 
 export async function generateMetadata(props: {}, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
