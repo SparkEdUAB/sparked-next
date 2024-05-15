@@ -1,4 +1,3 @@
-'use client';
 import { useEffect, useState } from 'react';
 import { T_RawMediaContentFields } from 'types/media-content';
 import { MEDIA_CONTENT_LIMIT } from '../../components/library/constants';
@@ -14,13 +13,13 @@ export function useLibraryInfiniteScroll(
 ) {
   const [mediaContent, setMediaContent] = useState(initialMediaContent);
   const [offset, setOffset] = useState(MEDIA_CONTENT_LIMIT);
-  let [hasMore, setHasMore] = useState(true);
+  let [hasMore, setHasMore] = useState(initialMediaContent.length >= MEDIA_CONTENT_LIMIT);
   let [error, setError] = useState(false);
 
   useEffect(() => {
     setMediaContent(initialMediaContent);
     setOffset(MEDIA_CONTENT_LIMIT);
-    setHasMore(true);
+    setHasMore(initialMediaContent.length >= MEDIA_CONTENT_LIMIT);
     setError(false);
   }, [initialMediaContent]);
 
