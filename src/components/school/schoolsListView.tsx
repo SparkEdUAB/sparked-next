@@ -16,7 +16,7 @@ import { T_SchoolFields } from './types';
 const SchoolsListView: React.FC = () => {
   const { selectedSchoolIds, setSelectedSchoolIds, onSearchQueryChange, deleteSchools, searchQuery } = useSchool();
   const [creatingSchool, setCreatingSchool] = useState(false);
-  const [edittingSchoolWithId, setEdittingSchoolWithId] = useState<string | null>(null);
+  const [edittingSchool, setEdittingSchool] = useState<T_SchoolFields | null>(null);
 
   const {
     items: schools,
@@ -47,7 +47,7 @@ const SchoolsListView: React.FC = () => {
         items={schools}
         isLoading={isLoading}
         createNew={() => setCreatingSchool(true)}
-        editItem={(id) => setEdittingSchoolWithId(id)}
+        editItem={(id) => setEdittingSchool(id)}
         columns={schoolTableColumns}
         onSearchQueryChange={onSearchQueryChange}
       />
@@ -62,15 +62,15 @@ const SchoolsListView: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingSchoolWithId} onClose={() => setEdittingSchoolWithId(null)} popup>
+      <Modal dismissible show={!!edittingSchool} onClose={() => setEdittingSchool(null)} popup>
         <Modal.Header />
         <Modal.Body>
-          {edittingSchoolWithId ? (
+          {edittingSchool ? (
             <EditSchoolView
-              schoolId={edittingSchoolWithId}
+              schoolId={edittingSchool._id}
               onSuccessfullyDone={() => {
                 mutate();
-                setEdittingSchoolWithId(null);
+                setEdittingSchool(null);
               }}
             />
           ) : null}

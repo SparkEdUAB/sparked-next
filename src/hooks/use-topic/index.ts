@@ -62,7 +62,7 @@ const useTopic = (form?: any) => {
     const url = API_LINKS.EDIT_TOPIC;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...topic, ...fields, topicId: topic?._id }),
+      body: JSON.stringify({ ...topic, ...fields, topicId: (topic || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -179,10 +179,10 @@ const useTopic = (form?: any) => {
     }
   };
 
-  const deleteTopics = async () => {
+  const deleteTopics = async (items?: T_TopicFields[]) => {
     const url = API_LINKS.DELETE_TOPICS;
     const formData = {
-      body: JSON.stringify({ topicIds: selectedTopicIds }),
+      body: JSON.stringify({ topicIds: items ? items.map((item) => item._id) : selectedTopicIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -210,7 +210,7 @@ const useTopic = (form?: any) => {
 
       setTopics(topics.filter((i) => selectedTopicIds.indexOf(i._id) == -1));
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
       setLoaderStatus(false);
 

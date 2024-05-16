@@ -28,28 +28,28 @@ export const topicTableColumns: T_ColumnData<T_TopicFields>[] = [
   //   key: 'programs',
   //   render: (text) => <a>{text || i18next.t('not_linked')}</a>,
   // },
-  {
-    title: 'Course',
-    dataIndex: 'courseName',
-    key: 'school',
-    render: (text) => <a>{text || i18next.t('not_linked')}</a>,
-  },
+  // {
+  //   title: 'Course',
+  //   dataIndex: 'courseName',
+  //   key: 'school',
+  //   render: (text) => <a>{text || i18next.t('not_linked')}</a>,
+  // },
   {
     title: 'Unit',
     dataIndex: 'unitName',
     key: 'school',
     render: (text) => <a>{text || i18next.t('not_linked')}</a>,
   },
-  {
-    title: 'Create By',
-    dataIndex: 'created_by',
-    key: 'created_by',
-    render: (text) => <a>{text}</a>,
-  },
-  {
-    title: 'Create At',
-    dataIndex: 'created_at',
-    key: 'created_by',
-    render: (text) => <a>{text}</a>,
-  },
+  // {
+  //   title: 'Create By',
+  //   dataIndex: 'created_by',
+  //   key: 'created_by',
+  //   render: (text) => <a>{text}</a>,
+  // },
+  // {
+  //   title: 'Create At',
+  //   dataIndex: 'created_at',
+  //   key: 'created_by',
+  //   render: (text) => <a>{text}</a>,
+  // },
 ];

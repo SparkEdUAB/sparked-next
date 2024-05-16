@@ -29,18 +29,18 @@ export const mediaContentTableColumns: T_ColumnData<T_MediaContentFields>[] = [
   //   key: 'Program',
   //   render: (text) => <StyledTableLinkView>{text || i18next.t('not_linked')}</StyledTableLinkView>,
   // },
-  {
-    title: 'Course',
-    dataIndex: 'courseName',
-    key: 'Course',
-    render: (text) => <StyledTableLinkView>{text || i18next.t('not_linked')}</StyledTableLinkView>,
-  },
-  {
-    title: 'Unit',
-    dataIndex: 'unitName',
-    key: 'Unit',
-    render: (text) => <StyledTableLinkView>{text || i18next.t('not_linked')}</StyledTableLinkView>,
-  },
+  // {
+  //   title: 'Course',
+  //   dataIndex: 'courseName',
+  //   key: 'Course',
+  //   render: (text) => <StyledTableLinkView>{text || i18next.t('not_linked')}</StyledTableLinkView>,
+  // },
+  // {
+  //   title: 'Unit',
+  //   dataIndex: 'unitName',
+  //   key: 'Unit',
+  //   render: (text) => <StyledTableLinkView>{text || i18next.t('not_linked')}</StyledTableLinkView>,
+  // },
   {
     title: 'Topic',
     dataIndex: 'topicName',
@@ -57,16 +57,16 @@ export const mediaContentTableColumns: T_ColumnData<T_MediaContentFields>[] = [
       </StyledTableLinkView>
     ),
   },
-  {
-    title: 'Created By',
-    dataIndex: 'created_by',
-    key: 'created_by',
-    render: (text) => <StyledTableLinkView>{text}</StyledTableLinkView>,
-  },
-  {
-    title: 'Created At',
-    dataIndex: 'created_at',
-    key: 'created_by',
-    render: (text) => <StyledTableLinkView>{text}</StyledTableLinkView>,
-  },
+  // {
+  //   title: 'Created By',
+  //   dataIndex: 'created_by',
+  //   key: 'created_by',
+  //   render: (text) => <StyledTableLinkView>{text}</StyledTableLinkView>,
+  // },
+  // {
+  //   title: 'Created At',
+  //   dataIndex: 'created_at',
+  //   key: 'created_by',
+  //   render: (text) => <StyledTableLinkView>{text}</StyledTableLinkView>,
+  // },
 ];

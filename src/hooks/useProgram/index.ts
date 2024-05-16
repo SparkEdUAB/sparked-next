@@ -60,7 +60,7 @@ const useProgram = (form?: any) => {
   const editProgram = async (fields: T_ProgramFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_PROGRAM;
     const formData = {
-      body: JSON.stringify({ ...fields, _id: program?._id }),
+      body: JSON.stringify({ ...fields, _id: (program || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',

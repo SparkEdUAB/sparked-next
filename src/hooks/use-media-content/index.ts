@@ -75,10 +75,10 @@ const useMediaContent = (form?: any) => {
       body: JSON.stringify({
         ...targetMediaContent,
         ...fields,
-        mediaContentId: targetMediaContent?._id,
-        fileUrl: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
-        file_url: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
-        thumbnailUrl: thumbnailUrl ? thumbnailUrl : targetMediaContent?.thumbnailUrl,
+        mediaContentId: fields?._id,
+        fileUrl: fileUrl ? fileUrl : fields?.fileUrl,
+        file_url: fileUrl ? fileUrl : fields?.fileUrl,
+        thumbnailUrl: thumbnailUrl ? thumbnailUrl : fields?.thumbnailUrl,
       }),
       method: 'post',
       headers: {
@@ -218,10 +218,10 @@ const useMediaContent = (form?: any) => {
     }
   };
 
-  const deleteMediaContent = async () => {
+  const deleteMediaContent = async (items?: T_MediaContentFields[]) => {
     const url = API_LINKS.DELETE_MEDIA_CONTENT;
     const formData = {
-      body: JSON.stringify({ mediaContentIds: selectedMediaContentIds }),
+      body: JSON.stringify({ mediaContentIds: items ? items.map((item) => item._id) : selectedMediaContentIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -253,7 +253,7 @@ const useMediaContent = (form?: any) => {
 
       // setTargetMediaContent(newMediaContentIds);
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
       setLoaderStatus(false);
 

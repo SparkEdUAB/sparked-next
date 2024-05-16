@@ -28,14 +28,14 @@ export const unitTableColumns: T_ColumnData<T_UnitFields>[] = [
     dataIndex: 'courseName',
     key: 'course',
   },
-  {
-    title: 'Create By',
-    dataIndex: 'created_by',
-    key: 'created_by',
-  },
-  {
-    title: 'Create At',
-    dataIndex: 'created_at',
-    key: 'created_at',
-  },
+  // {
+  //   title: 'Create By',
+  //   dataIndex: 'created_by',
+  //   key: 'created_by',
+  // },
+  // {
+  //   title: 'Create At',
+  //   dataIndex: 'created_at',
+  //   key: 'created_at',
+  // },
 ];

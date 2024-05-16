@@ -2,59 +2,62 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { transformRawProgram } from '@hooks/useProgram';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { COURSE_FORM_FIELDS } from './constants';
-import { transformRawSchool } from '@hooks/useSchool';
-import useCourse, { transformRawCourse } from '@hooks/useCourse';
+import useCourse from '@hooks/useCourse';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_CourseFields } from '@hooks/useCourse/types';
-import { API_LINKS } from 'app/links';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
-import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
+import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 
-const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; onSuccessfullyDone?: () => void }) => {
-  const { editCourse } = useCourse();
+const EditCourseView = ({ course, onSuccessfullyDone }: { course: T_CourseFields; onSuccessfullyDone: () => void }) => {
+  const { editCourse, deleteCourse } = useCourse();
+  const [uploading, setUploading] = useState(false);
+  const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
-  const { item: course, isLoading } = useAdminItemById(
-    API_LINKS.FETCH_COURSE_BY_ID,
-    courseId || (searchParams.get('courseId') as string),
-    'course',
-    transformRawCourse,
-  );
+  // const { item: course, isLoading } = useAdminItemById(
+  //   API_LINKS.FETCH_COURSE_BY_ID,
+  //   courseId || (searchParams.get('courseId') as string),
+  //   'course',
+  //   transformRawCourse,
+  // );
 
-  const { items: schools, isLoading: loadingSchools } = useAdminListViewData(
-    API_LINKS.FETCH_SCHOOLS,
-    'schools',
-    transformRawSchool,
-  );
+  // const { items: schools, isLoading: loadingSchools } = useAdminListViewData(
+  //   API_LINKS.FETCH_SCHOOLS,
+  //   'schools',
+  //   transformRawSchool,
+  // );
 
-  const { items: programs, isLoading: loadingPrograms } = useAdminListViewData(
-    API_LINKS.FETCH_PROGRAMS,
-    'programs',
-    transformRawProgram,
-  );
+  // const { items: programs, isLoading: loadingPrograms } = useAdminListViewData(
+  //   API_LINKS.FETCH_PROGRAMS,
+  //   'programs',
+  //   transformRawProgram,
+  // );
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    try {
+      setUploading(true);
+      e.preventDefault();
 
-    const keys = [
-      COURSE_FORM_FIELDS.name.key,
-      COURSE_FORM_FIELDS.description.key,
-      COURSE_FORM_FIELDS.school.key,
-      COURSE_FORM_FIELDS.program.key,
-    ];
+      const keys = [
+        COURSE_FORM_FIELDS.name.key,
+        COURSE_FORM_FIELDS.description.key,
+        // COURSE_FORM_FIELDS.school.key,
+        // COURSE_FORM_FIELDS.program.key,
+      ];
 
-    let result = extractValuesFromFormEvent<T_CourseFields>(e, keys);
-    editCourse({ ...course, ...result }, onSuccessfullyDone);
+      let result = extractValuesFromFormEvent<T_CourseFields>(e, keys);
+
+      await editCourse({ ...course, ...result }, onSuccessfullyDone);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -71,7 +74,7 @@ const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; o
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 max-w-xl w-full">
             <AdminFormInput
-              disabled={isLoading}
+              disabled={uploading}
               name={COURSE_FORM_FIELDS.name.key}
               label={COURSE_FORM_FIELDS.name.label}
               required
@@ -79,16 +82,16 @@ const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; o
             />
 
             <AdminFormInput
-              disabled={isLoading}
+              disabled={uploading}
               name={COURSE_FORM_FIELDS.description.key}
               label={COURSE_FORM_FIELDS.description.label}
               required
               defaultValue={course.description}
             />
 
-            <AdminFormSelector
+            {/* <AdminFormSelector
               loadingItems={loadingSchools}
-              disabled={isLoading || loadingSchools}
+              disabled={uploading || loadingSchools}
               options={schools}
               label={COURSE_FORM_FIELDS.school.label}
               name={COURSE_FORM_FIELDS.school.key}
@@ -97,20 +100,42 @@ const EditCourseView = ({ courseId, onSuccessfullyDone }: { courseId?: string; o
 
             <AdminFormSelector
               loadingItems={loadingPrograms}
-              disabled={isLoading || loadingPrograms}
+              disabled={uploading || loadingPrograms}
               options={programs}
               label={COURSE_FORM_FIELDS.program.label}
               name={COURSE_FORM_FIELDS.program.key}
               defaultValue={course.programId}
-            />
+            /> */}
 
-            <Button type="submit" className="mt-2" disabled={isLoading}>
-              {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
-              {i18next.t('submit')}
+            <Button type="submit" className="mt-2" disabled={uploading}>
+              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+              {i18next.t('update')}
+            </Button>
+
+            <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
+              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+              {i18next.t('delete')}
             </Button>
           </div>
         </form>
       )}
+
+      <DeletionWarningModal
+        showDeletionWarning={showDeletionWarning}
+        toggleDeletionWarning={toggleDeletionWarning}
+        deleteItems={async () => {
+          try {
+            setUploading(true);
+            const successful = await deleteCourse([course]);
+            if (successful) {
+              onSuccessfullyDone();
+            }
+          } finally {
+            setUploading(false);
+          }
+        }}
+        numberOfElements={1}
+      />
     </>
   );
 };

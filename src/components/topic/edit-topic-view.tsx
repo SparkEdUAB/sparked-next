@@ -5,7 +5,7 @@ import { AdminPageTitle } from '@components/layouts';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
 import useProgram from '@hooks/useProgram';
 import useSchool, { transformRawSchool } from '@hooks/useSchool';
@@ -20,18 +20,22 @@ import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
 import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
+import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 
-const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSuccessfullyDone?: () => void }) => {
-  const { editTopic } = useTopic();
+const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; onSuccessfullyDone: () => void }) => {
+  const { editTopic, deleteTopics } = useTopic();
+  const [uploading, setUploading] = useState(false);
+  const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
-  const { item: topic, isLoading } = useAdminItemById(
-    API_LINKS.FETCH_TOPIC_BY_ID,
-    topicId || (searchParams.get('topicId') as string),
-    'topic',
-    transformRawTopic,
-  );
+  // const { item: topic, isLoading } = useAdminItemById(
+  //   API_LINKS.FETCH_TOPIC_BY_ID,
+  //   topicId || (searchParams.get('topicId') as string),
+  //   'topic',
+  //   transformRawTopic,
+  // );
 
   const { items: units, isLoading: loadingUnits } = useAdminListViewData(
     API_LINKS.FETCH_UNITS,
@@ -45,20 +49,23 @@ const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSu
     transformRawCourse,
   );
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-    e.preventDefault();
+  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
+    try {
+      setUploading(true);
+      e.preventDefault();
 
-    const keys = [
-      TOPIC_FORM_FIELDS.name.key,
-      TOPIC_FORM_FIELDS.description.key,
-      TOPIC_FORM_FIELDS.school.key,
-      TOPIC_FORM_FIELDS.program.key,
-      TOPIC_FORM_FIELDS.course.key,
-      TOPIC_FORM_FIELDS.unit.key,
-    ];
+      const keys = [
+        TOPIC_FORM_FIELDS.name.key,
+        TOPIC_FORM_FIELDS.description.key,
+        TOPIC_FORM_FIELDS.course.key,
+        TOPIC_FORM_FIELDS.unit.key,
+      ];
 
-    let result = extractValuesFromFormEvent<T_TopicFields>(e, keys);
-    editTopic({ ...topic, ...result }, onSuccessfullyDone);
+      let result = extractValuesFromFormEvent<T_TopicFields>(e, keys);
+      await editTopic({ ...topic, ...result }, onSuccessfullyDone);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -74,7 +81,7 @@ const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSu
       ) : (
         <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
           <AdminFormInput
-            disabled={isLoading}
+            disabled={uploading}
             name={TOPIC_FORM_FIELDS.name.key}
             label={TOPIC_FORM_FIELDS.name.label}
             defaultValue={topic.name}
@@ -82,7 +89,7 @@ const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSu
           />
 
           <AdminFormInput
-            disabled={isLoading}
+            disabled={uploading}
             name={TOPIC_FORM_FIELDS.description.key}
             label={TOPIC_FORM_FIELDS.description.label}
             defaultValue={topic.description}
@@ -91,7 +98,7 @@ const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSu
 
           <AdminFormSelector
             loadingItems={loadingCourses}
-            disabled={isLoading || loadingCourses}
+            disabled={uploading || loadingCourses}
             options={courses}
             label={TOPIC_FORM_FIELDS.course.label}
             name={TOPIC_FORM_FIELDS.course.key}
@@ -100,19 +107,41 @@ const EditTopicView = ({ topicId, onSuccessfullyDone }: { topicId?: string; onSu
 
           <AdminFormSelector
             loadingItems={loadingUnits}
-            disabled={isLoading || loadingUnits}
+            disabled={uploading || loadingUnits}
             options={units}
             label={TOPIC_FORM_FIELDS.unit.label}
             name={TOPIC_FORM_FIELDS.unit.key}
             defaultValue={topic.unitId}
           />
 
-          <Button type="submit" className="mt-2" disabled={isLoading}>
-            {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('submit')}
+          <Button type="submit" className="mt-2" disabled={uploading}>
+            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+            {i18next.t('update')}
+          </Button>
+
+          <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
+            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+            {i18next.t('delete')}
           </Button>
         </form>
       )}
+
+      <DeletionWarningModal
+        showDeletionWarning={showDeletionWarning}
+        toggleDeletionWarning={toggleDeletionWarning}
+        deleteItems={async () => {
+          try {
+            setUploading(true);
+            const successful = await deleteTopics([topic]);
+            if (successful) {
+              onSuccessfullyDone();
+            }
+          } finally {
+            setUploading(false);
+          }
+        }}
+        numberOfElements={1}
+      />
     </>
   );
 };

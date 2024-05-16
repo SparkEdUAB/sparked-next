@@ -16,7 +16,7 @@ import { T_ProgramFields } from '@hooks/useProgram/types';
 const ProgramsListView: React.FC = () => {
   const { selectedProgramIds, setSelectedProgramIds, onSearchQueryChange, deletePrograms, searchQuery } = useProgram();
   const [creatingProgram, setCreatingProgram] = useState(false);
-  const [edittingProgramWithId, setEdittingProgramWithId] = useState<string | null>(null);
+  const [edittingProgram, setEdittingProgram] = useState<T_ProgramFields | null>(null);
 
   const {
     items: programs,
@@ -47,7 +47,7 @@ const ProgramsListView: React.FC = () => {
         items={programs}
         isLoading={isLoading}
         createNew={() => setCreatingProgram(true)}
-        editItem={(id) => setEdittingProgramWithId(id)}
+        editItem={(item) => setEdittingProgram(item)}
         columns={programTableColumns}
         onSearchQueryChange={onSearchQueryChange}
       />
@@ -62,15 +62,15 @@ const ProgramsListView: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingProgramWithId} onClose={() => setEdittingProgramWithId(null)} popup>
+      <Modal dismissible show={!!edittingProgram} onClose={() => setEdittingProgram(null)} popup>
         <Modal.Header />
         <Modal.Body>
-          {edittingProgramWithId ? (
+          {edittingProgram ? (
             <EditProgramView
-              programId={edittingProgramWithId}
+              programId={edittingProgram._id}
               onSuccessfullyDone={() => {
                 mutate();
-                setEdittingProgramWithId(null);
+                setEdittingProgram(null);
               }}
             />
           ) : null}

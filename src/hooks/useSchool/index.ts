@@ -59,7 +59,7 @@ const useSchool = (form?: any) => {
   const editSchool = async (fields: T_SchoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_SCHOOL;
     const formData = {
-      body: JSON.stringify({ ...fields, _id: school?._id }),
+      body: JSON.stringify({ ...fields, _id: (school || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
