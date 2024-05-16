@@ -3,6 +3,7 @@ import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/constants';
 import createPageLink_ from '../create';
+import editPageLink_ from '../edit';
 
 export async function POST(
   req: Request,
@@ -17,6 +18,7 @@ export async function POST(
     [key: string]: (request: Request, session?: Session) => {};
   } = {
     createPageLink: createPageLink_,
+    editPageLink: editPageLink_,
   };
 
   if (pageLinksFunctions[slug] && session) {
