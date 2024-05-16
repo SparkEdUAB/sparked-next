@@ -21,10 +21,10 @@ export default function AppProviders({
       <SessionProvider session={session}>
         <OpenpanelProvider
           clientId={NEXT_PUBLIC_OPENPANEL_CLIENT_ID}
-          trackScreenViews={true}
-          trackAttributes={true}
-          trackOutgoingLinks={true}
           profileId={session?.user?.email || 'anonymous'}
+          trackScreenViews
+          trackAttributes
+          trackOutgoingLinks
         />
         <HighlightInit
           projectId={NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID}
