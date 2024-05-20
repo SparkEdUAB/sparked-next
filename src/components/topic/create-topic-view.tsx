@@ -56,30 +56,6 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
           required
         />
 
-        {/* <AdminFormSelector
-          loadingItems={loadingSchools}
-          disabled={isLoading || loadingSchools}
-          options={schools}
-          label={TOPIC_FORM_FIELDS.school.label}
-          name={TOPIC_FORM_FIELDS.school.key}
-        />
-
-        <AdminFormSelector
-          loadingItems={loadingPrograms}
-          disabled={isLoading || loadingPrograms}
-          options={programs}
-          label={TOPIC_FORM_FIELDS.program.label}
-          name={TOPIC_FORM_FIELDS.program.key}
-        />
-
-        <AdminFormSelector
-          loadingItems={loadingCourses}
-          disabled={isLoading || loadingCourses}
-          options={courses}
-          label={TOPIC_FORM_FIELDS.course.label}
-          name={TOPIC_FORM_FIELDS.course.key}
-        /> */}
-
         <AdminFormSelector
           loadingItems={loadingUnits}
           disabled={isLoading || loadingUnits}

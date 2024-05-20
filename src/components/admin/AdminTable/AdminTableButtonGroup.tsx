@@ -5,17 +5,12 @@ import React from 'react';
 import { IoMdAddCircleOutline } from 'react-icons/io';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { message } from 'antd';
-import { useRouter } from 'next-nprogress-bar';
 
 export function AdminTableButtonGroup({
-  router,
-  // createNewUrl,
   createNew,
   rowSelection,
   toggleDeletionWarning,
 }: {
-  router: ReturnType<typeof useRouter>;
-  // createNewUrl: string;
   createNew: () => void;
   rowSelection: { selectedRowKeys: React.Key[]; onChange: (selectedRowKeys: React.Key[]) => void };
   toggleDeletionWarning: () => void;

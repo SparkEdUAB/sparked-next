@@ -66,7 +66,6 @@ const UnitListView: React.FC = () => {
         <Drawer.Items>
           {edittingUnit ? (
             <EditUnitView
-              // unitId={edittingUnitWithId}
               unit={edittingUnit}
               onSuccessfullyDone={() => {
                 mutate();

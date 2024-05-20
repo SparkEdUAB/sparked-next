@@ -7,7 +7,6 @@ import { IoFileTrayOutline } from 'react-icons/io5';
 import { T_ColumnData, T_ItemTypeBase } from './types';
 import { DeletionWarningModal } from './DeletionWarningModal';
 import { AdminTableButtonGroup } from './AdminTableButtonGroup';
-import { MdEdit } from 'react-icons/md';
 import useConfig from '@hooks/use-config';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import i18next from 'i18next';
@@ -34,7 +33,6 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   editItem: (item: ItemType) => void;
   columns: T_ColumnData<ItemType>[];
 }) {
-  const { router } = useNavigation();
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
@@ -59,7 +57,6 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
         }}
       />
       <AdminTableButtonGroup
-        router={router}
         createNew={createNew}
         rowSelection={rowSelection}
         toggleDeletionWarning={toggleDeletionWarning}
@@ -83,7 +80,6 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                 {column.title?.toString()}
               </Table.HeadCell>
             ))}
-            {/* <Table.HeadCell className="bg-gray-100"></Table.HeadCell> */}
           </Table.Head>
 
           <Table.Body className="divide-y">
@@ -114,13 +110,6 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                     const text = item[column.dataIndex as keyof ItemType] as string;
                     return <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>;
                   })}
-                  {/* <Table.Cell>
-                    <MdEdit
-                      size={18}
-                      onClick={() => editItem(item._id)}
-                      className="cursor-pointer font-medium text-cyan-600 dark:text-cyan-500"
-                    />
-                  </Table.Cell> */}
                 </Table.Row>
               ))
             )}

@@ -28,8 +28,6 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // const searchParams = useSearchParams();
-
   // const { item: topic, isLoading } = useAdminItemById(
   //   API_LINKS.FETCH_TOPIC_BY_ID,
   //   topicId || (searchParams.get('topicId') as string),

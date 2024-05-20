@@ -110,38 +110,6 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           rows={4}
         />
 
-        {/* <AdminFormSelector
-          loadingItems={loadingSchools}
-          disabled={isLoading || loadingSchools}
-          options={schools}
-          label={MEDIA_CONTENT_FORM_FIELDS.school.label}
-          name={MEDIA_CONTENT_FORM_FIELDS.school.key}
-        />
-
-        <AdminFormSelector
-          loadingItems={loadingPrograms}
-          disabled={isLoading || loadingPrograms}
-          options={programs}
-          label={MEDIA_CONTENT_FORM_FIELDS.program.label}
-          name={MEDIA_CONTENT_FORM_FIELDS.program.key}
-        /> */}
-
-        {/* <AdminFormSelector
-          loadingItems={loadingCourses}
-          disabled={isLoading || loadingCourses}
-          options={courses}
-          label={MEDIA_CONTENT_FORM_FIELDS.course.label}
-          name={MEDIA_CONTENT_FORM_FIELDS.course.key}
-        />
-
-        <AdminFormSelector
-          loadingItems={loadingUnits}
-          disabled={isLoading || loadingUnits}
-          options={units}
-          label={MEDIA_CONTENT_FORM_FIELDS.unit.label}
-          name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
-        /> */}
-
         <AdminFormSelector
           loadingItems={loadingTopics}
           disabled={isLoading || loadingTopics}

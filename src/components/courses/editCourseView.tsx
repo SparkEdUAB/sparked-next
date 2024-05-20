@@ -19,8 +19,6 @@ const EditCourseView = ({ course, onSuccessfullyDone }: { course: T_CourseFields
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // const searchParams = useSearchParams();
-
   // const { item: course, isLoading } = useAdminItemById(
   //   API_LINKS.FETCH_COURSE_BY_ID,
   //   courseId || (searchParams.get('courseId') as string),

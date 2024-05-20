@@ -78,7 +78,6 @@ const TopicsListView: React.FC = () => {
         <Drawer.Items>
           {edittingTopic ? (
             <EditTopicView
-              // topicId={edittingTopic}
               topic={edittingTopic}
               onSuccessfullyDone={() => {
                 mutate();

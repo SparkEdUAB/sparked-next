@@ -13,27 +13,4 @@ export const courseTableColumns: T_ColumnData<T_CourseFields>[] = [
     dataIndex: 'name',
     key: 'name',
   },
-  // {
-  //   title: 'School',
-  //   dataIndex: 'schoolName',
-  //   key: 'schools',
-  //   render: (text) => <a>{text || i18next.t('not_linked')}</a>,
-  // },
-  // {
-  //   title: 'Program',
-  //   dataIndex: 'programName',
-  //   key: 'programs',
-  //   render: (text) => <a>{text || i18next.t('not_linked')}</a>,
-  // },
-  // {
-  //   title: 'Created By',
-  //   dataIndex: 'created_by',
-  //   key: 'created_by',
-  //   render: (text) => <a>{text}</a>,
-  // },
-  // {
-  //   title: 'Create At',
-  //   dataIndex: 'created_at',
-  //   key: 'created_at',
-  // },
 ];

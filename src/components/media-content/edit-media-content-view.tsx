@@ -39,8 +39,6 @@ const EditMediaContentView = ({
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // const searchParams = useSearchParams();
-
   // const { item: mediaContent, isLoading: loadingResource } = useAdminItemById(
   //   API_LINKS.FETCH_MEDIA_CONTENT_BY_ID,
   //   resourceId || (searchParams.get('mediaContentId') as string),
@@ -132,24 +130,6 @@ const EditMediaContentView = ({
             required
             rows={4}
           />
-
-          {/* <AdminFormSelector
-            loadingItems={loadingSchools}
-            disabled={uploading || loadingSchools}
-            options={schools}
-            label={MEDIA_CONTENT_FORM_FIELDS.school.label}
-            name={MEDIA_CONTENT_FORM_FIELDS.school.key}
-            defaultValue={mediaContent.schoolId}
-          />
-
-          <AdminFormSelector
-            loadingItems={loadingPrograms}
-            disabled={uploading || loadingPrograms}
-            options={programs}
-            label={MEDIA_CONTENT_FORM_FIELDS.program.label}
-            name={MEDIA_CONTENT_FORM_FIELDS.program.key}
-            defaultValue={mediaContent.programId}
-          /> */}
 
           <AdminFormSelector
             loadingItems={loadingCourses}

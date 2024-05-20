@@ -27,8 +27,6 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // const searchParams = useSearchParams();
-
   // const { item: unit, isLoading } = useAdminItemById(
   //   API_LINKS.FETCH_UNIT_BY_ID,
   //   unitId || (searchParams.get('unitId') as string),
