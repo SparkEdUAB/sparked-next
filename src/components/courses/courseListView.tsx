@@ -22,6 +22,9 @@ const CourseListView: React.FC = () => {
     items: courses,
     isLoading,
     mutate,
+    loadMore,
+    hasMore,
+    error,
   } = useAdminListViewData(
     API_LINKS.FETCH_COURSES,
     'courses',
@@ -50,6 +53,9 @@ const CourseListView: React.FC = () => {
         editItem={(item) => setEdittingCourse(item)}
         columns={courseTableColumns}
         onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingCourse} onClose={() => setCreatingCourse(false)} popup>
         <Modal.Header />
