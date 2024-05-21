@@ -88,7 +88,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
               )
             }
           >
-            <Table>
+            <Table className="w-fit">
               <Table.Head>
                 <Table.HeadCell className="p-4 bg-gray-100">
                   <Checkbox
