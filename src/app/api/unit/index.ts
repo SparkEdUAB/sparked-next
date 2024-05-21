@@ -215,10 +215,10 @@ export async function findUnitsByName_(request: any) {
     const regexPattern = new RegExp(name, 'i');
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
-    let courses = null;
+    let units = null;
 
     if (isWithMetaData) {
-      courses = await db
+      units = await db
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
@@ -230,7 +230,7 @@ export async function findUnitsByName_(request: any) {
         )
         .toArray();
     } else {
-      courses = await db
+      units = await db
         .collection(dbCollections.units.name)
         .find({
           name: { $regex: regexPattern },
@@ -240,7 +240,7 @@ export async function findUnitsByName_(request: any) {
 
     const response = {
       isError: false,
-      courses,
+      units,
     };
 
     return new Response(JSON.stringify(response), {

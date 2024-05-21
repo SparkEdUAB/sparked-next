@@ -17,7 +17,7 @@ const AdminLayout: FC<T_AdminLayout> = ({ children, withBreadcrumb = true }) => 
       <AdminNavbar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
       <div className="md:grid md:grid-cols-[256px_calc(100%_-_256px)]  h-[calc(100vh_-_62px)]">
         <AdminSidebar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
-        <div className="p-6 max-h-full overflow-y-scroll">
+        <div id="scrollableDiv" className="p-6 max-h-full overflow-y-scroll">
           {withBreadcrumb && <AdminHeader menuItems={ADMIN_LINKS} />}
           <div className="py-6">{children}</div>
         </div>
