@@ -38,6 +38,7 @@
     "styled-components": "^6.1.8",
     "swr": "^2.2.5",
     "typescript": "5.1.6",
+    "zod": "^3.23.8",
     "zod-form-data": "^2.0.1"
   },
   "devDependencies": {
