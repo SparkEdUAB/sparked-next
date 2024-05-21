@@ -22,6 +22,9 @@ const UnitListView: React.FC = () => {
     items: units,
     isLoading,
     mutate,
+    loadMore,
+    hasMore,
+    error,
   } = useAdminListViewData(API_LINKS.FETCH_UNITS, 'units', transformRawUnit, API_LINKS.FIND_UNITS_BY_NAME, searchQuery);
 
   const rowSelection = {
@@ -44,6 +47,9 @@ const UnitListView: React.FC = () => {
         editItem={(id) => setEdittingUnit(id)}
         columns={unitTableColumns}
         onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingUnit} onClose={() => setCreatingUnit(false)} popup>
         <Modal.Header />

@@ -28,6 +28,9 @@ const TopicsListView: React.FC = () => {
     items: topics,
     isLoading,
     mutate,
+    loadMore,
+    hasMore,
+    error,
   } = useAdminListViewData(
     API_LINKS.FETCH_TOPICS,
     'topics',
@@ -56,6 +59,9 @@ const TopicsListView: React.FC = () => {
         editItem={(id) => setEdittingTopic(id)}
         columns={topicTableColumns}
         onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingTopic} onClose={() => setCreatingTopic(false)} popup>
         <Modal.Header />

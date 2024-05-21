@@ -22,6 +22,9 @@ const ProgramsListView: React.FC = () => {
     items: programs,
     isLoading,
     mutate,
+    loadMore,
+    hasMore,
+    error,
   } = useAdminListViewData(
     API_LINKS.FETCH_PROGRAMS,
     'programs',
@@ -50,6 +53,9 @@ const ProgramsListView: React.FC = () => {
         editItem={(item) => setEdittingProgram(item)}
         columns={programTableColumns}
         onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingProgram} onClose={() => setCreatingProgram(false)} popup>
         <Modal.Header />

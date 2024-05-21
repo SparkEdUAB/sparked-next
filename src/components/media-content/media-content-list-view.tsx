@@ -23,6 +23,9 @@ const MediaContentListView: React.FC = () => {
     items: mediaContent,
     isLoading,
     mutate,
+    loadMore,
+    hasMore,
+    error,
   } = useAdminListViewData(
     API_LINKS.FETCH_MEDIA_CONTENT,
     'mediaContent',
@@ -51,6 +54,9 @@ const MediaContentListView: React.FC = () => {
         editItem={(item) => setEdittingResource(item)}
         columns={mediaContentTableColumns}
         onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingResource} onClose={() => setCreatingResource(false)} popup>
         <Modal.Header />

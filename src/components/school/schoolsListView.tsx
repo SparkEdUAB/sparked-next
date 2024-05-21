@@ -22,6 +22,9 @@ const SchoolsListView: React.FC = () => {
     items: schools,
     isLoading,
     mutate,
+    loadMore,
+    hasMore,
+    error,
   } = useAdminListViewData(
     API_LINKS.FETCH_SCHOOLS,
     'schools',
@@ -50,6 +53,9 @@ const SchoolsListView: React.FC = () => {
         editItem={(id) => setEdittingSchool(id)}
         columns={schoolTableColumns}
         onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingSchool} onClose={() => setCreatingSchool(false)} popup>
         <Modal.Header />
