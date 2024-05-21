@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
-    "@auth/mongodb-adapter": "^2.0.0",
+    "@auth/mongodb-adapter": "^3.0.0",
     "@headlessui/react": "^1.7.17",
     "@highlight-run/next": "^7.5.4",
     "@intelllex/react-pdf": "github:YewoMhango/react-pdf-viewer#0.0.1",
