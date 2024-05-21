@@ -23,7 +23,7 @@ export async function POST(
   const slug = params.slug;
 
   const schoolFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createMediaContent: createMediaContent_,
     editMediaContent: editMediaContent_,
@@ -52,7 +52,7 @@ export async function GET(
   const slug = params.slug;
 
   const schoolFunctions: {
-    [key: string]: (request: NextRequest, session?: Session | undefined) => {};
+    [key: string]: (request: NextRequest, session?: Session | undefined) => Promise<Response>;
   } = {
     fetchRandomMediaContent: fetchRandomMediaContent_,
     fetchMediaContent: fetchMediaContent_,

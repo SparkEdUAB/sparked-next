@@ -16,7 +16,7 @@ export async function POST(
   const slug = params.slug;
 
   const unitFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createUnit: createUnit_,
     editUnit: editUnit_,
@@ -44,7 +44,7 @@ export async function GET(
   const slug = params.slug;
 
   const unitFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     fetchUnits: fetchUnits_,
     fetchUnitById: fetchUnitById_,
