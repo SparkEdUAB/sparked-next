@@ -20,31 +20,31 @@ import { FileUploadSection } from './FileUploadSection';
 import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
 import { API_LINKS } from 'app/links';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
-import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
+import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 
 const EditMediaContentView = ({
-  resourceId,
+  mediaContent,
   onSuccessfullyDone,
 }: {
-  resourceId?: string;
-  onSuccessfullyDone?: () => void;
+  mediaContent: T_MediaContentFields;
+  onSuccessfullyDone: () => void;
 }) => {
-  const { editMediaContent } = useMediaContent();
+  const { editMediaContent, deleteMediaContent } = useMediaContent();
   const { uploadFile } = useFileUpload();
 
   const [file, setFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const searchParams = useSearchParams();
-
-  const { item: mediaContent, isLoading: loadingResource } = useAdminItemById(
-    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID,
-    resourceId || (searchParams.get('mediaContentId') as string),
-    'mediaContent',
-    transformRawMediaContent,
-  );
+  // const { item: mediaContent, isLoading: loadingResource } = useAdminItemById(
+  //   API_LINKS.FETCH_MEDIA_CONTENT_BY_ID,
+  //   resourceId || (searchParams.get('mediaContentId') as string),
+  //   'mediaContent',
+  //   transformRawMediaContent,
+  // );
 
   const { items: topics, isLoading: loadingTopics } = useAdminListViewData(
     API_LINKS.FETCH_TOPICS,
@@ -77,20 +77,22 @@ const EditMediaContentView = ({
 
     let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
 
-    setUploadingFile(true);
+    setUploading(true);
 
-    let fileUrl = file ? await uploadFile(file) : undefined;
-    let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
+    try {
+      let fileUrl = file ? await uploadFile(file) : undefined;
+      let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
-    editMediaContent(
-      { ...mediaContent, ...result },
-      fileUrl || undefined,
-      thumbnailUrl || undefined,
-      onSuccessfullyDone,
-    );
+      await editMediaContent(
+        { ...mediaContent, ...result },
+        fileUrl || undefined,
+        thumbnailUrl || undefined,
+        onSuccessfullyDone,
+      );
+    } finally {
+      setUploading(false);
+    }
   };
-
-  const isLoading = uploadingFile || loadingResource;
 
   return (
     <>
@@ -105,7 +107,7 @@ const EditMediaContentView = ({
       ) : (
         <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
           <FileUploadSection
-            isLoading={isLoading}
+            isLoading={uploading}
             file={file}
             setFile={setFile}
             thumbnail={thumbnail}
@@ -113,7 +115,7 @@ const EditMediaContentView = ({
           />
 
           <AdminFormInput
-            disabled={isLoading}
+            disabled={uploading}
             name={MEDIA_CONTENT_FORM_FIELDS.name.key}
             defaultValue={mediaContent.name}
             label={MEDIA_CONTENT_FORM_FIELDS.name.label}
@@ -121,7 +123,7 @@ const EditMediaContentView = ({
           />
 
           <AdminFormTextarea
-            disabled={isLoading}
+            disabled={uploading}
             name={MEDIA_CONTENT_FORM_FIELDS.description.key}
             defaultValue={mediaContent.description}
             label={MEDIA_CONTENT_FORM_FIELDS.description.label}
@@ -129,27 +131,9 @@ const EditMediaContentView = ({
             rows={4}
           />
 
-          {/* <AdminFormSelector
-            loadingItems={loadingSchools}
-            disabled={isLoading || loadingSchools}
-            options={schools}
-            label={MEDIA_CONTENT_FORM_FIELDS.school.label}
-            name={MEDIA_CONTENT_FORM_FIELDS.school.key}
-            defaultValue={mediaContent.schoolId}
-          />
-
-          <AdminFormSelector
-            loadingItems={loadingPrograms}
-            disabled={isLoading || loadingPrograms}
-            options={programs}
-            label={MEDIA_CONTENT_FORM_FIELDS.program.label}
-            name={MEDIA_CONTENT_FORM_FIELDS.program.key}
-            defaultValue={mediaContent.programId}
-          /> */}
-
           <AdminFormSelector
             loadingItems={loadingCourses}
-            disabled={isLoading || loadingCourses}
+            disabled={uploading || loadingCourses}
             options={courses}
             label={MEDIA_CONTENT_FORM_FIELDS.course.label}
             name={MEDIA_CONTENT_FORM_FIELDS.course.key}
@@ -158,7 +142,7 @@ const EditMediaContentView = ({
 
           <AdminFormSelector
             loadingItems={loadingUnits}
-            disabled={isLoading || loadingUnits}
+            disabled={uploading || loadingUnits}
             options={units}
             label={MEDIA_CONTENT_FORM_FIELDS.unit.label}
             name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
@@ -167,19 +151,41 @@ const EditMediaContentView = ({
 
           <AdminFormSelector
             loadingItems={loadingTopics}
-            disabled={isLoading || loadingTopics}
+            disabled={uploading || loadingTopics}
             options={topics}
             label={MEDIA_CONTENT_FORM_FIELDS.topic.label}
             name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
             defaultValue={mediaContent.topicId}
           />
 
-          <Button type="submit" className="mt-2" disabled={isLoading}>
-            {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('submit')}
+          <Button type="submit" className="mt-2" disabled={uploading}>
+            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+            {i18next.t('update')}
+          </Button>
+
+          <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
+            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+            {i18next.t('delete')}
           </Button>
         </form>
       )}
+
+      <DeletionWarningModal
+        showDeletionWarning={showDeletionWarning}
+        toggleDeletionWarning={toggleDeletionWarning}
+        deleteItems={async () => {
+          try {
+            setUploading(true);
+            const successful = await deleteMediaContent([mediaContent]);
+            if (successful) {
+              onSuccessfullyDone();
+            }
+          } finally {
+            setUploading(false);
+          }
+        }}
+        numberOfElements={1}
+      />
     </>
   );
 };

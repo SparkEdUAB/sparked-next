@@ -77,6 +77,7 @@ i18next.init({
         topic: 'Topic',
 
         submit: 'Submit',
+        update: 'Update',
         upload_file: 'Upload File',
         upload_thumbnail: 'Upload Thumbnail (optional)',
 
@@ -86,6 +87,8 @@ i18next.init({
         schools: 'Schools',
         programs: 'Programs',
         media_content: 'Media Content',
+        statistics: 'Statistics',
+        feedback: 'Feedback',
 
         new: 'New',
         delete: 'Delete',

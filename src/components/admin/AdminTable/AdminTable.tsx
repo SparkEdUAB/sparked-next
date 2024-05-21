@@ -7,7 +7,6 @@ import { IoFileTrayOutline } from 'react-icons/io5';
 import { T_ColumnData, T_ItemTypeBase } from './types';
 import { DeletionWarningModal } from './DeletionWarningModal';
 import { AdminTableButtonGroup } from './AdminTableButtonGroup';
-import { MdEdit } from 'react-icons/md';
 import useConfig from '@hooks/use-config';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import i18next from 'i18next';
@@ -31,10 +30,9 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   isLoading: boolean;
   onSearchQueryChange: (text: string) => void;
   createNew: () => void;
-  editItem: (id: string) => void;
+  editItem: (item: ItemType) => void;
   columns: T_ColumnData<ItemType>[];
 }) {
-  const { router } = useNavigation();
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
@@ -59,7 +57,6 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
         }}
       />
       <AdminTableButtonGroup
-        router={router}
         createNew={createNew}
         rowSelection={rowSelection}
         toggleDeletionWarning={toggleDeletionWarning}
@@ -69,6 +66,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
           <Table.Head>
             <Table.HeadCell className="p-4 bg-gray-100">
               <Checkbox
+                className="cursor-pointer"
                 checked={rowSelection.selectedRowKeys.length === items?.length && items?.length !== 0}
                 onChange={(event) =>
                   event.target.checked
@@ -82,19 +80,24 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                 {column.title?.toString()}
               </Table.HeadCell>
             ))}
-            <Table.HeadCell className="bg-gray-100"></Table.HeadCell>
           </Table.Head>
 
           <Table.Body className="divide-y">
             {isLoading ? (
-              <AdminTableLoadingSpinner colSpan={filteredColumns.length + 2} />
+              <AdminTableLoadingSpinner colSpan={filteredColumns.length + 1} />
             ) : items?.length === 0 ? (
-              <NothingToShow colSpan={filteredColumns.length + 2} />
+              <NothingToShow colSpan={filteredColumns.length + 1} />
             ) : (
               items?.map((item) => (
-                <Table.Row key={item.key} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Row
+                  key={item.key}
+                  className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-50 hover:dark:bg-gray-700 active:bg-gray-100 active:dark:bg-gray-600 cursor-pointer"
+                  onClick={() => editItem(item)}
+                >
                   <Table.Cell className="p-4">
                     <Checkbox
+                      className="cursor-pointer"
+                      onClick={(e) => e.stopPropagation()}
                       checked={rowSelection.selectedRowKeys.includes(item._id)}
                       onChange={(event) =>
                         event.target.checked
@@ -107,13 +110,6 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                     const text = item[column.dataIndex as keyof ItemType] as string;
                     return <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>;
                   })}
-                  <Table.Cell>
-                    <MdEdit
-                      size={18}
-                      onClick={() => editItem(item._id)}
-                      className="cursor-pointer font-medium text-cyan-600 dark:text-cyan-500"
-                    />
-                  </Table.Cell>
                 </Table.Row>
               ))
             )}

@@ -2,7 +2,7 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useMediaContent, { transformRawMediaContent } from '@hooks/use-media-content';
-import { Modal } from 'flowbite-react';
+import { Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { mediaContentTableColumns } from '.';
@@ -17,7 +17,7 @@ const MediaContentListView: React.FC = () => {
   const { selectedMediaContentIds, setSelectedMediaContentIds, onSearchQueryChange, deleteMediaContent, searchQuery } =
     useMediaContent();
   const [creatingResource, setCreatingResource] = useState(false);
-  const [edittingResourceWithId, setEdittingResourceWithId] = useState<string | null>(null);
+  const [edittingResource, setEdittingResource] = useState<T_MediaContentFields | null>(null);
 
   const {
     items: mediaContent,
@@ -48,7 +48,7 @@ const MediaContentListView: React.FC = () => {
         items={mediaContent}
         isLoading={isLoading}
         createNew={() => setCreatingResource(true)}
-        editItem={(id) => setEdittingResourceWithId(id)}
+        editItem={(item) => setEdittingResource(item)}
         columns={mediaContentTableColumns}
         onSearchQueryChange={onSearchQueryChange}
       />
@@ -63,20 +63,25 @@ const MediaContentListView: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingResourceWithId} onClose={() => setEdittingResourceWithId(null)} popup>
-        <Modal.Header />
-        <Modal.Body className="custom-scrollbar">
-          {edittingResourceWithId ? (
+      <Drawer
+        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+        open={!!edittingResource}
+        onClose={() => setEdittingResource(null)}
+        position="right"
+      >
+        <Drawer.Header titleIcon={() => <></>} />
+        <Drawer.Items className="custom-scrollbar">
+          {edittingResource ? (
             <EditMediaContentView
-              resourceId={edittingResourceWithId}
+              mediaContent={edittingResource}
               onSuccessfullyDone={() => {
                 mutate();
-                setEdittingResourceWithId(null);
+                setEdittingResource(null);
               }}
             />
           ) : null}
-        </Modal.Body>
-      </Modal>
+        </Drawer.Items>
+      </Drawer>
     </>
   );
 };

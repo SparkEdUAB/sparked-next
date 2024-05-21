@@ -1,7 +1,7 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Modal } from 'flowbite-react';
+import { Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import useCourse, { transformRawCourse } from '@hooks/useCourse';
@@ -16,7 +16,7 @@ import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 const CourseListView: React.FC = () => {
   const { selectedCourseIds, setSelectedCourseIds, onSearchQueryChange, deleteCourse, searchQuery } = useCourse();
   const [creatingCourse, setCreatingCourse] = useState(false);
-  const [edittingCourseWithId, setEdittingCourseWithId] = useState<string | null>(null);
+  const [edittingCourse, setEdittingCourse] = useState<T_CourseFields | null>(null);
 
   const {
     items: courses,
@@ -47,7 +47,7 @@ const CourseListView: React.FC = () => {
         items={courses}
         isLoading={isLoading}
         createNew={() => setCreatingCourse(true)}
-        editItem={(id) => setEdittingCourseWithId(id)}
+        editItem={(item) => setEdittingCourse(item)}
         columns={courseTableColumns}
         onSearchQueryChange={onSearchQueryChange}
       />
@@ -62,20 +62,25 @@ const CourseListView: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingCourseWithId} onClose={() => setEdittingCourseWithId(null)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          {edittingCourseWithId ? (
+      <Drawer
+        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+        open={!!edittingCourse}
+        onClose={() => setEdittingCourse(null)}
+        position="right"
+      >
+        <Drawer.Header titleIcon={() => <></>} />
+        <Drawer.Items>
+          {edittingCourse ? (
             <EditCourseView
-              courseId={edittingCourseWithId}
+              course={edittingCourse}
               onSuccessfullyDone={() => {
                 mutate();
-                setEdittingCourseWithId(null);
+                setEdittingCourse(null);
               }}
             />
           ) : null}
-        </Modal.Body>
-      </Modal>
+        </Drawer.Items>
+      </Drawer>
     </>
   );
 };

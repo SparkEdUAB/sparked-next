@@ -13,29 +13,9 @@ export const unitTableColumns: T_ColumnData<T_UnitFields>[] = [
     dataIndex: 'name',
     key: 'name',
   },
-  // {
-  //   title: 'School',
-  //   dataIndex: 'schoolName',
-  //   key: 'schools',
-  // },
-  // {
-  //   title: 'Program',
-  //   dataIndex: 'programName',
-  //   key: 'programs',
-  // },
   {
     title: 'Course',
     dataIndex: 'courseName',
     key: 'course',
-  },
-  {
-    title: 'Create By',
-    dataIndex: 'created_by',
-    key: 'created_by',
-  },
-  {
-    title: 'Create At',
-    dataIndex: 'created_at',
-    key: 'created_at',
   },
 ];

@@ -59,7 +59,7 @@ const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; o
 
             <Button type="submit" className="mt-2" disabled={isLoading}>
               {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
-              {i18next.t('submit')}
+              {i18next.t('update')}
             </Button>
           </div>
         </form>

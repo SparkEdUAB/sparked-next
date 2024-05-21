@@ -6,7 +6,7 @@ import useNavigation from '@hooks/useNavigation';
 import { FormInstance, message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { T_CreateUnitFields, T_FetchUnits, T_RawUnitFields, T_UnitFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 
@@ -60,7 +60,7 @@ const useUnit = (form?: FormInstance) => {
     const url = API_LINKS.EDIT_UNIT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...unit, ...fields, unitId: unit?._id }),
+      body: JSON.stringify({ ...unit, ...fields, unitId: (unit || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -167,10 +167,10 @@ const useUnit = (form?: FormInstance) => {
     }
   };
 
-  const deleteUnits = async () => {
+  const deleteUnits = async (items?: T_UnitFields[]) => {
     const url = API_LINKS.DELETE_UNITS;
     const formData = {
-      body: JSON.stringify({ unitIds: selectedUnitIds }),
+      body: JSON.stringify({ unitIds: items ? items.map((item) => item._id) : selectedUnitIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -198,7 +198,7 @@ const useUnit = (form?: FormInstance) => {
 
       setUnits(units.filter((i) => selectedUnitIds.indexOf(i._id) == -1));
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
       setLoaderStatus(false);
 

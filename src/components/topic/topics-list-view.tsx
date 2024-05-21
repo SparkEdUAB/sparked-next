@@ -2,7 +2,7 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useTopic, { transformRawTopic } from '@hooks/use-topic';
-import { Modal } from 'flowbite-react';
+import { Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { topicTableColumns } from '.';
@@ -22,7 +22,7 @@ const TopicsListView: React.FC = () => {
     searchQuery,
   } = useTopic();
   const [creatingTopic, setCreatingTopic] = useState(false);
-  const [edittingTopicWithId, setEdittingTopicWithId] = useState<string | null>(null);
+  const [edittingTopic, setEdittingTopic] = useState<T_TopicFields | null>(null);
 
   const {
     items: topics,
@@ -53,7 +53,7 @@ const TopicsListView: React.FC = () => {
         items={topics || []}
         isLoading={isLoading}
         createNew={() => setCreatingTopic(true)}
-        editItem={(id) => setEdittingTopicWithId(id)}
+        editItem={(id) => setEdittingTopic(id)}
         columns={topicTableColumns}
         onSearchQueryChange={onSearchQueryChange}
       />
@@ -68,20 +68,25 @@ const TopicsListView: React.FC = () => {
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingTopicWithId} onClose={() => setEdittingTopicWithId(null)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          {edittingTopicWithId ? (
+      <Drawer
+        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+        open={!!edittingTopic}
+        onClose={() => setEdittingTopic(null)}
+        position="right"
+      >
+        <Drawer.Header titleIcon={() => <></>} />
+        <Drawer.Items>
+          {edittingTopic ? (
             <EditTopicView
-              topicId={edittingTopicWithId}
+              topic={edittingTopic}
               onSuccessfullyDone={() => {
                 mutate();
-                setEdittingTopicWithId(null);
+                setEdittingTopic(null);
               }}
             />
           ) : null}
-        </Modal.Body>
-      </Modal>
+        </Drawer.Items>
+      </Drawer>
     </>
   );
 };

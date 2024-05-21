@@ -60,7 +60,7 @@ const useCourse = (form?: any) => {
     const url = API_LINKS.EDIT_COURSE;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...course, ...fields, courseId: course?._id }),
+      body: JSON.stringify({ ...course, ...fields, courseId: (course || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -169,10 +169,10 @@ const useCourse = (form?: any) => {
     }
   };
 
-  const deleteCourse = async () => {
+  const deleteCourse = async (items?: T_CourseFields[]) => {
     const url = API_LINKS.DELETE_COURSES;
     const formData = {
-      body: JSON.stringify({ courseIds: selectedCourseIds }),
+      body: JSON.stringify({ courseIds: items ? items.map((item) => item._id) : selectedCourseIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -200,7 +200,7 @@ const useCourse = (form?: any) => {
 
       setCourses(courses.filter((i) => selectedCourseIds.indexOf(i._id) == -1));
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
       setLoaderStatus(false);
 
