@@ -10,7 +10,7 @@ export async function GET(
   const slug = params.slug;
 
   const configFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     readConfigFile: readConfigFile_,
   };
@@ -27,5 +27,4 @@ export async function GET(
       status: 200,
     });
   }
-};
-
+}
