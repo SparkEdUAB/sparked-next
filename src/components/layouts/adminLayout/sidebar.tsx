@@ -1,9 +1,7 @@
 'use client';
 
-import useConfig from '@hooks/use-config';
 import useNavigation from '@hooks/useNavigation';
-import { Badge, Sidebar } from 'flowbite-react';
-import i18next from 'i18next';
+import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
 
 const AdminSidebar = ({
@@ -20,7 +18,7 @@ const AdminSidebar = ({
   return (
     <>
       <div
-        className={`fixed inset-0 z-20 h-full w-64 flex-none md:static md:block md:h-auto md:overflow-y-visible ${
+        className={`fixed inset-0 z-40 h-full w-64 flex-none md:static md:block md:h-auto md:overflow-y-visible ${
           sidebarIsCollapsed ? 'hidden' : ''
         }`}
       >
@@ -42,7 +40,7 @@ const AdminSidebar = ({
         <div
           onClick={toggleSidebar}
           onKeyUp={(key) => key.code === 'Escape' && toggleSidebar()}
-          className="fixed inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 lg:hidden"
+          className="fixed inset-0 z-30 cursor-pointer bg-gray-900/50 dark:bg-gray-900/60 lg:hidden"
         />
       )}
     </>
