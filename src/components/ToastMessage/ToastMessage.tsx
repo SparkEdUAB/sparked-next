@@ -11,17 +11,17 @@ interface ToastMessageProps {
 
 const ToastMessage: React.FC<ToastMessageProps> = ({ content, type }) => {
   return (
-    <Toast color={type} className="animate-appear bg-white dark:bg-white p-3">
+    <Toast color={type} className="animate-appear bg-white dark:bg-[#202020] p-3">
       <div
         className={
           'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-md ' +
           (type === 'success'
-            ? 'bg-green-100 text-green-500 dark:bg-green-100 dark:text-green-500'
+            ? 'bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-300'
             : type === 'warning'
-            ? 'bg-orange-100 text-orange-500 dark:bg-orange-100 dark:text-orange-500'
+            ? 'bg-orange-100 text-orange-500 dark:bg-orange-800 dark:text-orange-300'
             : type === 'error'
-            ? 'bg-red-100 text-red-500 dark:bg-red-100 dark:text-red-500'
-            : type === 'info' && 'bg-cyan-100 text-cyan-500 dark:bg-cyan-100 dark:text-cyan-600')
+            ? 'bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-300'
+            : type === 'info' && 'bg-cyan-100 text-cyan-600 dark:bg-cyan-800 dark:text-cyan-300')
         }
       >
         {type === 'error' ? (
@@ -34,8 +34,8 @@ const ToastMessage: React.FC<ToastMessageProps> = ({ content, type }) => {
           type === 'info' && <IoInformation className="h-5 w-5" />
         )}
       </div>
-      <div className="ml-3 text-sm text-black font-normal">{content}</div>
-      <Toast.Toggle className="dark:bg-white dark:text-gray-400 dark:hover:bg-gray-100 dark:hover:text-gray-900" />
+      <div className="ml-3 text-sm text-gray-800 dark:text-gray-200 font-normal">{content}</div>
+      <Toast.Toggle className="dark:bg-[#202020] dark:text-gray-600 dark:hover:bg-gray-900 dark:hover:text-gray-100 dark:focus:ring-gray-700" />
     </Toast>
   );
 };
