@@ -35,9 +35,7 @@ const useConfig = (props: T_CONFIG) => {
         return false;
       }
 
-      const _configs: T_CONFIG_VARIABLES = JSON.parse(responseData.configData);
-
-      setConfigs(_configs);
+      setConfigs(responseData.configData);
     } catch (err: any) {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
