@@ -45,8 +45,9 @@ export type T_link = {
   DELETE_MEDIA_CONTENT: string;
   FETCH_RANDOM_MEDIA_CONTENT: string;
   CREATE_PAGE_LINK: string;
-  //users
   CREATE_USER: string;
+  EDIT_PAGE_LINK: string;
+  DELETE_PAGE_LINK: string;
 
   //config
   READ_CONFIG_FILE: string;
