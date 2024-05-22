@@ -1,6 +1,5 @@
 'use client';
 
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import { useSession } from 'next-auth/react';
 import { T_LoginFields, T_SignupFields } from './types';
@@ -9,11 +8,13 @@ import { signIn, signOut } from 'next-auth/react';
 import AUTH_PROCESS_CODES from '@app/api/auth/processCodes';
 import { useState } from 'react';
 import { useRouter } from 'next-nprogress-bar';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
 const useAuth = () => {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const message = useToastMessage();
 
   const isAuthenticated = status === 'authenticated';
 

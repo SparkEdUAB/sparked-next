@@ -3,7 +3,6 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
@@ -11,9 +10,11 @@ import { T_CreateResourceFields, T_FetchTopic } from './types';
 import { T_RawMediaContentFields, T_MediaContentFields } from 'types/media-content';
 import { T_React_key } from 'types/navigation';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useMediaContent = (form?: any) => {
+const useMediaContent = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -199,7 +200,6 @@ const useMediaContent = (form?: any) => {
         };
 
         setTargetMediaContent(_mediaContent);
-        form && form.setFieldsValue(_mediaContent);
         return _mediaContent;
       } else {
         return null;

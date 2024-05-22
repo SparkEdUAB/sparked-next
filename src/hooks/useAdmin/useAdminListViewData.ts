@@ -1,8 +1,8 @@
 import useSWRInfinite from 'swr/infinite';
-import { message } from 'antd';
 import { useMemo, useState } from 'react';
 import NETWORK_UTILS from 'utils/network';
 import { fetcher } from '@hooks/use-swr/fetcher';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
 const ITEMS_PER_PAGE = 100;
 
@@ -14,6 +14,7 @@ export function useAdminListViewData<Result extends Record<string, any>, RawData
   searchQuery?: string,
 ) {
   const [hasMore, setHasMore] = useState(true);
+  const message = useToastMessage();
 
   const getKey = (index: number) => {
     if (searchQuery && searchUrl) {

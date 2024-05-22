@@ -11,7 +11,7 @@ import i18next from 'i18next';
 import { useEffect } from 'react';
 
 const CreateUserView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (() => void) | undefined }) => {
-  const { createUser, onEmailPasswordChange } = useUsers();
+  const { createUser } = useUsers();
   const { fetchSchools, schools } = useSchool();
   const { fetchPrograms, programs } = useProgram();
   const { fetchCourses, courses } = useCourse();

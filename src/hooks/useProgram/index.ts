@@ -3,15 +3,16 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import { T_CreateProgramFields, T_FetchPrograms, T_ProgramFields, T_RawProgramFields } from './types';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useProgram = (form?: any) => {
+const useProgram = () => {
   const { router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -165,7 +166,6 @@ const useProgram = (form?: any) => {
         };
 
         setSProgram(_program as T_ProgramFields);
-        form && form.setFieldsValue(_program);
         return _program;
       } else {
         return null;

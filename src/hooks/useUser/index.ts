@@ -3,15 +3,15 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import { T_CreateUserFields, T_FetchUsers, T_UserFields } from './types';
-import type { CheckboxProps } from 'antd';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useUsers = (form?: any) => {
+const useUsers = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -183,7 +183,6 @@ const useUsers = (form?: any) => {
         };
 
         setUser(_user);
-        form && form.setFieldsValue(_user);
         return _user;
       } else {
         return null;
@@ -307,8 +306,6 @@ const useUsers = (form?: any) => {
     router.push(getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${selectedUserIds[0]}`);
   };
 
-  const onEmailPasswordChange: CheckboxProps['onChange'] = (e) => {};
-
   return {
     createUser,
     fetchUnits,
@@ -327,7 +324,6 @@ const useUsers = (form?: any) => {
     onSearchQueryChange,
     searchQuery,
     tempUsers,
-    onEmailPasswordChange,
     deleteUsers,
   };
 };

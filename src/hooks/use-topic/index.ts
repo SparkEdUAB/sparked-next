@@ -3,15 +3,16 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import { T_CreateTopicFields, T_FetchTopic, T_TopicFields, T_RawTopicFields } from './types';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useTopic = (form?: any) => {
+const useTopic = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -161,7 +162,6 @@ const useTopic = (form?: any) => {
         const _topic = transformRawTopic(topic, 0);
 
         setTopic(_topic);
-        form && form.setFieldsValue(_topic);
         return _topic;
       } else {
         return null;
