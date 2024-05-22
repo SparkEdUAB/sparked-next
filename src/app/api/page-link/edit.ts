@@ -6,16 +6,17 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as PAGE_PROCESS_CODES } from './processCodes';
 
-export default async function createPageLink_(request: Request, session?: Session) {
+export default async function editPageLink_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
+    pageLinkId: zfd.text(),
     description: zfd.text(),
     pageLink: zfd.text(),
   });
 
   const formBody = await request.json();
 
-  const { name, description, pageLink } = schema.parse(formBody);
+  const { name, description, pageLink, pageLinkId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -34,6 +35,7 @@ export default async function createPageLink_(request: Request, session?: Sessio
     const pageLinkData = await db.collection(dbCollections.page_links.name).findOne(
       {
         name: { $regex: regexPattern },
+        _id: { $ne: new BSON.ObjectId(pageLinkId) },
       },
       {
         projection: {
@@ -53,20 +55,26 @@ export default async function createPageLink_(request: Request, session?: Sessio
       });
     }
 
+    const query = {
+      _id: new BSON.ObjectId(pageLinkId),
+    };
 
-    await db.collection(dbCollections.page_links.name).insertOne({
+    const updateQuery = {
       name,
       description,
-      link: pageLink,
-      created_at: new Date(),
       updated_at: new Date(),
+      link: pageLink,
       //@ts-ignore
-      created_by_id: new BSON.ObjectId(session?.user?.id),
+      updated_by_id: new BSON.ObjectId(session?.user?.id),
+    };
+
+    await db.collection(dbCollections.page_links.name).updateOne(query, {
+      $set: updateQuery,
     });
 
     const response = {
       isError: false,
-      code: PAGE_PROCESS_CODES.PAGE_CREATED,
+      code: PAGE_PROCESS_CODES.PAGE_EDITED,
     };
 
     return new Response(JSON.stringify(response), {
