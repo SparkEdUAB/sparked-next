@@ -27,4 +27,8 @@ export type TdbCollection = {
     name: string;
     label: string;
   };
+  page_links: {
+    name: string;
+    label: string;
+  };
 };

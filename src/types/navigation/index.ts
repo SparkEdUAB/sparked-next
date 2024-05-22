@@ -44,6 +44,7 @@ export type T_link = {
   EDIT_MEDIA_CONTENT: string;
   DELETE_MEDIA_CONTENT: string;
   FETCH_RANDOM_MEDIA_CONTENT: string;
+  CREATE_PAGE_LINK: string;
   //users
   CREATE_USER: string;
 
