@@ -70,7 +70,7 @@ export function useAdminListViewData<Result extends Record<string, any>, RawData
           [],
         ) || []
       ).map(transformRawData),
-    [data],
+    [data, transformRawData],
   );
 
   return { items, isLoading, mutate, size, error, loadMore, hasMore, isValidating };
