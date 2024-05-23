@@ -1,6 +1,6 @@
-import { TdbCollection } from "./types";
+import { T_dbCollection } from './types';
 
-export const dbCollections: TdbCollection = {
+export const dbCollections: T_dbCollection = {
   users: {
     name: 'users',
     label: 'Users',
@@ -32,5 +32,9 @@ export const dbCollections: TdbCollection = {
   page_links: {
     name: 'page-links',
     label: 'Media Content',
+  },
+  grade: {
+    name: 'grade',
+    label: 'Grade',
   },
 };
