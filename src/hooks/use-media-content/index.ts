@@ -3,18 +3,18 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
 import { T_CreateResourceFields, T_FetchTopic } from './types';
 import { T_RawMediaContentFields, T_MediaContentFields } from 'types/media-content';
 import { T_React_key } from 'types/navigation';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useMediaContent = (form?: any) => {
+const useMediaContent = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -22,10 +22,6 @@ const useMediaContent = (form?: any) => {
   const [tempMediaContent, setTempMediaContent] = useState<Array<T_MediaContentFields>>([]);
   const [targetMediaContent, setTargetMediaContent] = useState<T_MediaContentFields | null>(null);
   const [selectedMediaContentIds, setSelectedMediaContentIds] = useState<T_React_key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedMediaContentIds.length && deleteMediaContent();
-  }, [UiStore.confirmDialogStatus]);
 
   const createResource = async (
     fields: T_CreateResourceFields,
@@ -55,12 +51,12 @@ const useMediaContent = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
       onSuccessfullyDone?.();
-      message.success(i18next.t('media content created'));
+      message.success(i18next.t('media_content_created'));
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -80,10 +76,10 @@ const useMediaContent = (form?: any) => {
       body: JSON.stringify({
         ...targetMediaContent,
         ...fields,
-        mediaContentId: targetMediaContent?._id,
-        fileUrl: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
-        file_url: fileUrl ? fileUrl : targetMediaContent?.fileUrl,
-        thumbnailUrl: thumbnailUrl ? thumbnailUrl : targetMediaContent?.thumbnailUrl,
+        mediaContentId: fields?._id,
+        fileUrl: fileUrl ? fileUrl : fields?.fileUrl,
+        file_url: fileUrl ? fileUrl : fields?.fileUrl,
+        thumbnailUrl: thumbnailUrl ? thumbnailUrl : fields?.thumbnailUrl,
       }),
       method: 'post',
       headers: {
@@ -104,7 +100,7 @@ const useMediaContent = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -134,34 +130,12 @@ const useMediaContent = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
       const _mediaContent = (responseData.mediaContent as T_RawMediaContentFields[])?.map<T_MediaContentFields>(
-        (i, index: number) =>
-          ({
-            index: index + 1,
-            key: i._id,
-            _id: i._id,
-            name: i.name,
-            fileUrl: i.file_url || undefined,
-            thumbnailUrl: i.thumbnailUrl,
-            description: i.description,
-            courseId: i.course?._id,
-            school: i.school,
-            schoolId: i.school?._id,
-            unitId: i.course?._id,
-            schoolName: i.school?.name,
-            programName: i.program?.name,
-            courseName: i.course?.name,
-            unitName: i.unit?.name,
-            programId: i.program?._id,
-            topicId: i.topic?._id,
-            topicName: i.topic?.name,
-            created_by: i.user?.email,
-            created_at: new Date(i.created_at as string).toDateString(),
-          } satisfies T_MediaContentFields),
+        transformRawMediaContent,
       );
 
       setMediaContent(_mediaContent);
@@ -196,7 +170,7 @@ const useMediaContent = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -226,7 +200,6 @@ const useMediaContent = (form?: any) => {
         };
 
         setTargetMediaContent(_mediaContent);
-        form && form.setFieldsValue(_mediaContent);
         return _mediaContent;
       } else {
         return null;
@@ -243,16 +216,12 @@ const useMediaContent = (form?: any) => {
     if (!selectedMediaContentIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deleteMediaContent = async () => {
-    if (UiStore.isLoading) return;
-
+  const deleteMediaContent = async (items?: T_MediaContentFields[]) => {
     const url = API_LINKS.DELETE_MEDIA_CONTENT;
     const formData = {
-      body: JSON.stringify({ mediaContentIds: selectedMediaContentIds }),
+      body: JSON.stringify({ mediaContentIds: items ? items.map((item) => item._id) : selectedMediaContentIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -261,10 +230,8 @@ const useMediaContent = (form?: any) => {
 
     try {
       setLoaderStatus(true);
-      UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -274,11 +241,10 @@ const useMediaContent = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       const newMediaContentIds = mediaContent.filter((i) => selectedMediaContentIds.indexOf(i._id) == -1);
@@ -287,10 +253,9 @@ const useMediaContent = (form?: any) => {
 
       // setTargetMediaContent(newMediaContentIds);
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
@@ -330,7 +295,7 @@ const useMediaContent = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
       message.success(responseData.mediaContent.length + ' ' + i18next.t('media_content_found'));
@@ -384,5 +349,30 @@ const useMediaContent = (form?: any) => {
     deleteMediaContent,
   };
 };
+
+export function transformRawMediaContent(i: T_RawMediaContentFields, index: number): T_MediaContentFields {
+  return {
+    index: index + 1,
+    key: i._id,
+    _id: i._id,
+    name: i.name,
+    fileUrl: i.file_url || undefined,
+    thumbnailUrl: i.thumbnailUrl,
+    description: i.description,
+    courseId: i.course?._id,
+    school: i.school,
+    schoolId: i.school?._id,
+    unitId: i.course?._id,
+    schoolName: i.school?.name,
+    programName: i.program?.name,
+    courseName: i.course?.name,
+    unitName: i.unit?.name,
+    programId: i.program?._id,
+    topicId: i.topic?._id,
+    topicName: i.topic?.name,
+    created_by: i.user?.email,
+    created_at: new Date(i.created_at as string).toDateString(),
+  };
+}
 
 export default useMediaContent;

@@ -1,48 +1,37 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
 import useMediaContent from '@hooks/use-media-content';
-import useTopic from '@hooks/use-topic';
-import useCourse from '@hooks/useCourse';
-import useProgram from '@hooks/useProgram';
-import useSchool from '@hooks/useSchool';
-import useUnit from '@hooks/useUnit';
+import { transformRawTopic } from '@hooks/use-topic';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_MediaContentFields } from 'types/media-content';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import useFileUpload from '@hooks/use-file-upload';
-import { message } from 'antd';
 import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
 import { FileUploadSection } from './FileUploadSection';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
 const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createResource, isLoading: loadingResource } = useMediaContent();
   const { uploadFile } = useFileUpload();
+  const message = useToastMessage();
 
   const [file, setFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
 
-  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
-  // const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
-  // const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
-  const { fetchTopics, topics, isLoading: loadingTopics } = useTopic();
-
-  useEffect(() => {
-    // fetchSchools({});
-    // fetchPrograms({});
-    // fetchCourses({});
-    // fetchUnits({});
-    fetchTopics({});
-  }, []);
+  const { items: topics, isLoading: loadingTopics } = useAdminListViewData(
+    API_LINKS.FETCH_TOPICS,
+    'topics',
+    transformRawTopic,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -50,10 +39,6 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
     const keys = [
       MEDIA_CONTENT_FORM_FIELDS.name.key,
       MEDIA_CONTENT_FORM_FIELDS.description.key,
-      // MEDIA_CONTENT_FORM_FIELDS.school.key,
-      // MEDIA_CONTENT_FORM_FIELDS.program.key,
-      // MEDIA_CONTENT_FORM_FIELDS.course.key,
-      // MEDIA_CONTENT_FORM_FIELDS.unit.key,
       MEDIA_CONTENT_FORM_FIELDS.topic.key,
     ];
 
@@ -126,38 +111,6 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           rows={4}
         />
 
-        {/* <AdminFormSelector
-          loadingItems={loadingSchools}
-          disabled={isLoading || loadingSchools}
-          options={schools}
-          label={MEDIA_CONTENT_FORM_FIELDS.school.label}
-          name={MEDIA_CONTENT_FORM_FIELDS.school.key}
-        />
-
-        <AdminFormSelector
-          loadingItems={loadingPrograms}
-          disabled={isLoading || loadingPrograms}
-          options={programs}
-          label={MEDIA_CONTENT_FORM_FIELDS.program.label}
-          name={MEDIA_CONTENT_FORM_FIELDS.program.key}
-        /> */}
-
-        {/* <AdminFormSelector
-          loadingItems={loadingCourses}
-          disabled={isLoading || loadingCourses}
-          options={courses}
-          label={MEDIA_CONTENT_FORM_FIELDS.course.label}
-          name={MEDIA_CONTENT_FORM_FIELDS.course.key}
-        />
-
-        <AdminFormSelector
-          loadingItems={loadingUnits}
-          disabled={isLoading || loadingUnits}
-          options={units}
-          label={MEDIA_CONTENT_FORM_FIELDS.unit.label}
-          name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
-        /> */}
-
         <AdminFormSelector
           loadingItems={loadingTopics}
           disabled={isLoading || loadingTopics}
@@ -175,4 +128,4 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   );
 };
 
-export default observer(CreateMediaContentView);
+export default CreateMediaContentView;

@@ -1,68 +1,38 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useMediaContent from '@hooks/use-media-content';
-import useNavigation from '@hooks/useNavigation';
-import { Modal, TextInput } from 'flowbite-react';
+import useMediaContent, { transformRawMediaContent } from '@hooks/use-media-content';
+import { Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
-import React, { useMemo, useState } from 'react';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
+import React, { useState } from 'react';
 import { mediaContentTableColumns } from '.';
-import { T_MediaContentFields, T_RawMediaContentFields } from 'types/media-content';
+import { T_MediaContentFields } from 'types/media-content';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import CreateMediaContentView from './create-media-content-view';
 import EditMediaContentView from './edit-media-content-view';
-import { useFetch } from '@hooks/use-swr';
 import { API_LINKS } from 'app/links';
-import NETWORK_UTILS from 'utils/network';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 
-const MediaContentListView: React.FC = observer(() => {
-  const {
-    selectedMediaContentIds,
-    setSelectedMediaContentIds,
-    triggerDelete,
-    triggerEdit,
-    findMediaContentByName,
-    onSearchQueryChange,
-    isLoading,
-    deleteMediaContent,
-    fetchMediaContent,
-  } = useMediaContent();
-  const { router, getChildLinkByKey } = useNavigation();
+const MediaContentListView: React.FC = () => {
+  const { selectedMediaContentIds, setSelectedMediaContentIds, onSearchQueryChange, deleteMediaContent, searchQuery } =
+    useMediaContent();
   const [creatingResource, setCreatingResource] = useState(false);
-  const [edittingResourceWithId, setEdittingResourceWithId] = useState<string | null>(null);
+  const [edittingResource, setEdittingResource] = useState<T_MediaContentFields | null>(null);
 
   const {
-    data,
-    isLoading: loading,
+    items: mediaContent,
+    isLoading,
     mutate,
-  } = useFetch<{ mediaContent: T_RawMediaContentFields[] }>(
-    API_LINKS.FETCH_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }),
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(
+    API_LINKS.FETCH_MEDIA_CONTENT,
+    'mediaContent',
+    transformRawMediaContent,
+    API_LINKS.FIND_MEDIA_CONTENT_BY_NAME,
+    searchQuery,
   );
-
-  const mediaContent = useMemo(() => {
-    return (
-      data?.mediaContent?.map<T_MediaContentFields>(
-        (i, index: number) =>
-          ({
-            index: index + 1,
-            key: i._id,
-            _id: i._id,
-            name: i.name,
-            fileUrl: i.file_url || undefined,
-            thumbnailUrl: i.thumbnailUrl,
-            description: i.description,
-            unitId: i.course?._id,
-            unitName: i.unit?.name,
-            topicId: i.topic?._id,
-            topicName: i.topic?.name,
-            created_by: i.user?.email,
-            created_at: new Date(i.created_at as string).toDateString(),
-          } satisfies T_MediaContentFields),
-      ) || []
-    );
-  }, [data]);
 
   const rowSelection = {
     selectedRowKeys: selectedMediaContentIds,
@@ -75,27 +45,18 @@ const MediaContentListView: React.FC = observer(() => {
     <>
       <AdminPageTitle title={i18next.t('media_content')} />
 
-      <TextInput
-        onChange={(e) => onSearchQueryChange(e.target.value)}
-        icon={HiMagnifyingGlass}
-        className="table-search-box"
-        placeholder={i18next.t('search_media_content')}
-        required
-        type="text"
-        onKeyDown={(e) => {
-          e.keyCode === 13 ? findMediaContentByName({ withMetaData: true }) : null;
-        }}
-      />
       <AdminTable<T_MediaContentFields>
         deleteItems={deleteMediaContent}
         rowSelection={rowSelection}
         items={mediaContent}
         isLoading={isLoading}
-        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.media_content)}
-        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.media_content) + `?mediaContentId=${id}`}
         createNew={() => setCreatingResource(true)}
-        editItem={(id) => setEdittingResourceWithId(id)}
+        editItem={(item) => setEdittingResource(item)}
         columns={mediaContentTableColumns}
+        onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingResource} onClose={() => setCreatingResource(false)} popup>
         <Modal.Header />
@@ -108,22 +69,27 @@ const MediaContentListView: React.FC = observer(() => {
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingResourceWithId} onClose={() => setEdittingResourceWithId(null)} popup>
-        <Modal.Header />
-        <Modal.Body className="custom-scrollbar">
-          {edittingResourceWithId ? (
+      <Drawer
+        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+        open={!!edittingResource}
+        onClose={() => setEdittingResource(null)}
+        position="right"
+      >
+        <Drawer.Header titleIcon={() => <></>} />
+        <Drawer.Items className="custom-scrollbar">
+          {edittingResource ? (
             <EditMediaContentView
-              resourceId={edittingResourceWithId}
+              mediaContent={edittingResource}
               onSuccessfullyDone={() => {
                 mutate();
-                setEdittingResourceWithId(null);
+                setEdittingResource(null);
               }}
             />
           ) : null}
-        </Modal.Body>
-      </Modal>
+        </Drawer.Items>
+      </Drawer>
     </>
   );
-});
+};
 
 export default MediaContentListView;

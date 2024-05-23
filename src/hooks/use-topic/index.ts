@@ -3,16 +3,16 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
 import { T_CreateTopicFields, T_FetchTopic, T_TopicFields, T_RawTopicFields } from './types';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useTopic = (form?: any) => {
+const useTopic = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -20,10 +20,6 @@ const useTopic = (form?: any) => {
   const [originalTopics, setOriginalTopics] = useState<Array<T_TopicFields>>([]);
   const [topic, setTopic] = useState<T_TopicFields | null>(null);
   const [selectedTopicIds, setSelectedTopicIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedTopicIds.length && deleteTopics();
-  }, [UiStore.confirmDialogStatus]);
 
   const createTopic = async (fields: T_CreateTopicFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_TOPIC;
@@ -48,7 +44,7 @@ const useTopic = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -67,7 +63,7 @@ const useTopic = (form?: any) => {
     const url = API_LINKS.EDIT_TOPIC;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...topic, ...fields, topicId: topic?._id }),
+      body: JSON.stringify({ ...topic, ...fields, topicId: (topic || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -87,7 +83,7 @@ const useTopic = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -121,28 +117,11 @@ const useTopic = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      const _topics = (responseData.topics as T_RawTopicFields[])?.map<T_TopicFields>((i, index: number) => ({
-        index: index + 1,
-        key: i._id,
-        _id: i._id,
-        name: i.name,
-        description: i.description,
-        school: i.school,
-        unitId: i.unit?._id,
-        schoolId: i.school?._id,
-        courseId: i.course?._id,
-        programId: i.program?._id,
-        schoolName: i.school?.name,
-        programName: i.program?.name,
-        courseName: i.course?.name,
-        unitName: i.unit?.name,
-        created_by: i.user?.email,
-        created_at: new Date(i.created_at).toDateString(),
-      }));
+      const _topics = (responseData.topics as T_RawTopicFields[])?.map<T_TopicFields>(transformRawTopic);
 
       _topics.sort((a, b) => (a > b ? 1 : -1));
 
@@ -173,35 +152,16 @@ const useTopic = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
       if (responseData.topic) {
         const topic: T_RawTopicFields = responseData.topic;
-        const { _id, name, description, school, program, course, unit } = topic;
 
-        const _topic: T_TopicFields = {
-          _id,
-          name,
-          description,
-          schoolId: school?._id,
-          programId: program?._id,
-          courseId: course?._id,
-          unitId: unit?._id,
-          index: 1,
-          key: topic.key,
-          school: topic.school,
-          schoolName: topic.school?.name,
-          programName: topic.program?.name,
-          courseName: topic.course?.name,
-          unitName: topic.unit?.name,
-          created_by: topic.created_by,
-          created_at: topic.created_at,
-        };
+        const _topic = transformRawTopic(topic, 0);
 
         setTopic(_topic);
-        form && form.setFieldsValue(_topic);
         return _topic;
       } else {
         return null;
@@ -217,16 +177,12 @@ const useTopic = (form?: any) => {
     if (!selectedTopicIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deleteTopics = async () => {
-    if (UiStore.isLoading) return;
-
+  const deleteTopics = async (items?: T_TopicFields[]) => {
     const url = API_LINKS.DELETE_TOPICS;
     const formData = {
-      body: JSON.stringify({ topicIds: selectedTopicIds }),
+      body: JSON.stringify({ topicIds: items ? items.map((item) => item._id) : selectedTopicIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -235,10 +191,8 @@ const useTopic = (form?: any) => {
 
     try {
       setLoaderStatus(true);
-      UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -248,19 +202,17 @@ const useTopic = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setTopics(topics.filter((i) => selectedTopicIds.indexOf(i._id) == -1));
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
@@ -294,7 +246,7 @@ const useTopic = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
       message.success(responseData.topics.length + ' ' + i18next.t('topics_found'));
@@ -348,5 +300,26 @@ const useTopic = (form?: any) => {
     originalTopics,
   };
 };
+
+export function transformRawTopic(i: T_RawTopicFields, index: number): T_TopicFields {
+  return {
+    index: index + 1,
+    key: i._id,
+    _id: i._id,
+    name: i.name,
+    description: i.description,
+    school: i.school,
+    unitId: i.unit?._id,
+    schoolId: i.school?._id,
+    courseId: i.course?._id,
+    programId: i.program?._id,
+    schoolName: i.school?.name,
+    programName: i.program?.name,
+    courseName: i.course?.name,
+    unitName: i.unit?.name,
+    created_by: i.user?.email,
+    created_at: new Date(i.created_at).toDateString(),
+  };
+}
 
 export default useTopic;

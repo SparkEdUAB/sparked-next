@@ -3,7 +3,6 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useSchool from '@hooks/useSchool';
-import { Card, Col, Form, Input, Row } from 'antd';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
@@ -13,10 +12,7 @@ import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_SchoolFields } from './types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 
-const onFinishFailed = (errorInfo: any) => {};
-
 const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; onSuccessfullyDone?: () => void }) => {
-  // const [form] = Form.useForm();
   const { editSchool, fetchSchool, school, isLoading } = useSchool();
 
   const searchParams = useSearchParams();
@@ -63,7 +59,7 @@ const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; o
 
             <Button type="submit" className="mt-2" disabled={isLoading}>
               {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
-              {i18next.t('submit')}
+              {i18next.t('update')}
             </Button>
           </div>
         </form>

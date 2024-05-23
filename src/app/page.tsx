@@ -1,5 +1,5 @@
 import WelcomePage from '@components/welcomePage';
-import { fetcher } from '@hooks/use-swr';
+import { fetcher } from '@hooks/use-swr/fetcher';
 import { Metadata, ResolvingMetadata } from 'next';
 import React from 'react';
 import { API_LINKS } from './links';

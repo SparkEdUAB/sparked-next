@@ -3,16 +3,15 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
 import { T_CreateUserFields, T_FetchUsers, T_UserFields } from './types';
-import type { CheckboxProps } from 'antd';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useUsers = (form?: any) => {
+const useUsers = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -20,10 +19,6 @@ const useUsers = (form?: any) => {
   const [tempUsers, setTempUsers] = useState<Array<T_UserFields>>([]);
   const [user, setUser] = useState<T_UserFields | null>(null);
   const [selectedUserIds, setSelectedUserIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedUserIds.length && deleteUsers();
-  }, [UiStore.confirmDialogStatus]);
 
   const createUser = async (fields: T_CreateUserFields, onSuccessfullyDone: () => void) => {
     const url = API_LINKS.CREATE_USER;
@@ -46,7 +41,7 @@ const useUsers = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -81,7 +76,7 @@ const useUsers = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -117,7 +112,7 @@ const useUsers = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -170,7 +165,7 @@ const useUsers = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -188,7 +183,6 @@ const useUsers = (form?: any) => {
         };
 
         setUser(_user);
-        form && form.setFieldsValue(_user);
         return _user;
       } else {
         return null;
@@ -203,13 +197,9 @@ const useUsers = (form?: any) => {
     if (!selectedUserIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
   const deleteUsers = async () => {
-    if (UiStore.isLoading) return;
-
     const url = API_LINKS.DELETE_UNITS;
     const formData = {
       body: JSON.stringify({ unitIds: selectedUserIds }),
@@ -220,10 +210,8 @@ const useUsers = (form?: any) => {
     };
 
     try {
-      UiStore.setLoaderStatus(true);
       setLoaderStatus(true);
       const resp = await fetch(url, formData);
-      UiStore.setLoaderStatus(false);
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -234,11 +222,10 @@ const useUsers = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setUsers(users.filter((i) => selectedUserIds.indexOf(i._id) == -1));
@@ -246,7 +233,6 @@ const useUsers = (form?: any) => {
       return responseData.results;
     } catch (err: any) {
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
@@ -287,7 +273,7 @@ const useUsers = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
       message.success(responseData.courses.length + ' ' + i18next.t('courses_found'));
@@ -320,8 +306,6 @@ const useUsers = (form?: any) => {
     router.push(getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${selectedUserIds[0]}`);
   };
 
-  const onEmailPasswordChange: CheckboxProps['onChange'] = (e) => {};
-
   return {
     createUser,
     fetchUnits,
@@ -340,7 +324,6 @@ const useUsers = (form?: any) => {
     onSearchQueryChange,
     searchQuery,
     tempUsers,
-    onEmailPasswordChange,
     deleteUsers,
   };
 };

@@ -5,8 +5,8 @@ export type T_MenuItemLink = {
   topics: T_MenuItemLinkParams;
   statistics: T_MenuItemLinkParams;
   feedback: T_MenuItemLinkParams;
-  schools: T_MenuItemLinkParams;
-  programs: T_MenuItemLinkParams;
+  // schools: T_MenuItemLinkParams;
+  // programs: T_MenuItemLinkParams;
   units: T_MenuItemLinkParams;
   media_content: T_MenuItemLinkParams;
 };

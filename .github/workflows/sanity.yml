@@ -17,20 +17,20 @@ jobs:
 
     steps:
       - name: Build Next.js app
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set MongoDB URI
         run: echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
       - name: Set MongoDB DB
         run: echo "MONGODB_DB=sparked-next" >> .env
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
