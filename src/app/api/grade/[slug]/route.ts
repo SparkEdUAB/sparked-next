@@ -93,27 +93,27 @@ export async function DELETE(
   }
 }
 
-export async function GET(
-  req: Request,
+// export async function GET(
+//   req: Request,
 
-  { params }: { params: { slug: string } },
-) {
-  const slug = params.slug;
+//   { params }: { params: { slug: string } },
+// ) {
+//   const slug = params.slug;
 
-  const gradeApiFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
-  } = {};
+//   const gradeApiFunctions: {
+//     [key: string]: (request: Request, session?: Session) => {};
+//   } = {};
 
-  if (gradeApiFunctions[slug]) {
-    return gradeApiFunctions[slug](req);
-  } else {
-    const response = {
-      isError: true,
-      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
-    };
+//   if (gradeApiFunctions[slug]) {
+//     return gradeApiFunctions[slug](req);
+//   } else {
+//     const response = {
+//       isError: true,
+//       code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+//     };
 
-    return new Response(JSON.stringify(response), {
-      status: 200,
-    });
-  }
-}
+//     return new Response(JSON.stringify(response), {
+//       status: 200,
+//     });
+//   }
+// }
