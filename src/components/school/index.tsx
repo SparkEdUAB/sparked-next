@@ -1,5 +1,3 @@
-import { Space } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import { T_SchoolFields } from './types';
 import { T_ColumnData } from '@components/admin/AdminTable/types';
 

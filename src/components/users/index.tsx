@@ -1,5 +1,3 @@
-import { Space } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
 import i18next from 'i18next';
 import { T_ColumnData } from '@components/admin/AdminTable/types';
 import { T_UserFields } from '@hooks/useUser/types';

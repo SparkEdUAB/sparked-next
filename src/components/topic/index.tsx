@@ -1,6 +1,5 @@
 import { T_ColumnData } from '@components/admin/AdminTable/types';
 import { T_TopicFields } from '@hooks/use-topic/types';
-import type { ColumnsType } from 'antd/es/table';
 import i18next from 'i18next';
 
 export const topicTableColumns: T_ColumnData<T_TopicFields>[] = [

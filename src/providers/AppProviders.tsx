@@ -8,6 +8,7 @@ import { AppProgressBar } from 'next-nprogress-bar';
 import { OpenpanelProvider } from '@openpanel/nextjs';
 import { HighlightInit } from '@highlight-run/next/client';
 import { NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, NEXT_PUBLIC_OPENPANEL_CLIENT_ID } from 'utils/constants';
+import { ToastMessageProvider } from './ToastMessageContext';
 
 export default function AppProviders({
   children,
@@ -37,7 +38,7 @@ export default function AppProviders({
             urlBlocklist: [],
           }}
         />
-        {children}
+        <ToastMessageProvider>{children}</ToastMessageProvider>
         <AppProgressBar color="#3584e4" height="4px" options={{ showSpinner: false }} />
       </SessionProvider>
     </Flowbite>

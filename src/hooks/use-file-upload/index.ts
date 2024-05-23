@@ -3,13 +3,14 @@
 
 import useNavigation from '@hooks/useNavigation';
 import { AXIOS_PROCESS_STATUS } from '@hooks/useNavigation/constants';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
+import { useToastMessage } from 'providers/ToastMessageContext';
 import { useState } from 'react';
 
 const useFileUpload = () => {
   const { apiNavigator } = useNavigation();
+  const message = useToastMessage();
 
   const [isUploading, setLoaderStatus] = useState<boolean>(false);
 

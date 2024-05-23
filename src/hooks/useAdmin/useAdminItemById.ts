@@ -1,5 +1,5 @@
 import { useFetch } from '@hooks/use-swr';
-import { message } from 'antd';
+import { useToastMessage } from 'providers/ToastMessageContext';
 import { useMemo } from 'react';
 import NETWORK_UTILS from 'utils/network';
 
@@ -9,6 +9,8 @@ export function useAdminItemById<Result extends object, RawData extends object>(
   objectType: string,
   transformRawData: (i: RawData, index: number) => Result,
 ) {
+  const message = useToastMessage();
+
   const { data, isLoading, mutate } = useFetch(
     url + NETWORK_UTILS.formatGetParams({ [objectType + 'Id']: id, withMetaData: 'false' }),
   );
@@ -19,7 +21,7 @@ export function useAdminItemById<Result extends object, RawData extends object>(
       return data;
     }
     return !data || !data[objectType] ? null : transformRawData(data[objectType], 0);
-  }, [data, objectType, transformRawData]);
+  }, [data, objectType, transformRawData, message]);
 
   return { item, isLoading, mutate };
 }

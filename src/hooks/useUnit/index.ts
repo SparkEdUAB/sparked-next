@@ -3,15 +3,16 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { FormInstance, message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useState } from 'react';
 import { T_CreateUnitFields, T_FetchUnits, T_RawUnitFields, T_UnitFields } from './types';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useUnit = (form?: FormInstance) => {
+const useUnit = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -150,7 +151,6 @@ const useUnit = (form?: FormInstance) => {
       if (responseData.unit) {
         const _unit = transformRawUnit(responseData.unit, 0);
         setUnit(_unit);
-        form && form.setFieldsValue(_unit);
         return _unit;
       } else {
         return null;
