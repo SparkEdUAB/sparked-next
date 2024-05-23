@@ -1,19 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import { T_SchoolFields } from '@components/school/types';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import { T_CreateSchoolFields, T_FetchSchools } from './types';
-import UiStore from '@state/mobx/uiStore';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useSchool = (form?: any) => {
+const useSchool = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -21,10 +20,6 @@ const useSchool = (form?: any) => {
   const [tempSchools, setTempSchools] = useState<Array<T_SchoolFields>>([]);
   const [school, setSchool] = useState<T_SchoolFields | null>(null);
   const [selectedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedSchoolIds.length && deleteSchools();
-  }, [UiStore.confirmDialogStatus]);
 
   const createSchool = async (fields: T_CreateSchoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_SCHOOL;
@@ -49,7 +44,7 @@ const useSchool = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -65,7 +60,7 @@ const useSchool = (form?: any) => {
   const editSchool = async (fields: T_SchoolFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_SCHOOL;
     const formData = {
-      body: JSON.stringify({ ...fields, _id: school?._id }),
+      body: JSON.stringify({ ...fields, _id: (school || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -85,7 +80,7 @@ const useSchool = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -115,18 +110,11 @@ const useSchool = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      const _schools = responseData.schools?.map((i: T_SchoolFields, index: number) => ({
-        index: index + 1,
-        key: i._id,
-        _id: i._id,
-        name: i.name,
-        created_by: i.user.email,
-        created_at: new Date(i.created_at).toDateString(),
-      }));
+      const _schools = responseData.schools?.map(transformRawSchool);
 
       setSchools(_schools);
       setTempSchools(_schools);
@@ -155,7 +143,7 @@ const useSchool = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -168,7 +156,6 @@ const useSchool = (form?: any) => {
       };
 
       setSchool(_school as T_SchoolFields);
-      form && form.setFieldsValue(_school);
       return _school;
     } catch (err: any) {
       setLoaderStatus(false);
@@ -181,13 +168,9 @@ const useSchool = (form?: any) => {
     if (!selectedSchoolIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
   const deleteSchools = async () => {
-    if (UiStore.isLoading) return;
-
     const url = API_LINKS.DELETE_SCHOOLS;
     const formData = {
       body: JSON.stringify({ schoolIds: selectedSchoolIds }),
@@ -199,10 +182,8 @@ const useSchool = (form?: any) => {
 
     try {
       setLoaderStatus(true);
-      UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -212,11 +193,10 @@ const useSchool = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setSchools(schools.filter((i) => selectedSchoolIds.indexOf(i._id) == -1));
@@ -224,7 +204,6 @@ const useSchool = (form?: any) => {
       return responseData.results;
     } catch (err: any) {
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
@@ -257,7 +236,7 @@ const useSchool = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
       message.success(responseData.schools.length + ' ' + i18next.t('schools_found'));
@@ -280,15 +259,15 @@ const useSchool = (form?: any) => {
     }
   };
 
-  const triggerEdit = async () => {
-    if (!selectedSchoolIds.length) {
-      return message.warning(i18next.t('select_item'));
-    } else if (selectedSchoolIds.length > 1) {
-      return message.warning(i18next.t('select_one_item'));
-    }
+  // const triggerEdit = async () => {
+  //   if (!selectedSchoolIds.length) {
+  //     return message.warning(i18next.t('select_item'));
+  //   } else if (selectedSchoolIds.length > 1) {
+  //     return message.warning(i18next.t('select_one_item'));
+  //   }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.schools) + `?schoolId=${selectedSchoolIds[0]}`);
-  };
+  //   router.push(getChildLinkByKey('edit', ADMIN_LINKS.schools) + `?schoolId=${selectedSchoolIds[0]}`);
+  // };
 
   return {
     createSchool,
@@ -298,7 +277,7 @@ const useSchool = (form?: any) => {
     setSelectedSchoolIds,
     selectedSchoolIds,
     triggerDelete,
-    triggerEdit,
+    // triggerEdit,
     fetchSchool,
     router,
     school,
@@ -311,5 +290,18 @@ const useSchool = (form?: any) => {
     deleteSchools,
   };
 };
+
+export function transformRawSchool(i: T_SchoolFields, index: number): T_SchoolFields {
+  return {
+    index: index + 1,
+    key: i._id,
+    _id: i._id,
+    name: i.name,
+    created_by: i.user.email,
+    created_at: new Date(i.created_at).toDateString(),
+    description: i.description,
+    user: i.user,
+  };
+}
 
 export default useSchool;

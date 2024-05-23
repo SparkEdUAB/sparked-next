@@ -2,35 +2,30 @@
 
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import { AdminPageTitle } from '@components/layouts';
-import useNavigation from '@hooks/useNavigation';
-import useUnit from '@hooks/useUnit';
-import { Modal, TextInput } from 'flowbite-react';
+import useUnit, { transformRawUnit } from '@hooks/useUnit';
+import { Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
+import React, { useState } from 'react';
 import { unitTableColumns } from '.';
 import CreateUnitView from './create-unit-view';
 import EditUnitView from './edit-unit-view';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
+import { T_UnitFields } from '@hooks/useUnit/types';
 
-const UnitListView: React.FC = observer(() => {
-  const {
-    fetchUnits,
-    units,
-    selectedUnitIds,
-    setSelectedProgramIds,
-    findUnitsByName,
-    onSearchQueryChange,
-    deleteUnits,
-    isLoading,
-  } = useUnit();
-  const { router, getChildLinkByKey } = useNavigation();
+const UnitListView: React.FC = () => {
+  const { selectedUnitIds, setSelectedProgramIds, searchQuery, onSearchQueryChange, deleteUnits } = useUnit();
   const [creatingUnit, setCreatingUnit] = useState(false);
-  const [edittingUnitWithId, setEdittingUnitWithId] = useState<string | null>(null);
+  const [edittingUnit, setEdittingUnit] = useState<T_UnitFields | null>(null);
 
-  useEffect(() => {
-    fetchUnits({});
-  }, []);
+  const {
+    items: units,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(API_LINKS.FETCH_UNITS, 'units', transformRawUnit, API_LINKS.FIND_UNITS_BY_NAME, searchQuery);
 
   const rowSelection = {
     selectedRowKeys: selectedUnitIds,
@@ -43,55 +38,51 @@ const UnitListView: React.FC = observer(() => {
     <>
       <AdminPageTitle title={i18next.t('units')} />
 
-      <TextInput
-        onChange={(e) => onSearchQueryChange(e.target.value)}
-        icon={HiMagnifyingGlass}
-        className="table-search-box"
-        placeholder={i18next.t('search_units')}
-        required
-        type="text"
-        onKeyDown={(e) => {
-          e.keyCode === 13 ? findUnitsByName({ withMetaData: true }) : null;
-        }}
-      />
-      <AdminTable
+      <AdminTable<T_UnitFields>
         deleteItems={deleteUnits}
         rowSelection={rowSelection}
         items={units}
         isLoading={isLoading}
-        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.units)}
-        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${id}`}
         createNew={() => setCreatingUnit(true)}
-        editItem={(id) => setEdittingUnitWithId(id)}
+        editItem={(id) => setEdittingUnit(id)}
         columns={unitTableColumns}
+        onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingUnit} onClose={() => setCreatingUnit(false)} popup>
         <Modal.Header />
         <Modal.Body>
           <CreateUnitView
             onSuccessfullyDone={() => {
-              fetchUnits({});
+              mutate();
               setCreatingUnit(false);
             }}
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingUnitWithId} onClose={() => setEdittingUnitWithId(null)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          {edittingUnitWithId ? (
+      <Drawer
+        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+        open={!!edittingUnit}
+        onClose={() => setEdittingUnit(null)}
+        position="right"
+      >
+        <Drawer.Header titleIcon={() => <></>} />
+        <Drawer.Items>
+          {edittingUnit ? (
             <EditUnitView
-              unitId={edittingUnitWithId}
+              unit={edittingUnit}
               onSuccessfullyDone={() => {
-                fetchUnits({});
-                setEdittingUnitWithId(null);
+                mutate();
+                setEdittingUnit(null);
               }}
             />
           ) : null}
-        </Modal.Body>
-      </Modal>
+        </Drawer.Items>
+      </Drawer>
     </>
   );
-});
+};
 
 export default UnitListView;

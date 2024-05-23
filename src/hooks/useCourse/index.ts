@@ -3,16 +3,16 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
 import { T_CreateCourseFields, T_FetchCourses, T_CourseFields, T_RawCourseFields } from './types';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useCourse = (form?: any) => {
+const useCourse = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -20,10 +20,6 @@ const useCourse = (form?: any) => {
   const [originalCourses, setOriginalCourses] = useState<Array<T_CourseFields>>([]);
   const [course, setCourse] = useState<T_CourseFields | null>(null);
   const [selectedCourseIds, setSelectedCourseIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedCourseIds.length && deleteCourse();
-  }, [UiStore.confirmDialogStatus]);
 
   const createCourse = async (fields: T_CreateCourseFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_COURSE;
@@ -48,7 +44,7 @@ const useCourse = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -65,7 +61,7 @@ const useCourse = (form?: any) => {
     const url = API_LINKS.EDIT_COURSE;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...course, ...fields, courseId: course?._id }),
+      body: JSON.stringify({ ...course, ...fields, courseId: (course || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -85,7 +81,7 @@ const useCourse = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -115,7 +111,7 @@ const useCourse = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -148,7 +144,7 @@ const useCourse = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -156,7 +152,6 @@ const useCourse = (form?: any) => {
         const _course = responseData.course as T_RawCourseFields;
 
         setCourse(transformRawCourse(_course));
-        form && form.setFieldsValue(_course);
         return _course;
       } else {
         return null;
@@ -172,16 +167,12 @@ const useCourse = (form?: any) => {
     if (!selectedCourseIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deleteCourse = async () => {
-    if (UiStore.isLoading) return;
-
+  const deleteCourse = async (items?: T_CourseFields[]) => {
     const url = API_LINKS.DELETE_COURSES;
     const formData = {
-      body: JSON.stringify({ courseIds: selectedCourseIds }),
+      body: JSON.stringify({ courseIds: items ? items.map((item) => item._id) : selectedCourseIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -189,10 +180,8 @@ const useCourse = (form?: any) => {
     };
 
     try {
-      UiStore.setLoaderStatus(true);
       setLoaderStatus(true);
       const resp = await fetch(url, formData);
-      UiStore.setLoaderStatus(false);
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -203,18 +192,16 @@ const useCourse = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setCourses(courses.filter((i) => selectedCourseIds.indexOf(i._id) == -1));
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
-      UiStore.setLoaderStatus(false);
       setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -245,7 +232,7 @@ const useCourse = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
       message.success(responseData.courses.length + ' ' + i18next.t('courses_found'));
@@ -301,9 +288,7 @@ const useCourse = (form?: any) => {
   };
 };
 
-export default useCourse;
-
-function transformRawCourse(course: T_RawCourseFields, index: number = 0): T_CourseFields {
+export function transformRawCourse(course: T_RawCourseFields, index: number = 0): T_CourseFields {
   return {
     index: index + 1,
     key: course._id,
@@ -319,3 +304,5 @@ function transformRawCourse(course: T_RawCourseFields, index: number = 0): T_Cou
     created_at: new Date(course.created_at).toDateString(),
   };
 }
+
+export default useCourse;

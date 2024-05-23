@@ -1,30 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import useSchool from '@hooks/useSchool';
+import { transformRawSchool } from '@hooks/useSchool';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { AdminPageTitle } from '@components/layouts';
-import SchoolStore from '@state/mobx/scholStore';
-import { FormEventHandler, useEffect } from 'react';
+import { FormEventHandler } from 'react';
 import useProgram from '@hooks/useProgram';
 import { T_CreateProgramFields } from '@hooks/useProgram/types';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { PROGRAM_FORM_FIELDS } from './constants';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
-
-const onFinishFailed = (errorInfo: any) => {};
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
 
 const CreateProgramView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createProgram, isLoading } = useProgram();
-  const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
 
-  const { selectedSchool } = SchoolStore;
-
-  useEffect(() => {
-    fetchSchools({});
-  }, []);
+  const { items: schools, isLoading: loadingSchools } = useAdminListViewData(
+    API_LINKS.FETCH_SCHOOLS,
+    'schools',
+    transformRawSchool,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -34,8 +32,6 @@ const CreateProgramView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => 
     let result = extractValuesFromFormEvent<T_CreateProgramFields>(e, keys);
     createProgram(result, onSuccessfullyDone);
   };
-
-  // const [form] = Form.useForm();
 
   return (
     <>

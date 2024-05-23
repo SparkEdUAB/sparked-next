@@ -1,8 +1,9 @@
+import { DEBUG } from 'app/shared/constants';
 import i18next from 'i18next';
 
 i18next.init({
   lng: 'en', // if you're using a language detector, do not define the lng option
-  debug: true,
+  debug: DEBUG,
   saveMissing: true,
   resources: {
     en: {
@@ -52,6 +53,22 @@ i18next.init({
         edit_program: 'Edit a Program',
         edit_media_content: 'Edit Media Content',
 
+        unit_created: 'Unit created successfully',
+        topic_created: 'Topic created successfully',
+        school_created: 'School created successfully',
+        course_created: 'Course created successfully',
+        program_created: 'Program created successfully',
+        resource_created: 'Resource created successfully',
+
+        topics_found: 'topics found',
+        media_content_found: 'media content found',
+        units_found: 'units found',
+        programs_found: 'programs found',
+        schools_found: 'schools found',
+        users_found: 'users found',
+
+        search_items: 'Search Items',
+
         name: 'Name',
         description: 'Description',
         school: 'School',
@@ -60,6 +77,7 @@ i18next.init({
         topic: 'Topic',
 
         submit: 'Submit',
+        update: 'Update',
         upload_file: 'Upload File',
         upload_thumbnail: 'Upload Thumbnail (optional)',
 
@@ -69,9 +87,20 @@ i18next.init({
         schools: 'Schools',
         programs: 'Programs',
         media_content: 'Media Content',
+        statistics: 'Statistics',
+        feedback: 'Feedback',
 
         new: 'New',
         delete: 'Delete',
+
+        select_items: 'Select some items',
+        select_one_item: 'Select one item',
+        search_empty: 'Please enter some search text',
+        wait: 'Please wait for the current operation to complete',
+        success: 'The operation was successfully completed',
+        no_file: 'No file was provided',
+        failed_to_upload: 'Failed to upload',
+        failed_with_error_code: 'The operation failed with an error code',
       },
     },
   },

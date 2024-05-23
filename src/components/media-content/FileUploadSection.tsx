@@ -3,6 +3,7 @@
 import { RedAsterisk } from '@components/atom';
 import { FileInput, Label } from 'flowbite-react';
 import i18next from 'i18next';
+import Image from 'next/image';
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { determineFileType } from 'utils/helpers';
 
@@ -42,7 +43,13 @@ export function FileUploadSection({
 
       {file ? (
         fileType === 'image' ? (
-          <img src={URL.createObjectURL(file)} alt="Media content file" className="mb-4 h-48" />
+          <Image
+            width={400}
+            height={300}
+            src={URL.createObjectURL(file)}
+            alt="Media content file"
+            className="mb-6 h-48 object-contain object-left"
+          />
         ) : fileType === 'video' ? (
           <video src={URL.createObjectURL(file)} className="mb-4 h-48" controls></video>
         ) : null
@@ -63,7 +70,13 @@ export function FileUploadSection({
       </div>
 
       {thumbnail ? (
-        <img src={URL.createObjectURL(thumbnail)} alt="Media content thumbnail" className="mb-4 h-48" />
+        <Image
+          width={400}
+          height={300}
+          src={URL.createObjectURL(thumbnail)}
+          alt="Media content thumbnail"
+          className="mb-4 h-48 object-contain object-left"
+        />
       ) : null}
     </div>
   );

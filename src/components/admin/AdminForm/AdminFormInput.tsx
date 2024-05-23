@@ -15,7 +15,6 @@ export function AdminFormInput({
   defaultValue?: string;
   required?: boolean;
 }) {
-  console.log(arguments);
   return (
     <div>
       <div className="mb-2 block">

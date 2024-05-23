@@ -2,48 +2,32 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useCourse from '@hooks/useCourse';
-import useProgram from '@hooks/useProgram';
-import useSchool from '@hooks/useSchool';
 import useTopic from '@hooks/use-topic';
-import SchoolStore from '@state/mobx/scholStore';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { FormEventHandler, useEffect } from 'react';
+import { FormEventHandler } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
-import useUnit from '@hooks/useUnit';
+import { transformRawUnit } from '@hooks/useUnit';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_CreateTopicFields } from '@hooks/use-topic/types';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
 
 const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createTopic, isLoading } = useTopic();
-  // const { fetchSchools, schools, isLoading: loadingSchools } = useSchool();
-  // const { fetchPrograms, programs, isLoading: loadingPrograms } = useProgram();
-  // const { fetchCourses, courses, isLoading: loadingCourses } = useCourse();
-  const { fetchUnits, units, isLoading: loadingUnits } = useUnit();
 
-  const { selectedSchool } = SchoolStore;
-
-  useEffect(() => {
-    // fetchSchools({});
-    // fetchPrograms({});
-    // fetchCourses({});
-    fetchUnits({});
-  }, []);
+  const { items: units, isLoading: loadingUnits } = useAdminListViewData(
+    API_LINKS.FETCH_UNITS,
+    'units',
+    transformRawUnit,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const keys = [
-      TOPIC_FORM_FIELDS.name.key,
-      TOPIC_FORM_FIELDS.description.key,
-      // TOPIC_FORM_FIELDS.school.key,
-      // TOPIC_FORM_FIELDS.program.key,
-      // TOPIC_FORM_FIELDS.course.key,
-      TOPIC_FORM_FIELDS.unit.key,
-    ];
+    const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key, TOPIC_FORM_FIELDS.unit.key];
 
     let result = extractValuesFromFormEvent<Omit<T_CreateTopicFields, 'schoolId' | 'programId' | 'courseId'>>(e, keys);
     let unit = units.find((unit) => unit._id === result.unitId);
@@ -52,8 +36,6 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
       onSuccessfullyDone,
     );
   };
-
-  // const [form] = Form.useForm();
 
   return (
     <>
@@ -73,30 +55,6 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
           label={TOPIC_FORM_FIELDS.description.label}
           required
         />
-
-        {/* <AdminFormSelector
-          loadingItems={loadingSchools}
-          disabled={isLoading || loadingSchools}
-          options={schools}
-          label={TOPIC_FORM_FIELDS.school.label}
-          name={TOPIC_FORM_FIELDS.school.key}
-        />
-
-        <AdminFormSelector
-          loadingItems={loadingPrograms}
-          disabled={isLoading || loadingPrograms}
-          options={programs}
-          label={TOPIC_FORM_FIELDS.program.label}
-          name={TOPIC_FORM_FIELDS.program.key}
-        />
-
-        <AdminFormSelector
-          loadingItems={loadingCourses}
-          disabled={isLoading || loadingCourses}
-          options={courses}
-          label={TOPIC_FORM_FIELDS.course.label}
-          name={TOPIC_FORM_FIELDS.course.key}
-        /> */}
 
         <AdminFormSelector
           loadingItems={loadingUnits}

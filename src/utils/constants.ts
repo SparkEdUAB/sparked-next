@@ -1,0 +1,2 @@
+export const NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID = 'kgryj0qd';
+export const NEXT_PUBLIC_OPENPANEL_CLIENT_ID = 'ae273441-4947-4a19-b15c-0ab48e9fe296';

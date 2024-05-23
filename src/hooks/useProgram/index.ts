@@ -3,16 +3,16 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
 import { T_CreateProgramFields, T_FetchPrograms, T_ProgramFields, T_RawProgramFields } from './types';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useProgram = (form?: any) => {
-  const { getChildLinkByKey, router } = useNavigation();
+const useProgram = () => {
+  const { router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -20,10 +20,6 @@ const useProgram = (form?: any) => {
   const [tempPrograms, setTempPrograms] = useState<Array<T_ProgramFields>>([]);
   const [program, setSProgram] = useState<T_ProgramFields | null>(null);
   const [selectedProgramIds, setSelectedProgramIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedProgramIds.length && deletePrograms();
-  }, [UiStore.confirmDialogStatus]);
 
   const createProgram = async (fields: T_CreateProgramFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_PROGRAM;
@@ -48,7 +44,7 @@ const useProgram = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -65,7 +61,7 @@ const useProgram = (form?: any) => {
   const editProgram = async (fields: T_ProgramFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.EDIT_PROGRAM;
     const formData = {
-      body: JSON.stringify({ ...fields, _id: program?._id }),
+      body: JSON.stringify({ ...fields, _id: (program || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -85,7 +81,7 @@ const useProgram = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -116,22 +112,11 @@ const useProgram = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      const _programs = (responseData.programs as T_RawProgramFields[])?.map<T_ProgramFields>((i, index: number) => ({
-        index: index + 1,
-        key: i._id,
-        _id: i._id,
-        name: i.name,
-        school: i.school,
-        schoolId: i.school?._id,
-        schoolName: i.school?.name,
-        created_by: i.user?.email,
-        created_at: new Date(i.created_at).toDateString(),
-        description: i.description,
-      }));
+      const _programs = (responseData.programs as T_RawProgramFields[])?.map<T_ProgramFields>(transformRawProgram);
 
       setPrograms(_programs);
       setTempPrograms(_programs);
@@ -166,7 +151,7 @@ const useProgram = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -181,7 +166,6 @@ const useProgram = (form?: any) => {
         };
 
         setSProgram(_program as T_ProgramFields);
-        form && form.setFieldsValue(_program);
         return _program;
       } else {
         return null;
@@ -197,13 +181,9 @@ const useProgram = (form?: any) => {
     if (!selectedProgramIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
   const deletePrograms = async () => {
-    if (UiStore.isLoading) return;
-
     const url = API_LINKS.DELETE_PROGRAMS;
     const formData = {
       body: JSON.stringify({ programIds: selectedProgramIds }),
@@ -215,10 +195,8 @@ const useProgram = (form?: any) => {
 
     try {
       setLoaderStatus(true);
-      UiStore.setLoaderStatus(true);
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       if (!resp.ok) {
         message.warning(i18next.t('unknown_error'));
@@ -228,11 +206,10 @@ const useProgram = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setPrograms(programs.filter((i) => selectedProgramIds.indexOf(i._id) == -1));
@@ -240,7 +217,6 @@ const useProgram = (form?: any) => {
       return responseData.results;
     } catch (err: any) {
       setLoaderStatus(false);
-      UiStore.setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
@@ -275,7 +251,7 @@ const useProgram = (form?: any) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
       message.success(responseData.programs.length + ' ' + i18next.t('programs_found'));
@@ -298,15 +274,15 @@ const useProgram = (form?: any) => {
     }
   };
 
-  const triggerEdit = async () => {
-    if (!selectedProgramIds.length) {
-      return message.warning(i18next.t('select_item'));
-    } else if (selectedProgramIds.length > 1) {
-      return message.warning(i18next.t('select_one_item'));
-    }
+  // const triggerEdit = async () => {
+  //   if (!selectedProgramIds.length) {
+  //     return message.warning(i18next.t('select_item'));
+  //   } else if (selectedProgramIds.length > 1) {
+  //     return message.warning(i18next.t('select_one_item'));
+  //   }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.programs) + `?programId=${selectedProgramIds[0]}`);
-  };
+  //   router.push(getChildLinkByKey('edit', ADMIN_LINKS.programs) + `?programId=${selectedProgramIds[0]}`);
+  // };
 
   return {
     createProgram,
@@ -316,7 +292,7 @@ const useProgram = (form?: any) => {
     setSelectedProgramIds,
     selectedProgramIds,
     triggerDelete,
-    triggerEdit,
+    // triggerEdit,
     fetchProgramById,
     router,
     program,
@@ -329,5 +305,20 @@ const useProgram = (form?: any) => {
     deletePrograms,
   };
 };
+
+export function transformRawProgram(i: T_RawProgramFields, index: number): T_ProgramFields {
+  return {
+    index: index + 1,
+    key: i._id,
+    _id: i._id,
+    name: i.name,
+    school: i.school,
+    schoolId: i.school?._id,
+    schoolName: i.school?.name,
+    created_by: i.user?.email,
+    created_at: new Date(i.created_at).toDateString(),
+    description: i.description,
+  };
+}
 
 export default useProgram;

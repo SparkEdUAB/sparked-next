@@ -16,7 +16,7 @@ export async function POST(
   const slug = params.slug;
 
   const topicFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createTopic: createTopic_,
     editTopic: editTopic_,
@@ -45,7 +45,7 @@ export async function GET(
   const slug = params.slug;
 
   const topicFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     fetchTopics: fetchTopics_,
     fetchTopicById: fetchTopicById_,

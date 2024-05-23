@@ -5,6 +5,10 @@ import { Flowbite } from 'flowbite-react';
 import { ReactNode } from 'react';
 import { Session } from 'next-auth';
 import { AppProgressBar } from 'next-nprogress-bar';
+import { OpenpanelProvider } from '@openpanel/nextjs';
+import { HighlightInit } from '@highlight-run/next/client';
+import { NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID, NEXT_PUBLIC_OPENPANEL_CLIENT_ID } from 'utils/constants';
+import { ToastMessageProvider } from './ToastMessageContext';
 
 export default function AppProviders({
   children,
@@ -16,7 +20,25 @@ export default function AppProviders({
   return (
     <Flowbite>
       <SessionProvider session={session}>
-        {children}
+        <OpenpanelProvider
+          clientId={NEXT_PUBLIC_OPENPANEL_CLIENT_ID}
+          profileId={session?.user?.email || 'anonymous'}
+          trackScreenViews
+          trackAttributes
+          trackOutgoingLinks
+        />
+        <HighlightInit
+          projectId={NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID}
+          serviceName="sparked-next"
+          tracingOrigins
+          excludedHostnames={['localhost', 'onrender.com']}
+          networkRecording={{
+            enabled: true,
+            recordHeadersAndBody: true,
+            urlBlocklist: [],
+          }}
+        />
+        <ToastMessageProvider>{children}</ToastMessageProvider>
         <AppProgressBar color="#3584e4" height="4px" options={{ showSpinner: false }} />
       </SessionProvider>
     </Flowbite>

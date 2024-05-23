@@ -6,7 +6,6 @@ import useNavigation from '@hooks/useNavigation';
 import useUser from '@hooks/useUser';
 import { Modal, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import { userTableColumns } from '.';
@@ -16,7 +15,7 @@ import CreateUserView from './create-user-view';
 import EditUserView from './edit-unit-view';
 import ContentPlaceholder from '@components/atom/ContentPlaceholder/ContentPlaceholder';
 
-const UsersListView = observer(() => {
+const UsersListView = () => {
   const {
     fetchUnits,
     users,
@@ -31,9 +30,9 @@ const UsersListView = observer(() => {
   const [creatingUser, setCreatingUser] = useState(false);
   const [edittingUserWithId, setEdittingUserWithId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchUnits({});
-  }, []);
+  // useEffect(() => {
+  //   fetchUnits({});
+  // }, []);
 
   const rowSelection = {
     selectedRowKeys: selectedUserIds,
@@ -97,6 +96,6 @@ const UsersListView = observer(() => {
       </Modal>*/}
     </>
   );
-});
+};
 
 export default UsersListView;

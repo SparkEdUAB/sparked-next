@@ -1,14 +1,22 @@
+import flowbite from 'flowbite-react/tailwind';
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
-
-    "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', flowbite.content()],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        appear: 'appear 0.5s ease-in-out',
+      },
+      keyframes: {
+        appear: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+      },
+    },
   },
-  plugins: [require("flowbite/plugin")],
+  plugins: [flowbite.plugin()],
 
   //config for mobx
   assumptions: {

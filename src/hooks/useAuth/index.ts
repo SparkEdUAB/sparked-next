@@ -1,6 +1,5 @@
 'use client';
 
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import { useSession } from 'next-auth/react';
 import { T_LoginFields, T_SignupFields } from './types';
@@ -9,11 +8,13 @@ import { signIn, signOut } from 'next-auth/react';
 import AUTH_PROCESS_CODES from '@app/api/auth/processCodes';
 import { useState } from 'react';
 import { useRouter } from 'next-nprogress-bar';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
 const useAuth = () => {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const message = useToastMessage();
 
   const isAuthenticated = status === 'authenticated';
 
@@ -46,9 +47,7 @@ const useAuth = () => {
         return false;
       }
       message.success(
-        responseData.code === AUTH_PROCESS_CODES.USER_CREATED
-          ? i18next.t('account_created')
-          : i18next.t('unknown_error'),
+        responseData.code === AUTH_PROCESS_CODES.USER_CREATED ? i18next.t('user_created') : i18next.t('unknown_error'),
       );
       router.replace('/');
     } catch (err: any) {
@@ -80,7 +79,7 @@ const useAuth = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 

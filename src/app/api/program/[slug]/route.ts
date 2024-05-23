@@ -1,26 +1,22 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { Session } from "next-auth";
-import { getServerSession } from "next-auth/next";
-import fetchPrograms_, {
-  deletePrograms_,
-  fetchProgramById_,
-  findProgramsByName_
-} from "..";
-import { authOptions } from "../../auth/constants";
-import createProgram_ from "../create";
-import editProgram_ from "../edit";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import fetchPrograms_, { deletePrograms_, fetchProgramById_, findProgramsByName_ } from '..';
+import { authOptions } from '../../auth/constants';
+import createProgram_ from '../create';
+import editProgram_ from '../edit';
 
 const schoolApiHandler_ = async function POST(
   req: Request,
 
-  { params }: { params: { slug: string } }
+  { params }: { params: { slug: string } },
 ) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
 
   const schoolFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createProgram: createProgram_,
     fetchPrograms: fetchPrograms_,

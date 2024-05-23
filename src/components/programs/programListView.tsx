@@ -1,37 +1,37 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
-import useNavigation from '@hooks/useNavigation';
-import useProgram from '@hooks/useProgram';
-import { Modal, TextInput } from 'flowbite-react';
+import useProgram, { transformRawProgram } from '@hooks/useProgram';
+import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
+import React, { useState } from 'react';
 import { programTableColumns } from '.';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import CreateProgramView from './createProgramView';
 import EditProgramView from './editProgramView';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
+import { T_ProgramFields } from '@hooks/useProgram/types';
 
-const ProgramsListView: React.FC = observer(() => {
-  const {
-    fetchPrograms,
-    programs,
-    selectedProgramIds,
-    setSelectedProgramIds,
-    findProgramsByName,
-    onSearchQueryChange,
-    deletePrograms,
-    isLoading,
-  } = useProgram();
-  const { getChildLinkByKey } = useNavigation();
+const ProgramsListView: React.FC = () => {
+  const { selectedProgramIds, setSelectedProgramIds, onSearchQueryChange, deletePrograms, searchQuery } = useProgram();
   const [creatingProgram, setCreatingProgram] = useState(false);
-  const [edittingProgramWithId, setEdittingProgramWithId] = useState<string | null>(null);
+  const [edittingProgram, setEdittingProgram] = useState<T_ProgramFields | null>(null);
 
-  useEffect(() => {
-    fetchPrograms({});
-  }, []);
+  const {
+    items: programs,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(
+    API_LINKS.FETCH_PROGRAMS,
+    'programs',
+    transformRawProgram,
+    API_LINKS.FIND_PROGRAMS_BY_NAME,
+    searchQuery,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedProgramIds,
@@ -44,48 +44,39 @@ const ProgramsListView: React.FC = observer(() => {
     <>
       <AdminPageTitle title={i18next.t('programs')} />
 
-      <TextInput
-        onChange={(e) => onSearchQueryChange(e.target.value)}
-        icon={HiMagnifyingGlass}
-        className="table-search-box"
-        placeholder={i18next.t('search_programs')}
-        required
-        type="text"
-        onKeyDown={(e) => {
-          e.keyCode === 13 ? findProgramsByName({ withMetaData: true }) : null;
-        }}
-      />
-      <AdminTable
+      <AdminTable<T_ProgramFields>
         deleteItems={deletePrograms}
         rowSelection={rowSelection}
         items={programs}
         isLoading={isLoading}
-        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.programs)}
-        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.programs) + `?programId=${id}`}
         createNew={() => setCreatingProgram(true)}
-        editItem={(id) => setEdittingProgramWithId(id)}
+        editItem={(item) => setEdittingProgram(item)}
         columns={programTableColumns}
+        onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingProgram} onClose={() => setCreatingProgram(false)} popup>
         <Modal.Header />
         <Modal.Body>
           <CreateProgramView
             onSuccessfullyDone={() => {
-              fetchPrograms({});
+              mutate();
               setCreatingProgram(false);
             }}
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingProgramWithId} onClose={() => setEdittingProgramWithId(null)} popup>
+      <Modal dismissible show={!!edittingProgram} onClose={() => setEdittingProgram(null)} popup>
         <Modal.Header />
         <Modal.Body>
-          {edittingProgramWithId ? (
+          {edittingProgram ? (
             <EditProgramView
-              programId={edittingProgramWithId}
+              programId={edittingProgram._id}
               onSuccessfullyDone={() => {
-                fetchPrograms({});
-                setEdittingProgramWithId(null);
+                mutate();
+                setEdittingProgram(null);
               }}
             />
           ) : null}
@@ -93,6 +84,6 @@ const ProgramsListView: React.FC = observer(() => {
       </Modal>
     </>
   );
-});
+};
 
 export default ProgramsListView;

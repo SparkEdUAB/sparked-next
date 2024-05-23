@@ -3,16 +3,16 @@
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { FormInstance, message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useEffect, useState } from 'react';
-import UiStore from '@state/mobx/uiStore';
+import { useState } from 'react';
 import { T_CreateUnitFields, T_FetchUnits, T_RawUnitFields, T_UnitFields } from './types';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useUnit = (form?: FormInstance) => {
+const useUnit = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -20,10 +20,6 @@ const useUnit = (form?: FormInstance) => {
   const [tempUnits, setTempUnits] = useState<Array<T_UnitFields>>([]);
   const [unit, setUnit] = useState<T_UnitFields | null>(null);
   const [selectedUnitIds, setSelectedProgramIds] = useState<React.Key[]>([]);
-
-  useEffect(() => {
-    UiStore.confirmDialogStatus && selectedUnitIds.length && deleteUnits();
-  }, [UiStore.confirmDialogStatus]);
 
   const createUnit = async (fields: T_CreateUnitFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_UNIT;
@@ -48,7 +44,7 @@ const useUnit = (form?: FormInstance) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -65,7 +61,7 @@ const useUnit = (form?: FormInstance) => {
     const url = API_LINKS.EDIT_UNIT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...unit, ...fields, unitId: unit?._id }),
+      body: JSON.stringify({ ...unit, ...fields, unitId: (unit || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -85,7 +81,7 @@ const useUnit = (form?: FormInstance) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
@@ -115,33 +111,11 @@ const useUnit = (form?: FormInstance) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      const _units = (responseData.units as T_RawUnitFields[])?.map<T_UnitFields>((i, index: number) => ({
-        index: index + 1,
-        key: i._id,
-        _id: i._id,
-        name: i.name,
-        description: i.description,
-
-        schoolId: i.school?._id,
-        programId: i.program?._id,
-        courseId: i.course?._id,
-
-        schoolName: i.school?.name,
-        programName: i.program?.name,
-        courseName: i.course?.name,
-
-        created_by: i.user?.email,
-        created_at: new Date(i.created_at).toDateString(),
-
-        school: i.school,
-        course: i.course,
-        program: i.program,
-        user: i.user,
-      }));
+      const _units = (responseData.units as T_RawUnitFields[])?.map<T_UnitFields>(transformRawUnit);
 
       setUnits(_units);
       setTempUnits(_units);
@@ -170,24 +144,13 @@ const useUnit = (form?: FormInstance) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
       if (responseData.unit) {
-        const { _id, name, description, school, program, course } = responseData.unit as T_UnitFields;
-
-        const _unit = {
-          _id,
-          name,
-          description,
-          schoolId: school?._id,
-          programId: program?._id,
-          courseId: course?._id,
-        };
-
-        setUnit(_unit as T_UnitFields);
-        form && form.setFieldsValue(_unit);
+        const _unit = transformRawUnit(responseData.unit, 0);
+        setUnit(_unit);
         return _unit;
       } else {
         return null;
@@ -202,16 +165,12 @@ const useUnit = (form?: FormInstance) => {
     if (!selectedUnitIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-
-    UiStore.setConfirmDialogVisibility(true);
   };
 
-  const deleteUnits = async () => {
-    if (UiStore.isLoading) return;
-
+  const deleteUnits = async (items?: T_UnitFields[]) => {
     const url = API_LINKS.DELETE_UNITS;
     const formData = {
-      body: JSON.stringify({ unitIds: selectedUnitIds }),
+      body: JSON.stringify({ unitIds: items ? items.map((item) => item._id) : selectedUnitIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -219,10 +178,8 @@ const useUnit = (form?: FormInstance) => {
     };
 
     try {
-      UiStore.setLoaderStatus(true);
       setLoaderStatus(true);
       const resp = await fetch(url, formData);
-      UiStore.setLoaderStatus(false);
       setLoaderStatus(false);
 
       if (!resp.ok) {
@@ -233,18 +190,16 @@ const useUnit = (form?: FormInstance) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
 
-      UiStore.setConfirmDialogVisibility(false);
       message.success(i18next.t('success'));
 
       setUnits(units.filter((i) => selectedUnitIds.indexOf(i._id) == -1));
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
-      UiStore.setLoaderStatus(false);
       setLoaderStatus(false);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -279,10 +234,10 @@ const useUnit = (form?: FormInstance) => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(responseData.code);
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
-      message.success(responseData.courses.length + ' ' + i18next.t('courses_found'));
+      message.success(responseData.courses.length + ' ' + i18next.t('units_found'));
 
       setUnits(responseData.courses);
 
@@ -333,5 +288,27 @@ const useUnit = (form?: FormInstance) => {
     deleteUnits,
   };
 };
+
+export function transformRawUnit(i: T_RawUnitFields, index: number): T_UnitFields {
+  return {
+    index: index + 1,
+    key: i._id,
+    _id: i._id,
+    name: i.name,
+    description: i.description,
+    schoolId: i.school?._id,
+    programId: i.program?._id,
+    courseId: i.course?._id,
+    schoolName: i.school?.name,
+    programName: i.program?.name,
+    courseName: i.course?.name,
+    created_by: i.user?.email,
+    created_at: new Date(i.created_at).toDateString(),
+    school: i.school,
+    course: i.course,
+    program: i.program,
+    user: i.user,
+  };
+}
 
 export default useUnit;

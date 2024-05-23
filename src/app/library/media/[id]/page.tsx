@@ -1,5 +1,5 @@
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
-import { fetcher } from '@hooks/use-swr';
+import { fetcher } from '@hooks/use-swr/fetcher';
 import { API_LINKS } from 'app/links';
 import { BASE_URL } from 'app/shared/constants';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -7,6 +7,7 @@ import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType, getMetadataGenerator } from 'utils/helpers';
 import NETWORK_UTILS from 'utils/network';
 import { MediaContentView } from '../../../../components/library/MediaContentView';
+import { fetchRelatedMedia } from '../../../../fetchers/library/fetchRelatedMedia';
 
 type T_MediaContentPageProps = {
   params: {
@@ -46,12 +47,21 @@ export default async function MediaContentPage({ params }: T_MediaContentPagePro
     { next: { revalidate: 3600 } },
   );
 
+  const relatedMediaContent = result instanceof Error ? null : await fetchRelatedMedia(result.mediaContent);
+
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] py-6 px-4">
       {result instanceof Error ? (
         <LibraryErrorMessage>{result.message}</LibraryErrorMessage>
       ) : (
-        <MediaContentView mediaContent={result.mediaContent} />
+        <MediaContentView
+          mediaContent={result.mediaContent}
+          relatedMediaContent={
+            relatedMediaContent instanceof Error || relatedMediaContent === null
+              ? null
+              : relatedMediaContent.mediaContent
+          }
+        />
       )}
     </main>
   );

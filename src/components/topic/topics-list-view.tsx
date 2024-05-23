@@ -1,37 +1,43 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useNavigation from '@hooks/useNavigation';
-import useTopic from '@hooks/use-topic';
-import { Modal, TextInput } from 'flowbite-react';
+import useTopic, { transformRawTopic } from '@hooks/use-topic';
+import { Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
-import { observer } from 'mobx-react-lite';
-import React, { useEffect, useState } from 'react';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
+import React, { useState } from 'react';
 import { topicTableColumns } from '.';
 import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import CreateTopicView from './create-topic-view';
 import EditTopicView from './edit-topic-view';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
 
-const TopicsListView: React.FC = observer(() => {
+const TopicsListView: React.FC = () => {
   const {
-    fetchTopics,
-    topics,
     selectedTopicIds: selectedTopicIds,
     setSelectedTopicIds,
-    findTopicsByName,
     onSearchQueryChange,
-    isLoading,
     deleteTopics,
+    searchQuery,
   } = useTopic();
-  const { router, getChildLinkByKey } = useNavigation();
   const [creatingTopic, setCreatingTopic] = useState(false);
-  const [edittingTopicWithId, setEdittingTopicWithId] = useState<string | null>(null);
+  const [edittingTopic, setEdittingTopic] = useState<T_TopicFields | null>(null);
 
-  useEffect(() => {
-    fetchTopics({});
-  }, []);
+  const {
+    items: topics,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(
+    API_LINKS.FETCH_TOPICS,
+    'topics',
+    transformRawTopic,
+    API_LINKS.FIND_TOPIC_BY_NAME,
+    searchQuery,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedTopicIds,
@@ -44,55 +50,51 @@ const TopicsListView: React.FC = observer(() => {
     <>
       <AdminPageTitle title={i18next.t('topics')} />
 
-      <TextInput
-        onChange={(e) => onSearchQueryChange(e.target.value)}
-        icon={HiMagnifyingGlass}
-        className="table-search-box"
-        placeholder={i18next.t('search_units')}
-        required
-        type="text"
-        onKeyDown={(e) => {
-          e.keyCode === 13 ? findTopicsByName({ withMetaData: true }) : null;
-        }}
-      />
       <AdminTable<T_TopicFields>
         deleteItems={deleteTopics}
         rowSelection={rowSelection}
         items={topics || []}
         isLoading={isLoading}
-        // createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.topics)}
-        // getEditUrl={(id) => getChildLinkByKey('edit', ADMIN_LINKS.topics) + `?topicId=${id}`}
         createNew={() => setCreatingTopic(true)}
-        editItem={(id) => setEdittingTopicWithId(id)}
+        editItem={(id) => setEdittingTopic(id)}
         columns={topicTableColumns}
+        onSearchQueryChange={onSearchQueryChange}
+        hasMore={hasMore}
+        loadMore={loadMore}
+        error={error}
       />
       <Modal dismissible show={creatingTopic} onClose={() => setCreatingTopic(false)} popup>
         <Modal.Header />
         <Modal.Body>
           <CreateTopicView
             onSuccessfullyDone={() => {
-              fetchTopics({});
+              mutate();
               setCreatingTopic(false);
             }}
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingTopicWithId} onClose={() => setEdittingTopicWithId(null)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          {edittingTopicWithId ? (
+      <Drawer
+        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+        open={!!edittingTopic}
+        onClose={() => setEdittingTopic(null)}
+        position="right"
+      >
+        <Drawer.Header titleIcon={() => <></>} />
+        <Drawer.Items>
+          {edittingTopic ? (
             <EditTopicView
-              topicId={edittingTopicWithId}
+              topic={edittingTopic}
               onSuccessfullyDone={() => {
-                fetchTopics({});
-                setEdittingTopicWithId(null);
+                mutate();
+                setEdittingTopic(null);
               }}
             />
           ) : null}
-        </Modal.Body>
-      </Modal>
+        </Drawer.Items>
+      </Drawer>
     </>
   );
-});
+};
 
 export default TopicsListView;

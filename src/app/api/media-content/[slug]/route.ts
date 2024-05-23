@@ -5,11 +5,13 @@ import fetchMediaContent_, {
   deleteMediaContentByIds_,
   fetchMediaContentById_,
   fetchRandomMediaContent_,
+  fetchRelatedMediaContent_,
   findMediaContentByName_,
 } from '..';
 import { authOptions } from '../../auth/constants';
 import createMediaContent_ from '../create';
 import editMediaContent_ from '../edit';
+import { NextRequest } from 'next/server';
 
 export async function POST(
   req: Request,
@@ -21,7 +23,7 @@ export async function POST(
   const slug = params.slug;
 
   const schoolFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createMediaContent: createMediaContent_,
     editMediaContent: editMediaContent_,
@@ -43,19 +45,20 @@ export async function POST(
 }
 
 export async function GET(
-  req: Request,
+  req: NextRequest,
 
   { params }: { params: { slug: string } },
 ) {
   const slug = params.slug;
 
   const schoolFunctions: {
-    [key: string]: (request: Request, session?: Session | undefined) => {};
+    [key: string]: (request: NextRequest, session?: Session | undefined) => Promise<Response>;
   } = {
     fetchRandomMediaContent: fetchRandomMediaContent_,
     fetchMediaContent: fetchMediaContent_,
     fetchMediaContentById: fetchMediaContentById_,
     findMediaContentByName: findMediaContentByName_,
+    fetchRelatedMediaContent: fetchRelatedMediaContent_,
   };
 
   if (schoolFunctions[slug]) {
@@ -70,5 +73,4 @@ export async function GET(
       status: 200,
     });
   }
-};
-
+}

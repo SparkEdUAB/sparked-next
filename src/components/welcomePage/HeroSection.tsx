@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 const HeroSection = () => {
@@ -18,7 +19,7 @@ const HeroSection = () => {
             </Link>
           </div>
           <div className="flex flex-col items-center md:w-[50%] justify-center">
-            <img src="/landing-page-feature-image-2.svg" alt="Landing page feature image" />
+            <Image width={600} height={788} src="/landing-page-feature-image-2.png" alt="Landing page feature image" />
           </div>
         </div>
       </section>

@@ -13,7 +13,7 @@ export function DeletionWarningModal({
   showDeletionWarning: boolean;
   toggleDeletionWarning: () => void;
   numberOfElements: number;
-  deleteItems: () => Promise<boolean | undefined>;
+  deleteItems: () => void;
 }) {
   return (
     <Modal show={showDeletionWarning} size="md" onClose={toggleDeletionWarning} popup>

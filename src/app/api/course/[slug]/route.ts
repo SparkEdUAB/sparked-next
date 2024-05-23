@@ -16,7 +16,7 @@ export async function POST(
   const slug = params.slug;
 
   const CourseFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createCourse: createCourse_,
     editCourse: editCourse_,
@@ -45,7 +45,7 @@ export async function GET(
   const slug = params.slug;
 
   const CourseFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     fetchCourses: fetchCourses_,
     fetchCourseById: fetchCourseById_,

@@ -4,22 +4,19 @@ import i18next from 'i18next';
 import React from 'react';
 import { IoMdAddCircleOutline } from 'react-icons/io';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { message } from 'antd';
-import { useRouter } from 'next-nprogress-bar';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
 export function AdminTableButtonGroup({
-  router,
-  // createNewUrl,
   createNew,
   rowSelection,
   toggleDeletionWarning,
 }: {
-  router: ReturnType<typeof useRouter>;
-  // createNewUrl: string;
   createNew: () => void;
   rowSelection: { selectedRowKeys: React.Key[]; onChange: (selectedRowKeys: React.Key[]) => void };
   toggleDeletionWarning: () => void;
 }) {
+  const message = useToastMessage();
+
   return (
     <Button.Group className="mb-5">
       <Button onClick={createNew} className={'table-action-buttons'}>
