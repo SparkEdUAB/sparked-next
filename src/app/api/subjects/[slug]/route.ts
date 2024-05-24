@@ -5,6 +5,7 @@ import { authOptions } from '../../auth/constants';
 import createSubject_ from '../create';
 import deleteGrades_ from '../delete';
 import editSubject_ from '../edit';
+import deleteSubjects_ from '../delete';
 
 export async function POST(
   req: Request,
@@ -76,7 +77,7 @@ export async function DELETE(
   const subjectApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    deleteGrades: deleteGrades_,
+    deleteSubjects: deleteSubjects_,
   };
 
   if (subjectApiFunctions[slug] && session) {

@@ -4,16 +4,16 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_PROCESS_CODES } from './processCodes';
+import { default as SUBJECT_PROCESS_CODES } from './processCodes';
 
-export default async function deleteGrades_(request: Request, session?: Session) {
+export default async function deleteSubjects_(request: Request, session?: Session) {
   const schema = zfd.formData({
-    gradeIds: zfd.repeatableOfType(zfd.text()),
+    subjectIds: zfd.repeatableOfType(zfd.text()),
   });
 
   const formBody = await request.json();
 
-  const { gradeIds } = schema.parse(formBody);
+  const { subjectIds } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -28,15 +28,15 @@ export default async function deleteGrades_(request: Request, session?: Session)
       });
     }
 
-    const results = await db.collection(dbCollections.grade.name).deleteMany({
+    const results = await db.collection(dbCollections.subjects.name).deleteMany({
       _id: {
-        $in: gradeIds.map((i) => new BSON.ObjectId(i)),
+        $in: subjectIds.map((i) => new BSON.ObjectId(i)),
       },
     });
 
     const response = {
       isError: false,
-      code: PAGE_PROCESS_CODES.GRADE_DELETED,
+      code: SUBJECT_PROCESS_CODES.SUBJECT_DELETED,
     };
 
     return new Response(JSON.stringify(response), {
