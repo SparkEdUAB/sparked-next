@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/constants';
 import createSubject_ from '../create';
 import deleteGrades_ from '../delete';
-import editGrade_ from '../edit';
+import editSubject_ from '../edit';
 
 export async function POST(
   req: Request,
@@ -47,7 +47,7 @@ export async function PUT(
   const subjectApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    editGrade: editGrade_,
+    editSubject: editSubject_,
   };
 
   if (subjectApiFunctions[slug] && session) {

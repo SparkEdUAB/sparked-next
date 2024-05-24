@@ -4,18 +4,19 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_PROCESS_CODES } from './processCodes';
+import { default as SUBJECT_PROCESS_CODES } from './processCodes';
 
-export default async function editGrade_(request: Request, session?: Session) {
+export default async function editSubject_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     gradeId: zfd.text(),
+    subjectId: zfd.text(),
     description: zfd.text(),
   });
 
   const formBody = await request.json();
 
-  const { name, description, gradeId } = schema.parse(formBody);
+  const { name, description, gradeId, subjectId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -31,10 +32,10 @@ export default async function editGrade_(request: Request, session?: Session) {
     }
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const gradeData = await db.collection(dbCollections.grade.name).findOne(
+    const gradeData = await db.collection(dbCollections.subjects.name).findOne(
       {
         name: { $regex: regexPattern },
-        _id: { $ne: new BSON.ObjectId(gradeId) },
+        _id: { $ne: new BSON.ObjectId(subjectId) },
       },
       {
         projection: {
@@ -46,7 +47,7 @@ export default async function editGrade_(request: Request, session?: Session) {
     if (gradeData) {
       const response = {
         isError: true,
-        code: PAGE_PROCESS_CODES.GRADE_EXIST,
+        code: SUBJECT_PROCESS_CODES.SUBJECT_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
@@ -55,24 +56,25 @@ export default async function editGrade_(request: Request, session?: Session) {
     }
 
     const query = {
-      _id: new BSON.ObjectId(gradeId),
+      _id: new BSON.ObjectId(subjectId),
     };
 
     const updateQuery = {
       name,
       description,
       updated_at: new Date(),
+      grade_id: new BSON.ObjectId(gradeId),
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };
 
-    await db.collection(dbCollections.grade.name).updateOne(query, {
+    await db.collection(dbCollections.subjects.name).updateOne(query, {
       $set: updateQuery,
     });
 
     const response = {
       isError: false,
-      code: PAGE_PROCESS_CODES.GRADE_EDITED,
+      code: SUBJECT_PROCESS_CODES.SUBJECT_EDITED,
     };
 
     return new Response(JSON.stringify(response), {
