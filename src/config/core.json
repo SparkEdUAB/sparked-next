@@ -46,5 +46,11 @@
         "value": "http://localhost:3000",
         "label": "",
         "stateLocation": ""
+    },
+    "gradeVisibility": {
+        "key": "grade",
+        "value": "true",
+        "label": "",
+        "stateLocation": ""
     }
 }
