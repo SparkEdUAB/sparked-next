@@ -16,7 +16,7 @@ export async function POST(
   const slug = params.slug;
 
   const gradeApiFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createGrade: createGrade_,
   };
@@ -45,7 +45,7 @@ export async function PUT(
   const slug = params.slug;
 
   const gradeApiFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     editGrade: editGrade_,
   };
@@ -74,7 +74,7 @@ export async function DELETE(
   const slug = params.slug;
 
   const gradeApiFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     deleteGrades: deleteGrades_,
   };
@@ -93,27 +93,3 @@ export async function DELETE(
   }
 }
 
-// export async function GET(
-//   req: Request,
-
-//   { params }: { params: { slug: string } },
-// ) {
-//   const slug = params.slug;
-
-//   const gradeApiFunctions: {
-//     [key: string]: (request: Request, session?: Session) => {};
-//   } = {};
-
-//   if (gradeApiFunctions[slug]) {
-//     return gradeApiFunctions[slug](req);
-//   } else {
-//     const response = {
-//       isError: true,
-//       code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
-//     };
-
-//     return new Response(JSON.stringify(response), {
-//       status: 200,
-//     });
-//   }
-// }

@@ -16,7 +16,7 @@ export async function POST(
   const slug = params.slug;
 
   const pageLinksFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createPageLink: createPageLink_,
     editPageLink: editPageLink_,
@@ -46,7 +46,7 @@ export async function DELETE(
   const slug = params.slug;
 
   const pageLinksFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     deletePageLink: deletePageLink_,
   };
@@ -73,7 +73,7 @@ export async function GET(
   const slug = params.slug;
 
   const pageLinksFunctions: {
-    [key: string]: (request: Request, session?: Session) => {};
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {};
 
   if (pageLinksFunctions[slug]) {
