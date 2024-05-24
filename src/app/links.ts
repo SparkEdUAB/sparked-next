@@ -56,6 +56,11 @@ export const API_LINKS: T_link = {
   DELETE_MEDIA_CONTENT: '/api/media-content/deleteMediaContentByIds',
   FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
 
+  //   SETTINGS > PAGE LINKS
+  CREATE_PAGE_LINK: 'api/page-link/createPageLink',
+  EDIT_PAGE_LINK: 'api/page-link/editPageLink',
+  DELETE_PAGE_LINK: 'api/page-link/deletePageLink',
+
   //   resources
   FILE_UPLOAD: '/api/file-upload/uploadFile',
   READ_CONFIG_FILE: '/api/config/readConfigFile',

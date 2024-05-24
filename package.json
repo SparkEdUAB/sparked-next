@@ -6,7 +6,8 @@
     "dev": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pm2": "pm2 start npm --name \"sparked-next\" -- start"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
