@@ -35,4 +35,8 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
+  subjects: {
+    name: string;
+    label: string;
+  };
 };

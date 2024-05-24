@@ -37,4 +37,8 @@ export const dbCollections: T_dbCollection = {
     name: 'grade',
     label: 'Grade',
   },
+  subjects: {
+    name: 'subjects',
+    label: 'Subjects',
+  },
 };
