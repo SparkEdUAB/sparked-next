@@ -47,12 +47,13 @@ i18next.init({
         create_resource: 'Create a New Resource',
         create_subject: 'Create a New Subject',
 
-        edit_unit: 'Edit a Unit',
+        edit_unit: 'Edit Unit',
         edit_user: 'Edit a User',
-        edit_topic: 'Edit a Topic',
+        edit_topic: 'Edit Topic',
         edit_school: 'Edit a School',
-        edit_course: 'Edit a Course',
-        edit_grade: 'Edit a Grade',
+        edit_course: 'Edit Course',
+        edit_subject: 'Edit Subject',
+        edit_grade: 'Edit Grade',
         edit_program: 'Edit a Program',
         edit_media_content: 'Edit Media Content',
 

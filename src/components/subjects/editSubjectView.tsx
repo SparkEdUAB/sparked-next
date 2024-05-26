@@ -12,6 +12,7 @@ import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_SubjectFields } from '@hooks/useSubject/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 
 const EditSubjectView = ({
   subject,
@@ -69,15 +70,18 @@ const EditSubjectView = ({
               defaultValue={subject.description}
             />
 
-            <Button type="submit" className="mt-2" disabled={uploading}>
-              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-              {i18next.t('update')}
-            </Button>
+            <Autocomplete />
 
-            <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-              {i18next.t('delete')}
-            </Button>
+            <div className="flex space-x-4 mt-2">
+              <Button type="submit" disabled={uploading}>
+                {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+                {i18next.t('update')}
+              </Button>
+              <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
+                {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+                {i18next.t('delete')}
+              </Button>
+            </div>
           </div>
         </form>
       )}
