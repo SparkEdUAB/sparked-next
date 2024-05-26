@@ -58,6 +58,14 @@ export type T_link = {
   EDIT_GRADE: string;
   FIND_GRADE_BY_NAME: string;
 
+  // SUBJECT
+  CREATE_SUBJECT: string;
+  FETCH_SUBJECTS: string;
+  DELETE_SUBJECTS: string;
+  FETCH_SUBJECT_BY_ID: string;
+  EDIT_SUBJECT: string;
+  FIND_SUBJECT_BY_NAME: string;
+
   //config
   READ_CONFIG_FILE: string;
 };

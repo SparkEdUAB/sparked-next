@@ -8,7 +8,7 @@ import {
   BarChartOutlined,
   MessageOutlined,
   HomeOutlined,
-  AppstoreAddOutlined,
+  HddOutlined,
   BlockOutlined,
   ContainerOutlined,
 } from '@ant-design/icons';
@@ -90,6 +90,28 @@ export const ADMIN_LINKS: T_MenuItemLink = {
         label: 'edit',
         key: 'edit',
         link: '/admin/grades/edit',
+        roles: ['admin'],
+      },
+    ],
+  },
+  subjects: {
+    link: '/admin/subjects',
+    roles: ['admin'],
+    label: i18next.t('subjects'),
+    key: 'admin_subjects',
+    icon: () => <HddOutlined />,
+    index: 2,
+    children: [
+      {
+        label: 'create',
+        key: 'create',
+        link: '/admin/subjects/create',
+        roles: ['admin'],
+      },
+      {
+        label: 'edit',
+        key: 'edit',
+        link: '/admin/subjects/edit',
         roles: ['admin'],
       },
     ],

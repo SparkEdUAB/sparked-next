@@ -50,6 +50,14 @@ export const API_LINKS: T_link = {
   EDIT_GRADE: '/api/grade/editGrade',
   FIND_GRADE_BY_NAME: '/api/grade/findGradesByName',
 
+  //   subjects
+  CREATE_SUBJECT: '/api/subjects/createSubject',
+  FETCH_SUBJECTS: '/api/subjects/fetchSubjects',
+  DELETE_SUBJECTS: '/api/subjects/deleteSubjects',
+  FETCH_SUBJECT_BY_ID: '/api/subjects/fetchSubjectById',
+  EDIT_SUBJECT: '/api/subjects/editSubject',
+  FIND_SUBJECT_BY_NAME: '/api/subjects/findSubjectsByName',
+
   //   users
   CREATE_USER: '/api/users/createUser',
 

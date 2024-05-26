@@ -45,6 +45,7 @@ i18next.init({
         create_grade: 'Create a New Grade',
         create_program: 'Create a New Program',
         create_resource: 'Create a New Resource',
+        create_subject: 'Create a New Subject',
 
         edit_unit: 'Edit a Unit',
         edit_user: 'Edit a User',
@@ -60,6 +61,7 @@ i18next.init({
         school_created: 'School created successfully',
         course_created: 'Course created successfully',
         grade_created: 'Grade created successfully',
+        subject_created: 'Subject created successfully',
         program_created: 'Program created successfully',
         resource_created: 'Resource created successfully',
 
@@ -70,6 +72,7 @@ i18next.init({
         schools_found: 'schools found',
         users_found: 'users found',
         grade_found: 'grade found',
+        subject_found: 'subject found',
 
         search_items: 'Search Items',
 
@@ -95,6 +98,7 @@ i18next.init({
         statistics: 'Statistics',
         feedback: 'Feedback',
         grades: 'Grades',
+        subjects: 'Subjects',
 
         new: 'New',
         delete: 'Delete',
