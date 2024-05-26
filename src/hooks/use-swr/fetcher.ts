@@ -7,6 +7,7 @@ export async function fetcher<JSON = any>(input: RequestInfo, init?: RequestInit
 
   const data = await res.json();
 
+  console.log(data, input);
   if (data.isError) {
     return new Error('Server returned an error status code: ' + data.code);
   }

@@ -34,7 +34,7 @@ export const dbCollections: T_dbCollection = {
     label: 'Media Content',
   },
   grade: {
-    name: 'grade',
+    name: 'grade', // TODO: This should be grades
     label: 'Grade',
   },
   subjects: {

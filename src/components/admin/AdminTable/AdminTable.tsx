@@ -78,7 +78,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
             dataLength={items.length}
             next={loadMore}
             hasMore={hasMore}
-            loader={<InfiniteListLoader />}
+            loader={hasMore ? <InfiniteListLoader /> : null}
             scrollableTarget="scrollableDiv"
             endMessage={
               error && (
@@ -88,7 +88,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
               )
             }
           >
-            <Table className="w-fit">
+            <Table className="min-w-full">
               <Table.Head>
                 <Table.HeadCell className="p-4 bg-gray-100">
                   <Checkbox
