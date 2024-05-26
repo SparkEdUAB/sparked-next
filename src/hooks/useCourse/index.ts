@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+// import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
@@ -263,7 +263,8 @@ const useCourse = () => {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.courses) + `?courseId=${selectedCourseIds[0]}`);
+    // TODO: Add the correct link
+    // router.push(getChildLinkByKey('edit', '') + `?courseId=${selectedCourseIds[0]}`);
   };
 
   return {
