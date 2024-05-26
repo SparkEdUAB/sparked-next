@@ -42,6 +42,7 @@ i18next.init({
         create_topic: 'Create a New Topic',
         create_school: 'Create a New School',
         create_course: 'Create a New Course',
+        create_grade: 'Create a New Grade',
         create_program: 'Create a New Program',
         create_resource: 'Create a New Resource',
 
@@ -50,6 +51,7 @@ i18next.init({
         edit_topic: 'Edit a Topic',
         edit_school: 'Edit a School',
         edit_course: 'Edit a Course',
+        edit_grade: 'Edit a Grade',
         edit_program: 'Edit a Program',
         edit_media_content: 'Edit Media Content',
 
@@ -57,6 +59,7 @@ i18next.init({
         topic_created: 'Topic created successfully',
         school_created: 'School created successfully',
         course_created: 'Course created successfully',
+        grade_created: 'Grade created successfully',
         program_created: 'Program created successfully',
         resource_created: 'Resource created successfully',
 
@@ -66,6 +69,7 @@ i18next.init({
         programs_found: 'programs found',
         schools_found: 'schools found',
         users_found: 'users found',
+        grade_found: 'grade found',
 
         search_items: 'Search Items',
 
@@ -75,6 +79,7 @@ i18next.init({
         program: 'Program',
         course: 'Course',
         topic: 'Topic',
+        grade: 'Grade',
 
         submit: 'Submit',
         update: 'Update',
@@ -89,6 +94,7 @@ i18next.init({
         media_content: 'Media Content',
         statistics: 'Statistics',
         feedback: 'Feedback',
+        grades: 'Grades',
 
         new: 'New',
         delete: 'Delete',
