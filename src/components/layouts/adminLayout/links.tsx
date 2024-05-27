@@ -49,24 +49,47 @@ export const ADMIN_LINKS: T_MenuItemLink = {
       },
     ],
   },
-  courses: {
-    link: '/admin/courses',
+  // We won't need list of courses for now, This should be configurable in settings page
+  // courses: {
+  //   link: '/admin/courses',
+  //   roles: ['admin'],
+  //   label: i18next.t('courses'),
+  //   key: 'admin_courses',
+  //   icon: () => <BookOutlined />,
+  //   index: 2,
+  //   children: [
+  //     {
+  //       label: 'create',
+  //       key: 'create',
+  //       link: '/admin/courses/create',
+  //       roles: ['admin'],
+  //     },
+  //     {
+  //       label: 'edit',
+  //       key: 'edit',
+  //       link: '/admin/courses/edit',
+  //       roles: ['admin'],
+  //     },
+  //   ],
+  // },
+  grades: {
+    link: '/admin/grades',
     roles: ['admin'],
-    label: i18next.t('courses'),
-    key: 'admin_courses',
+    label: i18next.t('grades'),
+    key: 'admin_grades',
     icon: () => <BookOutlined />,
     index: 2,
     children: [
       {
         label: 'create',
         key: 'create',
-        link: '/admin/courses/create',
+        link: '/admin/grades/create',
         roles: ['admin'],
       },
       {
         label: 'edit',
         key: 'edit',
-        link: '/admin/courses/edit',
+        link: '/admin/grades/edit',
         roles: ['admin'],
       },
     ],

@@ -1,28 +1,27 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-// import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useEffect, useState } from 'react';
-import { T_CreateCourseFields, T_FetchCourses, T_CourseFields, T_RawCourseFields } from './types';
+import { useState } from 'react';
+import { T_CreateGradeFields, T_FetchGrades, T_GradeFields, T_RawGradeFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useCourse = () => {
+const useGrade = () => {
   const { getChildLinkByKey, router } = useNavigation();
   const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [courses, setCourses] = useState<Array<T_CourseFields>>([]);
-  const [originalCourses, setOriginalCourses] = useState<Array<T_CourseFields>>([]);
-  const [course, setCourse] = useState<T_CourseFields | null>(null);
-  const [selectedCourseIds, setSelectedCourseIds] = useState<React.Key[]>([]);
+  const [grades, setGrades] = useState<Array<T_GradeFields>>([]);
+  const [originalGrades, setOriginalGrades] = useState<Array<T_GradeFields>>([]);
+  const [grade, setGrade] = useState<T_GradeFields | null>(null);
+  const [selectedGradeIds, setSelectedGradeIds] = useState<React.Key[]>([]);
 
-  const createCourse = async (fields: T_CreateCourseFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.CREATE_COURSE;
+  const createGrade = async (fields: T_CreateGradeFields, onSuccessfullyDone?: () => void) => {
+    const url = API_LINKS.CREATE_GRADE;
     const formData = {
       body: JSON.stringify({ ...fields }),
       method: 'post',
@@ -49,7 +48,7 @@ const useCourse = () => {
       }
 
       onSuccessfullyDone?.();
-      message.success(i18next.t('course_created'));
+      message.success(i18next.t('grade_created'));
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -57,11 +56,11 @@ const useCourse = () => {
     }
   };
 
-  const editCourse = async (fields: T_CourseFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.EDIT_COURSE;
+  const editGrade = async (fields: T_GradeFields, onSuccessfullyDone?: () => void) => {
+    const url = API_LINKS.EDIT_GRADE;
     const formData = {
-      //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...course, ...fields, courseId: (course || fields)?._id }),
+      //spread grade in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
+      body: JSON.stringify({ ...grade, ...fields, gradeId: (grade || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -94,9 +93,9 @@ const useCourse = () => {
     }
   };
 
-  const fetchCourses = async ({ limit = 1000, skip = 0 }: T_FetchCourses) => {
-    const url = API_LINKS.FETCH_COURSES;
-    const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
+  const fetchGradeById = async ({ gradeId, withMetaData = false }: { gradeId: string; withMetaData: boolean }) => {
+    const url = API_LINKS.FETCH_GRADE_BY_ID;
+    const params = { gradeId: gradeId.toString(), withMetaData: withMetaData.toString() };
 
     try {
       setLoaderStatus(true);
@@ -115,44 +114,11 @@ const useCourse = () => {
         return false;
       }
 
-      const _courses = responseData.courses?.map(transformRawCourse);
+      if (responseData.grade) {
+        const _grade = responseData.grade as T_RawGradeFields;
 
-      setCourses(_courses);
-      setOriginalCourses(_courses);
-      return _courses;
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const fetchCourseById = async ({ courseId, withMetaData = false }: { courseId: string; withMetaData: boolean }) => {
-    const url = API_LINKS.FETCH_COURSE_BY_ID;
-    const params = { courseId: courseId.toString(), withMetaData: withMetaData.toString() };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
-        return false;
-      }
-
-      if (responseData.course) {
-        const _course = responseData.course as T_RawCourseFields;
-
-        setCourse(transformRawCourse(_course));
-        return _course;
+        setGrade(transformRawGrade(_grade));
+        return _grade;
       } else {
         return null;
       }
@@ -164,15 +130,15 @@ const useCourse = () => {
   };
 
   const triggerDelete = async () => {
-    if (!selectedCourseIds.length) {
+    if (!selectedGradeIds.length) {
       return message.warning(i18next.t('select_items'));
     }
   };
 
-  const deleteCourse = async (items?: T_CourseFields[]) => {
-    const url = API_LINKS.DELETE_COURSES;
+  const deleteGrade = async (items?: T_GradeFields[]) => {
+    const url = API_LINKS.DELETE_GRADES;
     const formData = {
-      body: JSON.stringify({ courseIds: items ? items.map((item) => item._id) : selectedCourseIds }),
+      body: JSON.stringify({ gradeIds: items ? items.map((item) => item._id) : selectedGradeIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -198,7 +164,7 @@ const useCourse = () => {
 
       message.success(i18next.t('success'));
 
-      setCourses(courses.filter((i) => selectedCourseIds.indexOf(i._id) == -1));
+      setGrades(grades.filter((i) => selectedGradeIds.indexOf(i._id) == -1));
 
       return true;
     } catch (err: any) {
@@ -208,14 +174,14 @@ const useCourse = () => {
       return false;
     }
   };
-  const findCourseByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
+  const findGradeByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
       return message.warning(i18next.t('search_empty'));
     }
 
-    const url = API_LINKS.FIND_COURSE_BY_NAME;
+    const url = API_LINKS.FIND_GRADE_BY_NAME;
 
     const params = { name: searchQuery.trim(), limit: '1000', skip: '0', withMetaData: 'true' };
 
@@ -235,12 +201,12 @@ const useCourse = () => {
         message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
-      message.success(responseData.courses.length + ' ' + i18next.t('courses_found'));
+      message.success(responseData.grades.length + ' ' + i18next.t('grades_found'));
 
-      const _courses = (responseData.courses as T_RawCourseFields[]).map(transformRawCourse);
-      setCourses(_courses);
+      const _grades = (responseData.grades as T_RawGradeFields[]).map(transformRawGrade);
+      setGrades(_grades);
 
-      return _courses;
+      return _grades;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -252,58 +218,52 @@ const useCourse = () => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setCourses(originalCourses);
+      setGrades(originalGrades);
     }
   };
 
   const triggerEdit = async () => {
-    if (!selectedCourseIds.length) {
+    if (!selectedGradeIds.length) {
       return message.warning(i18next.t('select_item'));
-    } else if (selectedCourseIds.length > 1) {
+    } else if (selectedGradeIds.length > 1) {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    // TODO: Add the correct link
-    // router.push(getChildLinkByKey('edit', '') + `?courseId=${selectedCourseIds[0]}`);
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.grades) + `?gradeId=${selectedGradeIds[0]}`);
   };
 
   return {
-    createCourse,
-    fetchCourses,
-    courses,
-    setCourses,
-    setSelectedCourseIds,
-    selectedCourseIds,
+    createGrade,
+    // fetchGrades,
+    grades,
+    setGrades,
+    setSelectedGradeIds,
+    selectedGradeIds,
     triggerDelete,
     triggerEdit,
-    fetchCourseById,
+    fetchGradeById,
     router,
-    course,
+    grade,
     isLoading,
-    editCourse,
-    findCourseByName,
+    editGrade,
+    findGradeByName,
     onSearchQueryChange,
     searchQuery,
-    originalCourses,
-    deleteCourse,
+    originalGrades,
+    deleteGrade,
   };
 };
 
-export function transformRawCourse(course: T_RawCourseFields, index: number = 0): T_CourseFields {
+export function transformRawGrade(grade: T_RawGradeFields, index: number = 0): T_GradeFields {
   return {
     index: index + 1,
-    key: course._id,
-    _id: course._id,
-    name: course.name,
-    description: course.description,
-    school: course.school,
-    schoolId: course.school?._id,
-    schoolName: course.school?.name,
-    programName: course.program?.name,
-    programId: course.program?._id,
-    created_by: course.user?.email,
-    created_at: new Date(course.created_at).toDateString(),
+    key: grade._id,
+    _id: grade._id,
+    name: grade.name,
+    description: grade.description,
+    created_by: grade.user?.email,
+    created_at: new Date(grade.created_at).toDateString(),
   };
 }
 
-export default useCourse;
+export default useGrade;
