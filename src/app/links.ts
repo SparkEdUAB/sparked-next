@@ -56,7 +56,7 @@ export const API_LINKS: T_link = {
   DELETE_SUBJECTS: '/api/subjects/deleteSubjects',
   FETCH_SUBJECT_BY_ID: '/api/subjects/fetchSubjectById',
   EDIT_SUBJECT: '/api/subjects/editSubject',
-  FIND_SUBJECT_BY_NAME: '/api/subjects/findSubjectsByName',
+  FIND_SUBJECT_BY_NAME: '/api/subjects/findSubjectByName',
 
   //   users
   CREATE_USER: '/api/users/createUser',
