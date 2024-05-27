@@ -65,5 +65,6 @@ export async function getDbFieldNamesConfigStatus({ dbConfigData }: { dbConfigDa
     arrIndex++;
   }
 
-  return configItems.map((i) => ({ [i.fieldName]: i.value } as T_RECORD)).reduce((a, c) => ({ ...a, ...c }), {});
+  return configItems.map((i) => ({ [i.fieldName]: i.value }) as T_RECORD).reduce((a, c) => ({ ...a, ...c }));
+
 }
