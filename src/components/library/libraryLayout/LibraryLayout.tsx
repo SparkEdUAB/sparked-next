@@ -5,14 +5,17 @@ import { T_RawCourseFields } from '@hooks/useCourse/types';
 import { T_RawUnitFields } from '@hooks/useUnit/types';
 import { LibraryNavbar } from './LibraryNavbar';
 import { LibrarySidebar } from './LibrarySidebar';
+import { T_RawGradeFields } from '@hooks/useGrade/types';
 
 export default function LibraryLayout({
   children,
   courses,
+  grades,
   units,
 }: {
   children: ReactNode;
   courses: T_RawCourseFields[];
+  grades: T_RawGradeFields[];
   units: T_RawUnitFields[];
 }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
@@ -26,6 +29,7 @@ export default function LibraryLayout({
           sidebarIsCollapsed={sidebarIsCollapsed}
           toggleSidebar={toggleSidebar}
           courses={courses}
+          grades={grades}
           units={units}
         />
         <div className="max-h-full overflow-y-hidden">{children}</div>
