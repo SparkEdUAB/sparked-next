@@ -29,10 +29,8 @@ const s3Upload = ({ file, fileName, ext }: T_s3Upload) =>
         imageUrl = `${process.env.S3_BUCKET_NAME_URL}/${imageUrl}`;
 
         resolve(imageUrl);
-        console.log('Successfully uploaded data to' + imageUrl);
       })
       .catch((err) => {
-        console.log('uploadFile():err', err);
         reject(err);
       });
   });

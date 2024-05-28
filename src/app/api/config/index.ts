@@ -43,6 +43,7 @@ const getConfigFile = async () => {
  * @param configKeys keys to check against the config file
  */
 export async function getDbFieldNamesConfigStatus({ dbConfigData }: { dbConfigData: T_CONFIG_DB_VARIABLE[] }) {
+  return {};
   const configData = JSON.parse(await getConfigFile()) as T_CONFIG_VARIABLES;
 
   const configItems: T_CONFIG_DB_VARIABLE[] = [];

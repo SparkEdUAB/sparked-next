@@ -54,7 +54,7 @@ export async function GET(
   const schoolFunctions: {
     [key: string]: (request: NextRequest, session?: Session | undefined) => Promise<Response>;
   } = {
-    fetchRandomMediaContent: fetchRandomMediaContent_,
+    fetchRandomMediaContents: fetchRandomMediaContent_,
     fetchMediaContent: fetchMediaContent_,
     fetchMediaContentById: fetchMediaContentById_,
     findMediaContentByName: findMediaContentByName_,

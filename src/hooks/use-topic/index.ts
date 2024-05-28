@@ -52,7 +52,6 @@ const useTopic = () => {
       message.success(i18next.t('topic_created'));
     } catch (err: any) {
       setLoaderStatus(false);
-      console.log('createTopic:errr', err);
 
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;

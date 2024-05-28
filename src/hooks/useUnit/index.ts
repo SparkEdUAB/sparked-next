@@ -122,8 +122,6 @@ const useUnit = () => {
       return _units;
     } catch (err: any) {
       setLoaderStatus(false);
-      console.log(err);
-      console.error(err);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }

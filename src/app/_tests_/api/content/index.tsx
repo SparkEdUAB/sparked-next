@@ -17,20 +17,17 @@ export const test_fetchRandomMediaContent = async () => {
     const resp = await fetch(url, formData);
 
     if (!resp.ok) {
-      console.error(i18next.t('unknown_error'));
       return false;
     }
 
     const responseData = await resp.json();
 
     if (responseData.isError) {
-      console.error(responseData.code);
       return false;
     }
 
     return responseData.mediaContent;
   } catch (err: any) {
-    console.error(err, `${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
     return false;
   }
 };

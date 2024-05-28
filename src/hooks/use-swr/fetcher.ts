@@ -1,4 +1,5 @@
 export async function fetcher<JSON = any>(input: RequestInfo, init?: RequestInit): Promise<JSON | Error> {
+  init = { ...init, next: { revalidate: 1000 } };
   const res = await fetch(input, init);
 
   if (!res.ok) {
@@ -7,7 +8,6 @@ export async function fetcher<JSON = any>(input: RequestInfo, init?: RequestInit
 
   const data = await res.json();
 
-  console.log(data, input);
   if (data.isError) {
     return new Error('Server returned an error status code: ' + data.code);
   }

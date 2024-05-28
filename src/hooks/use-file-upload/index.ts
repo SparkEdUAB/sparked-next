@@ -38,7 +38,6 @@ const useFileUpload = () => {
 
       const fileUrl: string = resp.data.url;
 
-      console.log('fileUrl', fileUrl);
 
       return fileUrl;
     } catch (err: any) {
