@@ -11,6 +11,7 @@ import { useSearchQuery } from '@hooks/useSearchQuery';
 import { T_RawSubjectFields } from '@hooks/useSubject/types';
 import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
 import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
+import { T_RawTopicFields } from '@hooks/use-topic/types';
 
 export function LibrarySidebar({
   sidebarIsCollapsed,
@@ -18,18 +19,21 @@ export function LibrarySidebar({
   subjects,
   grades,
   units,
+  topics,
   mediaTypes,
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
   subjects: T_RawSubjectFields[];
   grades: T_RawGradeFields[];
+  topics: T_RawTopicFields[];
   units: T_RawUnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
 }) {
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');
   const filteredUnitId = useSearchParams().get('unit_id');
+  const filteredTopicId = useSearchParams().get('topic_id');
   const filteredMediaType = useSearchParams().get('mediaType');
 
   return (
@@ -85,6 +89,29 @@ export function LibrarySidebar({
                       {subject.name}
                     </Sidebar.Item>
                   </Sidebar.Collapse>
+                ))}
+              </Sidebar.Collapse>
+            </Sidebar.ItemGroup>
+
+            {/* Topics */}
+            <Sidebar.ItemGroup>
+              <Sidebar.Collapse label="Topics">
+                <ShowAllOrNoItems
+                  ItemName={'Topics'}
+                  items={topics}
+                  filterItemId={filteredTopicId}
+                  url={`/library?${createQueryString('topics_id', '')}`}
+                />
+                {topics.map((topic) => (
+                  <Sidebar.Item
+                    active={filteredTopicId == topic._id}
+                    className={styles.item}
+                    as={Link}
+                    href={`/library?${createQueryString('topic_id', topic._id)}`}
+                    key={topic._id}
+                  >
+                    {topic.name}
+                  </Sidebar.Item>
                 ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
