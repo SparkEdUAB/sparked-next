@@ -74,12 +74,11 @@ export function LibrarySidebar({
                   as={Link}
                   href={`/library?${createQueryString('subject_id', '')}`}
                 >
-                  All Subject
+                  All
                 </Sidebar.Item>
                 {subjects.map((subject) => (
                   <Sidebar.Collapse className={styles.collapsible} key={subject._id} label={subject.name}>
                     <Sidebar.Item
-                      focused={true}
                       active={filteredUnitId == subject._id}
                       className={styles.item}
                       as={Link}
@@ -102,12 +101,11 @@ export function LibrarySidebar({
                   as={Link}
                   href={`/library?${createQueryString('unit_id', '')}`}
                 >
-                  All Units
+                  All
                 </Sidebar.Item>
                 {units.map((unit) => (
                   <Sidebar.Item
                     key={unit._id}
-                    focused={true}
                     active={filteredUnitId == unit.name}
                     className={styles.item}
                     as={Link}
@@ -128,12 +126,11 @@ export function LibrarySidebar({
                   as={Link}
                   href={`/library?${createQueryString('mediaType', '')}`}
                 >
-                  All Media
+                  All
                 </Sidebar.Item>
                 {mediaTypes.map((mediaType) => (
                   <Sidebar.Item
                     key={mediaType._id}
-                    focused={true}
                     active={filteredMediaType == mediaType.name}
                     className={styles.item}
                     as={Link}
