@@ -10,6 +10,7 @@ import { useSearchParams } from 'next/navigation';
 import { useSearchQuery } from '@hooks/useSearchQuery';
 import { T_RawSubjectFields } from '@hooks/useSubject/types';
 import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
+import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
 
 export function LibrarySidebar({
   sidebarIsCollapsed,
@@ -44,14 +45,12 @@ export function LibrarySidebar({
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Grades" data-collapse-toggle="true">
-                <Sidebar.Item
-                  active={!filterGradeId}
-                  className={styles.item}
-                  as={Link}
-                  href={`/library?${createQueryString('grade_id', '')}`}
-                >
-                  All
-                </Sidebar.Item>
+                <ShowAllOrNoItems
+                  ItemName={'Grades'}
+                  items={grades}
+                  filterItemId={filterGradeId}
+                  url={`/library?${createQueryString('grade_id', '')}`}
+                />
                 {grades.map((grade) => (
                   <Sidebar.Item
                     active={filterGradeId == grade._id}
@@ -68,14 +67,12 @@ export function LibrarySidebar({
 
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Subjects">
-                <Sidebar.Item
-                  active={!filteredUnitId}
-                  className={styles.item}
-                  as={Link}
-                  href={`/library?${createQueryString('subject_id', '')}`}
-                >
-                  All
-                </Sidebar.Item>
+                <ShowAllOrNoItems
+                  ItemName={'Subjects'}
+                  items={subjects}
+                  filterItemId={filteredUnitId}
+                  url={`/library?${createQueryString('subject_id', '')}`}
+                />
                 {subjects.map((subject) => (
                   <Sidebar.Collapse className={styles.collapsible} key={subject._id} label={subject.name}>
                     <Sidebar.Item
@@ -95,14 +92,12 @@ export function LibrarySidebar({
             {/* Units */}
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Units">
-                <Sidebar.Item
-                  active={!filteredMediaType}
-                  className={styles.item}
-                  as={Link}
-                  href={`/library?${createQueryString('unit_id', '')}`}
-                >
-                  All
-                </Sidebar.Item>
+                <ShowAllOrNoItems
+                  ItemName={'Units'}
+                  items={units}
+                  filterItemId={filteredUnitId}
+                  url={`/library?${createQueryString('unit_id', '')}`}
+                />
                 {units.map((unit) => (
                   <Sidebar.Item
                     key={unit._id}
@@ -120,14 +115,13 @@ export function LibrarySidebar({
             {/* Media Types */}
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Media Types">
-                <Sidebar.Item
-                  active={!filteredMediaType}
-                  className={styles.item}
-                  as={Link}
-                  href={`/library?${createQueryString('mediaType', '')}`}
-                >
-                  All
-                </Sidebar.Item>
+                <ShowAllOrNoItems
+                  ItemName={'Media'}
+                  items={mediaTypes}
+                  filterItemId={filteredMediaType}
+                  url={`/library?${createQueryString('mediaType', '')}`}
+                />
+
                 {mediaTypes.map((mediaType) => (
                   <Sidebar.Item
                     key={mediaType._id}
