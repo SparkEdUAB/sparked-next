@@ -55,7 +55,6 @@ export default async function fetchMediaContent_(request: any) {
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
     if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
-    console.debug('query', query);
     if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
