@@ -70,6 +70,14 @@ export type T_link = {
   EDIT_SUBJECT: string;
   FIND_SUBJECT_BY_NAME: string;
 
+  // CATEGORY
+  CREATE_CATEGORY: string;
+  FETCH_CATEGORIES: string;
+  DELETE_CATEGORIES: string;
+  FETCH_CATEGORY_BY_ID: string;
+  EDIT_CATEGORY: string;
+  FIND_CATEGORY_BY_NAME: string;
+
   //config
   READ_CONFIG_FILE: string;
 };

@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 
 export type T_Filters = {
   school_id?: string;
+  category_id?: string;
   program_id?: string;
   course_id?: string;
   unit_id?: string;
