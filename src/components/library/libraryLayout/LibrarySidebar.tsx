@@ -93,6 +93,32 @@ export function LibrarySidebar({
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
+            {/* Units */}
+            <Sidebar.ItemGroup>
+              <Sidebar.Collapse label="Units">
+                <Sidebar.Item
+                  active={!filteredMediaType}
+                  className={styles.item}
+                  as={Link}
+                  href={`/library?${createQueryString('unit_id', '')}`}
+                >
+                  All Units
+                </Sidebar.Item>
+                {units.map((unit) => (
+                  <Sidebar.Item
+                    key={unit._id}
+                    focused={true}
+                    active={filteredUnitId == unit.name}
+                    className={styles.item}
+                    as={Link}
+                    href={`/library?${createQueryString('unit_id', unit._id)}`}
+                  >
+                    {unit.name}
+                  </Sidebar.Item>
+                ))}
+              </Sidebar.Collapse>
+            </Sidebar.ItemGroup>
+
             {/* Media Types */}
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Media Types">
