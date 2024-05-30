@@ -7,6 +7,7 @@ import { API_LINKS } from 'app/links';
 import { BASE_URL } from 'app/shared/constants';
 import { ReactNode } from 'react';
 import NETWORK_UTILS from 'utils/network';
+import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
 
 export default async function Layout({ children }: { children: ReactNode | ReactNode[] }) {
   const subjectsResult = await fetcher<{ subjects: T_RawSubjectFields[] }>(
@@ -22,13 +23,17 @@ export default async function Layout({ children }: { children: ReactNode | React
     BASE_URL + API_LINKS.FETCH_UNITS + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }),
     { next: { revalidate: 3600 } },
   );
-
+  const mediaTypesResult = await fetcher<{ mediaTypes: T_RawMediaTypeFieldes[] }>(
+    BASE_URL + API_LINKS.FETCH_MEDIA_TYPES + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }),
+    { next: { revalidate: 3600 } },
+  );
 
   return (
     <LibraryLayout
       subjects={subjectsResult instanceof Error ? [] : subjectsResult.subjects}
       units={unitsResult instanceof Error ? [] : unitsResult.units}
       grades={gradesResult instanceof Error ? [] : gradesResult.grades}
+      mediaTypes={mediaTypesResult instanceof Error ? [] : mediaTypesResult.mediaTypes}
     >
       {children}
     </LibraryLayout>

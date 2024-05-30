@@ -37,6 +37,8 @@ export type T_link = {
   EDIT_TOPIC: string;
   CREATE_MEDIA_CONTENT: string;
   DELETE_RESOURCES: string;
+
+  // MEDIA
   FIND_MEDIA_CONTENT_BY_NAME: string;
   FILE_UPLOAD: string;
   FETCH_MEDIA_CONTENT: string;
@@ -45,6 +47,8 @@ export type T_link = {
   EDIT_MEDIA_CONTENT: string;
   DELETE_MEDIA_CONTENT: string;
   FETCH_RANDOM_MEDIA_CONTENT: string;
+  FETCH_MEDIA_TYPES: string;
+
   CREATE_PAGE_LINK: string;
   CREATE_USER: string;
   EDIT_PAGE_LINK: string;

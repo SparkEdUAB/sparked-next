@@ -71,6 +71,7 @@ export const API_LINKS: T_link = {
   FIND_MEDIA_CONTENT_BY_NAME: '/api/media-content/findMediaContentByName',
   DELETE_MEDIA_CONTENT: '/api/media-content/deleteMediaContentByIds',
   FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
+  FETCH_MEDIA_TYPES: '/api/media-content/fetchMediaTypes',
 
   //   SETTINGS > PAGE LINKS
   CREATE_PAGE_LINK: 'api/page-link/createPageLink',

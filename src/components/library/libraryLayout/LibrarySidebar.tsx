@@ -9,6 +9,7 @@ import { useSearchParams } from 'next/navigation';
 
 import { useSearchQuery } from '@hooks/useSearchQuery';
 import { T_RawSubjectFields } from '@hooks/useSubject/types';
+import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
 
 export function LibrarySidebar({
   sidebarIsCollapsed,
@@ -16,16 +17,19 @@ export function LibrarySidebar({
   subjects,
   grades,
   units,
+  mediaTypes,
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
   subjects: T_RawSubjectFields[];
   grades: T_RawGradeFields[];
   units: T_RawUnitFields[];
+  mediaTypes: T_RawMediaTypeFieldes[];
 }) {
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');
   const filteredUnitId = useSearchParams().get('unit_id');
+  const filteredMediaType = useSearchParams().get('mediaType');
 
   return (
     <>
@@ -85,6 +89,32 @@ export function LibrarySidebar({
                       {subject.name}
                     </Sidebar.Item>
                   </Sidebar.Collapse>
+                ))}
+              </Sidebar.Collapse>
+            </Sidebar.ItemGroup>
+
+            {/* Media Types */}
+            <Sidebar.ItemGroup>
+              <Sidebar.Collapse label="Media Types">
+                <Sidebar.Item
+                  active={!filteredMediaType}
+                  className={styles.item}
+                  as={Link}
+                  href={`/library?${createQueryString('mediaType', '')}`}
+                >
+                  All Media
+                </Sidebar.Item>
+                {mediaTypes.map((mediaType) => (
+                  <Sidebar.Item
+                    key={mediaType._id}
+                    focused={true}
+                    active={filteredMediaType == mediaType.name}
+                    className={styles.item}
+                    as={Link}
+                    href={`/library?${createQueryString('mediaType', mediaType.name)}`}
+                  >
+                    {mediaType.name}
+                  </Sidebar.Item>
                 ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>

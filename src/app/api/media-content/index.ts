@@ -420,3 +420,17 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
     });
   }
 }
+
+export function fetchMediaTypes_() {
+  // @Bian
+  // return a list of media types for filter
+  // Added For Teating perposes only
+  //
+  return [
+    {
+      id: 1,
+      name: 'Documents',
+    },
+    { id: 2, name: 'Video' },
+  ];
+}

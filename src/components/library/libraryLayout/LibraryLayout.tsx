@@ -6,17 +6,20 @@ import { T_RawUnitFields } from '@hooks/useUnit/types';
 import { LibraryNavbar } from './LibraryNavbar';
 import { LibrarySidebar } from './LibrarySidebar';
 import { T_RawGradeFields } from '@hooks/useGrade/types';
+import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
 
 export default function LibraryLayout({
   children,
   subjects,
   grades,
   units,
+  mediaTypes,
 }: {
   children: ReactNode;
   subjects: T_RawSubjectFields[];
   grades: T_RawGradeFields[];
   units: T_RawUnitFields[];
+  mediaTypes: T_RawMediaTypeFieldes[];
 }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
   const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
@@ -31,6 +34,7 @@ export default function LibraryLayout({
           subjects={subjects}
           grades={grades}
           units={units}
+          mediaTypes={mediaTypes}
         />
         <div className="max-h-full overflow-y-hidden">{children}</div>
       </div>

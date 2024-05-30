@@ -12,3 +12,8 @@ export type T_FetchTopic = {
   limit?: number;
   skip?: number;
 };
+
+export type T_RawMediaTypeFieldes = {
+  id: string;
+  name: string;
+};
