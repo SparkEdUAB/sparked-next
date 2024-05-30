@@ -3,23 +3,23 @@
 import styles from './Layout.module.css';
 import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
-import { T_RawCourseFields } from '@hooks/useCourse/types';
 import { T_RawUnitFields } from '@hooks/useUnit/types';
 import { T_RawGradeFields } from '@hooks/useGrade/types';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+
 import { useSearchQuery } from '@hooks/useSearchQuery';
+import { T_RawSubjectFields } from '@hooks/useSubject/types';
 
 export function LibrarySidebar({
   sidebarIsCollapsed,
   toggleSidebar,
-  courses,
+  subjects,
   grades,
   units,
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
-  courses: T_RawCourseFields[];
+  subjects: T_RawSubjectFields[];
   grades: T_RawGradeFields[];
   units: T_RawUnitFields[];
 }) {
@@ -63,31 +63,27 @@ export function LibrarySidebar({
             </Sidebar.ItemGroup>
 
             <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Courses">
+              <Sidebar.Collapse label="Subjects">
                 <Sidebar.Item
                   active={!filteredUnitId}
                   className={styles.item}
                   as={Link}
-                  href={`/library?${createQueryString('unit_id', '')}`}
+                  href={`/library?${createQueryString('subject_id', '')}`}
                 >
-                  All Courses
+                  All Subject
                 </Sidebar.Item>
-                {courses.map((course) => (
-                  <Sidebar.Collapse className={styles.collapsible} key={course._id} label={course.name}>
-                    {units
-                      .filter((unit) => unit.course_id === course._id)
-                      .map((unit) => (
-                        <Sidebar.Item
-                          focused={true}
-                          active={filteredUnitId == unit._id}
-                          className={styles.item}
-                          as={Link}
-                          href={`/library?${createQueryString('unit_id', unit._id)}`}
-                          key={unit._id}
-                        >
-                          {unit.name}
-                        </Sidebar.Item>
-                      ))}
+                {subjects.map((subject) => (
+                  <Sidebar.Collapse className={styles.collapsible} key={subject._id} label={subject.name}>
+                    <Sidebar.Item
+                      focused={true}
+                      active={filteredUnitId == subject._id}
+                      className={styles.item}
+                      as={Link}
+                      href={`/library?${createQueryString('subject_id', subject._id)}`}
+                      key={subject._id}
+                    >
+                      {subject.name}
+                    </Sidebar.Item>
                   </Sidebar.Collapse>
                 ))}
               </Sidebar.Collapse>

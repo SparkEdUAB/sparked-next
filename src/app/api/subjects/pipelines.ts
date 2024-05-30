@@ -12,15 +12,15 @@ export const p_fetchSubjectWithGrade = ({
 }) => [
   {
     $lookup: {
-      from: 'grade',
-      localField: 'grade_id',
+      from: 'subject',
+      localField: 'subject_id',
       foreignField: '_id',
-      as: 'grade',
+      as: 'subject',
     },
   },
   {
     $unwind: {
-      path: '$grade',
+      path: '$subject',
       preserveNullAndEmptyArrays: true,
     },
   },

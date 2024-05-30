@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useState } from 'react';
-import { T_RawCourseFields } from '@hooks/useCourse/types';
+import { T_RawSubjectFields } from '@hooks/useSubject/types';
 import { T_RawUnitFields } from '@hooks/useUnit/types';
 import { LibraryNavbar } from './LibraryNavbar';
 import { LibrarySidebar } from './LibrarySidebar';
@@ -9,12 +9,12 @@ import { T_RawGradeFields } from '@hooks/useGrade/types';
 
 export default function LibraryLayout({
   children,
-  courses,
+  subjects,
   grades,
   units,
 }: {
   children: ReactNode;
-  courses: T_RawCourseFields[];
+  subjects: T_RawSubjectFields[];
   grades: T_RawGradeFields[];
   units: T_RawUnitFields[];
 }) {
@@ -28,7 +28,7 @@ export default function LibraryLayout({
         <LibrarySidebar
           sidebarIsCollapsed={sidebarIsCollapsed}
           toggleSidebar={toggleSidebar}
-          courses={courses}
+          subjects={subjects}
           grades={grades}
           units={units}
         />
