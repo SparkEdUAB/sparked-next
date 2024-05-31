@@ -50,7 +50,7 @@ export default async function MediaContentPage({ params }: T_MediaContentPagePro
   const relatedMediaContent = result instanceof Error ? null : await fetchRelatedMedia(result.mediaContent);
 
   return (
-    <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] py-6 px-4">
+    <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] py-6 mx-7">
       {result instanceof Error ? (
         <LibraryErrorMessage>{result.message}</LibraryErrorMessage>
       ) : (
