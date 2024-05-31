@@ -35,7 +35,7 @@ export function MediaContentView({
               height={600}
             />
           ) : fileType === 'video' ? (
-            <video src={mediaContent.file_url} className="max-h-[500px] max-w-full" controls></video>
+            <video src={mediaContent.file_url} className="max-h-[500px] max-w-full rounded-xl " controls></video>
           ) : fileType === 'pdf' ? (
             <PdfViewer file={mediaContent.file_url} />
           ) : (
