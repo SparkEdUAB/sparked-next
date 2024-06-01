@@ -51,7 +51,7 @@ export async function PUT(
     editUserRole: editUserRole_,
   };
 
-  if (gradeApiFunctions[slug] && !session) {
+  if (gradeApiFunctions[slug] && session) {
     return gradeApiFunctions[slug](req, session);
   } else {
     const response = {
