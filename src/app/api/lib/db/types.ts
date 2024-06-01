@@ -1,4 +1,4 @@
-export type TdbCollection = {
+export type T_dbCollection = {
   users: {
     name: string;
     label: string;
@@ -24,6 +24,18 @@ export type TdbCollection = {
     label: string;
   };
   media_content: {
+    name: string;
+    label: string;
+  };
+  page_links: {
+    name: string;
+    label: string;
+  };
+  grade: {
+    name: string;
+    label: string;
+  };
+  subjects: {
     name: string;
     label: string;
   };

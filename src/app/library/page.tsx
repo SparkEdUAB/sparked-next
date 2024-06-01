@@ -12,6 +12,7 @@ import { T_LibraryPageProps } from '@components/library/types';
 import { T_RawTopicFields } from '@hooks/use-topic/types';
 import LibraryMediaContentList from './LibraryMediaContentList';
 import { fetchMedia } from 'fetchers/library/fetchMedia';
+import { MEDIA_CONTENT_LIMIT } from '@components/library/constants';
 
 export async function generateMetadata(props: {}, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
@@ -23,7 +24,9 @@ const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
   const mediaResult = await fetchMedia(0, searchParams);
 
   const topicsResult = await fetcher<{ topics: T_RawTopicFields[] }>(
-    BASE_URL + API_LINKS.FETCH_TOPICS + NETWORK_UTILS.formatGetParams({ limit: '20', skip: '0' }),
+    BASE_URL +
+      API_LINKS.FETCH_TOPICS +
+      NETWORK_UTILS.formatGetParams({ limit: MEDIA_CONTENT_LIMIT.toString(), skip: '0' }),
     { next: { revalidate: 3600 } },
   );
 

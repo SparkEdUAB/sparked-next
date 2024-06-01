@@ -1,9 +1,7 @@
 'use client';
 
-import useConfig from '@hooks/use-config';
 import useNavigation from '@hooks/useNavigation';
-import { Badge, Sidebar } from 'flowbite-react';
-import i18next from 'i18next';
+import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
 
 const AdminSidebar = ({
@@ -42,7 +40,7 @@ const AdminSidebar = ({
         <div
           onClick={toggleSidebar}
           onKeyUp={(key) => key.code === 'Escape' && toggleSidebar()}
-          className="fixed inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 lg:hidden"
+          className="fixed inset-0 z-10 cursor-pointer bg-gray-900/50 dark:bg-gray-900/60 lg:hidden"
         />
       )}
     </>

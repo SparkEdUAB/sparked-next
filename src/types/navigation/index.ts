@@ -45,8 +45,18 @@ export type T_link = {
   EDIT_MEDIA_CONTENT: string;
   DELETE_MEDIA_CONTENT: string;
   FETCH_RANDOM_MEDIA_CONTENT: string;
-  //users
+  CREATE_PAGE_LINK: string;
   CREATE_USER: string;
+  EDIT_PAGE_LINK: string;
+  DELETE_PAGE_LINK: string;
+
+  // GRADE
+  CREATE_GRADE: string;
+  FETCH_GRADES: string;
+  DELETE_GRADES: string;
+  FETCH_GRADE_BY_ID: string;
+  EDIT_GRADE: string;
+  FIND_GRADE_BY_NAME: string;
 
   //config
   READ_CONFIG_FILE: string;

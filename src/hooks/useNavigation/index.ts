@@ -26,7 +26,7 @@ const useNavigation = () => {
 
     for (const menuItem in ADMIN_LINKS) {
       const entry = ADMIN_LINKS[menuItem as keyof T_MenuItemLink];
-      menuItems.push(entry);
+      menuItems.push(entry as T_MenuItemLinkParams);
     }
 
     return menuItems.filter((i) => filteredMenuItems.indexOf(i.key.replace('admin_', '')) === -1);

@@ -1,17 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+// import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
-import { message } from 'antd';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
 import { T_CreateCourseFields, T_FetchCourses, T_CourseFields, T_RawCourseFields } from './types';
 import NETWORK_UTILS from 'utils/network';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useCourse = (form?: any) => {
+const useCourse = () => {
   const { getChildLinkByKey, router } = useNavigation();
+  const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -151,7 +152,6 @@ const useCourse = (form?: any) => {
         const _course = responseData.course as T_RawCourseFields;
 
         setCourse(transformRawCourse(_course));
-        form && form.setFieldsValue(_course);
         return _course;
       } else {
         return null;
@@ -263,7 +263,8 @@ const useCourse = (form?: any) => {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.courses) + `?courseId=${selectedCourseIds[0]}`);
+    // TODO: Add the correct link
+    // router.push(getChildLinkByKey('edit', '') + `?courseId=${selectedCourseIds[0]}`);
   };
 
   return {

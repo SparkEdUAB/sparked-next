@@ -12,15 +12,16 @@ import { T_MediaContentFields } from 'types/media-content';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import useFileUpload from '@hooks/use-file-upload';
-import { message } from 'antd';
 import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
 import { FileUploadSection } from './FileUploadSection';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
 const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createResource, isLoading: loadingResource } = useMediaContent();
   const { uploadFile } = useFileUpload();
+  const message = useToastMessage();
 
   const [file, setFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);

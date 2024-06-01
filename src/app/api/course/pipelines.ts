@@ -50,7 +50,7 @@ export const p_fetchCoursesWithMetaData = ({
   query?: object;
   limit?: number;
   skip?: number;
-  project: T_RECORD[];
+  project: T_RECORD;
 }) => [
   {
     $match: query,

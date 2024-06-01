@@ -5,12 +5,12 @@ export const p_fetchTopicsWithMetaData = ({
   query = {},
   skip = 0,
   limit = 1000,
-  project = [],
+  project = {},
 }: {
   query?: object;
   limit?: number;
   skip?: number;
-  project: T_RECORD[];
+  project: T_RECORD;
 }) => [
   {
     $match: query,

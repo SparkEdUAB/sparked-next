@@ -42,6 +42,14 @@ export const API_LINKS: T_link = {
   EDIT_TOPIC: '/api/topic/editTopic',
   FIND_TOPIC_BY_NAME: '/api/topic/findTopicsByName',
 
+  //   grades
+  CREATE_GRADE: '/api/grade/createGrade',
+  FETCH_GRADES: '/api/grade/fetchGrades',
+  DELETE_GRADES: '/api/grade/deleteGrades',
+  FETCH_GRADE_BY_ID: '/api/grade/fetchGradeById',
+  EDIT_GRADE: '/api/grade/editGrade',
+  FIND_GRADE_BY_NAME: '/api/grade/findGradesByName',
+
   //   users
   CREATE_USER: '/api/users/createUser',
 
@@ -55,6 +63,11 @@ export const API_LINKS: T_link = {
   FIND_MEDIA_CONTENT_BY_NAME: '/api/media-content/findMediaContentByName',
   DELETE_MEDIA_CONTENT: '/api/media-content/deleteMediaContentByIds',
   FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
+
+  //   SETTINGS > PAGE LINKS
+  CREATE_PAGE_LINK: 'api/page-link/createPageLink',
+  EDIT_PAGE_LINK: 'api/page-link/editPageLink',
+  DELETE_PAGE_LINK: 'api/page-link/deletePageLink',
 
   //   resources
   FILE_UPLOAD: '/api/file-upload/uploadFile',
