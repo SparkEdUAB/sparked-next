@@ -1,11 +1,11 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
+import fetchGrades, { fetchGradeById_, findGradeByName_ } from '..';
 import { authOptions } from '../../auth/constants';
-import createGrade_ from '../create';
+import createUserRole_ from '../create';
 import deleteGrades_ from '../delete';
 import editGrade_ from '../edit';
-import fetchGrades, { fetchGradeById_, findGradeByName_ } from '..';
 
 export async function POST(
   req: Request,
@@ -19,10 +19,10 @@ export async function POST(
   const gradeApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    createGrade: createGrade_,
+    createUserRole: createUserRole_,
   };
 
-  if (gradeApiFunctions[slug] && session) {
+  if (gradeApiFunctions[slug] && !session) {
     return gradeApiFunctions[slug](req, session);
   } else {
     const response = {
