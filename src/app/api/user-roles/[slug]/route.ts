@@ -1,11 +1,11 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchGrades, { fetchGradeById_, findGradeByName_ } from '..';
+import fetchUserRoles_, { fetchUserRoleById_ } from '..';
 import { authOptions } from '../../auth/constants';
 import createUserRole_ from '../create';
-import deleteGrades_ from '../delete';
 import editGrade_ from '../edit';
+import deleteUserRoles_ from '../delete';
 
 export async function POST(
   req: Request,
@@ -22,7 +22,7 @@ export async function POST(
     createUserRole: createUserRole_,
   };
 
-  if (gradeApiFunctions[slug] && !session) {
+  if (gradeApiFunctions[slug] && session) {
     return gradeApiFunctions[slug](req, session);
   } else {
     const response = {
@@ -77,7 +77,7 @@ export async function DELETE(
   const gradeApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    deleteGrades: deleteGrades_,
+    deleteUserRoles: deleteUserRoles_,
   };
 
   if (gradeApiFunctions[slug] && session) {
@@ -104,9 +104,8 @@ export async function GET(
   const GradeFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    fetchGrades: fetchGrades,
-    fetchGradeById: fetchGradeById_,
-    findGradeByName: findGradeByName_,
+    fetchUserRoles: fetchUserRoles_,
+    fetchUserRoleById: fetchUserRoleById_,
   };
 
   if (GradeFunctions[slug]) {

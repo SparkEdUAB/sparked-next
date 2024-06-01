@@ -6,14 +6,14 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as PAGE_PROCESS_CODES } from './processCodes';
 
-export default async function deleteGrades_(request: Request, session?: Session) {
+export default async function deleteUserRoles_(request: Request, session?: Session) {
   const schema = zfd.formData({
-    gradeIds: zfd.repeatableOfType(zfd.text()),
+    userRoleIds: zfd.repeatableOfType(zfd.text()),
   });
 
   const formBody = await request.json();
 
-  const { gradeIds } = schema.parse(formBody);
+  const { userRoleIds } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -28,15 +28,16 @@ export default async function deleteGrades_(request: Request, session?: Session)
       });
     }
 
-    const results = await db.collection(dbCollections.grades.name).deleteMany({
+    const results = await db.collection(dbCollections.user_roles.name).deleteMany({
       _id: {
-        $in: gradeIds.map((i) => new BSON.ObjectId(i)),
+        $in: userRoleIds.map((i) => new BSON.ObjectId(i)),
       },
     });
 
     const response = {
       isError: false,
-      code: PAGE_PROCESS_CODES.GRADE_DELETED,
+      code: PAGE_PROCESS_CODES.USER_ROLES_DELETED,
+      results,
     };
 
     return new Response(JSON.stringify(response), {

@@ -3,8 +3,9 @@ import { BSON } from 'mongodb';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
+import USER_ROLES_PROCESS_CODES from './processCodes';
 
-export default async function fetchGrades_(request: any) {
+export default async function fetchUserRoles_(request: any) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
@@ -26,8 +27,8 @@ export default async function fetchGrades_(request: any) {
       });
     }
 
-    const grades = await db
-      .collection(dbCollections.grades.name)
+    const userRoles = await db
+      .collection(dbCollections.user_roles.name)
       .find(
         {},
         {
@@ -39,7 +40,7 @@ export default async function fetchGrades_(request: any) {
 
     const response = {
       isError: false,
-      grades,
+      userRoles,
     };
 
     return new Response(JSON.stringify(response), {
@@ -57,16 +58,13 @@ export default async function fetchGrades_(request: any) {
   }
 }
 
-export async function fetchGradeById_(request: any) {
+export async function fetchUserRoleById_(request: any) {
   const schema = zfd.formData({
-    gradeId: zfd.text(),
-    withMetaData: zfd.text(),
+    userRoleId: zfd.text(),
   });
   const params = request.nextUrl.searchParams;
 
-  const { gradeId, withMetaData } = schema.parse(params);
-
-  const isWithMetaData = Boolean(withMetaData);
+  const { userRoleId } = schema.parse(params);
 
   try {
     const db = await dbClient();
@@ -80,110 +78,10 @@ export async function fetchGradeById_(request: any) {
         status: 200,
       });
     }
-    const grade = await db.collection(dbCollections.grades.name).findOne({ _id: new BSON.ObjectId(gradeId) });
+    const grade = await db.collection(dbCollections.user_roles.name).findOne({ _id: new BSON.ObjectId(userRoleId) });
     const response = {
       isError: false,
       grade,
-    };
-
-    return new Response(JSON.stringify(response), {
-      status: 200,
-    });
-  } catch (error) {
-    const resp = {
-      isError: true,
-      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
-    };
-
-    return new Response(JSON.stringify(resp), {
-      status: 200,
-    });
-  }
-}
-
-export async function deleteGrade_(request: Request) {
-  const schema = zfd.formData({
-    gradeIds: zfd.repeatableOfType(zfd.text()),
-  });
-  const formBody = await request.json();
-
-  const { gradeIds } = schema.parse(formBody);
-
-  try {
-    const db = await dbClient();
-
-    if (!db) {
-      const response = {
-        isError: true,
-        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
-      };
-      return new Response(JSON.stringify(response), {
-        status: 200,
-      });
-    }
-
-    const results = await db.collection(dbCollections.grades.name).deleteMany({
-      _id: {
-        $in: gradeIds.map((i) => new BSON.ObjectId(i)),
-      },
-    });
-
-    const response = {
-      isError: false,
-      results,
-    };
-
-    return new Response(JSON.stringify(response), {
-      status: 200,
-    });
-  } catch (error) {
-    const resp = {
-      isError: true,
-      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
-    };
-
-    return new Response(JSON.stringify(resp), {
-      status: 200,
-    });
-  }
-}
-
-export async function findGradeByName_(request: any) {
-  const schema = zfd.formData({
-    name: zfd.text(),
-    skip: zfd.numeric(),
-    limit: zfd.numeric(),
-    withMetaData: zfd.text(),
-  });
-  const params = request.nextUrl.searchParams;
-
-  const { name, limit, skip, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
-
-  try {
-    const db = await dbClient();
-
-    if (!db) {
-      const response = {
-        isError: true,
-        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
-      };
-      return new Response(JSON.stringify(response), {
-        status: 200,
-      });
-    }
-    const regexPattern = new RegExp(name, 'i');
-
-    const grades = await db
-      .collection(dbCollections.grades.name)
-      .find({
-        name: { $regex: regexPattern },
-      })
-      .toArray();
-
-    const response = {
-      isError: false,
-      grades,
     };
 
     return new Response(JSON.stringify(response), {
