@@ -27,7 +27,7 @@ export default async function fetchGrades_(request: any) {
     }
 
     const grades = await db
-      .collection(dbCollections.grade.name)
+      .collection(dbCollections.grades.name)
       .find(
         {},
         {
@@ -80,7 +80,7 @@ export async function fetchGradeById_(request: any) {
         status: 200,
       });
     }
-    const grade = await db.collection(dbCollections.grade.name).findOne({ _id: new BSON.ObjectId(gradeId) });
+    const grade = await db.collection(dbCollections.grades.name).findOne({ _id: new BSON.ObjectId(gradeId) });
     const response = {
       isError: false,
       grade,
@@ -122,7 +122,7 @@ export async function deleteGrade_(request: Request) {
       });
     }
 
-    const results = await db.collection(dbCollections.grade.name).deleteMany({
+    const results = await db.collection(dbCollections.grades.name).deleteMany({
       _id: {
         $in: gradeIds.map((i) => new BSON.ObjectId(i)),
       },
@@ -175,7 +175,7 @@ export async function findGradeByName_(request: any) {
     const regexPattern = new RegExp(name, 'i');
 
     const grades = await db
-      .collection(dbCollections.grade.name)
+      .collection(dbCollections.grades.name)
       .find({
         name: { $regex: regexPattern },
       })

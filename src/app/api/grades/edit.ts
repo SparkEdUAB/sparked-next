@@ -31,7 +31,7 @@ export default async function editGrade_(request: Request, session?: Session) {
     }
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const gradeData = await db.collection(dbCollections.grade.name).findOne(
+    const gradeData = await db.collection(dbCollections.grades.name).findOne(
       {
         name: { $regex: regexPattern },
         _id: { $ne: new BSON.ObjectId(gradeId) },
@@ -66,7 +66,7 @@ export default async function editGrade_(request: Request, session?: Session) {
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };
 
-    await db.collection(dbCollections.grade.name).updateOne(query, {
+    await db.collection(dbCollections.grades.name).updateOne(query, {
       $set: updateQuery,
     });
 

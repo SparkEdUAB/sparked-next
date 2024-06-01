@@ -31,11 +31,15 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
-  grade: {
+  grades: {
     name: string;
     label: string;
   };
   subjects: {
+    name: string;
+    label: string;
+  };
+  user_roles: {
     name: string;
     label: string;
   };
