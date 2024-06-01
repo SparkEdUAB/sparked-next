@@ -4,8 +4,8 @@ import { getServerSession } from 'next-auth/next';
 import fetchUserRoles_, { fetchUserRoleById_ } from '..';
 import { authOptions } from '../../auth/constants';
 import createUserRole_ from '../create';
-import editGrade_ from '../edit';
 import deleteUserRoles_ from '../delete';
+import editUserRole_ from '../edit';
 
 export async function POST(
   req: Request,
@@ -48,10 +48,10 @@ export async function PUT(
   const gradeApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    editGrade: editGrade_,
+    editUserRole: editUserRole_,
   };
 
-  if (gradeApiFunctions[slug] && session) {
+  if (gradeApiFunctions[slug] && !session) {
     return gradeApiFunctions[slug](req, session);
   } else {
     const response = {
