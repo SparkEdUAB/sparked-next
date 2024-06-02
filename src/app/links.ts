@@ -58,6 +58,14 @@ export const API_LINKS: T_link = {
   EDIT_SUBJECT: '/api/subject/editSubject',
   FIND_SUBJECT_BY_NAME: '/api/subject/findSubjectsByName',
 
+  //   Categories
+  CREATE_CATEGORY: '/api/category/createCategory',
+  FETCH_CATEGORIES: '/api/category/fetchCategories',
+  DELETE_CATEGORIES: '/api/category/deleteCategories',
+  FETCH_CATEGORY_BY_ID: '/api/category/fetchCategoryById',
+  EDIT_CATEGORY: '/api/category/editCategory',
+  FIND_CATEGORY_BY_NAME: '/api/category/findCategoryByName',
+
   //   users
   CREATE_USER: '/api/users/createUser',
 

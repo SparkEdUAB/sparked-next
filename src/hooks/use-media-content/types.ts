@@ -14,6 +14,6 @@ export type T_FetchTopic = {
 };
 
 export type T_RawMediaTypeFieldes = {
-  id: string;
+  _id: string;
   name: string;
 };

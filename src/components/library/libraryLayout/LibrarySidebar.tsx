@@ -10,6 +10,8 @@ import { useSearchParams } from 'next/navigation';
 import { useSearchQuery } from '@hooks/useSearchQuery';
 import { T_RawSubjectFields } from '@hooks/useSubject/types';
 import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
+import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
+import { T_RawTopicFields } from '@hooks/use-topic/types';
 
 export function LibrarySidebar({
   sidebarIsCollapsed,
@@ -17,18 +19,21 @@ export function LibrarySidebar({
   subjects,
   grades,
   units,
+  topics,
   mediaTypes,
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
   subjects: T_RawSubjectFields[];
   grades: T_RawGradeFields[];
+  topics: T_RawTopicFields[];
   units: T_RawUnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
 }) {
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');
   const filteredUnitId = useSearchParams().get('unit_id');
+  const filteredTopicId = useSearchParams().get('topic_id');
   const filteredMediaType = useSearchParams().get('mediaType');
 
   return (
@@ -44,14 +49,12 @@ export function LibrarySidebar({
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Grades" data-collapse-toggle="true">
-                <Sidebar.Item
-                  active={!filterGradeId}
-                  className={styles.item}
-                  as={Link}
-                  href={`/library?${createQueryString('grade_id', '')}`}
-                >
-                  All
-                </Sidebar.Item>
+                <ShowAllOrNoItems
+                  ItemName={'Grades'}
+                  items={grades}
+                  filterItemId={filterGradeId}
+                  url={`/library?${createQueryString('grade_id', '')}`}
+                />
                 {grades.map((grade) => (
                   <Sidebar.Item
                     active={filterGradeId == grade._id}
@@ -68,18 +71,15 @@ export function LibrarySidebar({
 
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Subjects">
-                <Sidebar.Item
-                  active={!filteredUnitId}
-                  className={styles.item}
-                  as={Link}
-                  href={`/library?${createQueryString('subject_id', '')}`}
-                >
-                  All Subject
-                </Sidebar.Item>
+                <ShowAllOrNoItems
+                  ItemName={'Subjects'}
+                  items={subjects}
+                  filterItemId={filteredUnitId}
+                  url={`/library?${createQueryString('subject_id', '')}`}
+                />
                 {subjects.map((subject) => (
                   <Sidebar.Collapse className={styles.collapsible} key={subject._id} label={subject.name}>
                     <Sidebar.Item
-                      focused={true}
                       active={filteredUnitId == subject._id}
                       className={styles.item}
                       as={Link}
@@ -93,21 +93,65 @@ export function LibrarySidebar({
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
+            {/* Topics */}
+            <Sidebar.ItemGroup>
+              <Sidebar.Collapse label="Topics">
+                <ShowAllOrNoItems
+                  ItemName={'Topics'}
+                  items={topics}
+                  filterItemId={filteredTopicId}
+                  url={`/library?${createQueryString('topics_id', '')}`}
+                />
+                {topics.map((topic) => (
+                  <Sidebar.Item
+                    active={filteredTopicId == topic._id}
+                    className={styles.item}
+                    as={Link}
+                    href={`/library?${createQueryString('topic_id', topic._id)}`}
+                    key={topic._id}
+                  >
+                    {topic.name}
+                  </Sidebar.Item>
+                ))}
+              </Sidebar.Collapse>
+            </Sidebar.ItemGroup>
+
+            {/* Units */}
+            <Sidebar.ItemGroup>
+              <Sidebar.Collapse label="Units">
+                <ShowAllOrNoItems
+                  ItemName={'Units'}
+                  items={units}
+                  filterItemId={filteredUnitId}
+                  url={`/library?${createQueryString('unit_id', '')}`}
+                />
+                {units.map((unit) => (
+                  <Sidebar.Item
+                    key={unit._id}
+                    active={filteredUnitId == unit.name}
+                    className={styles.item}
+                    as={Link}
+                    href={`/library?${createQueryString('unit_id', unit._id)}`}
+                  >
+                    {unit.name}
+                  </Sidebar.Item>
+                ))}
+              </Sidebar.Collapse>
+            </Sidebar.ItemGroup>
+
             {/* Media Types */}
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Media Types">
-                <Sidebar.Item
-                  active={!filteredMediaType}
-                  className={styles.item}
-                  as={Link}
-                  href={`/library?${createQueryString('mediaType', '')}`}
-                >
-                  All Media
-                </Sidebar.Item>
+                <ShowAllOrNoItems
+                  ItemName={'Media'}
+                  items={mediaTypes}
+                  filterItemId={filteredMediaType}
+                  url={`/library?${createQueryString('mediaType', '')}`}
+                />
+
                 {mediaTypes.map((mediaType) => (
                   <Sidebar.Item
                     key={mediaType._id}
-                    focused={true}
                     active={filteredMediaType == mediaType.name}
                     className={styles.item}
                     as={Link}

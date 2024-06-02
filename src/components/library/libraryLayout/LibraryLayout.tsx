@@ -7,16 +7,19 @@ import { LibraryNavbar } from './LibraryNavbar';
 import { LibrarySidebar } from './LibrarySidebar';
 import { T_RawGradeFields } from '@hooks/useGrade/types';
 import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
+import { T_RawTopicFields } from '@hooks/use-topic/types';
 
 export default function LibraryLayout({
   children,
   subjects,
+  topics,
   grades,
   units,
   mediaTypes,
 }: {
   children: ReactNode;
   subjects: T_RawSubjectFields[];
+  topics: T_RawTopicFields[];
   grades: T_RawGradeFields[];
   units: T_RawUnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
@@ -32,6 +35,7 @@ export default function LibraryLayout({
           sidebarIsCollapsed={sidebarIsCollapsed}
           toggleSidebar={toggleSidebar}
           subjects={subjects}
+          topics={topics}
           grades={grades}
           units={units}
           mediaTypes={mediaTypes}
