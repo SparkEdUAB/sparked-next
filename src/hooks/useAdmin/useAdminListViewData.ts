@@ -60,11 +60,7 @@ export function useAdminListViewData<Result extends Record<string, any>, RawData
     }
   };
 
-  const { data, isLoading, mutate, size, setSize, error, isValidating } = useSWRInfinite(getKey, infiniteFetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: true,
-    revalidateOnMount: false,
-  });
+  const { data, isLoading, mutate, size, setSize, error, isValidating } = useSWRInfinite(getKey, infiniteFetcher);
 
   const loadMore = () => {
     setSize((value) => value + 1);
