@@ -60,8 +60,8 @@ const useSubject = () => {
     const url = API_LINKS.EDIT_SUBJECT;
     const formData = {
       //spread subject in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...subject, ...fields, subjectId: (subject || fields)?._id }),
-      method: 'post',
+      body: JSON.stringify({ ...subject, ...fields, subjectId: (subject || fields)?._id, gradeId: fields.gradeId }),
+      method: 'put',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -265,6 +265,8 @@ export function transformRawSubject(subject: T_RawSubjectFields, index: number =
     index: index + 1,
     key: subject._id,
     _id: subject._id,
+    // @ts-expect-error gradeId will need to be provided or grade details
+    gradeId: subject.gradeId,
     name: subject.name,
     description: subject.description,
     created_by: subject.user?.email,

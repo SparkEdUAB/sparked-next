@@ -151,9 +151,9 @@ export async function deleteGrade_(request: Request) {
 export async function findGradeByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
-    skip: zfd.numeric(),
-    limit: zfd.numeric(),
-    withMetaData: zfd.text(),
+    skip: zfd.numeric().optional(),
+    limit: zfd.numeric().optional(),
+    withMetaData: zfd.text().default('false'),
   });
   const params = request.nextUrl.searchParams;
 

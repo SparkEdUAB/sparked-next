@@ -31,6 +31,7 @@ export type T_SubjectFields = {
   key: string;
   _id: string;
   name: string;
+  gradeId: string;
   description: string;
   created_by?: string;
   created_at: string;

@@ -13,6 +13,8 @@ import { T_SubjectFields } from '@hooks/useSubject/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { API_LINKS } from 'app/links';
+import { T_GradeFields } from '@hooks/useGrade/types';
 
 const EditSubjectView = ({
   subject,
@@ -23,8 +25,13 @@ const EditSubjectView = ({
 }) => {
   const { editSubject, deleteSubject } = useSubject();
   const [uploading, setUploading] = useState(false);
+  const [gradeId, setGradeId] = useState<string | null>(null);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
+
+  const handleClick = (grade: T_GradeFields) => {
+    setGradeId(grade?._id);
+  };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -35,7 +42,7 @@ const EditSubjectView = ({
 
       let result = extractValuesFromFormEvent<T_SubjectFields>(e, keys);
 
-      await editSubject({ ...subject, ...result }, onSuccessfullyDone);
+      await editSubject({ ...subject, ...result, gradeId: gradeId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }
@@ -70,7 +77,7 @@ const EditSubjectView = ({
               defaultValue={subject.description}
             />
 
-            <Autocomplete />
+            <Autocomplete url={API_LINKS.FIND_GRADE_BY_NAME} handleSelect={handleClick} moduleName="grades" />
 
             <div className="flex space-x-4 mt-2">
               <Button type="submit" disabled={uploading}>
