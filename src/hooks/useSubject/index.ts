@@ -298,6 +298,7 @@ export function transformRawSubject(subject: T_RawSubjectFields, index: number =
     index: index + 1,
     key: subject._id,
     _id: subject._id,
+    // @ts-expect-error
     gradeId: subject.gradeId,
     name: subject.name,
     description: subject.description,
