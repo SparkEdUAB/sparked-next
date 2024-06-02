@@ -25,6 +25,7 @@ export default async function fetchMediaContent_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
+
   const isWithMetaData = Boolean(withMetaData);
   const _limit = parseInt(limit);
   const _skip = parseInt(skip);
@@ -51,7 +52,6 @@ export default async function fetchMediaContent_(request: any) {
     if (course_id) query.course_id = new BSON.ObjectId(course_id);
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
-
     if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
