@@ -21,12 +21,10 @@ export default async function fetchMediaContent_(request: any) {
     course_id: z.string().optional(),
     unit_id: z.string().optional(),
     topic_id: z.string().optional(),
-    grade_id: z.string().optional(),
   });
   const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id, grade_id } =
-    schema.parse(params);
+  const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
 
   const isWithMetaData = Boolean(withMetaData);
   const _limit = parseInt(limit);
@@ -54,8 +52,6 @@ export default async function fetchMediaContent_(request: any) {
     if (course_id) query.course_id = new BSON.ObjectId(course_id);
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
-    if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
-    console.debug('query', query);
     if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
@@ -419,18 +415,4 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
       status: 200,
     });
   }
-}
-
-export function fetchMediaTypes_() {
-  // @Bian
-  // return a list of media types for filter
-  // Added For Teating perposes only
-  //
-  return [
-    {
-      id: 1,
-      name: 'Documents',
-    },
-    { id: 2, name: 'Video' },
-  ];
 }
