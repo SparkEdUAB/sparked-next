@@ -50,6 +50,22 @@ export const API_LINKS: T_link = {
   EDIT_GRADE: '/api/grade/editGrade',
   FIND_GRADE_BY_NAME: '/api/grade/findGradesByName',
 
+  //   subjects
+  CREATE_SUBJECT: '/api/subject/createSubject',
+  FETCH_SUBJECTS: '/api/subject/fetchSubjects',
+  DELETE_SUBJECTS: '/api/subject/deleteSubjects',
+  FETCH_SUBJECT_BY_ID: '/api/subject/fetchSubjectById',
+  EDIT_SUBJECT: '/api/subject/editSubject',
+  FIND_SUBJECT_BY_NAME: '/api/subject/findSubjectsByName',
+
+  //   Categories
+  CREATE_CATEGORY: '/api/category/createCategory',
+  FETCH_CATEGORIES: '/api/category/fetchCategories',
+  DELETE_CATEGORIES: '/api/category/deleteCategories',
+  FETCH_CATEGORY_BY_ID: '/api/category/fetchCategoryById',
+  EDIT_CATEGORY: '/api/category/editCategory',
+  FIND_CATEGORY_BY_NAME: '/api/category/findCategoryByName',
+
   //   users
   CREATE_USER: '/api/users/createUser',
 
@@ -63,6 +79,7 @@ export const API_LINKS: T_link = {
   FIND_MEDIA_CONTENT_BY_NAME: '/api/media-content/findMediaContentByName',
   DELETE_MEDIA_CONTENT: '/api/media-content/deleteMediaContentByIds',
   FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
+  FETCH_MEDIA_TYPES: '/api/media-content/fetchMediaTypes',
 
   //   SETTINGS > PAGE LINKS
   CREATE_PAGE_LINK: 'api/page-link/createPageLink',
