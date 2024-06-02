@@ -1,25 +1,27 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
+// import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useEffect, useState } from 'react';
-import { T_CreateSubjectFields, T_FetchSubjects, T_SubjectFields, T_RawSubjectFields } from './types';
+import { T_CreateCategoryFields, T_FetchCategorys, T_CategoryFields, T_RawCategoryFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useSubject = () => {
+const useCategory = () => {
   const { getChildLinkByKey, router } = useNavigation();
   const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [subjects, setSubjects] = useState<Array<T_SubjectFields>>([]);
-  const [originalSubjects, setOriginalSubjects] = useState<Array<T_SubjectFields>>([]);
-  const [subject, setSubject] = useState<T_SubjectFields | null>(null);
-  const [selectedSubjectIds, setSelectedSubjectIds] = useState<React.Key[]>([]);
+  const [cartegories, setCategories] = useState<Array<T_CategoryFields>>([]);
+  const [originalCategories, setOriginalCategories] = useState<Array<T_CategoryFields>>([]);
+  const [cartegory, setCategory] = useState<T_CategoryFields | null>(null);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<React.Key[]>([]);
 
-  const createSubject = async (fields: T_CreateSubjectFields, onSuccessfullyDone?: () => void) => {
+  const createCategory = async (fields: T_CreateCategoryFields, onSuccessfullyDone?: () => void) => {
     const url = API_LINKS.CREATE_COURSE;
     const formData = {
       body: JSON.stringify({ ...fields }),
@@ -47,7 +49,7 @@ const useSubject = () => {
       }
 
       onSuccessfullyDone?.();
-      message.success(i18next.t('subject_created'));
+      message.success(i18next.t('course_created'));
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -55,11 +57,11 @@ const useSubject = () => {
     }
   };
 
-  const editSubject = async (fields: T_SubjectFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.EDIT_SUBJECT;
+  const editCategory = async (fields: T_CategoryFields, onSuccessfullyDone?: () => void) => {
+    const url = API_LINKS.EDIT_COURSE;
     const formData = {
-      //spread subject in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...subject, ...fields, subjectId: (subject || fields)?._id }),
+      //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
+      body: JSON.stringify({ ...cartegory, ...fields, courseId: (cartegory || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -92,8 +94,8 @@ const useSubject = () => {
     }
   };
 
-  const fetchSubjects = async ({ limit = 1000, skip = 0 }: T_FetchSubjects) => {
-    const url = API_LINKS.FETCH_SUBJECTS;
+  const fetchCategories = async ({ limit = 1000, skip = 0 }: T_FetchCategorys) => {
+    const url = API_LINKS.FETCH_CATEGORIES;
     const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
 
     try {
@@ -113,11 +115,11 @@ const useSubject = () => {
         return false;
       }
 
-      const _subjects = responseData.subjects?.map(transformRawSubject);
+      const _categories = responseData.courses?.map(transformRawCategory);
 
-      setSubjects(_subjects);
-      setOriginalSubjects(_subjects);
-      return _subjects;
+      setCategories(_categories);
+      setOriginalCategories(_categories);
+      return _categories;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -125,15 +127,9 @@ const useSubject = () => {
     }
   };
 
-  const fetchSubjectById = async ({
-    subjectId,
-    withMetaData = false,
-  }: {
-    subjectId: string;
-    withMetaData: boolean;
-  }) => {
-    const url = API_LINKS.FETCH_SUBJECT_BY_ID;
-    const params = { subjectId: subjectId.toString(), withMetaData: withMetaData.toString() };
+  const fetchCategoryById = async ({ courseId, withMetaData = false }: { courseId: string; withMetaData: boolean }) => {
+    const url = API_LINKS.FETCH_COURSE_BY_ID;
+    const params = { courseId: courseId.toString(), withMetaData: withMetaData.toString() };
 
     try {
       setLoaderStatus(true);
@@ -152,11 +148,11 @@ const useSubject = () => {
         return false;
       }
 
-      if (responseData.subject) {
-        const _subject = responseData.subject as T_RawSubjectFields;
+      if (responseData.course) {
+        const _course = responseData.course as T_RawCategoryFields;
 
-        setSubject(transformRawSubject(_subject));
-        return _subject;
+        setCategory(transformRawCategory(_course));
+        return _course;
       } else {
         return null;
       }
@@ -168,15 +164,15 @@ const useSubject = () => {
   };
 
   const triggerDelete = async () => {
-    if (!selectedSubjectIds.length) {
+    if (!selectedCategoryIds.length) {
       return message.warning(i18next.t('select_items'));
     }
   };
 
-  const deleteSubject = async (items?: T_SubjectFields[]) => {
-    const url = API_LINKS.DELETE_SUBJECTS;
+  const deleteCategory = async (items?: T_CategoryFields[]) => {
+    const url = API_LINKS.DELETE_CATEGORIES;
     const formData = {
-      body: JSON.stringify({ subjectIds: items ? items.map((item) => item._id) : selectedSubjectIds }),
+      body: JSON.stringify({ courseIds: items ? items.map((item) => item._id) : selectedCategoryIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -202,7 +198,7 @@ const useSubject = () => {
 
       message.success(i18next.t('success'));
 
-      setSubjects(subjects.filter((i) => selectedSubjectIds.indexOf(i._id) == -1));
+      setCategories(cartegories.filter((i) => selectedCategoryIds.indexOf(i._id) == -1));
 
       return true;
     } catch (err: any) {
@@ -212,14 +208,14 @@ const useSubject = () => {
       return false;
     }
   };
-  const findSubjectByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
+  const findCategoryByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
       return message.warning(i18next.t('search_empty'));
     }
 
-    const url = API_LINKS.FIND_SUBJECT_BY_NAME;
+    const url = API_LINKS.FIND_COURSE_BY_NAME;
 
     const params = { name: searchQuery.trim(), limit: '1000', skip: '0', withMetaData: 'true' };
 
@@ -239,12 +235,12 @@ const useSubject = () => {
         message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
-      message.success(responseData.subjects.length + ' ' + i18next.t('subjects_found'));
+      message.success(responseData.courses.length + ' ' + i18next.t('courses_found'));
 
-      const _subjects = (responseData.subjects as T_RawSubjectFields[]).map(transformRawSubject);
-      setSubjects(_subjects);
+      const _categories = (responseData.courses as T_RawCategoryFields[]).map(transformRawCategory);
+      setCategories(_categories);
 
-      return _subjects;
+      return _categories;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -256,54 +252,58 @@ const useSubject = () => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setSubjects(originalSubjects);
+      setCategories(originalCategories);
     }
   };
 
   const triggerEdit = async () => {
-    if (!selectedSubjectIds.length) {
+    if (!selectedCategoryIds.length) {
       return message.warning(i18next.t('select_item'));
-    } else if (selectedSubjectIds.length > 1) {
+    } else if (selectedCategoryIds.length > 1) {
       return message.warning(i18next.t('select_one_item'));
     }
 
     // TODO: Add the correct link
-    // router.push(getChildLinkByKey('edit', '') + `?subjectId=${selectedSubjectIds[0]}`);
+    // router.push(getChildLinkByKey('edit', '') + `?courseId=${selectedCategoryIds[0]}`);
   };
 
   return {
-    createSubject,
-    fetchSubjects,
-    subjects,
-    setSubjects,
-    setSelectedSubjectIds,
-    selectedSubjectIds,
+    createCategory,
+    fetchCategories,
+    cartegories,
+    setCategories,
+    setSelectedCategoryIds,
+    selectedCategoryIds,
     triggerDelete,
     triggerEdit,
-    fetchSubjectById,
+    fetchCategoryById,
     router,
-    subject,
+    cartegory,
     isLoading,
-    editSubject,
-    findSubjectByName,
+    editCategory,
+    findCategoryByName,
     onSearchQueryChange,
     searchQuery,
-    originalSubjects,
-    deleteSubject,
+    originalCategories,
+    deleteCategory,
   };
 };
 
-export function transformRawSubject(subject: T_RawSubjectFields, index: number = 0): T_SubjectFields {
+export function transformRawCategory(course: T_RawCategoryFields, index: number = 0): T_CategoryFields {
   return {
     index: index + 1,
-    key: subject._id,
-    _id: subject._id,
-    gradeId: subject.gradeId,
-    name: subject.name,
-    description: subject.description,
-    created_by: subject.user?.email,
-    created_at: new Date(subject.created_at).toDateString(),
+    key: course._id,
+    _id: course._id,
+    name: course.name,
+    description: course.description,
+    school: course.school,
+    schoolId: course.school?._id,
+    schoolName: course.school?.name,
+    programName: course.program?.name,
+    programId: course.program?._id,
+    created_by: course.user?.email,
+    created_at: new Date(course.created_at).toDateString(),
   };
 }
 
-export default useSubject;
+export default useCategory;

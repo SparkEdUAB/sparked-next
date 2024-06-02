@@ -1,19 +1,28 @@
 'use client';
 
 import { ReactNode, useState } from 'react';
-import { T_RawCourseFields } from '@hooks/useCourse/types';
+import { T_RawSubjectFields } from '@hooks/useSubject/types';
 import { T_RawUnitFields } from '@hooks/useUnit/types';
 import { LibraryNavbar } from './LibraryNavbar';
 import { LibrarySidebar } from './LibrarySidebar';
+import { T_RawGradeFields } from '@hooks/useGrade/types';
+import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
+import { T_RawTopicFields } from '@hooks/use-topic/types';
 
 export default function LibraryLayout({
   children,
-  courses,
+  subjects,
+  topics,
+  grades,
   units,
+  mediaTypes,
 }: {
   children: ReactNode;
-  courses: T_RawCourseFields[];
+  subjects: T_RawSubjectFields[];
+  topics: T_RawTopicFields[];
+  grades: T_RawGradeFields[];
   units: T_RawUnitFields[];
+  mediaTypes: T_RawMediaTypeFieldes[];
 }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
   const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
@@ -25,8 +34,11 @@ export default function LibraryLayout({
         <LibrarySidebar
           sidebarIsCollapsed={sidebarIsCollapsed}
           toggleSidebar={toggleSidebar}
-          courses={courses}
+          subjects={subjects}
+          topics={topics}
+          grades={grades}
           units={units}
+          mediaTypes={mediaTypes}
         />
         <div className="max-h-full overflow-y-hidden">{children}</div>
       </div>
