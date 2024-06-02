@@ -6,6 +6,9 @@ import { useToastMessage } from 'providers/ToastMessageContext';
 
 const ITEMS_PER_PAGE = 100;
 
+/**
+ * This will only work well when we have cursor based pagination on the backend, right now it is hard to tell if there's more data to be fetched
+ */
 export function useAdminListViewData<Result extends Record<string, any>, RawData extends Record<string, any>>(
   url: string,
   field: string,
@@ -40,8 +43,6 @@ export function useAdminListViewData<Result extends Record<string, any>, RawData
   };
 
   const infiniteFetcher = async (input: RequestInfo, init?: RequestInit) => {
-    setHasMore(true);
-
     const result = await fetcher<Record<string, any>>(input, init);
 
     if (result instanceof Error) {
@@ -52,12 +53,18 @@ export function useAdminListViewData<Result extends Record<string, any>, RawData
       const data = result[field] as RawData[];
       if (data.length < ITEMS_PER_PAGE) {
         setHasMore(false);
+        return data;
       }
+      setHasMore(true); // TODO: Needs to be revisited
       return data;
     }
   };
 
-  const { data, isLoading, mutate, size, setSize, error, isValidating } = useSWRInfinite(getKey, infiniteFetcher);
+  const { data, isLoading, mutate, size, setSize, error, isValidating } = useSWRInfinite(getKey, infiniteFetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: true,
+    revalidateOnMount: false,
+  });
 
   const loadMore = () => {
     setSize((value) => value + 1);

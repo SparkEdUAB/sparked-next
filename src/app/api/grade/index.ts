@@ -7,7 +7,7 @@ import { dbCollections } from '../lib/db/collections';
 export default async function fetchGrades_(request: any) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
-    skip: zfd.numeric(),
+    skip: zfd.numeric().default(0),
   });
   const params = request.nextUrl.searchParams;
 

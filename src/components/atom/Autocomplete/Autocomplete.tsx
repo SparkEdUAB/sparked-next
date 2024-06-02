@@ -1,23 +1,28 @@
 import { useState } from 'react';
-import { TextInput } from 'flowbite-react';
+import { Label, TextInput } from 'flowbite-react';
 import { useFetch } from '@hooks/use-swr';
 import useDebounceValue from '@hooks/use-debounce';
+import { RedAsterisk } from '..';
 
 /**
  * TODO: Make this component more reusable for other collections we have in the subjects
  * Instead of fetching everything when we want to assign just a single id, we should instead fetch by name and then assign that value
  * Link to fetch should be passed as a prop
- *  handleClick fn should be passed as a prop
+ * handleClick fn should be passed as a prop
  * and anything else possible to make sure this is reused for Grades,Subjects, Topics, Units & Media contents
+ * TODO: Display the default value in the input field if the value is passed
  */
 
 interface Props {
   url: string;
+  /**
+   * TODO: If no query is provided search module name with at least 5 options to provide default values, this means we need to provide a fallback url
+   */
+  fallbackUrl?: string;
   handleSelect: (suggestion: any) => void; // suggestion here, we are interested in id and name
   /**
    * This should match the collection, e.g. subjects, grades, topics, units, media-contents
    * TODO: Set this as an enum to only accept the values we have in the app
-   * TODO: Display the default value in the input field if the value is passed
    */
   moduleName: string;
 }
@@ -42,10 +47,23 @@ const Autocomplete = ({ url, handleSelect, moduleName }: Props) => {
 
   const loading = isLoading || isValidating;
 
-  if (!url && !moduleName) return null; // this component should not display unless a url is passed
+  if (!url && !moduleName) return null;
+
   return (
     <div className="relative w-full">
-      <TextInput type="text" value={query} onChange={handleChange} placeholder="Search..." className="block w-full" />
+      <div className="mb-2 block capitalize">
+        <Label htmlFor={moduleName}>
+          {moduleName} <RedAsterisk />
+        </Label>
+      </div>
+      <TextInput
+        type="text"
+        value={query}
+        name={moduleName}
+        onChange={handleChange}
+        placeholder={`Search for ${moduleName}`}
+        className="block w-full"
+      />
       {autoCompleted && query && (
         <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-600">
           {data?.[moduleName]?.length ? (

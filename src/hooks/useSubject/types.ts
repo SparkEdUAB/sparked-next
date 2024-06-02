@@ -1,8 +1,7 @@
 export type T_CreateSubjectFields = {
   name: string;
   description: string;
-  schoolId?: string;
-  programId?: string;
+  gradeId: string;
 };
 
 export type T_FetchSubjects = {
