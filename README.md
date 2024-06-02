@@ -36,8 +36,7 @@ Run the application
 # Using Docker
 
 Install Docker on your machine, for better performance install [https://orbstack.dev/](https://orbstack.dev/) instead of docker
-Build your container: `docker build -t sparked-next .`.
-Run your container: `docker run -p 3000:3000 sparked-next`.
+Run your container: `docker-compose up dev`.
 
 ### Contribution
 
