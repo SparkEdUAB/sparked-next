@@ -25,7 +25,7 @@ export async function POST(
     unAssignPageActionToPageLink: unAssignPageActionToPageLink_,
   };
 
-  if (pageLinksFunctions[slug] && !session) {
+  if (pageLinksFunctions[slug] && session) {
     return pageLinksFunctions[slug](req, session);
   } else {
     const response = {
@@ -74,8 +74,6 @@ export async function GET(
   { params }: { params: { slug: string } },
 ) {
   const slug = params.slug;
-
-  console.log('formBody', slug);
 
   const pageLinksFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;

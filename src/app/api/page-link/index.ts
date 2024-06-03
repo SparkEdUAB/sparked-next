@@ -172,7 +172,6 @@ export async function unAssignPageActionToPageLink_(request: Request, session?: 
       },
     );
 
-    console.log('pageLinkData', pageLinkData, pageLinkId);
 
     if (!pageLinkData) {
       const response = {
