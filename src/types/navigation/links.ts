@@ -3,6 +3,7 @@ export type T_MenuItemLink = {
   users: T_MenuItemLinkParams;
   courses?: T_MenuItemLinkParams;
   grades: T_MenuItemLinkParams;
+  subjects: T_MenuItemLinkParams;
   topics: T_MenuItemLinkParams;
   statistics: T_MenuItemLinkParams;
   feedback: T_MenuItemLinkParams;

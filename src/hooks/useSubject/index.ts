@@ -1,7 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-// import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
@@ -16,9 +14,9 @@ const useSubject = () => {
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [courses, setSubjects] = useState<Array<T_SubjectFields>>([]);
+  const [subjects, setSubjects] = useState<Array<T_SubjectFields>>([]);
   const [originalSubjects, setOriginalSubjects] = useState<Array<T_SubjectFields>>([]);
-  const [course, setSubject] = useState<T_SubjectFields | null>(null);
+  const [subject, setSubject] = useState<T_SubjectFields | null>(null);
   const [selectedSubjectIds, setSelectedSubjectIds] = useState<React.Key[]>([]);
 
   const createSubject = async (fields: T_CreateSubjectFields, onSuccessfullyDone?: () => void) => {
@@ -49,7 +47,7 @@ const useSubject = () => {
       }
 
       onSuccessfullyDone?.();
-      message.success(i18next.t('course_created'));
+      message.success(i18next.t('subject_created'));
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -58,10 +56,10 @@ const useSubject = () => {
   };
 
   const editSubject = async (fields: T_SubjectFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.EDIT_COURSE;
+    const url = API_LINKS.EDIT_SUBJECT;
     const formData = {
-      //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...course, ...fields, courseId: (course || fields)?._id }),
+      //spread subject in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
+      body: JSON.stringify({ ...subject, ...fields, subjectId: (subject || fields)?._id }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -95,7 +93,7 @@ const useSubject = () => {
   };
 
   const fetchSubjects = async ({ limit = 1000, skip = 0 }: T_FetchSubjects) => {
-    const url = API_LINKS.FETCH_COURSES;
+    const url = API_LINKS.FETCH_SUBJECTS;
     const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
 
     try {
@@ -115,11 +113,11 @@ const useSubject = () => {
         return false;
       }
 
-      const _courses = responseData.courses?.map(transformRawSubject);
+      const _subjects = responseData.subjects?.map(transformRawSubject);
 
-      setSubjects(_courses);
-      setOriginalSubjects(_courses);
-      return _courses;
+      setSubjects(_subjects);
+      setOriginalSubjects(_subjects);
+      return _subjects;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -127,9 +125,15 @@ const useSubject = () => {
     }
   };
 
-  const fetchSubjectById = async ({ courseId, withMetaData = false }: { courseId: string; withMetaData: boolean }) => {
-    const url = API_LINKS.FETCH_COURSE_BY_ID;
-    const params = { courseId: courseId.toString(), withMetaData: withMetaData.toString() };
+  const fetchSubjectById = async ({
+    subjectId,
+    withMetaData = false,
+  }: {
+    subjectId: string;
+    withMetaData: boolean;
+  }) => {
+    const url = API_LINKS.FETCH_SUBJECT_BY_ID;
+    const params = { subjectId: subjectId.toString(), withMetaData: withMetaData.toString() };
 
     try {
       setLoaderStatus(true);
@@ -148,11 +152,11 @@ const useSubject = () => {
         return false;
       }
 
-      if (responseData.course) {
-        const _course = responseData.course as T_RawSubjectFields;
+      if (responseData.subject) {
+        const _subject = responseData.subject as T_RawSubjectFields;
 
-        setSubject(transformRawSubject(_course));
-        return _course;
+        setSubject(transformRawSubject(_subject));
+        return _subject;
       } else {
         return null;
       }
@@ -170,9 +174,9 @@ const useSubject = () => {
   };
 
   const deleteSubject = async (items?: T_SubjectFields[]) => {
-    const url = API_LINKS.DELETE_COURSES;
+    const url = API_LINKS.DELETE_SUBJECTS;
     const formData = {
-      body: JSON.stringify({ courseIds: items ? items.map((item) => item._id) : selectedSubjectIds }),
+      body: JSON.stringify({ subjectIds: items ? items.map((item) => item._id) : selectedSubjectIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -198,7 +202,7 @@ const useSubject = () => {
 
       message.success(i18next.t('success'));
 
-      setSubjects(courses.filter((i) => selectedSubjectIds.indexOf(i._id) == -1));
+      setSubjects(subjects.filter((i) => selectedSubjectIds.indexOf(i._id) == -1));
 
       return true;
     } catch (err: any) {
@@ -215,7 +219,7 @@ const useSubject = () => {
       return message.warning(i18next.t('search_empty'));
     }
 
-    const url = API_LINKS.FIND_COURSE_BY_NAME;
+    const url = API_LINKS.FIND_SUBJECT_BY_NAME;
 
     const params = { name: searchQuery.trim(), limit: '1000', skip: '0', withMetaData: 'true' };
 
@@ -235,12 +239,12 @@ const useSubject = () => {
         message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
-      message.success(responseData.courses.length + ' ' + i18next.t('courses_found'));
+      message.success(responseData.subjects.length + ' ' + i18next.t('subjects_found'));
 
-      const _courses = (responseData.courses as T_RawSubjectFields[]).map(transformRawSubject);
-      setSubjects(_courses);
+      const _subjects = (responseData.subjects as T_RawSubjectFields[]).map(transformRawSubject);
+      setSubjects(_subjects);
 
-      return _courses;
+      return _subjects;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -264,13 +268,13 @@ const useSubject = () => {
     }
 
     // TODO: Add the correct link
-    // router.push(getChildLinkByKey('edit', '') + `?courseId=${selectedSubjectIds[0]}`);
+    // router.push(getChildLinkByKey('edit', '') + `?subjectId=${selectedSubjectIds[0]}`);
   };
 
   return {
     createSubject,
     fetchSubjects,
-    courses,
+    subjects,
     setSubjects,
     setSelectedSubjectIds,
     selectedSubjectIds,
@@ -278,7 +282,7 @@ const useSubject = () => {
     triggerEdit,
     fetchSubjectById,
     router,
-    course,
+    subject,
     isLoading,
     editSubject,
     findSubjectByName,
@@ -289,20 +293,17 @@ const useSubject = () => {
   };
 };
 
-export function transformRawSubject(course: T_RawSubjectFields, index: number = 0): T_SubjectFields {
+export function transformRawSubject(subject: T_RawSubjectFields, index: number = 0): T_SubjectFields {
   return {
     index: index + 1,
-    key: course._id,
-    _id: course._id,
-    name: course.name,
-    description: course.description,
-    school: course.school,
-    schoolId: course.school?._id,
-    schoolName: course.school?.name,
-    programName: course.program?.name,
-    programId: course.program?._id,
-    created_by: course.user?.email,
-    created_at: new Date(course.created_at).toDateString(),
+    key: subject._id,
+    _id: subject._id,
+    // @ts-expect-error
+    gradeId: subject.gradeId,
+    name: subject.name,
+    description: subject.description,
+    created_by: subject.user?.email,
+    created_at: new Date(subject.created_at).toDateString(),
   };
 }
 

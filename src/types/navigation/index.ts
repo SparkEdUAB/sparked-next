@@ -62,7 +62,7 @@ export type T_link = {
   EDIT_GRADE: string;
   FIND_GRADE_BY_NAME: string;
 
-  // SUBJECTS
+  // SUBJECT
   CREATE_SUBJECT: string;
   FETCH_SUBJECTS: string;
   DELETE_SUBJECTS: string;

@@ -191,9 +191,9 @@ export async function deleteCourse_(request: Request) {
 export async function findCourseByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
-    skip: zfd.numeric(),
-    limit: zfd.numeric(),
-    withMetaData: zfd.text(),
+    skip: zfd.numeric().optional(),
+    limit: zfd.numeric().optional(),
+    withMetaData: zfd.text().optional(),
   });
   const params = request.nextUrl.searchParams;
 
