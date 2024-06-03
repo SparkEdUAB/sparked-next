@@ -41,4 +41,8 @@ export const dbCollections: T_dbCollection = {
     name: 'subjects',
     label: 'Subjects',
   },
+  page_actions: {
+    name: 'page-actions',
+    label: 'Page Actions',
+  },
 };
