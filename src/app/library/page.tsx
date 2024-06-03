@@ -23,9 +23,9 @@ export async function generateMetadata(props: {}, parent: ResolvingMetadata): Pr
 const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
   const mediaResult = await fetchMedia(0, searchParams);
 
-  const topicsResult = await fetcher<{ topics: T_RawTopicFields[] }>(
+  const categoriesResult = await fetcher<{ categories: T_RawTopicFields[] }>(
     BASE_URL +
-      API_LINKS.FETCH_TOPICS +
+      API_LINKS.FETCH_CATEGORIES +
       NETWORK_UTILS.formatGetParams({ limit: MEDIA_CONTENT_LIMIT.toString(), skip: '0' }),
     { next: { revalidate: 3600 } },
   );
@@ -33,34 +33,35 @@ const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
   return (
     <main id="scrollableDiv" className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
       <div className="overflow-x-scroll custom-scrollbar flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
-        {topicsResult instanceof Error || (topicsResult.topics.length === 0 && !searchParams.topic_id) ? null : (
+        {categoriesResult instanceof Error ||
+        (categoriesResult.categories.length === 0 && !searchParams.category_id) ? null : (
           <>
             <LibraryBadge
               key={'Any topic'}
               href={searchParams.unit_id ? '/library?unit_id=' + searchParams.unit_id : '/library'}
-              color={searchParams.topic_id ? 'gray' : undefined}
+              color={searchParams.category_id ? 'gray' : undefined}
             >
               Any topic
             </LibraryBadge>
             {(searchParams.unit_id
-              ? topicsResult.topics.filter((topic) => topic.unit_id === searchParams.unit_id)
-              : topicsResult.topics
+              ? categoriesResult.categories.filter((topic) => topic.unit_id === searchParams.unit_id)
+              : categoriesResult.categories
             )
               .sort((a, b) => (a._id === searchParams.topic_id ? -1 : b._id === searchParams.topic_id ? 1 : 0))
-              .map((topic) => (
+              .map((category) => (
                 <LibraryBadge
-                  key={topic._id}
+                  key={category._id}
                   href={
                     '/library?' +
                     new URLSearchParams(
                       searchParams.unit_id
-                        ? { unit_id: searchParams.unit_id, topic_id: topic._id }
-                        : { topic_id: topic._id },
+                        ? { unit_id: searchParams.unit_id, category_id: category._id }
+                        : { category_id: category._id },
                     ).toString()
                   }
-                  color={searchParams.topic_id && searchParams.topic_id === topic._id ? undefined : 'gray'}
+                  color={searchParams.category_id && searchParams.category_id === category._id ? undefined : 'gray'}
                 >
-                  {topic.name}
+                  {category.name}
                 </LibraryBadge>
               ))}
           </>

@@ -37,6 +37,8 @@ export type T_link = {
   EDIT_TOPIC: string;
   CREATE_MEDIA_CONTENT: string;
   DELETE_RESOURCES: string;
+
+  // MEDIA
   FIND_MEDIA_CONTENT_BY_NAME: string;
   FILE_UPLOAD: string;
   FETCH_MEDIA_CONTENT: string;
@@ -45,6 +47,8 @@ export type T_link = {
   EDIT_MEDIA_CONTENT: string;
   DELETE_MEDIA_CONTENT: string;
   FETCH_RANDOM_MEDIA_CONTENT: string;
+  FETCH_MEDIA_TYPES: string;
+
   CREATE_PAGE_LINK: string;
   CREATE_USER: string;
   EDIT_PAGE_LINK: string;
@@ -57,6 +61,22 @@ export type T_link = {
   FETCH_GRADE_BY_ID: string;
   EDIT_GRADE: string;
   FIND_GRADE_BY_NAME: string;
+
+  // SUBJECTS
+  CREATE_SUBJECT: string;
+  FETCH_SUBJECTS: string;
+  DELETE_SUBJECTS: string;
+  FETCH_SUBJECT_BY_ID: string;
+  EDIT_SUBJECT: string;
+  FIND_SUBJECT_BY_NAME: string;
+
+  // CATEGORY
+  CREATE_CATEGORY: string;
+  FETCH_CATEGORIES: string;
+  DELETE_CATEGORIES: string;
+  FETCH_CATEGORY_BY_ID: string;
+  EDIT_CATEGORY: string;
+  FIND_CATEGORY_BY_NAME: string;
 
   //config
   READ_CONFIG_FILE: string;
