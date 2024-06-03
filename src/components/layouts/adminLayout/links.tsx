@@ -8,7 +8,7 @@ import {
   BarChartOutlined,
   MessageOutlined,
   HomeOutlined,
-  AppstoreAddOutlined,
+  HddOutlined,
   BlockOutlined,
   ContainerOutlined,
 } from '@ant-design/icons';
@@ -25,7 +25,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('dashboard'),
     key: 'admin_home',
     icon: () => <DashboardOutlined />,
-    index: 0,
+    index: 1,
   },
   users: {
     link: '/admin/users',
@@ -78,7 +78,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('grades'),
     key: 'admin_grades',
     icon: () => <BookOutlined />,
-    index: 2,
+    index: 3,
     children: [
       {
         label: 'create',
@@ -94,13 +94,35 @@ export const ADMIN_LINKS: T_MenuItemLink = {
       },
     ],
   },
+  subjects: {
+    link: '/admin/subjects',
+    roles: ['admin'],
+    label: i18next.t('subjects'),
+    key: 'admin_subjects',
+    icon: () => <HddOutlined />,
+    index: 4,
+    children: [
+      {
+        label: 'create',
+        key: 'create',
+        link: '/admin/subjects/create',
+        roles: ['admin'],
+      },
+      {
+        label: 'edit',
+        key: 'edit',
+        link: '/admin/subjects/edit',
+        roles: ['admin'],
+      },
+    ],
+  },
   topics: {
     link: '/admin/topics',
     roles: ['admin'],
     label: i18next.t('topics'),
     key: 'admin_topics',
     icon: () => <BulbOutlined />,
-    index: 3,
+    index: 5,
     children: [
       {
         label: 'create',
@@ -166,7 +188,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('units'),
     key: 'admin_units',
     icon: () => <BlockOutlined />,
-    index: 9,
+    index: 6,
     children: [
       {
         label: 'create',
@@ -188,7 +210,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: 'Media Content',
     key: 'admin_media-content',
     icon: () => <ContainerOutlined />,
-    index: 9,
+    index: 7,
     children: [
       {
         label: 'create',
@@ -210,7 +232,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('statistics'),
     key: 'admin_statistics',
     icon: () => <BarChartOutlined />,
-    index: 5,
+    index: 8,
   },
   feedback: {
     link: '/feedback',
@@ -218,6 +240,6 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('feedback'),
     key: 'admin_feedback',
     icon: () => <MessageOutlined />,
-    index: 6,
+    index: 9,
   },
 };

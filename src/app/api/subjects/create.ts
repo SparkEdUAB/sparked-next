@@ -45,11 +45,11 @@ export default async function createSubject_(request: Request, session?: Session
     if (subjectData) {
       const response = {
         isError: true,
-        code: SUBJECT_PROCESS_CODES.SUBJECT_CREATED,
+        code: SUBJECT_PROCESS_CODES.SUBJECT_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: 500,
       });
     }
 
@@ -78,7 +78,7 @@ export default async function createSubject_(request: Request, session?: Session
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: 500,
     });
   }
 }
