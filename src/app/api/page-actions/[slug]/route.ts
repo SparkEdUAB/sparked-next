@@ -6,6 +6,7 @@ import { authOptions } from '../../auth/constants';
 import createPageAction_ from '../create';
 import deleteSubjects_ from '../delete';
 import editSubject_ from '../edit';
+import editPageAction_ from '../edit';
 
 export async function POST(
   req: Request,
@@ -48,7 +49,7 @@ export async function PUT(
   const pageActionApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    editSubject: editSubject_,
+    editPageAction: editPageAction_,
   };
 
   if (pageActionApiFunctions[slug] && session) {

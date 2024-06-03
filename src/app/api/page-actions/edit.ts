@@ -4,19 +4,20 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as SUBJECT_PROCESS_CODES } from './processCodes';
+import PAGE_ACTIONS_PROCESS_CODES from './processCodes';
 
-export default async function editSubject_(request: Request, session?: Session) {
+export default async function editPageAction_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
-    gradeId: zfd.text(),
-    subjectId: zfd.text(),
     description: zfd.text(),
+    actionKey: zfd.text(),
+    label: zfd.text(),
+    pageActionId: zfd.text(),
   });
 
   const formBody = await request.json();
 
-  const { name, description, gradeId, subjectId } = schema.parse(formBody);
+  const { name, description, pageActionId, label, actionKey } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -32,10 +33,10 @@ export default async function editSubject_(request: Request, session?: Session) 
     }
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const gradeData = await db.collection(dbCollections.subjects.name).findOne(
+    const duplicatePageAction = await db.collection(dbCollections.page_actions.name).findOne(
       {
-        name: { $regex: regexPattern },
-        _id: { $ne: new BSON.ObjectId(subjectId) },
+        $or: [{ name: { $regex: regexPattern } }, { action_key: actionKey }],
+        _id: { $ne: new BSON.ObjectId(pageActionId) },
       },
       {
         projection: {
@@ -44,10 +45,10 @@ export default async function editSubject_(request: Request, session?: Session) 
       },
     );
 
-    if (gradeData) {
+    if (duplicatePageAction) {
       const response = {
         isError: true,
-        code: SUBJECT_PROCESS_CODES.SUBJECT_EXIST,
+        code: PAGE_ACTIONS_PROCESS_CODES.PAGE_ACTION_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
@@ -56,25 +57,26 @@ export default async function editSubject_(request: Request, session?: Session) 
     }
 
     const query = {
-      _id: new BSON.ObjectId(subjectId),
+      _id: new BSON.ObjectId(pageActionId),
     };
 
     const updateQuery = {
       name,
       description,
       updated_at: new Date(),
-      grade_id: new BSON.ObjectId(gradeId),
+      label,
+      action_key: actionKey,
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };
 
-    await db.collection(dbCollections.subjects.name).updateOne(query, {
+    await db.collection(dbCollections.page_actions.name).updateOne(query, {
       $set: updateQuery,
     });
 
     const response = {
       isError: false,
-      code: SUBJECT_PROCESS_CODES.SUBJECT_EDITED,
+      code: PAGE_ACTIONS_PROCESS_CODES.PAGE_ACTION_EDITED,
     };
 
     return new Response(JSON.stringify(response), {
