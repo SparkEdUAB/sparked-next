@@ -1,7 +1,7 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchSubjects_ from '..';
+import fetchPageActions_ from '..';
 import { authOptions } from '../../auth/constants';
 import createPageAction_ from '../create';
 import deleteSubjects_ from '../delete';
@@ -22,7 +22,7 @@ export async function POST(
     createPageAction: createPageAction_,
   };
 
-  if (pageActionApiFunctions[slug] && !session) {
+  if (pageActionApiFunctions[slug] && session) {
     return pageActionApiFunctions[slug](req, session);
   } else {
     const response = {
@@ -105,7 +105,7 @@ export async function GET(
   const pageActionApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    fetchSubjects: fetchSubjects_,
+    fetchPageActions: fetchPageActions_,
   };
 
   if (pageActionApiFunctions[slug] && session) {

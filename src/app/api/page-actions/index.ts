@@ -1,21 +1,16 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { zfd } from 'zod-form-data';
-import { getDbFieldNamesConfigStatus } from '../config';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { SUBJECT_FIELD_NAMES_CONFIG } from './constants';
-import { p_fetchSubjectWithGrade } from './pipelines';
 
-export default async function fetchSubjects_(request: any) {
+export default async function fetchPageActions_(request: any) {
   const schema = zfd.formData({
-    limit: zfd.numeric(),
-    skip: zfd.numeric(),
-    withMetaData: zfd.text().optional(),
+    limit: zfd.numeric().optional().default(1000),
+    skip: zfd.numeric().optional().default(0),
   });
   const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const { limit, skip } = schema.parse(params);
 
   try {
     const db = await dbClient();
@@ -30,33 +25,22 @@ export default async function fetchSubjects_(request: any) {
       });
     }
 
-    let subjects = [];
+    let pageActions = [];
 
-    const dbConfigData = SUBJECT_FIELD_NAMES_CONFIG;
-
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
-
-    if (isWithMetaData) {
-      subjects = await db
-        .collection(dbCollections.subjects.name)
-        .aggregate(p_fetchSubjectWithGrade({ skip, limit, project }))
-        .toArray();
-    } else {
-      subjects = await db
-        .collection(dbCollections.subjects.name)
-        .find(
-          {},
-          {
-            limit,
-            skip,
-          },
-        )
-        .toArray();
-    }
+    pageActions = await db
+      .collection(dbCollections.page_actions.name)
+      .find(
+        {},
+        {
+          limit,
+          skip,
+        },
+      )
+      .toArray();
 
     const response = {
       isError: false,
-      subjects,
+      pageActions,
     };
 
     return new Response(JSON.stringify(response), {
