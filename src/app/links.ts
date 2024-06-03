@@ -48,7 +48,23 @@ export const API_LINKS: T_link = {
   DELETE_GRADES: '/api/grade/deleteGrades',
   FETCH_GRADE_BY_ID: '/api/grade/fetchGradeById',
   EDIT_GRADE: '/api/grade/editGrade',
-  FIND_GRADE_BY_NAME: '/api/grade/findGradesByName',
+  FIND_GRADE_BY_NAME: '/api/grade/findGradeByName',
+
+  //   subjects
+  CREATE_SUBJECT: '/api/subjects/createSubject',
+  FETCH_SUBJECTS: '/api/subjects/fetchSubjects',
+  DELETE_SUBJECTS: '/api/subjects/deleteSubjects',
+  FETCH_SUBJECT_BY_ID: '/api/subjects/fetchSubjectById',
+  EDIT_SUBJECT: '/api/subjects/editSubject',
+  FIND_SUBJECT_BY_NAME: '/api/subjects/findSubjectByName',
+
+  //   Categories
+  CREATE_CATEGORY: '/api/category/createCategory',
+  FETCH_CATEGORIES: '/api/category/fetchCategories',
+  DELETE_CATEGORIES: '/api/category/deleteCategories',
+  FETCH_CATEGORY_BY_ID: '/api/category/fetchCategoryById',
+  EDIT_CATEGORY: '/api/category/editCategory',
+  FIND_CATEGORY_BY_NAME: '/api/category/findCategoryByName',
 
   //   users
   CREATE_USER: '/api/users/createUser',
@@ -63,6 +79,7 @@ export const API_LINKS: T_link = {
   FIND_MEDIA_CONTENT_BY_NAME: '/api/media-content/findMediaContentByName',
   DELETE_MEDIA_CONTENT: '/api/media-content/deleteMediaContentByIds',
   FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
+  FETCH_MEDIA_TYPES: '/api/media-content/fetchMediaTypes',
 
   //   SETTINGS > PAGE LINKS
   CREATE_PAGE_LINK: 'api/page-link/createPageLink',

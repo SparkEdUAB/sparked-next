@@ -1,27 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
+// import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useState } from 'react';
-import { T_CreateGradeFields, T_FetchGrades, T_GradeFields, T_RawGradeFields } from './types';
+import { useEffect, useState } from 'react';
+import { T_CreateCategoryFields, T_FetchCategorys, T_CategoryFields, T_RawCategoryFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useGrade = () => {
+const useCategory = () => {
   const { getChildLinkByKey, router } = useNavigation();
   const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [grades, setGrades] = useState<Array<T_GradeFields>>([]);
-  const [originalGrades, setOriginalGrades] = useState<Array<T_GradeFields>>([]);
-  const [grade, setGrade] = useState<T_GradeFields | null>(null);
-  const [selectedGradeIds, setSelectedGradeIds] = useState<React.Key[]>([]);
+  const [cartegories, setCategories] = useState<Array<T_CategoryFields>>([]);
+  const [originalCategories, setOriginalCategories] = useState<Array<T_CategoryFields>>([]);
+  const [cartegory, setCategory] = useState<T_CategoryFields | null>(null);
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<React.Key[]>([]);
 
-  const createGrade = async (fields: T_CreateGradeFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.CREATE_GRADE;
+  const createCategory = async (fields: T_CreateCategoryFields, onSuccessfullyDone?: () => void) => {
+    const url = API_LINKS.CREATE_COURSE;
     const formData = {
       body: JSON.stringify({ ...fields }),
       method: 'post',
@@ -48,7 +49,7 @@ const useGrade = () => {
       }
 
       onSuccessfullyDone?.();
-      message.success(i18next.t('grade_created'));
+      message.success(i18next.t('course_created'));
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -56,12 +57,12 @@ const useGrade = () => {
     }
   };
 
-  const editGrade = async (fields: T_GradeFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.EDIT_GRADE;
+  const editCategory = async (fields: T_CategoryFields, onSuccessfullyDone?: () => void) => {
+    const url = API_LINKS.EDIT_COURSE;
     const formData = {
-      //spread grade in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...grade, ...fields, gradeId: (grade || fields)?._id }),
-      method: 'put',
+      //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
+      body: JSON.stringify({ ...cartegory, ...fields, courseId: (cartegory || fields)?._id }),
+      method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -93,9 +94,9 @@ const useGrade = () => {
     }
   };
 
-  const fetchGradeById = async ({ gradeId, withMetaData = false }: { gradeId: string; withMetaData: boolean }) => {
-    const url = API_LINKS.FETCH_GRADE_BY_ID;
-    const params = { gradeId: gradeId.toString(), withMetaData: withMetaData.toString() };
+  const fetchCategories = async ({ limit = 1000, skip = 0 }: T_FetchCategorys) => {
+    const url = API_LINKS.FETCH_CATEGORIES;
+    const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
 
     try {
       setLoaderStatus(true);
@@ -114,11 +115,44 @@ const useGrade = () => {
         return false;
       }
 
-      if (responseData.grade) {
-        const _grade = responseData.grade as T_RawGradeFields;
+      const _categories = responseData.courses?.map(transformRawCategory);
 
-        setGrade(transformRawGrade(_grade));
-        return _grade;
+      setCategories(_categories);
+      setOriginalCategories(_categories);
+      return _categories;
+    } catch (err: any) {
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      return false;
+    }
+  };
+
+  const fetchCategoryById = async ({ courseId, withMetaData = false }: { courseId: string; withMetaData: boolean }) => {
+    const url = API_LINKS.FETCH_COURSE_BY_ID;
+    const params = { courseId: courseId.toString(), withMetaData: withMetaData.toString() };
+
+    try {
+      setLoaderStatus(true);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+      setLoaderStatus(false);
+
+      if (!resp.ok) {
+        message.warning(i18next.t('unknown_error'));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        return false;
+      }
+
+      if (responseData.course) {
+        const _course = responseData.course as T_RawCategoryFields;
+
+        setCategory(transformRawCategory(_course));
+        return _course;
       } else {
         return null;
       }
@@ -130,15 +164,15 @@ const useGrade = () => {
   };
 
   const triggerDelete = async () => {
-    if (!selectedGradeIds.length) {
+    if (!selectedCategoryIds.length) {
       return message.warning(i18next.t('select_items'));
     }
   };
 
-  const deleteGrade = async (items?: T_GradeFields[]) => {
-    const url = API_LINKS.DELETE_GRADES;
+  const deleteCategory = async (items?: T_CategoryFields[]) => {
+    const url = API_LINKS.DELETE_CATEGORIES;
     const formData = {
-      body: JSON.stringify({ gradeIds: items ? items.map((item) => item._id) : selectedGradeIds }),
+      body: JSON.stringify({ courseIds: items ? items.map((item) => item._id) : selectedCategoryIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -164,7 +198,7 @@ const useGrade = () => {
 
       message.success(i18next.t('success'));
 
-      setGrades(grades.filter((i) => selectedGradeIds.indexOf(i._id) == -1));
+      setCategories(cartegories.filter((i) => selectedCategoryIds.indexOf(i._id) == -1));
 
       return true;
     } catch (err: any) {
@@ -174,14 +208,14 @@ const useGrade = () => {
       return false;
     }
   };
-  const findGradeByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
+  const findCategoryByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
       return message.warning(i18next.t('search_empty'));
     }
 
-    const url = API_LINKS.FIND_GRADE_BY_NAME;
+    const url = API_LINKS.FIND_COURSE_BY_NAME;
 
     const params = { name: searchQuery.trim(), limit: '1000', skip: '0', withMetaData: 'true' };
 
@@ -201,12 +235,12 @@ const useGrade = () => {
         message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
-      message.success(responseData.grades.length + ' ' + i18next.t('grades_found'));
+      message.success(responseData.courses.length + ' ' + i18next.t('courses_found'));
 
-      const _grades = (responseData.grades as T_RawGradeFields[]).map(transformRawGrade);
-      setGrades(_grades);
+      const _categories = (responseData.courses as T_RawCategoryFields[]).map(transformRawCategory);
+      setCategories(_categories);
 
-      return _grades;
+      return _categories;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -218,52 +252,58 @@ const useGrade = () => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setGrades(originalGrades);
+      setCategories(originalCategories);
     }
   };
 
   const triggerEdit = async () => {
-    if (!selectedGradeIds.length) {
+    if (!selectedCategoryIds.length) {
       return message.warning(i18next.t('select_item'));
-    } else if (selectedGradeIds.length > 1) {
+    } else if (selectedCategoryIds.length > 1) {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.grades) + `?gradeId=${selectedGradeIds[0]}`);
+    // TODO: Add the correct link
+    // router.push(getChildLinkByKey('edit', '') + `?courseId=${selectedCategoryIds[0]}`);
   };
 
   return {
-    createGrade,
-    // fetchGrades,
-    grades,
-    setGrades,
-    setSelectedGradeIds,
-    selectedGradeIds,
+    createCategory,
+    fetchCategories,
+    cartegories,
+    setCategories,
+    setSelectedCategoryIds,
+    selectedCategoryIds,
     triggerDelete,
     triggerEdit,
-    fetchGradeById,
+    fetchCategoryById,
     router,
-    grade,
+    cartegory,
     isLoading,
-    editGrade,
-    findGradeByName,
+    editCategory,
+    findCategoryByName,
     onSearchQueryChange,
     searchQuery,
-    originalGrades,
-    deleteGrade,
+    originalCategories,
+    deleteCategory,
   };
 };
 
-export function transformRawGrade(grade: T_RawGradeFields, index: number = 0): T_GradeFields {
+export function transformRawCategory(course: T_RawCategoryFields, index: number = 0): T_CategoryFields {
   return {
     index: index + 1,
-    key: grade._id,
-    _id: grade._id,
-    name: grade.name,
-    description: grade.description,
-    created_by: grade.user?.email,
-    created_at: new Date(grade.created_at).toDateString(),
+    key: course._id,
+    _id: course._id,
+    name: course.name,
+    description: course.description,
+    school: course.school,
+    schoolId: course.school?._id,
+    schoolName: course.school?.name,
+    programName: course.program?.name,
+    programId: course.program?._id,
+    created_by: course.user?.email,
+    created_at: new Date(course.created_at).toDateString(),
   };
 }
 
-export default useGrade;
+export default useCategory;

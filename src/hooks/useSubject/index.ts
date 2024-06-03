@@ -1,27 +1,26 @@
 'use client';
 
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useState } from 'react';
-import { T_CreateGradeFields, T_FetchGrades, T_GradeFields, T_RawGradeFields } from './types';
+import { useEffect, useState } from 'react';
+import { T_CreateSubjectFields, T_FetchSubjects, T_SubjectFields, T_RawSubjectFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
 
-const useGrade = () => {
+const useSubject = () => {
   const { getChildLinkByKey, router } = useNavigation();
   const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [grades, setGrades] = useState<Array<T_GradeFields>>([]);
-  const [originalGrades, setOriginalGrades] = useState<Array<T_GradeFields>>([]);
-  const [grade, setGrade] = useState<T_GradeFields | null>(null);
-  const [selectedGradeIds, setSelectedGradeIds] = useState<React.Key[]>([]);
+  const [subjects, setSubjects] = useState<Array<T_SubjectFields>>([]);
+  const [originalSubjects, setOriginalSubjects] = useState<Array<T_SubjectFields>>([]);
+  const [subject, setSubject] = useState<T_SubjectFields | null>(null);
+  const [selectedSubjectIds, setSelectedSubjectIds] = useState<React.Key[]>([]);
 
-  const createGrade = async (fields: T_CreateGradeFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.CREATE_GRADE;
+  const createSubject = async (fields: T_CreateSubjectFields, onSuccessfullyDone?: () => void) => {
+    const url = API_LINKS.CREATE_COURSE;
     const formData = {
       body: JSON.stringify({ ...fields }),
       method: 'post',
@@ -48,7 +47,7 @@ const useGrade = () => {
       }
 
       onSuccessfullyDone?.();
-      message.success(i18next.t('grade_created'));
+      message.success(i18next.t('subject_created'));
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -56,12 +55,12 @@ const useGrade = () => {
     }
   };
 
-  const editGrade = async (fields: T_GradeFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.EDIT_GRADE;
+  const editSubject = async (fields: T_SubjectFields, onSuccessfullyDone?: () => void) => {
+    const url = API_LINKS.EDIT_SUBJECT;
     const formData = {
-      //spread grade in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...grade, ...fields, gradeId: (grade || fields)?._id }),
-      method: 'put',
+      //spread subject in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
+      body: JSON.stringify({ ...subject, ...fields, subjectId: (subject || fields)?._id }),
+      method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -93,9 +92,9 @@ const useGrade = () => {
     }
   };
 
-  const fetchGradeById = async ({ gradeId, withMetaData = false }: { gradeId: string; withMetaData: boolean }) => {
-    const url = API_LINKS.FETCH_GRADE_BY_ID;
-    const params = { gradeId: gradeId.toString(), withMetaData: withMetaData.toString() };
+  const fetchSubjects = async ({ limit = 1000, skip = 0 }: T_FetchSubjects) => {
+    const url = API_LINKS.FETCH_SUBJECTS;
+    const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
 
     try {
       setLoaderStatus(true);
@@ -114,11 +113,50 @@ const useGrade = () => {
         return false;
       }
 
-      if (responseData.grade) {
-        const _grade = responseData.grade as T_RawGradeFields;
+      const _subjects = responseData.subjects?.map(transformRawSubject);
 
-        setGrade(transformRawGrade(_grade));
-        return _grade;
+      setSubjects(_subjects);
+      setOriginalSubjects(_subjects);
+      return _subjects;
+    } catch (err: any) {
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      return false;
+    }
+  };
+
+  const fetchSubjectById = async ({
+    subjectId,
+    withMetaData = false,
+  }: {
+    subjectId: string;
+    withMetaData: boolean;
+  }) => {
+    const url = API_LINKS.FETCH_SUBJECT_BY_ID;
+    const params = { subjectId: subjectId.toString(), withMetaData: withMetaData.toString() };
+
+    try {
+      setLoaderStatus(true);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+      setLoaderStatus(false);
+
+      if (!resp.ok) {
+        message.warning(i18next.t('unknown_error'));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        return false;
+      }
+
+      if (responseData.subject) {
+        const _subject = responseData.subject as T_RawSubjectFields;
+
+        setSubject(transformRawSubject(_subject));
+        return _subject;
       } else {
         return null;
       }
@@ -130,15 +168,15 @@ const useGrade = () => {
   };
 
   const triggerDelete = async () => {
-    if (!selectedGradeIds.length) {
+    if (!selectedSubjectIds.length) {
       return message.warning(i18next.t('select_items'));
     }
   };
 
-  const deleteGrade = async (items?: T_GradeFields[]) => {
-    const url = API_LINKS.DELETE_GRADES;
+  const deleteSubject = async (items?: T_SubjectFields[]) => {
+    const url = API_LINKS.DELETE_SUBJECTS;
     const formData = {
-      body: JSON.stringify({ gradeIds: items ? items.map((item) => item._id) : selectedGradeIds }),
+      body: JSON.stringify({ subjectIds: items ? items.map((item) => item._id) : selectedSubjectIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -164,7 +202,7 @@ const useGrade = () => {
 
       message.success(i18next.t('success'));
 
-      setGrades(grades.filter((i) => selectedGradeIds.indexOf(i._id) == -1));
+      setSubjects(subjects.filter((i) => selectedSubjectIds.indexOf(i._id) == -1));
 
       return true;
     } catch (err: any) {
@@ -174,14 +212,14 @@ const useGrade = () => {
       return false;
     }
   };
-  const findGradeByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
+  const findSubjectByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
       return message.warning(i18next.t('search_empty'));
     }
 
-    const url = API_LINKS.FIND_GRADE_BY_NAME;
+    const url = API_LINKS.FIND_SUBJECT_BY_NAME;
 
     const params = { name: searchQuery.trim(), limit: '1000', skip: '0', withMetaData: 'true' };
 
@@ -201,12 +239,12 @@ const useGrade = () => {
         message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
         return false;
       }
-      message.success(responseData.grades.length + ' ' + i18next.t('grades_found'));
+      message.success(responseData.subjects.length + ' ' + i18next.t('subjects_found'));
 
-      const _grades = (responseData.grades as T_RawGradeFields[]).map(transformRawGrade);
-      setGrades(_grades);
+      const _subjects = (responseData.subjects as T_RawSubjectFields[]).map(transformRawSubject);
+      setSubjects(_subjects);
 
-      return _grades;
+      return _subjects;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -218,52 +256,55 @@ const useGrade = () => {
     setSearchQuery(text);
 
     if (!text.trim().length) {
-      setGrades(originalGrades);
+      setSubjects(originalSubjects);
     }
   };
 
   const triggerEdit = async () => {
-    if (!selectedGradeIds.length) {
+    if (!selectedSubjectIds.length) {
       return message.warning(i18next.t('select_item'));
-    } else if (selectedGradeIds.length > 1) {
+    } else if (selectedSubjectIds.length > 1) {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.grades) + `?gradeId=${selectedGradeIds[0]}`);
+    // TODO: Add the correct link
+    // router.push(getChildLinkByKey('edit', '') + `?subjectId=${selectedSubjectIds[0]}`);
   };
 
   return {
-    createGrade,
-    // fetchGrades,
-    grades,
-    setGrades,
-    setSelectedGradeIds,
-    selectedGradeIds,
+    createSubject,
+    fetchSubjects,
+    subjects,
+    setSubjects,
+    setSelectedSubjectIds,
+    selectedSubjectIds,
     triggerDelete,
     triggerEdit,
-    fetchGradeById,
+    fetchSubjectById,
     router,
-    grade,
+    subject,
     isLoading,
-    editGrade,
-    findGradeByName,
+    editSubject,
+    findSubjectByName,
     onSearchQueryChange,
     searchQuery,
-    originalGrades,
-    deleteGrade,
+    originalSubjects,
+    deleteSubject,
   };
 };
 
-export function transformRawGrade(grade: T_RawGradeFields, index: number = 0): T_GradeFields {
+export function transformRawSubject(subject: T_RawSubjectFields, index: number = 0): T_SubjectFields {
   return {
     index: index + 1,
-    key: grade._id,
-    _id: grade._id,
-    name: grade.name,
-    description: grade.description,
-    created_by: grade.user?.email,
-    created_at: new Date(grade.created_at).toDateString(),
+    key: subject._id,
+    _id: subject._id,
+    // @ts-expect-error
+    gradeId: subject.gradeId,
+    name: subject.name,
+    description: subject.description,
+    created_by: subject.user?.email,
+    created_at: new Date(subject.created_at).toDateString(),
   };
 }
 
-export default useGrade;
+export default useSubject;

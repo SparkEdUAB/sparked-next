@@ -51,7 +51,7 @@ export default async function editSubject_(request: Request, session?: Session) 
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: 500,
       });
     }
 
@@ -87,7 +87,7 @@ export default async function editSubject_(request: Request, session?: Session) 
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: 500,
     });
   }
 }
