@@ -4,8 +4,7 @@ import { getServerSession } from 'next-auth/next';
 import fetchPageActions_ from '..';
 import { authOptions } from '../../auth/constants';
 import createPageAction_ from '../create';
-import deleteSubjects_ from '../delete';
-import editSubject_ from '../edit';
+import deletePageActions_ from '../delete';
 import editPageAction_ from '../edit';
 
 export async function POST(
@@ -78,7 +77,7 @@ export async function DELETE(
   const pageActionApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    deleteSubjects: deleteSubjects_,
+    deletePageActions: deletePageActions_,
   };
 
   if (pageActionApiFunctions[slug] && session) {
