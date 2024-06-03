@@ -24,7 +24,7 @@ export function LibraryNavbar({
       <div className={`pl-2 flex flex-row gap-4 ${searching ? 'hidden md:flex' : ''}`}>
         <button
           type="button"
-          className="text-gray-500 -ml-3 mr-1 p-2 md:ml-0 md:mr-0 md:hidden"
+          className="text-gray-500 -ml-3 mr-1 p-2 md:ml-0 md:mr-0 "
           onClick={toggleSidebar}
         >
           {sidebarIsCollapsed ? (

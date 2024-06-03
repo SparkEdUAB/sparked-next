@@ -12,6 +12,9 @@ import { T_RawSubjectFields } from '@hooks/useSubject/types';
 import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
 import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
 import { T_RawTopicFields } from '@hooks/use-topic/types';
+import useNavigation from '@hooks/useNavigation';
+import { useScreenDetector } from '@hooks/useScreenDetactor';
+import { useEffect } from 'react';
 
 export function LibrarySidebar({
   sidebarIsCollapsed,
@@ -30,6 +33,23 @@ export function LibrarySidebar({
   units: T_RawUnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
 }) {
+  const { isMobile } = useScreenDetector();
+  const { pathname } = useNavigation();
+  const isMediaPage = pathname.split('/')[2] == 'media';
+  console.log('hello', sidebarIsCollapsed);
+  console.log('isMediaPage', isMediaPage);
+  toggleSidebar();
+  useEffect(() => {
+    if (isMediaPage && !sidebarIsCollapsed) {
+      toggleSidebar();
+    }
+    if (sidebarIsCollapsed) {
+      toggleSidebar();
+    }
+  }, []);
+
+  console.log('hello2', sidebarIsCollapsed);
+
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');
   const filteredUnitId = useSearchParams().get('unit_id');
@@ -39,12 +59,11 @@ export function LibrarySidebar({
   return (
     <>
       <div
-        className={`fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] flex-none md:sticky md:block h-[calc(100vh_-_62px)] overflow-y-clip ${
-          sidebarIsCollapsed ? 'hidden' : ''
-        }`}
+        className={`${sidebarIsCollapsed ? 'hidden' : 'block'} fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] flex-none md:sticky  h-[calc(100vh_-_62px)] overflow-y-clip
+        `}
       >
         <Sidebar
-          className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)] bg-white dark:bg-gray-800`}
+          className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)] bg-white dark:bg-gray-800 `}
         >
           <Sidebar.Items>
             <Sidebar.ItemGroup>
@@ -166,11 +185,11 @@ export function LibrarySidebar({
         </Sidebar>
       </div>
 
-      {!sidebarIsCollapsed && (
+      {!sidebarIsCollapsed && isMobile && (
         <div
           onClick={toggleSidebar}
           onKeyUp={(key) => key.code === 'Escape' && toggleSidebar()}
-          className="fixed cursor-pointer inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:hidden"
+          className="fixed cursor-pointer inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:backdrop-blur-none md:bg-inherit"
         />
       )}
     </>
