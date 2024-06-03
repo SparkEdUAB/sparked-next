@@ -5,6 +5,7 @@ import { authOptions } from '../../auth/constants';
 import createPageLink_ from '../create';
 import editPageLink_ from '../edit';
 import deletePageLink_ from '../delete';
+import fetchPageLinks_ from '..';
 
 export async function POST(
   req: Request,
@@ -72,9 +73,13 @@ export async function GET(
 ) {
   const slug = params.slug;
 
+  console.log('formBody', slug);
+
   const pageLinksFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
-  } = {};
+  } = {
+    fetchPageLinks: fetchPageLinks_,
+  };
 
   if (pageLinksFunctions[slug]) {
     return pageLinksFunctions[slug](req);
