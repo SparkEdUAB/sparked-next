@@ -5,7 +5,7 @@ import { authOptions } from '../../auth/constants';
 import createPageLink_ from '../create';
 import editPageLink_ from '../edit';
 import deletePageLink_ from '../delete';
-import fetchPageLinks_ from '..';
+import fetchPageLinks_, { assignPageActionToPageLink_ } from '..';
 
 export async function POST(
   req: Request,
@@ -21,6 +21,7 @@ export async function POST(
   } = {
     createPageLink: createPageLink_,
     editPageLink: editPageLink_,
+    assignPageActionToPageLink: assignPageActionToPageLink_,
   };
 
   if (pageLinksFunctions[slug] && session) {

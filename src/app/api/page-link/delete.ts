@@ -4,7 +4,7 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_PROCESS_CODES } from './processCodes';
+import { default as PAGE_LINK_PROCESS_CODES } from './processCodes';
 
 export default async function deletePageLink_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -36,7 +36,7 @@ export default async function deletePageLink_(request: Request, session?: Sessio
 
     const response = {
       isError: false,
-      code: PAGE_PROCESS_CODES.PAGE_DELETED,
+      code: PAGE_LINK_PROCESS_CODES.PAGE_DELETED,
     };
 
     return new Response(JSON.stringify(response), {
