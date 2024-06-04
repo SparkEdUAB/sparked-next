@@ -1,5 +1,3 @@
-'use client';
-
 import styles from './Layout.module.css';
 import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
@@ -14,12 +12,12 @@ import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
 import { T_RawTopicFields } from '@hooks/use-topic/types';
 import useNavigation from '@hooks/useNavigation';
 import { useScreenDetector } from '@hooks/useScreenDetactor';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 export function LibrarySidebar({
+  subjects,
   sidebarIsCollapsed,
   toggleSidebar,
-  subjects,
   grades,
   units,
   topics,
@@ -33,22 +31,23 @@ export function LibrarySidebar({
   units: T_RawUnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
 }) {
-  const { isMobile } = useScreenDetector();
+  const { isMobile, isDesktop } = useScreenDetector();
   const { pathname } = useNavigation();
-  const isMediaPage = pathname.split('/')[2] == 'media';
-  console.log('hello', sidebarIsCollapsed);
-  console.log('isMediaPage', isMediaPage);
-  toggleSidebar();
-  useEffect(() => {
-    if (isMediaPage && !sidebarIsCollapsed) {
+  const sliptPathname = pathname.split('/');
+
+  const isMediaPage = sliptPathname[2] == 'media';
+  const isLibrary = sliptPathname[1] == 'library';
+
+  useLayoutEffect(() => {
+    // if is media Page and SideNav is not collapsed on navigate set to true
+    if (isLibrary && isMediaPage && !sidebarIsCollapsed && isDesktop) {
       toggleSidebar();
     }
-    if (sidebarIsCollapsed) {
+    // if is Library Page and SideNav is collapsed on navigate set to flase
+    if (isLibrary && !isMediaPage && sidebarIsCollapsed && isDesktop) {
       toggleSidebar();
     }
   }, []);
-
-  console.log('hello2', sidebarIsCollapsed);
 
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');

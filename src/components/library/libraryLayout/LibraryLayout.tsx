@@ -25,7 +25,7 @@ export default function LibraryLayout({
   mediaTypes: T_RawMediaTypeFieldes[];
 }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
-  const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
+  const toggleSidebar = () => setSidebarIsCollapsed(!sidebarIsCollapsed);
 
   return (
     <div className="h-[calc(100vh_-_62px)]">
