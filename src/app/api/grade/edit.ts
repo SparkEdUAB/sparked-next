@@ -4,7 +4,7 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_PROCESS_CODES } from './processCodes';
+import { default as PAGE_LINK_PROCESS_CODES } from './processCodes';
 
 export default async function editGrade_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -37,7 +37,7 @@ export default async function editGrade_(request: Request, session?: Session) {
     if (!existingGrade) {
       const response = {
         isError: true,
-        code: PAGE_PROCESS_CODES.GRADE_NOT_FOUND,
+        code: PAGE_LINK_PROCESS_CODES.GRADE_NOT_FOUND,
       };
       return new Response(JSON.stringify(response), {
         status: 404,
@@ -61,7 +61,7 @@ export default async function editGrade_(request: Request, session?: Session) {
     if (duplicateGrade) {
       const response = {
         isError: true,
-        code: PAGE_PROCESS_CODES.GRADE_EXIST,
+        code: PAGE_LINK_PROCESS_CODES.GRADE_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
@@ -87,7 +87,7 @@ export default async function editGrade_(request: Request, session?: Session) {
 
     const response = {
       isError: false,
-      code: PAGE_PROCESS_CODES.GRADE_EDITED,
+      code: PAGE_LINK_PROCESS_CODES.GRADE_EDITED,
     };
 
     return new Response(JSON.stringify(response), {
