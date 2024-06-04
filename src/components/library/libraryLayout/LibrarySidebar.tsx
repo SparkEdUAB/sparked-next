@@ -78,7 +78,6 @@ export function LibrarySidebar({
                   url={`/library?${createQueryString('subject_id', '')}`}
                 />
                 {subjects.map((subject) => (
-                  <Sidebar.Collapse className={styles.collapsible} key={subject._id} label={subject.name}>
                     <Sidebar.Item
                       active={filteredUnitId == subject._id}
                       className={styles.item}
@@ -88,7 +87,6 @@ export function LibrarySidebar({
                     >
                       {subject.name}
                     </Sidebar.Item>
-                  </Sidebar.Collapse>
                 ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
