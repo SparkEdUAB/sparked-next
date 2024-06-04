@@ -5,6 +5,7 @@ import { authOptions } from '../../auth/constants';
 import createPageLink_ from '../create';
 import editPageLink_ from '../edit';
 import deletePageLink_ from '../delete';
+import fetchPageLinks_, { assignPageActionToPageLink_, unAssignPageActionToPageLink_ } from '..';
 
 export async function POST(
   req: Request,
@@ -20,6 +21,8 @@ export async function POST(
   } = {
     createPageLink: createPageLink_,
     editPageLink: editPageLink_,
+    assignPageActionToPageLink: assignPageActionToPageLink_,
+    unAssignPageActionToPageLink: unAssignPageActionToPageLink_,
   };
 
   if (pageLinksFunctions[slug] && session) {
@@ -74,7 +77,9 @@ export async function GET(
 
   const pageLinksFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
-  } = {};
+  } = {
+    fetchPageLinks: fetchPageLinks_,
+  };
 
   if (pageLinksFunctions[slug]) {
     return pageLinksFunctions[slug](req);

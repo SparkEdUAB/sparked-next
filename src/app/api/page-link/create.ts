@@ -4,7 +4,7 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_PROCESS_CODES } from './processCodes';
+import { default as PAGE_LINK_PROCESS_CODES } from './processCodes';
 
 export default async function createPageLink_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -45,14 +45,13 @@ export default async function createPageLink_(request: Request, session?: Sessio
     if (pageLinkData) {
       const response = {
         isError: true,
-        code: PAGE_PROCESS_CODES.PAGE_EXIST,
+        code: PAGE_LINK_PROCESS_CODES.PAGE_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
         status: 200,
       });
     }
-
 
     await db.collection(dbCollections.page_links.name).insertOne({
       name,
@@ -66,7 +65,7 @@ export default async function createPageLink_(request: Request, session?: Sessio
 
     const response = {
       isError: false,
-      code: PAGE_PROCESS_CODES.PAGE_CREATED,
+      code: PAGE_LINK_PROCESS_CODES.PAGE_CREATED,
     };
 
     return new Response(JSON.stringify(response), {
