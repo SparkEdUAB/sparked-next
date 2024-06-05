@@ -29,9 +29,24 @@ export default async function editGrade_(request: Request, session?: Session) {
         status: 200,
       });
     }
+
+    const existingGrade = await db.collection(dbCollections.grades.name).findOne({
+      _id: new BSON.ObjectId(gradeId),
+    });
+
+    if (!existingGrade) {
+      const response = {
+        isError: true,
+        code: PAGE_PROCESS_CODES.GRADE_NOT_FOUND,
+      };
+      return new Response(JSON.stringify(response), {
+        status: 404,
+      });
+    }
+
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const gradeData = await db.collection(dbCollections.grades.name).findOne(
+    const duplicateGrade = await db.collection(dbCollections.grades.name).findOne(
       {
         name: { $regex: regexPattern },
         _id: { $ne: new BSON.ObjectId(gradeId) },
@@ -43,7 +58,7 @@ export default async function editGrade_(request: Request, session?: Session) {
       },
     );
 
-    if (gradeData) {
+    if (duplicateGrade) {
       const response = {
         isError: true,
         code: PAGE_PROCESS_CODES.GRADE_EXIST,
@@ -85,7 +100,7 @@ export default async function editGrade_(request: Request, session?: Session) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: 500,
     });
   }
 }

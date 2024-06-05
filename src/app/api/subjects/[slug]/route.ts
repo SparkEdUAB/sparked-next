@@ -5,7 +5,7 @@ import { authOptions } from '../../auth/constants';
 import createSubject_ from '../create';
 import editSubject_ from '../edit';
 import deleteSubjects_ from '../delete';
-import fetchSubjects_ from '..';
+import fetchSubjects_, { findSubjectByName_ } from '..';
 
 export async function POST(
   req: Request,
@@ -98,18 +98,18 @@ export async function GET(
 
   { params }: { params: { slug: string } },
 ) {
-  const session = await getServerSession(authOptions);
-
   const slug = params.slug;
 
   const subjectApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     fetchSubjects: fetchSubjects_,
+    findSubjectByName: findSubjectByName_,
   };
 
-  if (subjectApiFunctions[slug] && session) {
-    return subjectApiFunctions[slug](req, session);
+  if (subjectApiFunctions[slug]) {
+    // @ts-expect-error
+    return subjectApiFunctions[slug](req, {});
   } else {
     const response = {
       isError: true,
