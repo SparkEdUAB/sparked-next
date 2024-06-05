@@ -40,14 +40,14 @@ export function LibrarySidebar({
 
   useLayoutEffect(() => {
     // if is media Page and SideNav is not collapsed on navigate set to true
-    if (isLibrary && isMediaPage && !sidebarIsCollapsed && isDesktop) {
+    if (isLibrary && isMediaPage && !sidebarIsCollapsed) {
       toggleSidebar();
     }
     // if is Library Page and SideNav is collapsed on navigate set to flase
-    if (isLibrary && !isMediaPage && sidebarIsCollapsed && isDesktop) {
+    if (isLibrary && !isMediaPage && sidebarIsCollapsed) {
       toggleSidebar();
     }
-  }, []);
+  }, [isMediaPage]);
 
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');
