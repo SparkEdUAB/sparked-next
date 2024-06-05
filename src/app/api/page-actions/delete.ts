@@ -4,16 +4,16 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_LINK_PROCESS_CODES } from './processCodes';
+import PAGE_ACTIONS_PROCESS_CODES from './processCodes';
 
-export default async function deleteGrades_(request: Request, session?: Session) {
+export default async function deletePageActions_(request: Request, session?: Session) {
   const schema = zfd.formData({
-    gradeIds: zfd.repeatableOfType(zfd.text()),
+    pageActionIds: zfd.repeatableOfType(zfd.text()),
   });
 
   const formBody = await request.json();
 
-  const { gradeIds } = schema.parse(formBody);
+  const { pageActionIds } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -28,15 +28,16 @@ export default async function deleteGrades_(request: Request, session?: Session)
       });
     }
 
-    const results = await db.collection(dbCollections.grades.name).deleteMany({
+    const results = await db.collection(dbCollections.page_actions.name).deleteMany({
       _id: {
-        $in: gradeIds.map((i) => new BSON.ObjectId(i)),
+        $in: pageActionIds.map((i) => new BSON.ObjectId(i)),
       },
     });
 
     const response = {
       isError: false,
-      code: PAGE_LINK_PROCESS_CODES.GRADE_DELETED,
+      code: PAGE_ACTIONS_PROCESS_CODES.PAGE_ACTION_DELETED,
+      results,
     };
 
     return new Response(JSON.stringify(response), {

@@ -4,19 +4,19 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_LINK_PROCESS_CODES } from './processCodes';
+import PAGE_ACTIONS_PROCESS_CODES from './processCodes';
 
-export default async function editPageLink_(request: Request, session?: Session) {
+export default async function createPageAction_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
-    pageLinkId: zfd.text(),
     description: zfd.text(),
-    pageLink: zfd.text(),
+    actionKey: zfd.text(),
+    label: zfd.text(),
   });
 
   const formBody = await request.json();
 
-  const { name, description, pageLink, pageLinkId } = schema.parse(formBody);
+  const { name, description, label, actionKey } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -32,10 +32,9 @@ export default async function editPageLink_(request: Request, session?: Session)
     }
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const pageLinkData = await db.collection(dbCollections.page_links.name).findOne(
+    const duplicatePageAction = await db.collection(dbCollections.page_actions.name).findOne(
       {
-        name: { $regex: regexPattern },
-        _id: { $ne: new BSON.ObjectId(pageLinkId) },
+        $or: [{ name: { $regex: regexPattern } }, { action_key: actionKey }],
       },
       {
         projection: {
@@ -44,10 +43,10 @@ export default async function editPageLink_(request: Request, session?: Session)
       },
     );
 
-    if (pageLinkData) {
+    if (duplicatePageAction) {
       const response = {
         isError: true,
-        code: PAGE_LINK_PROCESS_CODES.PAGE_EXIST,
+        code: PAGE_ACTIONS_PROCESS_CODES.PAGE_ACTION_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
@@ -55,26 +54,20 @@ export default async function editPageLink_(request: Request, session?: Session)
       });
     }
 
-    const query = {
-      _id: new BSON.ObjectId(pageLinkId),
-    };
-
-    const updateQuery = {
+    await db.collection(dbCollections.page_actions.name).insertOne({
       name,
       description,
+      created_at: new Date(),
       updated_at: new Date(),
-      link: pageLink,
+      label,
+      action_key: actionKey,
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
-    };
-
-    await db.collection(dbCollections.page_links.name).updateOne(query, {
-      $set: updateQuery,
+      created_by_id: new BSON.ObjectId(session?.user?.id),
     });
 
     const response = {
       isError: false,
-      code: PAGE_LINK_PROCESS_CODES.PAGE_EDITED,
+      code: PAGE_ACTIONS_PROCESS_CODES.PAGE_ACTION_CREATED,
     };
 
     return new Response(JSON.stringify(response), {

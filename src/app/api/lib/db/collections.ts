@@ -45,4 +45,8 @@ export const dbCollections: T_dbCollection = {
     name: 'user_roles',
     label: 'User Role',
   },
+  page_actions: {
+    name: 'page-actions',
+    label: 'Page Actions',
+  },
 };

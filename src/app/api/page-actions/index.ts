@@ -1,19 +1,16 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
-import { BSON } from 'mongodb';
-import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_LINK_PROCESS_CODES } from './processCodes';
 
-export default async function deleteGrades_(request: Request, session?: Session) {
+export default async function fetchPageActions_(request: any) {
   const schema = zfd.formData({
-    gradeIds: zfd.repeatableOfType(zfd.text()),
+    limit: zfd.numeric().optional().default(1000),
+    skip: zfd.numeric().optional().default(0),
   });
+  const params = request.nextUrl.searchParams;
 
-  const formBody = await request.json();
-
-  const { gradeIds } = schema.parse(formBody);
+  const { limit, skip } = schema.parse(params);
 
   try {
     const db = await dbClient();
@@ -28,15 +25,22 @@ export default async function deleteGrades_(request: Request, session?: Session)
       });
     }
 
-    const results = await db.collection(dbCollections.grades.name).deleteMany({
-      _id: {
-        $in: gradeIds.map((i) => new BSON.ObjectId(i)),
-      },
-    });
+    let pageActions = [];
+
+    pageActions = await db
+      .collection(dbCollections.page_actions.name)
+      .find(
+        {},
+        {
+          limit,
+          skip,
+        },
+      )
+      .toArray();
 
     const response = {
       isError: false,
-      code: PAGE_LINK_PROCESS_CODES.GRADE_DELETED,
+      pageActions,
     };
 
     return new Response(JSON.stringify(response), {
