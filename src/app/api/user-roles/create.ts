@@ -4,18 +4,17 @@ import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_LINK_PROCESS_CODES } from './processCodes';
+import { default as USER_ROLES_PROCESS_CODES } from './processCodes';
 
-export default async function editGrade_(request: Request, session?: Session) {
+export default async function createUserRole_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
-    gradeId: zfd.text(),
     description: zfd.text(),
   });
 
   const formBody = await request.json();
 
-  const { name, description, gradeId } = schema.parse(formBody);
+  const { name, description } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -29,27 +28,11 @@ export default async function editGrade_(request: Request, session?: Session) {
         status: 200,
       });
     }
-
-    const existingGrade = await db.collection(dbCollections.grade.name).findOne({
-      _id: new BSON.ObjectId(gradeId),
-    });
-
-    if (!existingGrade) {
-      const response = {
-        isError: true,
-        code: PAGE_LINK_PROCESS_CODES.GRADE_NOT_FOUND,
-      };
-      return new Response(JSON.stringify(response), {
-        status: 404,
-      });
-    }
-
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const duplicateGrade = await db.collection(dbCollections.grade.name).findOne(
+    const userRoleData = await db.collection(dbCollections.user_roles.name).findOne(
       {
         name: { $regex: regexPattern },
-        _id: { $ne: new BSON.ObjectId(gradeId) },
       },
       {
         projection: {
@@ -58,10 +41,10 @@ export default async function editGrade_(request: Request, session?: Session) {
       },
     );
 
-    if (duplicateGrade) {
+    if (userRoleData) {
       const response = {
         isError: true,
-        code: PAGE_LINK_PROCESS_CODES.GRADE_EXIST,
+        code: USER_ROLES_PROCESS_CODES.USER_ROLE_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
@@ -69,25 +52,18 @@ export default async function editGrade_(request: Request, session?: Session) {
       });
     }
 
-    const query = {
-      _id: new BSON.ObjectId(gradeId),
-    };
-
-    const updateQuery = {
+    await db.collection(dbCollections.user_roles.name).insertOne({
       name,
       description,
+      created_at: new Date(),
       updated_at: new Date(),
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
-    };
-
-    await db.collection(dbCollections.grade.name).updateOne(query, {
-      $set: updateQuery,
+      created_by_id: new BSON.ObjectId(session?.user?.id),
     });
 
     const response = {
       isError: false,
-      code: PAGE_LINK_PROCESS_CODES.GRADE_EDITED,
+      code: USER_ROLES_PROCESS_CODES.USER_ROLE_CREATED,
     };
 
     return new Response(JSON.stringify(response), {
@@ -100,7 +76,7 @@ export default async function editGrade_(request: Request, session?: Session) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 500,
+      status: 200,
     });
   }
 }

@@ -28,7 +28,7 @@ export default async function deleteGrades_(request: Request, session?: Session)
       });
     }
 
-    const results = await db.collection(dbCollections.grade.name).deleteMany({
+    const results = await db.collection(dbCollections.grades.name).deleteMany({
       _id: {
         $in: gradeIds.map((i) => new BSON.ObjectId(i)),
       },

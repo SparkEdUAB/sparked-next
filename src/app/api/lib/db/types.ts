@@ -31,7 +31,7 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
-  grade: {
+  grades: {
     name: string;
     label: string;
   };
@@ -39,6 +39,11 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
+  user_roles: {
+    name: string;
+    label: string;
+  };
+
   page_actions: {
     name: string;
     label: string;

@@ -33,13 +33,17 @@ export const dbCollections: T_dbCollection = {
     name: 'page-links',
     label: 'Media Content',
   },
-  grade: {
-    name: 'grade', // TODO: This should be grades
-    label: 'Grade',
+  grades: {
+    name: 'grades',
+    label: 'Grades',
   },
   subjects: {
     name: 'subjects',
     label: 'Subjects',
+  },
+  user_roles: {
+    name: 'user_roles',
+    label: 'User Role',
   },
   page_actions: {
     name: 'page-actions',
