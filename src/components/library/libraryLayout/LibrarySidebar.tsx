@@ -31,7 +31,7 @@ export function LibrarySidebar({
   units: T_RawUnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
 }) {
-  const { isMobile, isDesktop } = useScreenDetector();
+  const { isMobile } = useScreenDetector();
   const { pathname } = useNavigation();
   const sliptPathname = pathname.split('/');
 
