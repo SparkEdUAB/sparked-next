@@ -20,16 +20,21 @@ import { API_LINKS } from 'app/links';
 
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+import { T_SubjectFields } from '@hooks/useSubject/types';
 
 const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSuccessfullyDone: () => void }) => {
   const { editUnit, deleteUnits } = useUnit();
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const [subjectId, setSubjectId] = useState<string | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
-    API_LINKS.FETCH_COURSES,
-    'courses',
+  const { item: subject, isLoading: loadingCourses } = useAdminItemById(
+    API_LINKS.FETCH_COURSE_BY_ID,
+    unit.subjectId as string,
+    'subject',
     transformRawCourse,
   );
 
@@ -44,6 +49,10 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleClick = (subject: T_SubjectFields) => {
+    setSubjectId(subject?._id);
   };
 
   return (
@@ -75,13 +84,11 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
               defaultValue={unit.description}
             />
 
-            <AdminFormSelector
-              loadingItems={loadingCourses}
-              disabled={uploading || loadingCourses}
-              options={courses}
-              label={UNIT_FORM_FIELDS.course.label}
-              name={UNIT_FORM_FIELDS.course.key}
-              defaultValue={unit.courseId}
+            <Autocomplete
+              url={API_LINKS.FIND_SUBJECT_BY_NAME}
+              handleSelect={handleClick}
+              moduleName="subjects"
+              defaultValue={subject?.name}
             />
 
             <Button type="submit" className="mt-2" disabled={uploading}>
