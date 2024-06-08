@@ -22,6 +22,7 @@ export type T_UnitFields = {
   programId?: string;
   courseId?: string;
 
+  subjectName?: string;
   schoolName?: string;
   programName?: string;
   courseName?: string;
@@ -42,6 +43,10 @@ export type T_UnitFields = {
     _id: string;
   };
   course?: {
+    name: string;
+    _id: string;
+  };
+  subject?: {
     name: string;
     _id: string;
   };
