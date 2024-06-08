@@ -21,11 +21,14 @@ import { API_LINKS } from 'app/links';
 import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { T_UnitFields } from '@hooks/useUnit/types';
 
 const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; onSuccessfullyDone: () => void }) => {
   const { editTopic, deleteTopics } = useTopic();
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const [unitId, setUnitId] = useState<string | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
   // const { item: topic, isLoading } = useAdminItemById(
@@ -41,6 +44,8 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
     transformRawUnit,
   );
 
+  let unit = units.find((unit) => unit._id === topic.unitId);
+
   const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
     API_LINKS.FETCH_COURSES,
     'courses',
@@ -52,18 +57,17 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
       setUploading(true);
       e.preventDefault();
 
-      const keys = [
-        TOPIC_FORM_FIELDS.name.key,
-        TOPIC_FORM_FIELDS.description.key,
-        TOPIC_FORM_FIELDS.course.key,
-        TOPIC_FORM_FIELDS.unit.key,
-      ];
+      const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key, TOPIC_FORM_FIELDS.course.key];
 
       let result = extractValuesFromFormEvent<T_TopicFields>(e, keys);
-      await editTopic({ ...topic, ...result }, onSuccessfullyDone);
+      await editTopic({ ...topic, ...result, unitId: unitId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleClick = (unit: T_UnitFields) => {
+    setUnitId(unit?._id);
   };
 
   return (
@@ -102,14 +106,11 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
             name={TOPIC_FORM_FIELDS.course.key}
             defaultValue={topic.courseId}
           />
-
-          <AdminFormSelector
-            loadingItems={loadingUnits}
-            disabled={uploading || loadingUnits}
-            options={units}
-            label={TOPIC_FORM_FIELDS.unit.label}
-            name={TOPIC_FORM_FIELDS.unit.key}
-            defaultValue={topic.unitId}
+          <Autocomplete
+            url={API_LINKS.FIND_UNITS_BY_NAME}
+            handleSelect={handleClick}
+            defaultValue={unit?.name}
+            moduleName="units"
           />
 
           <Button type="submit" className="mt-2" disabled={uploading}>
