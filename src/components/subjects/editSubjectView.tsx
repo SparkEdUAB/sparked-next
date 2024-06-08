@@ -15,6 +15,8 @@ import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarni
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { API_LINKS } from 'app/links';
 import { T_GradeFields } from '@hooks/useGrade/types';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { transformRawUnit } from '@hooks/useUnit';
 
 const EditSubjectView = ({
   subject,
@@ -32,6 +34,13 @@ const EditSubjectView = ({
   const handleClick = (grade: T_GradeFields) => {
     setGradeId(grade?._id);
   };
+  const { items: grades, isLoading: loadingUnits } = useAdminListViewData(
+    API_LINKS.FETCH_GRADES,
+    'grades',
+    transformRawUnit,
+  );
+
+  let grade = grades.find((grade) => grade._id === subject.gradeId);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -77,7 +86,12 @@ const EditSubjectView = ({
               defaultValue={subject.description}
             />
 
-            <Autocomplete url={API_LINKS.FIND_GRADE_BY_NAME} handleSelect={handleClick} moduleName="grades" />
+            <Autocomplete
+              url={API_LINKS.FIND_GRADE_BY_NAME}
+              handleSelect={handleClick}
+              moduleName="grades"
+              defaultValue={grade?.name}
+            />
 
             <div className="flex space-x-4 mt-2">
               <Button type="submit" disabled={uploading}>
