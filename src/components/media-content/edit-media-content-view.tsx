@@ -2,13 +2,13 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useMediaContent, { transformRawMediaContent } from '@hooks/use-media-content';
+import useMediaContent from '@hooks/use-media-content';
 import { transformRawCourse } from '@hooks/useCourse';
 import { transformRawUnit } from '@hooks/useUnit';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect, useState } from 'react';
+
+import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
 import { transformRawTopic } from '@hooks/use-topic';
 import { extractValuesFromFormEvent } from 'utils/helpers';
@@ -22,6 +22,8 @@ import { API_LINKS } from 'app/links';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import { T_TopicFields } from '@hooks/use-topic/types';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 
 const EditMediaContentView = ({
   mediaContent,
@@ -37,6 +39,8 @@ const EditMediaContentView = ({
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const [topicId, setTopicId] = useState<string | null>(null);
+
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
   // const { item: mediaContent, isLoading: loadingResource } = useAdminItemById(
@@ -63,6 +67,8 @@ const EditMediaContentView = ({
     'units',
     transformRawUnit,
   );
+
+  let topic = topics.find((topic) => topic._id === mediaContent.topicId);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -94,6 +100,9 @@ const EditMediaContentView = ({
     }
   };
 
+  const handleClick = (topic: T_TopicFields) => {
+    setTopicId(topic?._id);
+  };
   return (
     <>
       <AdminPageTitle title={i18next.t('edit_media_content')} />
@@ -149,13 +158,11 @@ const EditMediaContentView = ({
             defaultValue={mediaContent.unitId}
           />
 
-          <AdminFormSelector
-            loadingItems={loadingTopics}
-            disabled={uploading || loadingTopics}
-            options={topics}
-            label={MEDIA_CONTENT_FORM_FIELDS.topic.label}
-            name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
-            defaultValue={mediaContent.topicId}
+          <Autocomplete
+            url={API_LINKS.FIND_TOPIC_BY_NAME}
+            handleSelect={handleClick}
+            moduleName="topics"
+            defaultValue={topic?.name}
           />
 
           <Button type="submit" className="mt-2" disabled={uploading}>
