@@ -2,22 +2,22 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useProgram from '@hooks/useProgram';
+
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect, useState } from 'react';
+
+import { FormEventHandler, useState } from 'react';
 import { UNIT_FORM_FIELDS } from './constants';
-import useSchool from '@hooks/useSchool';
-import useUnit, { transformRawUnit } from '@hooks/useUnit';
-import useCourse, { transformRawCourse } from '@hooks/useCourse';
+
+import useUnit from '@hooks/useUnit';
+import { transformRawCourse } from '@hooks/useCourse';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { T_UnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
-import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 
@@ -26,13 +26,6 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
-
-  // const { item: unit, isLoading } = useAdminItemById(
-  //   API_LINKS.FETCH_UNIT_BY_ID,
-  //   unitId || (searchParams.get('unitId') as string),
-  //   'unit',
-  //   transformRawUnit,
-  // );
 
   const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
     API_LINKS.FETCH_COURSES,

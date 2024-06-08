@@ -4,14 +4,13 @@
 import { AdminPageTitle } from '@components/layouts';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect, useState } from 'react';
+
+import { FormEventHandler, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
-import useProgram from '@hooks/useProgram';
-import useSchool, { transformRawSchool } from '@hooks/useSchool';
-import useUnit, { transformRawUnit } from '@hooks/useUnit';
-import useCourse, { transformRawCourse } from '@hooks/useCourse';
-import useTopic, { transformRawTopic } from '@hooks/use-topic';
+
+import { transformRawUnit } from '@hooks/useUnit';
+import { transformRawCourse } from '@hooks/useCourse';
+import useTopic from '@hooks/use-topic';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
@@ -31,20 +30,12 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
   const [unitId, setUnitId] = useState<string | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // const { item: topic, isLoading } = useAdminItemById(
-  //   API_LINKS.FETCH_TOPIC_BY_ID,
-  //   topicId || (searchParams.get('topicId') as string),
-  //   'topic',
-  //   transformRawTopic,
-  // );
-
-  const { items: units, isLoading: loadingUnits } = useAdminListViewData(
-    API_LINKS.FETCH_UNITS,
-    'units',
+  const { item: unit, isLoading: loadingUnits } = useAdminItemById(
+    API_LINKS.FETCH_UNIT_BY_ID,
+    topic.unitId as string,
+    'unit',
     transformRawUnit,
   );
-
-  let unit = units.find((unit) => unit._id === topic.unitId);
 
   const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
     API_LINKS.FETCH_COURSES,

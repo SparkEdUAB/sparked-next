@@ -15,8 +15,8 @@ import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarni
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { API_LINKS } from 'app/links';
 import { T_GradeFields } from '@hooks/useGrade/types';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { transformRawUnit } from '@hooks/useUnit';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 
 const EditSubjectView = ({
   subject,
@@ -34,13 +34,12 @@ const EditSubjectView = ({
   const handleClick = (grade: T_GradeFields) => {
     setGradeId(grade?._id);
   };
-  const { items: grades, isLoading: loadingUnits } = useAdminListViewData(
-    API_LINKS.FETCH_GRADES,
-    'grades',
+  const { item: grade, isLoading: loadingUnits } = useAdminItemById(
+    API_LINKS.FETCH_GRADE_BY_ID,
+    subject.gradeId,
+    'grade',
     transformRawUnit,
   );
-
-  let grade = grades.find((grade) => grade._id === subject.gradeId);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {

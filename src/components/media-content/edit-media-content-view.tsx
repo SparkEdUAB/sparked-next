@@ -24,6 +24,7 @@ import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/Lib
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 
 const EditMediaContentView = ({
   mediaContent,
@@ -50,12 +51,6 @@ const EditMediaContentView = ({
   //   transformRawMediaContent,
   // );
 
-  const { items: topics, isLoading: loadingTopics } = useAdminListViewData(
-    API_LINKS.FETCH_TOPICS,
-    'topics',
-    transformRawTopic,
-  );
-
   const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
     API_LINKS.FETCH_COURSES,
     'courses',
@@ -68,7 +63,12 @@ const EditMediaContentView = ({
     transformRawUnit,
   );
 
-  let topic = topics.find((topic) => topic._id === mediaContent.topicId);
+  const { item: topic, isLoading: loadingTopics } = useAdminItemById(
+    API_LINKS.FETCH_TOPIC_BY_ID,
+    mediaContent.topicId as string,
+    'topic',
+    transformRawTopic,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -78,7 +78,6 @@ const EditMediaContentView = ({
       MEDIA_CONTENT_FORM_FIELDS.description.key,
       MEDIA_CONTENT_FORM_FIELDS.course.key,
       MEDIA_CONTENT_FORM_FIELDS.unit.key,
-      MEDIA_CONTENT_FORM_FIELDS.topic.key,
     ];
 
     let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
@@ -90,7 +89,7 @@ const EditMediaContentView = ({
       let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
       await editMediaContent(
-        { ...mediaContent, ...result },
+        { ...mediaContent, ...result, topicId: topicId as string },
         fileUrl || undefined,
         thumbnailUrl || undefined,
         onSuccessfullyDone,
