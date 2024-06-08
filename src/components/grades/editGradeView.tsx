@@ -12,6 +12,7 @@ import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_GradeFields } from '@hooks/useGrade/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 
 const EditGradeView = ({ grade, onSuccessfullyDone }: { grade: T_GradeFields; onSuccessfullyDone: () => void }) => {
   const { editGrade, deleteGrade } = useGrade();
@@ -63,15 +64,7 @@ const EditGradeView = ({ grade, onSuccessfullyDone }: { grade: T_GradeFields; on
               defaultValue={grade.description}
             />
 
-            <Button type="submit" className="mt-2" disabled={uploading}>
-              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-              {i18next.t('update')}
-            </Button>
-
-            <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-              {i18next.t('delete')}
-            </Button>
+            <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
           </div>
         </form>
       )}

@@ -21,6 +21,7 @@ import { API_LINKS } from 'app/links';
 import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 
 const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; onSuccessfullyDone: () => void }) => {
   const { editTopic, deleteTopics } = useTopic();
@@ -112,15 +113,7 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
             defaultValue={topic.unitId}
           />
 
-          <Button type="submit" className="mt-2" disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('update')}
-          </Button>
-
-          <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('delete')}
-          </Button>
+          <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
         </form>
       )}
 

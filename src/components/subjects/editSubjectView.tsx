@@ -15,6 +15,7 @@ import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarni
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { API_LINKS } from 'app/links';
 import { T_GradeFields } from '@hooks/useGrade/types';
+import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 
 const EditSubjectView = ({
   subject,
@@ -78,17 +79,7 @@ const EditSubjectView = ({
             />
 
             <Autocomplete url={API_LINKS.FIND_GRADE_BY_NAME} handleSelect={handleClick} moduleName="grades" />
-
-            <div className="flex space-x-4 mt-2">
-              <Button type="submit" disabled={uploading}>
-                {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-                {i18next.t('update')}
-              </Button>
-              <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-                {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-                {i18next.t('delete')}
-              </Button>
-            </div>
+            <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
           </div>
         </form>
       )}
