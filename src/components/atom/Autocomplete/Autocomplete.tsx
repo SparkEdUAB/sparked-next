@@ -18,6 +18,7 @@ interface Props {
   /**
    * TODO: If no query is provided search module name with at least 5 options to provide default values, this means we need to provide a fallback url
    */
+  defaultValue?: string;
   fallbackUrl?: string;
   handleSelect: (suggestion: any) => void; // suggestion here, we are interested in id and name
   /**
@@ -27,10 +28,10 @@ interface Props {
   moduleName: string;
 }
 
-const Autocomplete = ({ url, handleSelect, moduleName }: Props) => {
-  const [query, setQuery] = useState('');
+const Autocomplete = ({ url, handleSelect, moduleName, defaultValue }: Props) => {
+  const [query, setQuery] = useState('' || defaultValue);
   const [autoCompleted, setAutoCompleted] = useState<boolean>(false);
-  const debouncedValue: string = useDebounceValue<string>(query, 500);
+  const debouncedValue: string = useDebounceValue<string>(query as string, 500);
   const { data, isLoading, isValidating } = useFetch(query ? `${url}?name=${debouncedValue}` : undefined);
 
   const handleChange = (e: any) => {

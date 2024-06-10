@@ -5,18 +5,20 @@ import { AdminPageTitle } from '@components/layouts';
 import useTopic from '@hooks/use-topic';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
 import { transformRawUnit } from '@hooks/useUnit';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { extractValuesFromFormEvent } from 'utils/helpers';
 import { T_CreateTopicFields } from '@hooks/use-topic/types';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { T_UnitFields } from '@hooks/useUnit/types';
 
 const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createTopic, isLoading } = useTopic();
+  const [unitId, setUnitId] = useState<string | null>(null);
 
   const { items: units, isLoading: loadingUnits } = useAdminListViewData(
     API_LINKS.FETCH_UNITS,
@@ -26,15 +28,25 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-
-    const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key, TOPIC_FORM_FIELDS.unit.key];
+    const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key];
 
     let result = extractValuesFromFormEvent<Omit<T_CreateTopicFields, 'schoolId' | 'programId' | 'courseId'>>(e, keys);
     let unit = units.find((unit) => unit._id === result.unitId);
+
     createTopic(
-      { ...result, programId: unit?.programId, courseId: unit?.courseId, schoolId: unit?.schoolId },
+      {
+        ...result,
+        unitId: unitId as string,
+        programId: unit?.programId,
+        courseId: unit?.courseId,
+        schoolId: unit?.schoolId,
+      },
       onSuccessfullyDone,
     );
+  };
+
+  const handleClick = (unit: T_UnitFields) => {
+    setUnitId(unit?._id);
   };
 
   return (
@@ -55,14 +67,7 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
           label={TOPIC_FORM_FIELDS.description.label}
           required
         />
-
-        <AdminFormSelector
-          loadingItems={loadingUnits}
-          disabled={isLoading || loadingUnits}
-          options={units}
-          label={TOPIC_FORM_FIELDS.unit.label}
-          name={TOPIC_FORM_FIELDS.unit.key}
-        />
+        <Autocomplete url={API_LINKS.FIND_UNITS_BY_NAME} handleSelect={handleClick} moduleName="units" />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
           {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}

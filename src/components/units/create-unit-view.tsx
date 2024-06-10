@@ -5,7 +5,7 @@ import { AdminPageTitle } from '@components/layouts';
 import { transformRawCourse } from '@hooks/useCourse';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { UNIT_FORM_FIELDS } from './constants';
 import useUnit from '@hooks/useUnit';
 import { extractValuesFromFormEvent } from 'utils/helpers';
@@ -14,9 +14,12 @@ import { AdminFormSelector } from '../admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '../admin/AdminForm/AdminFormInput';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { T_SubjectFields } from '@hooks/useSubject/types';
 
 const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createUnit, isLoading } = useUnit();
+  const [subjectId, setSubjectId] = useState<string | null>(null);
 
   const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
     API_LINKS.FETCH_COURSES,
@@ -27,11 +30,15 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    const keys = [UNIT_FORM_FIELDS.name.key, UNIT_FORM_FIELDS.description.key, UNIT_FORM_FIELDS.course.key];
+    const keys = [UNIT_FORM_FIELDS.name.key, UNIT_FORM_FIELDS.description.key];
 
     let result = extractValuesFromFormEvent<Omit<T_CreateUnitFields, 'schoolId' | 'programId'>>(e, keys);
     let course = courses.find((course) => course._id === result.courseId);
-    createUnit({ ...result, programId: course?.programId, schoolId: course?.schoolId }, onSuccessfullyDone);
+    createUnit({ ...result, subjectId: subjectId as string, schoolId: course?.schoolId }, onSuccessfullyDone);
+  };
+
+  const handleClick = (subject: T_SubjectFields) => {
+    setSubjectId(subject?._id);
   };
 
   return (
@@ -53,13 +60,7 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
           required
         />
 
-        <AdminFormSelector
-          loadingItems={loadingCourses}
-          disabled={isLoading || loadingCourses}
-          options={courses}
-          label={UNIT_FORM_FIELDS.course.label}
-          name={UNIT_FORM_FIELDS.course.key}
-        />
+        <Autocomplete url={API_LINKS.FIND_SUBJECT_BY_NAME} handleSelect={handleClick} moduleName="subjects" />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
           {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}

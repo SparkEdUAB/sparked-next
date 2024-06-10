@@ -2,43 +2,40 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useProgram from '@hooks/useProgram';
+
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect, useState } from 'react';
+
+import { FormEventHandler, useState } from 'react';
 import { UNIT_FORM_FIELDS } from './constants';
-import useSchool from '@hooks/useSchool';
-import useUnit, { transformRawUnit } from '@hooks/useUnit';
-import useCourse, { transformRawCourse } from '@hooks/useCourse';
+
+import useUnit from '@hooks/useUnit';
+
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { T_UnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
-import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+import { T_SubjectFields } from '@hooks/useSubject/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
+import { transformRawSubject } from '@hooks/useSubject';
 
 const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSuccessfullyDone: () => void }) => {
   const { editUnit, deleteUnits } = useUnit();
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const [subjectId, setSubjectId] = useState<string | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // const { item: unit, isLoading } = useAdminItemById(
-  //   API_LINKS.FETCH_UNIT_BY_ID,
-  //   unitId || (searchParams.get('unitId') as string),
-  //   'unit',
-  //   transformRawUnit,
-  // );
-
-  const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
-    API_LINKS.FETCH_COURSES,
-    'courses',
-    transformRawCourse,
+  const { item: subject, isLoading: loadingCourses } = useAdminItemById(
+    API_LINKS.FETCH_SUBJECT_BY_ID,
+    unit.subjectId as string,
+    'subject',
+    transformRawSubject,
   );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -52,6 +49,10 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleClick = (subject: T_SubjectFields) => {
+    setSubjectId(subject?._id);
   };
 
   return (
@@ -83,13 +84,11 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
               defaultValue={unit.description}
             />
 
-            <AdminFormSelector
-              loadingItems={loadingCourses}
-              disabled={uploading || loadingCourses}
-              options={courses}
-              label={UNIT_FORM_FIELDS.course.label}
-              name={UNIT_FORM_FIELDS.course.key}
-              defaultValue={unit.courseId}
+            <Autocomplete
+              url={API_LINKS.FIND_SUBJECT_BY_NAME}
+              handleSelect={handleClick}
+              moduleName="subjects"
+              defaultValue={subject?.name}
             />
 
             <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />

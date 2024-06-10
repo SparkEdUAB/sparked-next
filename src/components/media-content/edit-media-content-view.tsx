@@ -2,13 +2,13 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useMediaContent, { transformRawMediaContent } from '@hooks/use-media-content';
+import useMediaContent from '@hooks/use-media-content';
 import { transformRawCourse } from '@hooks/useCourse';
 import { transformRawUnit } from '@hooks/useUnit';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect, useState } from 'react';
+
+import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
 import { transformRawTopic } from '@hooks/use-topic';
 import { extractValuesFromFormEvent } from 'utils/helpers';
@@ -23,6 +23,9 @@ import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
+import { T_TopicFields } from '@hooks/use-topic/types';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 
 const EditMediaContentView = ({
   mediaContent,
@@ -38,6 +41,8 @@ const EditMediaContentView = ({
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const [topicId, setTopicId] = useState<string | null>(null);
+
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
   // const { item: mediaContent, isLoading: loadingResource } = useAdminItemById(
@@ -46,12 +51,6 @@ const EditMediaContentView = ({
   //   'mediaContent',
   //   transformRawMediaContent,
   // );
-
-  const { items: topics, isLoading: loadingTopics } = useAdminListViewData(
-    API_LINKS.FETCH_TOPICS,
-    'topics',
-    transformRawTopic,
-  );
 
   const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
     API_LINKS.FETCH_COURSES,
@@ -65,6 +64,13 @@ const EditMediaContentView = ({
     transformRawUnit,
   );
 
+  const { item: topic, isLoading: loadingTopics } = useAdminItemById(
+    API_LINKS.FETCH_TOPIC_BY_ID,
+    mediaContent.topicId as string,
+    'topic',
+    transformRawTopic,
+  );
+
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
@@ -73,7 +79,6 @@ const EditMediaContentView = ({
       MEDIA_CONTENT_FORM_FIELDS.description.key,
       MEDIA_CONTENT_FORM_FIELDS.course.key,
       MEDIA_CONTENT_FORM_FIELDS.unit.key,
-      MEDIA_CONTENT_FORM_FIELDS.topic.key,
     ];
 
     let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
@@ -85,7 +90,7 @@ const EditMediaContentView = ({
       let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
       await editMediaContent(
-        { ...mediaContent, ...result },
+        { ...mediaContent, ...result, topicId: topicId as string },
         fileUrl || undefined,
         thumbnailUrl || undefined,
         onSuccessfullyDone,
@@ -95,6 +100,9 @@ const EditMediaContentView = ({
     }
   };
 
+  const handleClick = (topic: T_TopicFields) => {
+    setTopicId(topic?._id);
+  };
   return (
     <>
       <AdminPageTitle title={i18next.t('edit_media_content')} />
@@ -150,13 +158,11 @@ const EditMediaContentView = ({
             defaultValue={mediaContent.unitId}
           />
 
-          <AdminFormSelector
-            loadingItems={loadingTopics}
-            disabled={uploading || loadingTopics}
-            options={topics}
-            label={MEDIA_CONTENT_FORM_FIELDS.topic.label}
-            name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
-            defaultValue={mediaContent.topicId}
+          <Autocomplete
+            url={API_LINKS.FIND_TOPIC_BY_NAME}
+            handleSelect={handleClick}
+            moduleName="topics"
+            defaultValue={topic?.name}
           />
 
           <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />

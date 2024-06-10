@@ -16,6 +16,8 @@ import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { API_LINKS } from 'app/links';
 import { T_GradeFields } from '@hooks/useGrade/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
+import { transformRawUnit } from '@hooks/useUnit';
+import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 
 const EditSubjectView = ({
   subject,
@@ -33,6 +35,12 @@ const EditSubjectView = ({
   const handleClick = (grade: T_GradeFields) => {
     setGradeId(grade?._id);
   };
+  const { item: grade, isLoading: loadingUnits } = useAdminItemById(
+    API_LINKS.FETCH_GRADE_BY_ID,
+    subject.gradeId,
+    'grade',
+    transformRawUnit,
+  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
