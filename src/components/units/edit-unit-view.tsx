@@ -10,7 +10,7 @@ import { FormEventHandler, useState } from 'react';
 import { UNIT_FORM_FIELDS } from './constants';
 
 import useUnit from '@hooks/useUnit';
-import { transformRawCourse } from '@hooks/useCourse';
+
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { T_UnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers';
@@ -22,6 +22,7 @@ import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { T_SubjectFields } from '@hooks/useSubject/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
+import { transformRawSubject } from '@hooks/useSubject';
 
 const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSuccessfullyDone: () => void }) => {
   const { editUnit, deleteUnits } = useUnit();
@@ -34,7 +35,7 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
     API_LINKS.FETCH_SUBJECT_BY_ID,
     unit.subjectId as string,
     'subject',
-    transformRawCourse,
+    transformRawSubject,
   );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
