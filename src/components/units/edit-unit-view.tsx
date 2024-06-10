@@ -21,6 +21,7 @@ import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarni
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { T_SubjectFields } from '@hooks/useSubject/types';
+import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 
 const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSuccessfullyDone: () => void }) => {
   const { editUnit, deleteUnits } = useUnit();
@@ -89,15 +90,7 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
               defaultValue={subject?.name}
             />
 
-            <Button type="submit" className="mt-2" disabled={uploading}>
-              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-              {i18next.t('update')}
-            </Button>
-
-            <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-              {i18next.t('delete')}
-            </Button>
+            <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
           </div>
         </form>
       )}

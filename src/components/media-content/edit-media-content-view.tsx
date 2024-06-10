@@ -22,6 +22,7 @@ import { API_LINKS } from 'app/links';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
@@ -164,15 +165,7 @@ const EditMediaContentView = ({
             defaultValue={topic?.name}
           />
 
-          <Button type="submit" className="mt-2" disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('update')}
-          </Button>
-
-          <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('delete')}
-          </Button>
+          <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
         </form>
       )}
 

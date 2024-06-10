@@ -22,6 +22,7 @@ import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/Lib
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { T_UnitFields } from '@hooks/useUnit/types';
+import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 
 const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; onSuccessfullyDone: () => void }) => {
   const { editTopic, deleteTopics } = useTopic();
@@ -104,15 +105,7 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
             moduleName="units"
           />
 
-          <Button type="submit" className="mt-2" disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('update')}
-          </Button>
-
-          <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('delete')}
-          </Button>
+          <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
         </form>
       )}
 
