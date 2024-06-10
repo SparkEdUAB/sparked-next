@@ -31,7 +31,7 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
   const { item: subject, isLoading: loadingCourses } = useAdminItemById(
-    API_LINKS.FETCH_COURSE_BY_ID,
+    API_LINKS.FETCH_SUBJECT_BY_ID,
     unit.subjectId as string,
     'subject',
     transformRawCourse,
