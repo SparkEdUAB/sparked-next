@@ -2,6 +2,7 @@ export type T_CreateUnitFields = {
   name: string;
   description: string;
   schoolId?: string;
+  subjectId: string;
   courseId: string;
   programId?: string;
 };
@@ -19,6 +20,7 @@ export type T_UnitFields = {
   description: string;
 
   schoolId?: string;
+  subjectId?: string;
   programId?: string;
   courseId?: string;
 
