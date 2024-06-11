@@ -1,7 +1,7 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchUnits_, { deleteUnits_, fetchUnitById_, findUnitsByName_ } from '..';
+import fetchUnits_, { deleteUnits_, fetchUnitById_, fetchUnitBySubjectId_, findUnitsByName_ } from '..';
 import { authOptions } from '../../auth/constants';
 import createUnit_ from '../create';
 import editUnit_ from '../edit';
@@ -19,7 +19,6 @@ export async function POST(
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createUnit: createUnit_,
-    editUnit: editUnit_,
     deleteUnits: deleteUnits_,
   };
 
@@ -36,6 +35,36 @@ export async function POST(
     });
   }
 }
+
+export async function PUT(
+  req: Request,
+
+  { params }: { params: { slug: string } },
+) {
+  const session = await getServerSession(authOptions);
+
+  const slug = params.slug;
+
+  const unitFunctions: {
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
+  } = {
+    editUnit: editUnit_,
+  };
+
+  if (unitFunctions[slug] && session) {
+    return unitFunctions[slug](req, session);
+  } else {
+    const response = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  }
+}
+
 export async function GET(
   req: Request,
 
@@ -49,6 +78,7 @@ export async function GET(
     fetchUnits: fetchUnits_,
     fetchUnitById: fetchUnitById_,
     findUnitsByName: findUnitsByName_,
+    fetchUnitBySubjectId: fetchUnitBySubjectId_,
   };
 
   if (unitFunctions[slug]) {
