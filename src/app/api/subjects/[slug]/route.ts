@@ -5,7 +5,7 @@ import { authOptions } from '../../auth/constants';
 import createSubject_ from '../create';
 import editSubject_ from '../edit';
 import deleteSubjects_ from '../delete';
-import fetchSubjects_, { findSubjectByName_ } from '..';
+import fetchSubjects_, { fetchSubjectsByGradeId_, findSubjectByName_ } from '..';
 
 export async function POST(
   req: Request,
@@ -105,6 +105,7 @@ export async function GET(
   } = {
     fetchSubjects: fetchSubjects_,
     findSubjectByName: findSubjectByName_,
+    fetchSubjectsByGradeId: fetchSubjectsByGradeId_,
   };
 
   if (subjectApiFunctions[slug]) {
