@@ -5,6 +5,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { SUBJECT_FIELD_NAMES_CONFIG } from './constants';
 import { p_fetchSubjectWithGrade } from './pipelines';
+import { BSON } from 'mongodb';
 
 export default async function fetchSubjects_(request: any) {
   const schema = zfd.formData({
@@ -102,6 +103,55 @@ export async function findSubjectByName_(request: any) {
       .collection(dbCollections.subjects.name)
       .find({
         name: { $regex: regexPattern },
+      })
+      .toArray();
+
+    const response = {
+      isError: false,
+      subjects,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  } catch (error) {
+    const resp = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+    };
+
+    return new Response(JSON.stringify(resp), {
+      status: 500,
+    });
+  }
+}
+export async function fetchSubjectsByGradeId_(request: any) {
+  const schema = zfd.formData({
+    gradeId: zfd.text(),
+    skip: zfd.numeric().optional(),
+    limit: zfd.numeric().optional(),
+  });
+  const params = request.nextUrl.searchParams;
+
+  const { gradeId, limit, skip } = schema.parse(params);
+
+  try {
+    const db = await dbClient();
+
+    if (!db) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+      };
+      return new Response(JSON.stringify(response), {
+        status: 500,
+      });
+    }
+
+    const subjects = await db
+      .collection(dbCollections.subjects.name)
+      .find({
+        grade_id: new BSON.ObjectId(gradeId),
       })
       .toArray();
 
