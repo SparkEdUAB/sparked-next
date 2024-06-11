@@ -14,10 +14,11 @@ export default async function editUnit_(request: Request, session?: Session) {
     programId: zfd.text().optional(),
     courseId: zfd.text(),
     unitId: zfd.text(),
+    subjectId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId, subjectId } = schema.parse(formBody);
   try {
     const db = await dbClient();
 
@@ -109,20 +110,42 @@ export default async function editUnit_(request: Request, session?: Session) {
       });
     }
 
-    const query = {
-      _id: new BSON.ObjectId(unitId),
-    };
 
-    const updateQuery = {
-      name,
-      description,
-      updated_at: new Date(),
-      school_id: new BSON.ObjectId(schoolId),
-      course_id: new BSON.ObjectId(courseId),
-      program_id: new BSON.ObjectId(programId),
-      //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
-    };
+        const subject = subjectId
+          ? await db.collection(dbCollections.subjects.name).findOne(
+              {
+                _id: new BSON.ObjectId(subjectId),
+              },
+              { projection: { _id: 1 } },
+            )
+          : null;
+
+        if (!subjectId && subject) {
+          const response = {
+            isError: true,
+            code: UNIT_PROCESS_CODES.SUBJECT_NOT_FOUND,
+          };
+
+          return new Response(JSON.stringify(response), {
+            status: 200,
+          });
+        }
+
+        const query = {
+          _id: new BSON.ObjectId(unitId),
+        };
+
+        const updateQuery = {
+          name,
+          description,
+          updated_at: new Date(),
+          school_id: new BSON.ObjectId(schoolId),
+          course_id: new BSON.ObjectId(courseId),
+          program_id: new BSON.ObjectId(programId),
+          subjectId: new BSON.ObjectId(subjectId),
+          //@ts-ignore
+          updated_by_id: new BSON.ObjectId(session?.user?.id),
+        };
 
     await db.collection(dbCollections.units.name).updateOne(query, {
       $set: updateQuery,
