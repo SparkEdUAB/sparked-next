@@ -302,6 +302,7 @@ export function transformRawUnit(i: T_RawUnitFields, index: number): T_UnitField
     schoolName: i.school?.name,
     programName: i.program?.name,
     courseName: i.course?.name,
+    subjectName: i.subject?.name,
     created_by: i.user?.email,
     created_at: new Date(i.created_at).toDateString(),
     school: i.school,

@@ -15,7 +15,7 @@ export default async function fetchUnits_(request: any) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
-    withMetaData: zfd.text().optional(),
+    withMetaData: zfd.text().default('true').optional(),
   });
   const params = request.nextUrl.searchParams;
 
