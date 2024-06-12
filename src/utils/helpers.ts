@@ -1,6 +1,6 @@
 import { DEFAULT_OPEN_GRAPH_PREVIEW } from 'app/shared/constants';
 import { Metadata, ResolvingMetadata } from 'next';
-import { FormEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 
 export const toTitleCase = (text: string) => {
   if (!text) return '';
@@ -80,4 +80,38 @@ export async function getMetadataGenerator(parent: ResolvingMetadata) {
       images: thumbnail ? [thumbnail, ...previousImages] : [...previousImages],
     },
   });
+}
+
+export function convertListToText(items: string[]): string {
+  const length = items.length;
+
+  if (length === 0) {
+    return '';
+  } else if (length === 1) {
+    return capitalizeFirstLetter(items[0]);
+  } else if (length === 2) {
+    return `${capitalizeFirstLetter(items[0])} or ${capitalizeFirstLetter(items[1])}`;
+  } else {
+    const firstPart = items
+      .slice(0, length - 1)
+      .map(capitalizeFirstLetter)
+      .join(', ');
+
+    const lastItem = capitalizeFirstLetter(items[length - 1]);
+    return `${firstPart}, or ${lastItem}`;
+  }
+}
+
+export function capitalizeFirstLetter(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function getFileFromInput(e: ChangeEvent<HTMLInputElement>) {
+  const files = (e.target as HTMLInputElement).files;
+
+  if (files && files.length > 0) {
+    return files[0];
+  } else {
+    return null;
+  }
 }
