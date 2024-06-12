@@ -18,7 +18,7 @@ export function AdminFormInput({
   return (
     <div>
       <div className="mb-2 block">
-        <Label htmlFor={name}>
+        <Label htmlFor={name} className="cursor-pointer">
           {label} {required ? <RedAsterisk /> : undefined}
         </Label>
       </div>
