@@ -4,7 +4,7 @@ import { ReactNode } from 'react';
 import { FaBook, FaBookmark } from 'react-icons/fa';
 import { ImBooks } from 'react-icons/im';
 import { T_RawMediaContentFields } from 'types/media-content';
-import { determineFileType } from 'utils/helpers';
+import { determineFileType } from 'utils/helpers/determineFileType';
 import { LibraryErrorMessage } from './LibraryErrorMessage/LibraryErrorMessage';
 import Image from 'next/image';
 import { RelatedMediaContentList } from './RelatedMediaContentList';

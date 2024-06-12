@@ -13,7 +13,7 @@ import useUnit from '@hooks/useUnit';
 
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { T_UnitFields } from '@hooks/useUnit/types';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { API_LINKS } from 'app/links';
 
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';

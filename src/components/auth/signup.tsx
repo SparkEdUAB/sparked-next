@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { SIGNUP_FORM_FIELDS } from './constants';
 import AppLogo from '@components/logo';
 import { T_SignupFields } from '@hooks/useAuth/types';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { AiOutlineLock } from 'react-icons/ai';

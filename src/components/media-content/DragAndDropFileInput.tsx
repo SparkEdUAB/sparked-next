@@ -5,10 +5,10 @@ import { FileInput, Label } from 'flowbite-react';
 import { ChangeEvent, Dispatch, SetStateAction, useCallback } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
 import { VscCloudUpload } from 'react-icons/vsc';
-import { convertListToText, determineFileType, getFileFromInput } from 'utils/helpers';
+import { AcceptableFileType, determineFileType } from 'utils/helpers/determineFileType';
+import { convertListToText } from 'utils/helpers/convertListToText';
+import { getFileFromInput } from 'utils/helpers/getFileFromInput';
 import { Accept, DropEvent, FileRejection, useDropzone } from 'react-dropzone';
-
-type AcceptableFileType = 'image' | 'video' | 'pdf';
 
 export function DragAndDropFileInput({
   id,

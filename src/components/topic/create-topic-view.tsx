@@ -9,7 +9,7 @@ import { FormEventHandler, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
 import { transformRawUnit } from '@hooks/useUnit';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateTopicFields } from '@hooks/use-topic/types';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';

@@ -8,7 +8,7 @@ import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { UNIT_FORM_FIELDS } from './constants';
 import useUnit from '@hooks/useUnit';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateUnitFields } from '@hooks/useUnit/types';
 import { AdminFormSelector } from '../admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '../admin/AdminForm/AdminFormInput';
