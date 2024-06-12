@@ -8,7 +8,7 @@ import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useEffect } from 'react';
 import { SCHOOL_FORM_FIELDS } from './constants';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_SchoolFields } from './types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 

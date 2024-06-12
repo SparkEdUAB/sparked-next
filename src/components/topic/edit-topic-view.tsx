@@ -11,7 +11,7 @@ import { TOPIC_FORM_FIELDS } from './constants';
 import { transformRawUnit } from '@hooks/useUnit';
 import { transformRawCourse } from '@hooks/useCourse';
 import useTopic from '@hooks/use-topic';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';

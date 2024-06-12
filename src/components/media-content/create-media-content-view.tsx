@@ -7,7 +7,7 @@ import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_MediaContentFields } from 'types/media-content';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import useFileUpload from '@hooks/use-file-upload';

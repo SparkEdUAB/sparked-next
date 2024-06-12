@@ -53,11 +53,12 @@ const Autocomplete = ({ url, handleSelect, moduleName, defaultValue }: Props) =>
   return (
     <div className="relative w-full">
       <div className="mb-2 block capitalize">
-        <Label htmlFor={moduleName}>
+        <Label htmlFor={moduleName} className="cursor-pointer">
           {moduleName} <RedAsterisk />
         </Label>
       </div>
       <TextInput
+        id={moduleName}
         type="text"
         value={query}
         name={moduleName}

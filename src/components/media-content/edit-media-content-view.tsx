@@ -11,7 +11,7 @@ import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
 import { transformRawTopic } from '@hooks/use-topic';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_MediaContentFields } from 'types/media-content';
 import useFileUpload from '@hooks/use-file-upload';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';

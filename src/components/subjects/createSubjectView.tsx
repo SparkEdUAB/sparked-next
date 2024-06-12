@@ -11,7 +11,7 @@ import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import { FormEventHandler, useState } from 'react';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { SUBJECT_FORM_FIELDS } from './constants';
 
 const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
