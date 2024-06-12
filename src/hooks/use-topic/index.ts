@@ -302,20 +302,21 @@ const useTopic = () => {
 };
 
 export function transformRawTopic(i: T_RawTopicFields, index: number): T_TopicFields {
+  console.log(i.unit);
   return {
     index: index + 1,
     key: i._id,
     _id: i._id,
     name: i.name,
     description: i.description,
-    school: i.school,
+    // school: i.school,
     unitId: i.unit?._id,
-    schoolId: i.school?._id,
-    courseId: i.course?._id,
-    programId: i.program?._id,
-    schoolName: i.school?.name,
-    programName: i.program?.name,
-    courseName: i.course?.name,
+    // schoolId: i.school?._id,
+    // courseId: i.course?._id,
+    // programId: i.program?._id,
+    // schoolName: i.school?.name,
+    // programName: i.program?.name,
+    // courseName: i.course?.name,
     unitName: i.unit?.name,
     created_by: i.user?.email,
     created_at: new Date(i.created_at).toDateString(),

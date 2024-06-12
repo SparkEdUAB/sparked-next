@@ -32,7 +32,9 @@ const Autocomplete = ({ url, handleSelect, moduleName, defaultValue }: Props) =>
   const [query, setQuery] = useState('' || defaultValue);
   const [autoCompleted, setAutoCompleted] = useState<boolean>(false);
   const debouncedValue: string = useDebounceValue<string>(query as string, 500);
-  const { data, isLoading, isValidating } = useFetch(query ? `${url}?name=${debouncedValue}` : undefined);
+  const { data, isLoading, isValidating } = useFetch(
+    query && autoCompleted ? `${url}?name=${debouncedValue}` : undefined,
+  );
 
   const handleChange = (e: any) => {
     const userInput = e.target.value;

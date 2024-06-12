@@ -80,7 +80,7 @@ export default async function fetchUnits_(request: any) {
 export async function fetchUnitById_(request: any) {
   const schema = zfd.formData({
     unitId: zfd.text(),
-    withMetaData: z.boolean().optional(),
+    withMetaData: zfd.text().optional(), // this should boolean but changing for now to match the rest and FE
   });
   const params = request.nextUrl.searchParams;
 
@@ -191,8 +191,8 @@ export async function deleteUnits_(request: Request) {
 export async function findUnitsByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
-    skip: zfd.numeric(),
-    limit: zfd.numeric(),
+    skip: zfd.numeric().optional(),
+    limit: zfd.numeric().default(20).optional(),
     withMetaData: zfd.text().optional(),
   });
   const params = request.nextUrl.searchParams;
@@ -232,9 +232,14 @@ export async function findUnitsByName_(request: any) {
     } else {
       units = await db
         .collection(dbCollections.units.name)
-        .find({
-          name: { $regex: regexPattern },
-        })
+        .find(
+          {
+            name: { $regex: regexPattern },
+          },
+          {
+            limit,
+          },
+        )
         .toArray();
     }
 
