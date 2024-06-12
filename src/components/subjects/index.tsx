@@ -13,4 +13,9 @@ export const subjectTableColumns: T_ColumnData<T_SubjectFields>[] = [
     dataIndex: 'name',
     key: 'name',
   },
+  {
+    title: 'Grade',
+    dataIndex: 'gradeName',
+    key: 'gradeName',
+  },
 ];

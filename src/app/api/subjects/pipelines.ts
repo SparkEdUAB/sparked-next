@@ -35,6 +35,8 @@ export const p_fetchSubjectWithGrade = ({
       _id: 1,
       name: 1,
       description: 1,
+      'grade.name': 1,
+      'grade._id': 1,
       ...project,
     },
   },

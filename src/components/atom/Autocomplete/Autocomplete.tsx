@@ -66,6 +66,7 @@ const Autocomplete = ({ url, handleSelect, moduleName, defaultValue }: Props) =>
         onChange={handleChange}
         placeholder={`Search for ${moduleName}`}
         className="block w-full"
+        autoComplete="off"
       />
       {autoCompleted && query && (
         <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-600">
