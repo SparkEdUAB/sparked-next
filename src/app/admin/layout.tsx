@@ -1,6 +1,5 @@
 'use client';
 
-import 'utils/intl';
 import AdminLayout from '@components/layouts/adminLayout';
 import { ReactNode } from 'react';
 
