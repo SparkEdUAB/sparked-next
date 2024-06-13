@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateTopicFields } from '@hooks/use-topic/types';
 import { API_LINKS } from 'app/links';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';

@@ -6,7 +6,7 @@ import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
 import useTopic from '@hooks/use-topic';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { API_LINKS } from 'app/links';

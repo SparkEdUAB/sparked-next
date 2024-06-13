@@ -7,7 +7,7 @@ import i18next from 'i18next';
 
 import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_MediaContentFields } from 'types/media-content';
 import useFileUpload from '@hooks/use-file-upload';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
@@ -43,11 +43,7 @@ const EditMediaContentView = ({
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    const keys = [
-      MEDIA_CONTENT_FORM_FIELDS.name.key,
-      MEDIA_CONTENT_FORM_FIELDS.description.key,
-      // MEDIA_CONTENT_FORM_FIELDS.unit.key,
-    ];
+    const keys = [MEDIA_CONTENT_FORM_FIELDS.name.key, MEDIA_CONTENT_FORM_FIELDS.description.key];
 
     let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
 

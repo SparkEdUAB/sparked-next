@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
-import { RedAsterisk } from '@components/atom';
-import { FileInput, Label } from 'flowbite-react';
+
 import i18next from 'i18next';
-import Image from 'next/image';
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import { determineFileType } from 'utils/helpers';
+import { Dispatch, SetStateAction } from 'react';
+import { DragAndDropFileInput } from './DragAndDropFileInput';
 
 export function FileUploadSection({
   isLoading,
@@ -22,72 +20,27 @@ export function FileUploadSection({
   setThumbnail: Dispatch<SetStateAction<File | null>>;
   required?: boolean;
 }) {
-  const fileType = determineFileType(file?.name || '');
-
   return (
     <div className="w-full">
-      <div id="fileUpload" className="w-full mb-4">
-        <div className="mb-2 block">
-          <Label htmlFor="file" value={i18next.t('upload_file')} /> {required ? <RedAsterisk /> : null}
-        </div>
-        <FileInput
-          id="file"
-          required={required}
-          name="file"
-          disabled={isLoading}
-          multiple={false}
-          onChange={(e) => setFile(getFileFromInput(e))}
-          accept="image/*, application/pdf, video/*"
-        />
-      </div>
+      <DragAndDropFileInput
+        id="file"
+        file={file}
+        label={i18next.t('upload_file')}
+        onChange={setFile}
+        required={required}
+        isLoading={isLoading}
+        fileTypes={['pdf', 'video', 'image']}
+      />
 
-      {file ? (
-        fileType === 'image' ? (
-          <Image
-            width={400}
-            height={300}
-            src={URL.createObjectURL(file)}
-            alt="Media content file"
-            className="mb-6 h-48 object-contain object-left"
-          />
-        ) : fileType === 'video' ? (
-          <video src={URL.createObjectURL(file)} className="mb-4 h-48" controls></video>
-        ) : null
-      ) : null}
-
-      <div id="thumbnailUpload" className="w-full mb-2">
-        <div className="mb-2 block">
-          <Label htmlFor="thumbnail" value={i18next.t('upload_thumbnail')} />
-        </div>
-        <FileInput
-          id="thumbnail"
-          name="thumbnail"
-          disabled={isLoading}
-          multiple={false}
-          onChange={(e) => setThumbnail(getFileFromInput(e))}
-          accept="image/*"
-        />
-      </div>
-
-      {thumbnail ? (
-        <Image
-          width={400}
-          height={300}
-          src={URL.createObjectURL(thumbnail)}
-          alt="Media content thumbnail"
-          className="mb-4 h-48 object-contain object-left"
-        />
-      ) : null}
+      <DragAndDropFileInput
+        id="thumbnail"
+        file={thumbnail}
+        label={i18next.t('upload_thumbnail')}
+        required={false}
+        isLoading={isLoading}
+        onChange={setThumbnail}
+        fileTypes={['image']}
+      />
     </div>
   );
-}
-
-function getFileFromInput(e: ChangeEvent<HTMLInputElement>) {
-  const files = (e.target as HTMLInputElement).files;
-
-  if (files && files.length > 0) {
-    return files[0];
-  } else {
-    return null;
-  }
 }

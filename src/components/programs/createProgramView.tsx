@@ -8,7 +8,7 @@ import { AdminPageTitle } from '@components/layouts';
 import { FormEventHandler } from 'react';
 import useProgram from '@hooks/useProgram';
 import { T_CreateProgramFields } from '@hooks/useProgram/types';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { PROGRAM_FORM_FIELDS } from './constants';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';

@@ -3,7 +3,7 @@
 import React from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
 import { T_RawMediaContentFields } from 'types/media-content';
-import { determineFileType } from 'utils/helpers';
+import { determineFileType } from 'utils/helpers/determineFileType';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
 
