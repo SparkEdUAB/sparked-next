@@ -52,8 +52,6 @@ const useTopic = () => {
       message.success(i18next.t('topic_created'));
     } catch (err: any) {
       setLoaderStatus(false);
-      console.log('createTopic:errr', err);
-
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -302,7 +300,6 @@ const useTopic = () => {
 };
 
 export function transformRawTopic(i: T_RawTopicFields, index: number): T_TopicFields {
-  console.log(i.unit);
   return {
     index: index + 1,
     key: i._id,

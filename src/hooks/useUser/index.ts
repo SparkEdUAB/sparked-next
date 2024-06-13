@@ -1,11 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { T_CreateUserFields, T_FetchUsers, T_UserFields } from './types';
 import { useToastMessage } from 'providers/ToastMessageContext';
 

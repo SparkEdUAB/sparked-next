@@ -43,7 +43,6 @@ const EditSubjectView = ({
 
       let result = extractValuesFromFormEvent<T_SubjectFields>(e, keys);
 
-      console.log(result, subject);
       await editSubject({ ...result, gradeId: gradeId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);

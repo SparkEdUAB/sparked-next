@@ -3,13 +3,13 @@
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { T_CreateSubjectFields, T_FetchSubjects, T_SubjectFields, T_RawSubjectFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
 
 const useSubject = () => {
-  const { getChildLinkByKey, router } = useNavigation();
+  const { router } = useNavigation();
   const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
@@ -212,7 +212,7 @@ const useSubject = () => {
       return false;
     }
   };
-  const findSubjectByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
+  const findSubjectByName = async () => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {

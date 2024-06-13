@@ -5,7 +5,7 @@ import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useState } from 'react';
-import { T_CreateGradeFields, T_FetchGrades, T_GradeFields, T_RawGradeFields } from './types';
+import { T_CreateGradeFields, T_GradeFields, T_RawGradeFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
 
@@ -16,7 +16,7 @@ const useGrade = () => {
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [grades, setGrades] = useState<Array<T_GradeFields>>([]);
-  const [originalGrades, setOriginalGrades] = useState<Array<T_GradeFields>>([]);
+  const [originalGrades] = useState<Array<T_GradeFields>>([]);
   const [grade, setGrade] = useState<T_GradeFields | null>(null);
   const [selectedGradeIds, setSelectedGradeIds] = useState<React.Key[]>([]);
 
@@ -174,7 +174,7 @@ const useGrade = () => {
       return false;
     }
   };
-  const findGradeByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
+  const findGradeByName = async () => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {

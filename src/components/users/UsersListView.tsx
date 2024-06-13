@@ -1,46 +1,10 @@
 'use client';
 
-import { AdminPageTitle } from '@components/layouts';
-import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
-import useNavigation from '@hooks/useNavigation';
-import useUser from '@hooks/useUser';
-import { Modal, TextInput } from 'flowbite-react';
-import i18next from 'i18next';
-import React, { useEffect, useState } from 'react';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
-import { userTableColumns } from '.';
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { T_UserFields } from '@hooks/useUser/types';
-import CreateUserView from './create-user-view';
-import EditUserView from './edit-unit-view';
 import ContentPlaceholder from '@components/atom/ContentPlaceholder/ContentPlaceholder';
+import { AdminPageTitle } from '@components/layouts';
+import i18next from 'i18next';
 
 const UsersListView = () => {
-  const {
-    fetchUnits,
-    users,
-    selectedUserIds,
-    setSelectedUserIds,
-    findUsersByName,
-    onSearchQueryChange,
-    isLoading,
-    deleteUsers,
-  } = useUser();
-  const { getChildLinkByKey } = useNavigation();
-  const [creatingUser, setCreatingUser] = useState(false);
-  const [edittingUserWithId, setEdittingUserWithId] = useState<string | null>(null);
-
-  // useEffect(() => {
-  //   fetchUnits({});
-  // }, []);
-
-  const rowSelection = {
-    selectedRowKeys: selectedUserIds,
-    onChange: (selectedRowKeys: React.Key[]) => {
-      setSelectedUserIds(selectedRowKeys);
-    },
-  };
-
   return (
     <>
       <AdminPageTitle title={i18next.t('users')} />

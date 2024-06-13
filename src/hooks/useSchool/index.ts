@@ -5,13 +5,13 @@ import { T_SchoolFields } from '@components/school/types';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { T_CreateSchoolFields, T_FetchSchools } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
 
 const useSchool = () => {
-  const { getChildLinkByKey, router } = useNavigation();
+  const { router } = useNavigation();
   const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
