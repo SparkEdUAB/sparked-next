@@ -12,7 +12,7 @@ export default async function editTopic_(request: Request, session?: Session) {
     description: zfd.text(),
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
-    courseId: zfd.text(),
+    courseId: zfd.text().optional(), // add subjectId instead
     unitId: zfd.text(),
     topicId: zfd.text(),
   });

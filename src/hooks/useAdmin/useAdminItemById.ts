@@ -12,7 +12,7 @@ export function useAdminItemById<Result extends object, RawData extends object>(
   const message = useToastMessage();
 
   const { data, isLoading, mutate } = useFetch(
-    url + NETWORK_UTILS.formatGetParams({ [objectType + 'Id']: id, withMetaData: 'false' }),
+    id ? url + NETWORK_UTILS.formatGetParams({ [objectType + 'Id']: id, withMetaData: 'false' }) : undefined,
   );
 
   const item: Result | null | Error = useMemo(() => {

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
@@ -122,8 +121,6 @@ const useUnit = () => {
       return _units;
     } catch (err: any) {
       setLoaderStatus(false);
-      console.log(err);
-      console.error(err);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
@@ -302,6 +299,7 @@ export function transformRawUnit(i: T_RawUnitFields, index: number): T_UnitField
     schoolName: i.school?.name,
     programName: i.program?.name,
     courseName: i.course?.name,
+    subjectName: i.subject?.name,
     created_by: i.user?.email,
     created_at: new Date(i.created_at).toDateString(),
     school: i.school,

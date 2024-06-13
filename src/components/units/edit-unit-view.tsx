@@ -43,9 +43,9 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
       setUploading(true);
 
       e.preventDefault();
-      const keys = [UNIT_FORM_FIELDS.name.key, UNIT_FORM_FIELDS.description.key, UNIT_FORM_FIELDS.course.key];
+      const keys = [UNIT_FORM_FIELDS.name.key, UNIT_FORM_FIELDS.description.key];
       let result = extractValuesFromFormEvent<T_UnitFields>(e, keys);
-      await editUnit({ ...unit, ...result }, onSuccessfullyDone);
+      await editUnit({ ...unit, ...result, subjectId: subjectId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }

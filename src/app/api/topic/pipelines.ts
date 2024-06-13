@@ -27,48 +27,48 @@ export const p_fetchTopicsWithMetaData = ({
   {
     $unwind: '$user',
   },
-  {
-    $lookup: {
-      from: dbCollections.schools.name,
-      localField: 'school_id',
-      foreignField: '_id',
-      as: 'school',
-    },
-  },
-  {
-    $unwind: {
-      path: '$school',
-      preserveNullAndEmptyArrays: true,
-    },
-  },
-  {
-    $lookup: {
-      from: dbCollections.programs.name,
-      localField: 'program_id',
-      foreignField: '_id',
-      as: 'program',
-    },
-  },
-  {
-    $unwind: {
-      path: '$program',
-      preserveNullAndEmptyArrays: true,
-    },
-  },
-  {
-    $lookup: {
-      from: dbCollections.courses.name,
-      localField: 'course_id',
-      foreignField: '_id',
-      as: 'course',
-    },
-  },
-  {
-    $unwind: {
-      path: '$course',
-      preserveNullAndEmptyArrays: true,
-    },
-  },
+  // {
+  //   $lookup: {
+  //     from: dbCollections.schools.name,
+  //     localField: 'school_id',
+  //     foreignField: '_id',
+  //     as: 'school',
+  //   },
+  // },
+  // {
+  //   $unwind: {
+  //     path: '$school',
+  //     preserveNullAndEmptyArrays: true,
+  //   },
+  // },
+  // {
+  //   $lookup: {
+  //     from: dbCollections.programs.name,
+  //     localField: 'program_id',
+  //     foreignField: '_id',
+  //     as: 'program',
+  //   },
+  // },
+  // {
+  //   $unwind: {
+  //     path: '$program',
+  //     preserveNullAndEmptyArrays: true,
+  //   },
+  // },
+  // {
+  //   $lookup: {
+  //     from: dbCollections.courses.name,
+  //     localField: 'course_id',
+  //     foreignField: '_id',
+  //     as: 'course',
+  //   },
+  // },
+  // {
+  //   $unwind: {
+  //     path: '$course',
+  //     preserveNullAndEmptyArrays: true,
+  //   },
+  // },
   {
     $lookup: {
       from: dbCollections.units.name,
@@ -94,8 +94,8 @@ export const p_fetchTopicsWithMetaData = ({
       'user._id': 1,
       'user.name': 1,
       'user.email': 1,
-      'course._id': 1,
-      'course.name': 1,
+      // 'course._id': 1,
+      // 'course.name': 1,
       'unit.name': 1,
       'unit._id': 1,
       ...project,

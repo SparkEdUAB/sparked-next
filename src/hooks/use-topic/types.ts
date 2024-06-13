@@ -20,9 +20,9 @@ export type T_RawTopicFields = {
   _id: string;
   created_by: string;
   description: string;
-  school_id: string;
-  program_id: string;
-  course_id: string;
+  // school_id: string;
+  // program_id: string;
+  // course_id: string;
   unit_id: string;
 
   created_at: string;
@@ -31,18 +31,18 @@ export type T_RawTopicFields = {
     name: string;
     email: string;
   };
-  school?: {
-    name: string;
-    _id: string;
-  };
-  program?: {
-    name: string;
-    _id: string;
-  };
-  course?: {
-    name: string;
-    _id: string;
-  };
+  // school?: {
+  //   name: string;
+  //   _id: string;
+  // };
+  // program?: {
+  //   name: string;
+  //   _id: string;
+  // };
+  // course?: {
+  //   name: string;
+  //   _id: string;
+  // };
   unit?: {
     name: string;
     _id: string;
@@ -61,14 +61,14 @@ export type T_TopicFields = {
     _id: string;
   };
 
-  schoolId: string | undefined;
   unitId: string | undefined;
-  programId: string | undefined;
-  courseId: string | undefined;
+  // schoolId: string | undefined;
+  // programId: string | undefined;
+  // courseId: string | undefined;
 
-  schoolName: string | undefined;
-  programName: string | undefined;
-  courseName: string | undefined;
+  // schoolName: string | undefined;
+  // programName: string | undefined;
+  // courseName: string | undefined;
   unitName: string | undefined;
 
   created_by: string | undefined;
