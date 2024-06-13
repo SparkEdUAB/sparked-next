@@ -1,5 +1,6 @@
 'use client';
 
+import 'utils/intl';
 import { SessionProvider } from 'next-auth/react';
 import { Flowbite } from 'flowbite-react';
 import { ReactNode } from 'react';
