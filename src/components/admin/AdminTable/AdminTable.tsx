@@ -43,7 +43,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const { configs, getDisabledConfigItems } = useConfig({ isAutoLoadCoreConfig: true });
+  const { configs, getDisabledConfigItems } = useConfig();
 
   const disabledConfigItems: Array<string> = configs ? getDisabledConfigItems({ configs }) : [];
 
