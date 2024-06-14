@@ -3,7 +3,7 @@
 
 import i18next from 'i18next';
 import { Dispatch, SetStateAction } from 'react';
-import { DragAndDropFileInput } from './DragAndDropFileInput';
+import { DragAndDropFileInput } from '../molecules/DragAndDropFileInput/DragAndDropFileInput';
 
 export function FileUploadSection({
   isLoading,

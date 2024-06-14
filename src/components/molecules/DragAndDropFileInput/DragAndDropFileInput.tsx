@@ -2,15 +2,14 @@
 'use client';
 import { RedAsterisk } from '@components/atom';
 import { FileInput, Label } from 'flowbite-react';
-import { useCallback, useMemo } from 'react';
-import { FaFilePdf } from 'react-icons/fa';
+import { useCallback } from 'react';
 import { VscCloudUpload } from 'react-icons/vsc';
-import { AcceptableFileTypes, determineFileType } from 'utils/helpers/determineFileType';
+import { AcceptableFileTypes } from 'utils/helpers/determineFileType';
 import { convertListToText } from 'utils/helpers/convertListToText';
 import { getFileFromInput, getMultipleFilesFromInput } from 'utils/helpers/getFileFromInput';
-import { Accept, DropEvent, FileRejection, useDropzone } from 'react-dropzone';
-import { truncateText } from 'utils/helpers/truncateText';
-import { IoClose } from 'react-icons/io5';
+import { DropEvent, FileRejection, useDropzone } from 'react-dropzone';
+import { FilePreview } from './FilePreview';
+import { getDropzoneAcceptValue } from './getDropzoneAcceptValue';
 
 type Props = {
   id: string;
@@ -115,57 +114,4 @@ export function DragAndDropFileInput({
       </div>
     </>
   );
-}
-
-function FilePreview({ file, deleteItem }: { file: File | null; deleteItem?: () => void }) {
-  const fileType = determineFileType(file?.name || '');
-  const fileUrl = useMemo(() => (file ? URL.createObjectURL(file) : undefined), [file]);
-
-  return file ? (
-    <div className="inline-block relative w-fit h-fit" onClick={(e) => e.stopPropagation()}>
-      {fileType === 'image' ? (
-        <img
-          src={fileUrl}
-          alt="Media content file"
-          className="inline-block m-4 h-full max-h-48 max-w-48 object-contain object-center"
-        />
-      ) : fileType === 'video' ? (
-        <video src={fileUrl} className="inline-block m-4 h-48 max-h-48 max-w-48" controls></video>
-      ) : (
-        fileType === 'pdf' && (
-          <div className="m-4 inline-flex flex-col items-center text-center">
-            <FaFilePdf className="mb-2" color="#bb4338" size={40} />
-            <p className="max-w-32">{truncateText(file.name, 40)}</p>
-          </div>
-        )
-      )}
-      {deleteItem && (
-        <button className="p-1 absolute top-0 right-0 z-20 bg-red-500 text-white rounded-full" onClick={deleteItem}>
-          <IoClose size={20} />
-        </button>
-      )}
-    </div>
-  ) : null;
-}
-
-/**
- * Creates an object for specifying the file types that
- * should be accepted by a dropzone file input field
- *
- * @param fileTypes The acceptable file types
- */
-function getDropzoneAcceptValue(fileTypes: AcceptableFileTypes[]): Accept {
-  let accept: Accept = {};
-
-  if (fileTypes.includes('image')) {
-    accept['image/*'] = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
-  }
-  if (fileTypes.includes('video')) {
-    accept['video/*'] = ['.mp4', '.webm', '.ogg'];
-  }
-  if (fileTypes.includes('pdf')) {
-    accept['application/pdf'] = ['.pdf'];
-  }
-
-  return accept;
 }

@@ -3,7 +3,7 @@ import { AdminPageTitle } from '@components/layouts';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import { Button } from 'flowbite-react';
 import { Dispatch, SetStateAction } from 'react';
-import { DragAndDropFileInput } from '../DragAndDropFileInput';
+import { DragAndDropFileInput } from '../../molecules/DragAndDropFileInput/DragAndDropFileInput';
 
 export function FileSelector({
   files,
