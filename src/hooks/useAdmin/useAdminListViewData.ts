@@ -27,7 +27,7 @@ export function useAdminListViewData<Result extends Record<string, any>, RawData
           name: searchQuery,
           limit: ITEMS_PER_PAGE.toString(),
           skip: (ITEMS_PER_PAGE * index).toString(),
-          withMetaData: 'false',
+          withMetaData: 'true',
         })
       );
     } else {
@@ -36,14 +36,14 @@ export function useAdminListViewData<Result extends Record<string, any>, RawData
         NETWORK_UTILS.formatGetParams({
           limit: ITEMS_PER_PAGE.toString(),
           skip: (ITEMS_PER_PAGE * index).toString(),
-          withMetaData: 'false',
+          withMetaData: 'true',
         })
       );
     }
   };
 
   const infiniteFetcher = async (input: RequestInfo, init?: RequestInit) => {
-    const result = await fetcher<Record<string, any>>(input, init);
+    const result = await fetcher<Record<string, any>>(input, { ...init, cache: 'default' });
 
     if (result instanceof Error) {
       message.error(result.message);

@@ -12,7 +12,7 @@ export default async function editUnit_(request: Request, session?: Session) {
     description: zfd.text(),
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
-    courseId: zfd.text(),
+    courseId: zfd.text().optional(),
     unitId: zfd.text(),
   });
   const formBody = await request.json();

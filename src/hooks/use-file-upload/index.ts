@@ -37,9 +37,6 @@ const useFileUpload = () => {
       }
 
       const fileUrl: string = resp.data.url;
-
-      console.log('fileUrl', fileUrl);
-
       return fileUrl;
     } catch (err: any) {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);

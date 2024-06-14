@@ -1,23 +1,15 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Button, Spinner } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-
 import { FormEventHandler, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
-
-import { transformRawUnit } from '@hooks/useUnit';
-import { transformRawCourse } from '@hooks/useCourse';
 import useTopic from '@hooks/use-topic';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_TopicFields } from '@hooks/use-topic/types';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
-import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
@@ -31,25 +23,12 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
   const [unitId, setUnitId] = useState<string | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const { item: unit, isLoading: loadingUnits } = useAdminItemById(
-    API_LINKS.FETCH_UNIT_BY_ID,
-    topic.unitId as string,
-    'unit',
-    transformRawUnit,
-  );
-
-  const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
-    API_LINKS.FETCH_COURSES,
-    'courses',
-    transformRawCourse,
-  );
-
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
       setUploading(true);
       e.preventDefault();
 
-      const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key, TOPIC_FORM_FIELDS.course.key];
+      const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key];
 
       let result = extractValuesFromFormEvent<T_TopicFields>(e, keys);
       await editTopic({ ...topic, ...result, unitId: unitId as string }, onSuccessfullyDone);
@@ -90,18 +69,10 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
             required
           />
 
-          <AdminFormSelector
-            loadingItems={loadingCourses}
-            disabled={uploading || loadingCourses}
-            options={courses}
-            label={TOPIC_FORM_FIELDS.course.label}
-            name={TOPIC_FORM_FIELDS.course.key}
-            defaultValue={topic.courseId}
-          />
           <Autocomplete
             url={API_LINKS.FIND_UNITS_BY_NAME}
             handleSelect={handleClick}
-            defaultValue={unit?.name}
+            defaultValue={topic.unitName}
             moduleName="units"
           />
 

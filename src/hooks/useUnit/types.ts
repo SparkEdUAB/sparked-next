@@ -86,4 +86,8 @@ export type T_RawUnitFields = {
     _id: string;
     name: string;
   };
+  subject?: {
+    _id: string;
+    name: string;
+  };
 };

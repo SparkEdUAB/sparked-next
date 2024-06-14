@@ -23,6 +23,10 @@ export type T_RawSubjectFields = {
     name: string;
     email: string;
   };
+  grade?: {
+    name: string;
+    id: string;
+  };
 };
 
 export type T_SubjectFields = {
@@ -31,6 +35,7 @@ export type T_SubjectFields = {
   _id: string;
   name: string;
   gradeId: string;
+  gradeName?: string;
   description: string;
   created_by?: string;
   created_at: string;
