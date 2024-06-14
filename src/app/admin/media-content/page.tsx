@@ -4,6 +4,8 @@ import MediaContentListView from '@components/media-content/media-content-list-v
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
 import React from 'react';
 
+export const dynamic = 'force-dynamic';
+
 const MediaContentList: React.FC = (props) => {
   useDocumentTitle('Media Content');
 
