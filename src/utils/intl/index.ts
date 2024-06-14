@@ -103,6 +103,11 @@ i18next.init({
 
         new: 'New',
         delete: 'Delete',
+        upload_multiple: 'Upload Multiple',
+        next: 'Next',
+        step_1_select_topic: 'Step 1: Select Topic',
+        step_2_select_files: 'Step 2: Select Files',
+        step_3_edit_resources: 'Step 3: Edit Resource Data',
 
         select_items: 'Select some items',
         select_one_item: 'Select one item',

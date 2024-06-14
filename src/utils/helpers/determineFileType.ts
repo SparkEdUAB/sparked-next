@@ -1,6 +1,6 @@
-export type AcceptableFileType = 'image' | 'video' | 'pdf';
+export type AcceptableFileTypes = 'image' | 'video' | 'pdf';
 
-export function determineFileType(fileUrl: string): AcceptableFileType | null {
+export function determineFileType(fileUrl: string): AcceptableFileTypes | null {
   let extension = fileUrl.split('.').pop()?.toLowerCase();
 
   switch (extension) {
