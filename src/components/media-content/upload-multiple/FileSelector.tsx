@@ -1,3 +1,5 @@
+'use client';
+
 import i18next from 'i18next';
 import { AdminPageTitle } from '@components/layouts';
 import { T_TopicFields } from '@hooks/use-topic/types';

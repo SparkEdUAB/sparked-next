@@ -1,3 +1,4 @@
+'use client';
 import i18next from 'i18next';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { AdminPageTitle } from '@components/layouts';

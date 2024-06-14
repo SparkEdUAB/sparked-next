@@ -1,3 +1,5 @@
+'use client';
+
 import { Button, Modal } from 'flowbite-react';
 import { useMemo, useState } from 'react';
 import { IoMdEye } from 'react-icons/io';
