@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { AcceptableFileTypes } from 'utils/helpers/determineFileType';
 import { Accept } from 'react-dropzone';

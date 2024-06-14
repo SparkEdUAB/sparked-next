@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { RedAsterisk } from '@components/atom';
 import { FileInput, Label } from 'flowbite-react';

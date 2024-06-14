@@ -18,7 +18,7 @@ export function PreviewButton({ file }: { file: File }) {
         <Modal.Header />
         <Modal.Body className="custom-scrollbar">
           <h1 className="text-xl font-semibold mb-2 text-gray-700 dark:text-gray-300">{file.name}</h1>
-          <FilePreview file={file} />
+          {showPreview && <FilePreview file={file} />}
         </Modal.Body>
       </Modal>
     </>

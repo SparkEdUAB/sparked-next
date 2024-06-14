@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 import { useMemo } from 'react';
 import { FaFilePdf } from 'react-icons/fa';
