@@ -6,12 +6,8 @@ import { Accordion, Button, Spinner } from 'flowbite-react';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
+import PreviewButton from './PreviewButton';
 import { ResourceData, UploadProgress } from './upload-multiple-resources';
-import dynamic from 'next/dynamic';
-
-const PreviewButton = dynamic(() => import('./PreviewButton'), {
-  ssr: false,
-});
 
 export function EditResourceData({
   resourceData,

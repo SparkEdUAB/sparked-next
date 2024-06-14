@@ -4,7 +4,11 @@ import { Button, Modal } from 'flowbite-react';
 import { useMemo, useState } from 'react';
 import { IoMdEye } from 'react-icons/io';
 import { determineFileType } from 'utils/helpers/determineFileType';
-import PdfViewer from '@components/layouts/library/PdfViewer/PdfViewer';
+import dynamic from 'next/dynamic';
+
+const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
+  ssr: false,
+});
 
 export default function PreviewButton({ file }: { file: File }) {
   let [showPreview, setShowPreview] = useState(false);
