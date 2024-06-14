@@ -6,7 +6,7 @@ import { IoMdEye } from 'react-icons/io';
 import { determineFileType } from 'utils/helpers/determineFileType';
 import PdfViewer from '@components/layouts/library/PdfViewer/PdfViewer';
 
-export function PreviewButton({ file }: { file: File }) {
+export default function PreviewButton({ file }: { file: File }) {
   let [showPreview, setShowPreview] = useState(false);
 
   return (
