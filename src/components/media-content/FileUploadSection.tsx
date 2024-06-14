@@ -24,7 +24,7 @@ export function FileUploadSection({
     <div className="w-full">
       <DragAndDropFileInput
         id="file"
-        file={file}
+        files={file}
         label={i18next.t('upload_file')}
         onChange={setFile}
         required={required}
@@ -34,7 +34,7 @@ export function FileUploadSection({
 
       <DragAndDropFileInput
         id="thumbnail"
-        file={thumbnail}
+        files={thumbnail}
         label={i18next.t('upload_thumbnail')}
         required={false}
         isLoading={isLoading}
