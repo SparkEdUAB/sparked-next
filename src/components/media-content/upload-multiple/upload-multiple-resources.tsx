@@ -10,6 +10,7 @@ import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/Lib
 import { FileSelector } from './FileSelector';
 import { TopicSelector } from './TopicSelector';
 import { EditResourceData } from './EditResourceData';
+import { truncateText } from 'utils/helpers/truncateText';
 
 enum UploadProcessSteps {
   SelectTopic,
@@ -39,6 +40,7 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
   const [resourceData, setResourceData] = useState<ResourceData[] | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
+  const [failedToUpload, setFailedToUpload] = useState(false);
 
   const handleTopicSelect = (topic: T_TopicFields) => {
     setTopic(topic);
@@ -78,8 +80,8 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
         let fileUrl = await uploadFile(resource.file);
 
         if (!fileUrl) {
-          setIsUploading(false);
-          toast.error(i18next.t('failed_to_upload'));
+          setFailedToUpload(true);
+          toast.error(`${i18next.t('failed_to_upload')}: ${truncateText(resource.file.name, 40)}`);
           continue;
         }
 
@@ -96,6 +98,9 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
         if (successful) {
           setResourceData((data) => data?.filter((item) => item.file !== resource.file) || null);
           setUploadProgress((value) => value && { ...value, successful: value.successful + 1 });
+        } else {
+          toast.error(`${i18next.t('failed_to_upload')}: ${truncateText(resource.file.name, 40)}`);
+          setFailedToUpload(true);
         }
       }
     } finally {
@@ -109,6 +114,12 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
       }
       return data;
     });
+    setUploadProgress((value) => {
+      if (value) {
+        toast.info(`Successfully uploaded ${value.successful} out of ${value.outOf} resources`);
+      }
+      return value;
+    });
   };
 
   return step === UploadProcessSteps.EditResources && topic && resourceData && resourceData.length > 0 ? (
@@ -119,6 +130,7 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
       topic={topic}
       isUploading={isUploading}
       uploadProgress={uploadProgress}
+      failedToUpload={failedToUpload}
     />
   ) : step === UploadProcessSteps.SelectFiles && topic ? (
     <FileSelector files={files} setFiles={setFiles} chosenFiles={chosenFiles} topic={topic} />

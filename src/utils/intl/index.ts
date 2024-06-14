@@ -86,6 +86,7 @@ i18next.init({
         grade: 'Grade',
 
         submit: 'Submit',
+        upload: 'Upload',
         update: 'Update',
         upload_file: 'Upload File',
         upload_thumbnail: 'Upload Thumbnail (optional)',
