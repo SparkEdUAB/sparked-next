@@ -79,7 +79,11 @@ export function DragAndDropFileInput({
             {files instanceof Array && files.length > 0 ? (
               <div>
                 {files.map((file) => (
-                  <FilePreview file={file} deleteItem={() => multiple && onChange(files.filter((f) => f != file))} />
+                  <FilePreview
+                    key={file.name}
+                    file={file}
+                    deleteItem={() => multiple && onChange(files.filter((f) => f != file))}
+                  />
                 ))}
               </div>
             ) : (
