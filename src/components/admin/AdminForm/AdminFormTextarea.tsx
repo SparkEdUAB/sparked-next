@@ -1,6 +1,7 @@
 'use client';
 import { RedAsterisk } from '@components/atom';
 import { Label, Textarea } from 'flowbite-react';
+import { ChangeEventHandler, FocusEventHandler, FormEventHandler } from 'react';
 
 export function AdminFormTextarea({
   disabled,
@@ -9,6 +10,9 @@ export function AdminFormTextarea({
   defaultValue,
   required,
   rows,
+  onChange,
+  onInput,
+  onBlur,
 }: {
   disabled: boolean;
   name: string;
@@ -16,6 +20,9 @@ export function AdminFormTextarea({
   defaultValue?: string;
   required?: boolean;
   rows?: number;
+  onChange?: ChangeEventHandler<HTMLTextAreaElement> | undefined;
+  onInput?: FormEventHandler<HTMLTextAreaElement> | undefined;
+  onBlur?: FocusEventHandler<HTMLTextAreaElement> | undefined;
 }) {
   return (
     <div>
@@ -33,6 +40,9 @@ export function AdminFormTextarea({
         disabled={disabled}
         required={required}
         rows={rows}
+        onChange={onChange}
+        onInput={onInput}
+        onBlur={onBlur}
       />
     </div>
   );

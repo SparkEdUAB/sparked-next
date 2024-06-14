@@ -57,6 +57,7 @@ const useMediaContent = () => {
 
       onSuccessfullyDone?.();
       message.success(i18next.t('media_content_created'));
+      return true;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
