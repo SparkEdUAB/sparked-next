@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import NETWORK_UTILS from 'utils/network';
 import { fetcher } from '@hooks/use-swr/fetcher';
 import { useToastMessage } from 'providers/ToastMessageContext';
+import { T_RawStatsFields, T_StatFields } from './types';
 
 const ITEMS_PER_PAGE = 100;
 
@@ -80,7 +81,7 @@ export function useAdminStatsData<Result extends Record<string, any>, RawData ex
   return { items, isLoading, mutate, size, error, loadMore, hasMore, isValidating };
 }
 
-export function transformRawStats(stat: T_RawStatsFields, index: number = 0): T_GradeFields {
+export function transformRawStats(stat: T_RawStatsFields, index: number = 0): T_StatFields {
   return {
     index: index + 1,
     name: stat.name,
