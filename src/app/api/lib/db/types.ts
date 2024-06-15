@@ -48,4 +48,12 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
+  page_views: {
+    name: string;
+    label: string;
+  };
+  searches: {
+    name: string;
+    label: string;
+  };
 };

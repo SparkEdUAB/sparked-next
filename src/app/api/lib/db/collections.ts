@@ -49,4 +49,12 @@ export const dbCollections: T_dbCollection = {
     name: 'page-actions',
     label: 'Page Actions',
   },
+  page_views: {
+    name: 'page-views',
+    label: 'Page Views',
+  },
+  searches: {
+    name: 'searches',
+    label: 'Searches',
+  },
 };
