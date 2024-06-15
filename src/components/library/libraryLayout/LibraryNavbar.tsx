@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { HiSearch, HiX } from 'react-icons/hi';
 import { MdMenu } from 'react-icons/md';
 import AppLogo from '@components/logo';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { useRouter } from 'next-nprogress-bar';
 
 export function LibraryNavbar({
@@ -22,11 +22,7 @@ export function LibraryNavbar({
   return (
     <Navbar fluid rounded className="sticky top-0 z-[60]">
       <div className={`pl-2 flex flex-row gap-4 ${searching ? 'hidden md:flex' : ''}`}>
-        <button
-          type="button"
-          className="text-gray-500 -ml-3 mr-1 p-2 md:ml-0 md:mr-0 md:hidden"
-          onClick={toggleSidebar}
-        >
+        <button type="button" className="text-gray-500 -ml-3 mr-1 p-2 md:ml-0 md:mr-0 " onClick={toggleSidebar}>
           {sidebarIsCollapsed ? (
             <MdMenu aria-label="Open sidebar" className="h-6 w-6 cursor-pointer text-gray-500 dark:text-gray-400" />
           ) : (

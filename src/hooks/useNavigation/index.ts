@@ -15,7 +15,7 @@ const useNavigation = () => {
   const pathname = usePathname();
   const router = useRouter();
 
-  const { configs, getDisabledConfigItems } = useConfig({ isAutoLoadCoreConfig: true });
+  const { configs, getDisabledConfigItems } = useConfig();
 
   const [activeMenuItem, setActiveMenuItem] = useState<T_MenuItemLinkParams | T_ChildMenuItemLinkParams | null>(null);
 

@@ -25,12 +25,12 @@ export default function LibraryLayout({
   mediaTypes: T_RawMediaTypeFieldes[];
 }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
-  const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
+  const toggleSidebar = () => setSidebarIsCollapsed(!sidebarIsCollapsed);
 
   return (
     <div className="h-[calc(100vh_-_62px)]">
       <LibraryNavbar toggleSidebar={toggleSidebar} sidebarIsCollapsed={sidebarIsCollapsed} />
-      <div className="md:grid md:grid-cols-[300px_calc(100%_-_300px)] h-[calc(100vh_-_62px)]">
+      <div className="flex h-[calc(100vh_-_62px)]">
         <LibrarySidebar
           sidebarIsCollapsed={sidebarIsCollapsed}
           toggleSidebar={toggleSidebar}
@@ -40,7 +40,7 @@ export default function LibraryLayout({
           units={units}
           mediaTypes={mediaTypes}
         />
-        <div className="max-h-full overflow-y-hidden">{children}</div>
+        <div className="max-h-full overflow-y-hidden w-screen ">{children}</div>
       </div>
     </div>
   );

@@ -30,7 +30,11 @@ export default async function createUserRole_(request: Request, session?: Sessio
     }
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
+<<<<<<<< HEAD:src/app/api/user-roles/create.ts
     const userRoleData = await db.collection(dbCollections.user_roles.name).findOne(
+========
+    const gradeData = await db.collection(dbCollections.grades.name).findOne(
+>>>>>>>> main:src/app/api/grade/create.ts
       {
         name: { $regex: regexPattern },
       },
@@ -52,7 +56,11 @@ export default async function createUserRole_(request: Request, session?: Sessio
       });
     }
 
+<<<<<<<< HEAD:src/app/api/user-roles/create.ts
     await db.collection(dbCollections.user_roles.name).insertOne({
+========
+    await db.collection(dbCollections.grades.name).insertOne({
+>>>>>>>> main:src/app/api/grade/create.ts
       name,
       description,
       created_at: new Date(),

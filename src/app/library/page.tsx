@@ -1,6 +1,6 @@
 import React from 'react';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
-import { getMetadataGenerator } from 'utils/helpers';
+import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import LibraryBadge from '@components/library/LibraryBadge';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -31,7 +31,7 @@ const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
   );
 
   return (
-    <main id="scrollableDiv" className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)]">
+    <main id="scrollableDiv" className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] min-w-full">
       <div className="overflow-x-scroll custom-scrollbar flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
         {categoriesResult instanceof Error ||
         (categoriesResult.categories.length === 0 && !searchParams.category_id) ? null : (

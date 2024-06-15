@@ -1,69 +1,44 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Button, Spinner } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
-import useProgram from '@hooks/useProgram';
-import useSchool, { transformRawSchool } from '@hooks/useSchool';
-import useUnit, { transformRawUnit } from '@hooks/useUnit';
-import useCourse, { transformRawCourse } from '@hooks/useCourse';
-import useTopic, { transformRawTopic } from '@hooks/use-topic';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import useTopic from '@hooks/use-topic';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_TopicFields } from '@hooks/use-topic/types';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
-import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { T_UnitFields } from '@hooks/useUnit/types';
+import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 
 const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; onSuccessfullyDone: () => void }) => {
   const { editTopic, deleteTopics } = useTopic();
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const [unitId, setUnitId] = useState<string | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
-
-  // const { item: topic, isLoading } = useAdminItemById(
-  //   API_LINKS.FETCH_TOPIC_BY_ID,
-  //   topicId || (searchParams.get('topicId') as string),
-  //   'topic',
-  //   transformRawTopic,
-  // );
-
-  const { items: units, isLoading: loadingUnits } = useAdminListViewData(
-    API_LINKS.FETCH_UNITS,
-    'units',
-    transformRawUnit,
-  );
-
-  const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
-    API_LINKS.FETCH_COURSES,
-    'courses',
-    transformRawCourse,
-  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
       setUploading(true);
       e.preventDefault();
 
-      const keys = [
-        TOPIC_FORM_FIELDS.name.key,
-        TOPIC_FORM_FIELDS.description.key,
-        TOPIC_FORM_FIELDS.course.key,
-        TOPIC_FORM_FIELDS.unit.key,
-      ];
+      const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key];
 
       let result = extractValuesFromFormEvent<T_TopicFields>(e, keys);
-      await editTopic({ ...topic, ...result }, onSuccessfullyDone);
+      await editTopic({ ...topic, ...result, unitId: unitId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleClick = (unit: T_UnitFields) => {
+    setUnitId(unit?._id);
   };
 
   return (
@@ -94,33 +69,14 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
             required
           />
 
-          <AdminFormSelector
-            loadingItems={loadingCourses}
-            disabled={uploading || loadingCourses}
-            options={courses}
-            label={TOPIC_FORM_FIELDS.course.label}
-            name={TOPIC_FORM_FIELDS.course.key}
-            defaultValue={topic.courseId}
+          <Autocomplete
+            url={API_LINKS.FIND_UNITS_BY_NAME}
+            handleSelect={handleClick}
+            defaultValue={topic.unitName}
+            moduleName="units"
           />
 
-          <AdminFormSelector
-            loadingItems={loadingUnits}
-            disabled={uploading || loadingUnits}
-            options={units}
-            label={TOPIC_FORM_FIELDS.unit.label}
-            name={TOPIC_FORM_FIELDS.unit.key}
-            defaultValue={topic.unitId}
-          />
-
-          <Button type="submit" className="mt-2" disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('update')}
-          </Button>
-
-          <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('delete')}
-          </Button>
+          <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
         </form>
       )}
 

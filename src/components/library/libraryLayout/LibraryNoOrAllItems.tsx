@@ -20,7 +20,7 @@ export const ShowAllOrNoItems = ({
           All
         </Sidebar.Item>
       ) : (
-        <Sidebar.Item disabeld as={Link} href="#" className={styles.item}>
+        <Sidebar.Item as={Link} href="#" className={styles.item}>
           No {ItemName}
         </Sidebar.Item>
       )}

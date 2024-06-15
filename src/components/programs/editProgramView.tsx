@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation';
 import { FormEventHandler } from 'react';
 import { PROGRAM_FORM_FIELDS } from './constants';
 import { transformRawSchool } from '@hooks/useSchool';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_ProgramFields } from '@hooks/useProgram/types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';

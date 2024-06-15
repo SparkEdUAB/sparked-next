@@ -14,8 +14,8 @@ export const unitTableColumns: T_ColumnData<T_UnitFields>[] = [
     key: 'name',
   },
   {
-    title: 'Course',
-    dataIndex: 'courseName',
-    key: 'course',
+    title: 'Subject',
+    dataIndex: 'subjectName',
+    key: 'subject',
   },
 ];

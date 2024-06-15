@@ -1,13 +1,17 @@
-import PdfViewer from '@components/layouts/library/PdfViewer/PdfViewer';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FaBook, FaBookmark } from 'react-icons/fa';
 import { ImBooks } from 'react-icons/im';
 import { T_RawMediaContentFields } from 'types/media-content';
-import { determineFileType } from 'utils/helpers';
+import { determineFileType } from 'utils/helpers/determineFileType';
 import { LibraryErrorMessage } from './LibraryErrorMessage/LibraryErrorMessage';
 import Image from 'next/image';
 import { RelatedMediaContentList } from './RelatedMediaContentList';
+import dynamic from 'next/dynamic';
+
+const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
+  ssr: false,
+});
 
 export function MediaContentView({
   mediaContent,
@@ -19,7 +23,7 @@ export function MediaContentView({
   const fileType = determineFileType(mediaContent?.file_url || '');
 
   return (
-    <div className="xl:grid xl:grid-cols-[calc(100%_-_300px)_300px] 2xl:grid-cols-[calc(100%_-_400px)_400px] w-full">
+    <div className="xl:grid xl:grid-cols-[calc(100%_-_300px)_300px] 2xl:grid-cols-[calc(100%_-_400px)_400px] px-4 md:px-8 w-full ">
       <section>
         <div>
           {!mediaContent.file_url ? (
@@ -35,7 +39,11 @@ export function MediaContentView({
               height={600}
             />
           ) : fileType === 'video' ? (
-            <video src={mediaContent.file_url} className="max-h-[500px] max-w-full" controls></video>
+            <video
+              src={mediaContent.file_url}
+              className="max-h-[500px] max-w-full border-2 border-none rounded-xl "
+              controls
+            ></video>
           ) : fileType === 'pdf' ? (
             <PdfViewer file={mediaContent.file_url} />
           ) : (

@@ -9,7 +9,6 @@ import { getDbFieldNamesConfigStatus } from '../config';
 
 const dbConfigData = TOPIC_FIELD_NAMES_CONFIG;
 
-
 export default async function fetchTopics_(request: any) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
@@ -189,8 +188,8 @@ export async function deleteTopics_(request: Request) {
 export async function findTopicsByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
-    skip: zfd.numeric(),
-    limit: zfd.numeric(),
+    skip: zfd.numeric().optional(),
+    limit: zfd.numeric().default(20).optional(),
     withMetaData: zfd.text().optional(),
   });
   const params = request.nextUrl.searchParams;

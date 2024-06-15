@@ -2,6 +2,7 @@ export type T_CreateUnitFields = {
   name: string;
   description: string;
   schoolId?: string;
+  subjectId: string;
   courseId: string;
   programId?: string;
 };
@@ -19,9 +20,11 @@ export type T_UnitFields = {
   description: string;
 
   schoolId?: string;
+  subjectId?: string;
   programId?: string;
   courseId?: string;
 
+  subjectName?: string;
   schoolName?: string;
   programName?: string;
   courseName?: string;
@@ -42,6 +45,10 @@ export type T_UnitFields = {
     _id: string;
   };
   course?: {
+    name: string;
+    _id: string;
+  };
+  subject?: {
     name: string;
     _id: string;
   };
@@ -76,6 +83,10 @@ export type T_RawUnitFields = {
     name: string;
   };
   course?: {
+    _id: string;
+    name: string;
+  };
+  subject?: {
     _id: string;
     name: string;
   };

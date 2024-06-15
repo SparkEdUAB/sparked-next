@@ -1,7 +1,8 @@
 'use client';
 
+import 'utils/intl';
 import { SessionProvider } from 'next-auth/react';
-import { Flowbite } from 'flowbite-react';
+import { CustomFlowbiteTheme, Flowbite } from 'flowbite-react';
 import { ReactNode } from 'react';
 import { Session } from 'next-auth';
 import { AppProgressBar } from 'next-nprogress-bar';

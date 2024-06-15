@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import { SCHOOL_FORM_FIELDS } from './constants';
 import { AdminPageTitle } from '@components/layouts';
 import { FormEventHandler } from 'react';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_SchoolFields } from './types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 

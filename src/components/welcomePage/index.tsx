@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import FooterSection from './FooterSection';
 import HeroSection from './HeroSection';
 import HeaderSection from './HeaderSection';

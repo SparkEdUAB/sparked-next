@@ -1,27 +1,25 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import useMediaContent, { transformRawMediaContent } from '@hooks/use-media-content';
-import { transformRawCourse } from '@hooks/useCourse';
-import { transformRawUnit } from '@hooks/useUnit';
-import { Button, Spinner } from 'flowbite-react';
+import useMediaContent from '@hooks/use-media-content';
+import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { useSearchParams } from 'next/navigation';
-import { FormEventHandler, useEffect, useState } from 'react';
+
+import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
-import { transformRawTopic } from '@hooks/use-topic';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_MediaContentFields } from 'types/media-content';
 import useFileUpload from '@hooks/use-file-upload';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { FileUploadSection } from './FileUploadSection';
 import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
 import { API_LINKS } from 'app/links';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
+import { T_TopicFields } from '@hooks/use-topic/types';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { T_UnitFields } from '@hooks/useUnit/types';
 
 const EditMediaContentView = ({
   mediaContent,
@@ -37,43 +35,15 @@ const EditMediaContentView = ({
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const [topicId, setTopicId] = useState<string | null>(null);
+  const [unitId, setUnitId] = useState<string | null>(null);
+
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
-
-  // const { item: mediaContent, isLoading: loadingResource } = useAdminItemById(
-  //   API_LINKS.FETCH_MEDIA_CONTENT_BY_ID,
-  //   resourceId || (searchParams.get('mediaContentId') as string),
-  //   'mediaContent',
-  //   transformRawMediaContent,
-  // );
-
-  const { items: topics, isLoading: loadingTopics } = useAdminListViewData(
-    API_LINKS.FETCH_TOPICS,
-    'topics',
-    transformRawTopic,
-  );
-
-  const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
-    API_LINKS.FETCH_COURSES,
-    'courses',
-    transformRawCourse,
-  );
-
-  const { items: units, isLoading: loadingUnits } = useAdminListViewData(
-    API_LINKS.FETCH_UNITS,
-    'units',
-    transformRawUnit,
-  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
-    const keys = [
-      MEDIA_CONTENT_FORM_FIELDS.name.key,
-      MEDIA_CONTENT_FORM_FIELDS.description.key,
-      MEDIA_CONTENT_FORM_FIELDS.course.key,
-      MEDIA_CONTENT_FORM_FIELDS.unit.key,
-      MEDIA_CONTENT_FORM_FIELDS.topic.key,
-    ];
+    const keys = [MEDIA_CONTENT_FORM_FIELDS.name.key, MEDIA_CONTENT_FORM_FIELDS.description.key];
 
     let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
 
@@ -84,7 +54,7 @@ const EditMediaContentView = ({
       let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
       await editMediaContent(
-        { ...mediaContent, ...result },
+        { ...mediaContent, ...result, topicId: topicId as string, unitId: unitId as string },
         fileUrl || undefined,
         thumbnailUrl || undefined,
         onSuccessfullyDone,
@@ -92,6 +62,14 @@ const EditMediaContentView = ({
     } finally {
       setUploading(false);
     }
+  };
+
+  const handleClick = (topic: T_TopicFields) => {
+    setTopicId(topic?._id);
+  };
+
+  const handleSelectUnit = (unit: T_UnitFields) => {
+    setUnitId(unit?._id);
   };
 
   return (
@@ -131,42 +109,20 @@ const EditMediaContentView = ({
             rows={4}
           />
 
-          <AdminFormSelector
-            loadingItems={loadingCourses}
-            disabled={uploading || loadingCourses}
-            options={courses}
-            label={MEDIA_CONTENT_FORM_FIELDS.course.label}
-            name={MEDIA_CONTENT_FORM_FIELDS.course.key}
-            defaultValue={mediaContent.courseId}
+          <Autocomplete
+            url={API_LINKS.FIND_UNITS_BY_NAME}
+            handleSelect={handleSelectUnit}
+            moduleName="units"
+            defaultValue={mediaContent.unitName}
+          />
+          <Autocomplete
+            url={API_LINKS.FIND_TOPIC_BY_NAME}
+            handleSelect={handleClick}
+            moduleName="topics"
+            defaultValue={mediaContent.topicName}
           />
 
-          <AdminFormSelector
-            loadingItems={loadingUnits}
-            disabled={uploading || loadingUnits}
-            options={units}
-            label={MEDIA_CONTENT_FORM_FIELDS.unit.label}
-            name={MEDIA_CONTENT_FORM_FIELDS.unit.key}
-            defaultValue={mediaContent.unitId}
-          />
-
-          <AdminFormSelector
-            loadingItems={loadingTopics}
-            disabled={uploading || loadingTopics}
-            options={topics}
-            label={MEDIA_CONTENT_FORM_FIELDS.topic.label}
-            name={MEDIA_CONTENT_FORM_FIELDS.topic.key}
-            defaultValue={mediaContent.topicId}
-          />
-
-          <Button type="submit" className="mt-2" disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('update')}
-          </Button>
-
-          <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-            {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-            {i18next.t('delete')}
-          </Button>
+          <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
         </form>
       )}
 

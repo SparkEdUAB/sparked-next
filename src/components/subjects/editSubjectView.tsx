@@ -2,19 +2,20 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Button, Spinner } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { SUBJECT_FORM_FIELDS } from './constants';
 import useSubject from '@hooks/useSubject';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_SubjectFields } from '@hooks/useSubject/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { API_LINKS } from 'app/links';
 import { T_GradeFields } from '@hooks/useGrade/types';
+import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 
 const EditSubjectView = ({
   subject,
@@ -42,7 +43,7 @@ const EditSubjectView = ({
 
       let result = extractValuesFromFormEvent<T_SubjectFields>(e, keys);
 
-      await editSubject({ ...subject, ...result, gradeId: gradeId as string }, onSuccessfullyDone);
+      await editSubject({ ...result, gradeId: gradeId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }
@@ -77,18 +78,13 @@ const EditSubjectView = ({
               defaultValue={subject.description}
             />
 
-            <Autocomplete url={API_LINKS.FIND_GRADE_BY_NAME} handleSelect={handleClick} moduleName="grades" />
-
-            <div className="flex space-x-4 mt-2">
-              <Button type="submit" disabled={uploading}>
-                {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-                {i18next.t('update')}
-              </Button>
-              <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-                {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
-                {i18next.t('delete')}
-              </Button>
-            </div>
+            <Autocomplete
+              url={API_LINKS.FIND_GRADE_BY_NAME}
+              handleSelect={handleClick}
+              moduleName="grades"
+              defaultValue={subject.gradeName}
+            />
+            <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
           </div>
         </form>
       )}
