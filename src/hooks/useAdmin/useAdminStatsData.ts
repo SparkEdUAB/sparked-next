@@ -80,14 +80,12 @@ export function useAdminStatsData<Result extends Record<string, any>, RawData ex
   return { items, isLoading, mutate, size, error, loadMore, hasMore, isValidating };
 }
 
-export function transformRawStats(grade: T_RawGradeFields, index: number = 0): T_GradeFields {
+export function transformRawStats(stat: T_RawStatsFields, index: number = 0): T_GradeFields {
   return {
     index: index + 1,
-    key: grade._id,
-    _id: grade._id,
-    name: grade.name,
-    description: grade.description,
-    created_by: grade.user?.email,
-    created_at: new Date(grade.created_at).toDateString(),
+    name: stat.name,
+    value: stat.value,
+    isPercentage: stat.isPercentage,
+    percentageTrend: stat.percentageTrend,
   };
 }

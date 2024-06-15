@@ -32,13 +32,14 @@ const Home: React.FC = () => {
     error,
   } = useAdminStatsData(API_LINKS.FETCH_ALL_STATS, 'stats', transformRawStats);
   console.log(stats);
+
   return (
     <div>
       {stats.length > 0 ? (
         <div className="grid pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           {stats.map((stat, index) => (
             <div key={index}>
-              <DashbordUsageCard statName={stat.statName} value={stat.value} />
+              <DashbordUsageCard statName={stat.name} value={stat.value} {...stat} />
             </div>
           ))}
         </div>

@@ -112,6 +112,9 @@ i18next.init({
         no_file: 'No file was provided',
         failed_to_upload: 'Failed to upload',
         failed_with_error_code: 'The operation failed with an error code',
+
+        page_views: 'Page Views',
+        searches: 'Searches',
       },
     },
   },
