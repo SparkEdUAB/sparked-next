@@ -46,6 +46,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
       setUploadingFile(true);
 
       let fileUrl = await uploadFile(file);
+
       if (!fileUrl) {
         setUploadingFile(false);
         return message.error(i18next.t('failed_to_upload'));
@@ -91,7 +92,6 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           setFile={setFile}
           thumbnail={thumbnail}
           setThumbnail={setThumbnail}
-          required
         />
 
         <AdminFormInput
