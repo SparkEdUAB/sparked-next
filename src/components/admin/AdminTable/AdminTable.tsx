@@ -1,6 +1,6 @@
 'use client';
 
-import { Checkbox, Spinner, Table, TextInput } from 'flowbite-react';
+import { Checkbox, Table, TextInput } from 'flowbite-react';
 import React, { useState } from 'react';
 import { IoFileTrayOutline } from 'react-icons/io5';
 import { T_ColumnData, T_ItemTypeBase } from './types';
@@ -11,6 +11,7 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import i18next from 'i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
+import { LoadingSpinner } from '@components/atom/AdminloadinSpiner';
 
 export function AdminTable<ItemType extends T_ItemTypeBase>({
   rowSelection,
@@ -70,7 +71,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
       />
       <div className="w-full overflow-x-scroll rounded-lg drop-shadow-md custom-scrollbar">
         {isLoading ? (
-          <AdminTableLoadingSpinner />
+          <LoadingSpinner />
         ) : items?.length === 0 ? (
           <NothingToShow />
         ) : (
@@ -163,14 +164,6 @@ function InfiniteListLoader() {
   return (
     <div className="flex flex-row justify-center items-center my-4">
       <BouncingLoader />
-    </div>
-  );
-}
-
-function AdminTableLoadingSpinner() {
-  return (
-    <div className="flex items-center justify-center h-[200px]">
-      <Spinner size="xl" />
     </div>
   );
 }
