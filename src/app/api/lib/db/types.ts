@@ -48,4 +48,8 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
+  user_role_mappings: {
+    name: string;
+    label: string;
+  };
 };
