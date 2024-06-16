@@ -1,4 +1,4 @@
-import { S3 } from 'aws-sdk';
+import { S3 } from '@aws-sdk/client-s3';
 
 type T_s3Upload = {
   file: Buffer;
@@ -6,6 +6,10 @@ type T_s3Upload = {
   ext: string;
 };
 
+const credentials = {
+  accessKeyId: process.env.AWS_ACCESS_KEY_LOCAL as string,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY as string,
+};
 const s3Upload = ({ file, fileName, ext }: T_s3Upload) =>
   new Promise((resolve, reject) => {
     let imageUrl = getKeyName({ name: fileName, ext });
@@ -18,14 +22,10 @@ const s3Upload = ({ file, fileName, ext }: T_s3Upload) =>
     };
 
     var uploadPromise = new S3({
-      accessKeyId: process.env.AWS_ACCESS_KEY_LOCAL,
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      apiVersion: '2006-03-01',
-    })
-      .putObject(objectParams)
-      .promise();
+      credentials,
+    }).putObject(objectParams);
     uploadPromise
-      .then(function (_data) {
+      .then(function () {
         imageUrl = `${process.env.S3_BUCKET_NAME_URL}/${imageUrl}`;
 
         resolve(imageUrl);
