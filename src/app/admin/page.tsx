@@ -31,7 +31,6 @@ const Home: React.FC = () => {
     hasMore,
     error,
   } = useAdminStatsData(API_LINKS.FETCH_ALL_STATS, 'stats', transformRawStats);
-  console.log(stats);
 
   return (
     <div>
@@ -39,7 +38,7 @@ const Home: React.FC = () => {
         <div className="grid pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
           {stats.map((stat, index) => (
             <div key={index}>
-              <DashbordUsageCard statName={stat.name} value={stat.value} {...stat} />
+              <DashbordUsageCard {...stat} />
             </div>
           ))}
         </div>
