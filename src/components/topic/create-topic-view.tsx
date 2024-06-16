@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
@@ -7,11 +6,9 @@ import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
-import { transformRawUnit } from '@hooks/useUnit';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateTopicFields } from '@hooks/use-topic/types';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { T_UnitFields } from '@hooks/useUnit/types';
@@ -20,26 +17,17 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
   const { createTopic, isLoading } = useTopic();
   const [unitId, setUnitId] = useState<string | null>(null);
 
-  const { items: units, isLoading: loadingUnits } = useAdminListViewData(
-    API_LINKS.FETCH_UNITS,
-    'units',
-    transformRawUnit,
-  );
-
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
     const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key];
 
     let result = extractValuesFromFormEvent<Omit<T_CreateTopicFields, 'schoolId' | 'programId' | 'courseId'>>(e, keys);
-    let unit = units.find((unit) => unit._id === result.unitId);
 
     createTopic(
       {
         ...result,
         unitId: unitId as string,
-        programId: unit?.programId,
-        courseId: unit?.courseId,
-        schoolId: unit?.schoolId,
+        // TODO: Add subjectId here
       },
       onSuccessfullyDone,
     );

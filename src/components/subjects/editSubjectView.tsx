@@ -2,13 +2,13 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Button, Spinner } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { SUBJECT_FORM_FIELDS } from './constants';
 import useSubject from '@hooks/useSubject';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_SubjectFields } from '@hooks/useSubject/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
@@ -16,8 +16,6 @@ import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { API_LINKS } from 'app/links';
 import { T_GradeFields } from '@hooks/useGrade/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
-import { transformRawUnit } from '@hooks/useUnit';
-import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 
 const EditSubjectView = ({
   subject,
@@ -35,12 +33,6 @@ const EditSubjectView = ({
   const handleClick = (grade: T_GradeFields) => {
     setGradeId(grade?._id);
   };
-  const { item: grade, isLoading: loadingUnits } = useAdminItemById(
-    API_LINKS.FETCH_GRADE_BY_ID,
-    subject.gradeId,
-    'grade',
-    transformRawUnit,
-  );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -51,7 +43,7 @@ const EditSubjectView = ({
 
       let result = extractValuesFromFormEvent<T_SubjectFields>(e, keys);
 
-      await editSubject({ ...subject, ...result, gradeId: gradeId as string }, onSuccessfullyDone);
+      await editSubject({ ...result, gradeId: gradeId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }
@@ -86,7 +78,12 @@ const EditSubjectView = ({
               defaultValue={subject.description}
             />
 
-            <Autocomplete url={API_LINKS.FIND_GRADE_BY_NAME} handleSelect={handleClick} moduleName="grades" />
+            <Autocomplete
+              url={API_LINKS.FIND_GRADE_BY_NAME}
+              handleSelect={handleClick}
+              moduleName="grades"
+              defaultValue={subject.gradeName}
+            />
             <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
           </div>
         </form>

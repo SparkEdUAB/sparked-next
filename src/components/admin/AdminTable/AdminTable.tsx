@@ -25,6 +25,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   loadMore,
   hasMore,
   error,
+  additionalButtons,
 }: {
   deleteItems: () => Promise<boolean | undefined>;
   rowSelection: {
@@ -40,11 +41,12 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   loadMore: () => void;
   hasMore: boolean;
   error: any;
+  additionalButtons?: ReactNode[] | ReactNode;
 }) {
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const { configs, getDisabledConfigItems } = useConfig({ isAutoLoadCoreConfig: true });
+  const { configs, getDisabledConfigItems } = useConfig();
 
   const disabledConfigItems: Array<string> = configs ? getDisabledConfigItems({ configs }) : [];
 
@@ -68,6 +70,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
         createNew={createNew}
         rowSelection={rowSelection}
         toggleDeletionWarning={toggleDeletionWarning}
+        additionalButtons={additionalButtons}
       />
       <div className="w-full overflow-x-scroll rounded-lg drop-shadow-md custom-scrollbar">
         {isLoading ? (
@@ -112,7 +115,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
               <Table.Body className="divide-y">
                 {items?.map((item) => (
                   <Table.Row
-                    key={item.key}
+                    key={item._id}
                     className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-50 hover:dark:bg-gray-700 active:bg-gray-100 active:dark:bg-gray-600 cursor-pointer"
                     onClick={() => editItem(item)}
                   >
@@ -128,10 +131,12 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                         }
                       />
                     </Table.Cell>
-                    {filteredColumns.map((column) => {
+                    {filteredColumns.map((column, index) => {
                       const text = item[column.dataIndex as keyof ItemType] as string;
                       return (
-                        <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>
+                        <Table.Cell key={`${column.title}-${index}`}>
+                          {column.render ? column.render(text, item) : text}
+                        </Table.Cell>
                       );
                     })}
                   </Table.Row>

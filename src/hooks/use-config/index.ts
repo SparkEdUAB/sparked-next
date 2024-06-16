@@ -4,11 +4,10 @@ import { API_LINKS } from 'app/links';
 import sharedConfig from 'app/shared/config';
 import i18next from 'i18next';
 import { useToastMessage } from 'providers/ToastMessageContext';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { T_CONFIG, T_CONFIG_VARIABLES } from 'types/config';
 
-const useConfig = (props: T_CONFIG) => {
-  const { isAutoLoadCoreConfig } = props;
+const useConfig = () => {
   const message = useToastMessage();
 
   const { getDisabledConfigItems } = sharedConfig();
@@ -43,9 +42,11 @@ const useConfig = (props: T_CONFIG) => {
     [message],
   );
 
-  useEffect(() => {
-    isAutoLoadCoreConfig && loadConfigFile({});
-  }, [isAutoLoadCoreConfig, loadConfigFile]);
+  // TODO: Disable until we figure out a better way to do things
+  // https://github.com/SparkEdUAB/sparked-next/issues/172
+  // useEffect(() => {
+  //   isAutoLoadCoreConfig && loadConfigFile({});
+  // }, [isAutoLoadCoreConfig]);
 
   return {
     loadConfigFile,

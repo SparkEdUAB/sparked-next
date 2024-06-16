@@ -1,13 +1,17 @@
-import PdfViewer from '@components/layouts/library/PdfViewer/PdfViewer';
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FaBook, FaBookmark } from 'react-icons/fa';
 import { ImBooks } from 'react-icons/im';
 import { T_RawMediaContentFields } from 'types/media-content';
-import { determineFileType } from 'utils/helpers';
+import { determineFileType } from 'utils/helpers/determineFileType';
 import { LibraryErrorMessage } from './LibraryErrorMessage/LibraryErrorMessage';
 import Image from 'next/image';
 import { RelatedMediaContentList } from './RelatedMediaContentList';
+import dynamic from 'next/dynamic';
+
+const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
+  ssr: false,
+});
 
 export function MediaContentView({
   mediaContent,

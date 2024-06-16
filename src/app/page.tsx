@@ -6,7 +6,7 @@ import { API_LINKS } from './links';
 import { T_CONFIG_VARIABLES } from 'types/config';
 import { T_WelcomePageProps } from '@components/welcomePage/types';
 import { BASE_URL } from './shared/constants';
-import { getMetadataGenerator } from 'utils/helpers';
+import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
 
 export async function generateMetadata(props: T_WelcomePageProps, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);

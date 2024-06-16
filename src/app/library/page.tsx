@@ -1,6 +1,6 @@
 import React from 'react';
 import EmptyContentIndicator from '@components/library/EmptyContentIndicator';
-import { getMetadataGenerator } from 'utils/helpers';
+import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import LibraryBadge from '@components/library/LibraryBadge';
 import { Metadata, ResolvingMetadata } from 'next';

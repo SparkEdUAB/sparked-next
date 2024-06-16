@@ -11,7 +11,7 @@ export default async function fetchSubjects_(request: any) {
   const schema = zfd.formData({
     limit: zfd.numeric().optional(),
     skip: zfd.numeric().optional(),
-    withMetaData: zfd.text().optional(),
+    withMetaData: zfd.text().default('true').optional(),
   });
   const params = request.nextUrl.searchParams;
 

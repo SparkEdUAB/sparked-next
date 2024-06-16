@@ -8,7 +8,7 @@ import { FormEventHandler, useState } from 'react';
 import { GRADE_FORM_FIELDS } from './constants';
 import useGrade from '@hooks/useGrade';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_GradeFields } from '@hooks/useGrade/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';

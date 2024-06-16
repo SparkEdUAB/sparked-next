@@ -1,7 +1,7 @@
 import { Card } from 'flowbite-react';
 import Link from 'next/link';
 import React from 'react';
-import { truncateText } from 'utils/helpers';
+import { truncateText } from 'utils/helpers/truncateText';
 
 const ContentDetailsCardView = ({
   image,

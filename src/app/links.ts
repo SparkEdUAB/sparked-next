@@ -43,12 +43,12 @@ export const API_LINKS: T_link = {
   FIND_TOPIC_BY_NAME: '/api/topic/findTopicsByName',
 
   //   grades
-  CREATE_GRADE: '/api/grade/createGrade',
-  FETCH_GRADES: '/api/grade/fetchGrades',
-  DELETE_GRADES: '/api/grade/deleteGrades',
-  FETCH_GRADE_BY_ID: '/api/grade/fetchGradeById',
-  EDIT_GRADE: '/api/grade/editGrade',
-  FIND_GRADE_BY_NAME: '/api/grade/findGradeByName',
+  CREATE_GRADE: '/api/grades/createGrade',
+  FETCH_GRADES: '/api/grades/fetchGrades',
+  DELETE_GRADES: '/api/grades/deleteGrades',
+  FETCH_GRADE_BY_ID: '/api/grades/fetchGradeById',
+  EDIT_GRADE: '/api/grades/editGrade',
+  FIND_GRADE_BY_NAME: '/api/grades/findGradeByName',
 
   //   subjects
   CREATE_SUBJECT: '/api/subjects/createSubject',

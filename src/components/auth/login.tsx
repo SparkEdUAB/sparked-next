@@ -7,7 +7,7 @@ import { LuUser2 } from 'react-icons/lu';
 import { AiOutlineLock } from 'react-icons/ai';
 import i18next from 'i18next';
 import { FormEventHandler } from 'react';
-import { extractValuesFromFormEvent } from 'utils/helpers';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_LoginFields } from '@hooks/useAuth/types';
 
 const onFinishFailed = (errorInfo: any) => {};

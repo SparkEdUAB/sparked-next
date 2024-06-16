@@ -10,18 +10,18 @@ export const TOPIC_FORM_FIELDS: I_FormFields = {
     label: i18next.t('description'),
     key: 'description',
   },
-  ['school']: {
-    label: i18next.t('school'),
-    key: 'schoolId',
-  },
-  ['program']: {
-    label: i18next.t('program'),
-    key: 'programId',
-  },
-  ['course']: {
-    label: i18next.t('course'),
-    key: 'courseId',
-  },
+  // ['school']: {
+  //   label: i18next.t('school'),
+  //   key: 'schoolId',
+  // },
+  // ['program']: {
+  //   label: i18next.t('program'),
+  //   key: 'programId',
+  // },
+  // ['course']: {
+  //   label: i18next.t('course'),
+  //   key: 'courseId',
+  // },
   ['unit']: {
     label: i18next.t('units'),
     key: 'unitId',

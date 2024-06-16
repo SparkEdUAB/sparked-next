@@ -1,7 +1,7 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchUserRoles_, { fetchUserRoleById_ } from '..';
+import fetchUserRoles_, { assignUserRole_, fetchUserRoleById_ } from '..';
 import { authOptions } from '../../auth/constants';
 import createUserRole_ from '../create';
 import deleteUserRoles_ from '../delete';
@@ -49,6 +49,7 @@ export async function PUT(
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     editUserRole: editUserRole_,
+    assignUserRole: assignUserRole_,
   };
 
   if (gradeApiFunctions[slug] && session) {

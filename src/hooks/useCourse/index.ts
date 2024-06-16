@@ -1,11 +1,9 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-// import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { T_CreateCourseFields, T_FetchCourses, T_CourseFields, T_RawCourseFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
@@ -208,7 +206,7 @@ const useCourse = () => {
       return false;
     }
   };
-  const findCourseByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
+  const findCourseByName = async () => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
