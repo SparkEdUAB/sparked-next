@@ -42,10 +42,15 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
       return message.error(i18next.t('no_file'));
     }
 
+    if (!unitId || !topicId) {
+      return message.error(i18next.t('fill_required_fields'));
+    }
+
     try {
       setUploadingFile(true);
 
       let fileUrl = await uploadFile(file);
+
       if (!fileUrl) {
         setUploadingFile(false);
         return message.error(i18next.t('failed_to_upload'));
@@ -91,7 +96,6 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           setFile={setFile}
           thumbnail={thumbnail}
           setThumbnail={setThumbnail}
-          required
         />
 
         <AdminFormInput
