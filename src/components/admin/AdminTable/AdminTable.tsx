@@ -1,7 +1,7 @@
 'use client';
 
 import { Checkbox, Table, TextInput } from 'flowbite-react';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { IoFileTrayOutline } from 'react-icons/io5';
 import { T_ColumnData, T_ItemTypeBase } from './types';
 import { DeletionWarningModal } from './DeletionWarningModal';
