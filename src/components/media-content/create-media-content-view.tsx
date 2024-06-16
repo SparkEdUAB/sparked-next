@@ -42,6 +42,10 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
       return message.error(i18next.t('no_file'));
     }
 
+    if (!unitId || !topicId) {
+      return message.error(i18next.t('fill_required_fields'));
+    }
+
     try {
       setUploadingFile(true);
 

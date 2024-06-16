@@ -58,7 +58,7 @@ const MediaContentListView: React.FC = () => {
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingResource} onClose={() => setCreatingResource(false)} popup>
+      <Modal show={creatingResource} onClose={() => setCreatingResource(false)} popup>
         <Modal.Header />
         <Modal.Body className="custom-scrollbar">
           <CreateMediaContentView
