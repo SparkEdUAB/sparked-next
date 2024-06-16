@@ -1,7 +1,7 @@
 'use client';
 
 import { Checkbox, Spinner, Table, TextInput } from 'flowbite-react';
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { IoFileTrayOutline } from 'react-icons/io5';
 import { T_ColumnData, T_ItemTypeBase } from './types';
 import { DeletionWarningModal } from './DeletionWarningModal';
@@ -24,6 +24,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   loadMore,
   hasMore,
   error,
+  additionalButtons,
 }: {
   deleteItems: () => Promise<boolean | undefined>;
   rowSelection: {
@@ -39,6 +40,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   loadMore: () => void;
   hasMore: boolean;
   error: any;
+  additionalButtons?: ReactNode[] | ReactNode;
 }) {
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
@@ -67,6 +69,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
         createNew={createNew}
         rowSelection={rowSelection}
         toggleDeletionWarning={toggleDeletionWarning}
+        additionalButtons={additionalButtons}
       />
       <div className="w-full overflow-x-scroll rounded-lg drop-shadow-md custom-scrollbar">
         {isLoading ? (

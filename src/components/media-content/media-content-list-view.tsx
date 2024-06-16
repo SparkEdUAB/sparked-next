@@ -2,7 +2,7 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useMediaContent, { transformRawMediaContent } from '@hooks/use-media-content';
-import { Drawer, Modal } from 'flowbite-react';
+import { Button, Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { mediaContentTableColumns } from '.';
@@ -12,11 +12,14 @@ import CreateMediaContentView from './create-media-content-view';
 import EditMediaContentView from './edit-media-content-view';
 import { API_LINKS } from 'app/links';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { LuFiles } from 'react-icons/lu';
+import UploadMultipleResources from './upload-multiple/upload-multiple-resources';
 
 const MediaContentListView: React.FC = () => {
   const { selectedMediaContentIds, setSelectedMediaContentIds, onSearchQueryChange, deleteMediaContent, searchQuery } =
     useMediaContent();
   const [creatingResource, setCreatingResource] = useState(false);
+  const [uploadingMultiple, setUploadingMultiple] = useState(false);
   const [edittingResource, setEdittingResource] = useState<T_MediaContentFields | null>(null);
 
   const {
@@ -57,6 +60,12 @@ const MediaContentListView: React.FC = () => {
         hasMore={hasMore}
         loadMore={loadMore}
         error={error}
+        additionalButtons={
+          <Button onClick={() => setUploadingMultiple(true)} className={'table-action-buttons'}>
+            <LuFiles className="mr-3 h-4 w-4" />
+            {i18next.t('upload_multiple')}
+          </Button>
+        }
       />
       <Modal show={creatingResource} onClose={() => setCreatingResource(false)} popup>
         <Modal.Header />
@@ -65,6 +74,17 @@ const MediaContentListView: React.FC = () => {
             onSuccessfullyDone={() => {
               mutate();
               setCreatingResource(false);
+            }}
+          />
+        </Modal.Body>
+      </Modal>
+      <Modal size="4xl" show={uploadingMultiple} onClose={() => setUploadingMultiple(false)} popup>
+        <Modal.Header />
+        <Modal.Body className="custom-scrollbar">
+          <UploadMultipleResources
+            onSuccessfullyDone={() => {
+              mutate();
+              setUploadingMultiple(false);
             }}
           />
         </Modal.Body>

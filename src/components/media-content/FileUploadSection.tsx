@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import i18next from 'i18next';
 import { Dispatch, SetStateAction } from 'react';
-import { DragAndDropFileInput } from './DragAndDropFileInput';
+import { DragAndDropFileInput } from '../molecules/DragAndDropFileInput/DragAndDropFileInput';
 
 export function FileUploadSection({
   isLoading,
@@ -24,7 +23,7 @@ export function FileUploadSection({
     <div className="w-full">
       <DragAndDropFileInput
         id="file"
-        file={file}
+        files={file}
         label={i18next.t('upload_file')}
         onChange={setFile}
         required={required}
@@ -34,7 +33,7 @@ export function FileUploadSection({
 
       <DragAndDropFileInput
         id="thumbnail"
-        file={thumbnail}
+        files={thumbnail}
         label={i18next.t('upload_thumbnail')}
         required={false}
         isLoading={isLoading}

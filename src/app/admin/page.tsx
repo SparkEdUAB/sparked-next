@@ -1,6 +1,5 @@
 'use client';
 
-import 'utils/intl';
 import ContentPlaceholder from '@components/atom/ContentPlaceholder/ContentPlaceholder';
 import React from 'react';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';

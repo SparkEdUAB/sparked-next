@@ -1,7 +1,7 @@
 'use client';
 import { Button } from 'flowbite-react';
 import i18next from 'i18next';
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { IoMdAddCircleOutline } from 'react-icons/io';
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { useToastMessage } from 'providers/ToastMessageContext';
@@ -10,10 +10,12 @@ export function AdminTableButtonGroup({
   createNew,
   rowSelection,
   toggleDeletionWarning,
+  additionalButtons,
 }: {
   createNew: () => void;
   rowSelection: { selectedRowKeys: React.Key[]; onChange: (selectedRowKeys: React.Key[]) => void };
   toggleDeletionWarning: () => void;
+  additionalButtons?: ReactNode[] | ReactNode;
 }) {
   const message = useToastMessage();
 
@@ -23,6 +25,7 @@ export function AdminTableButtonGroup({
         <IoMdAddCircleOutline className="mr-3 h-4 w-4" />
         {i18next.t('new')}
       </Button>
+      {additionalButtons}
       <Button
         disabled={rowSelection.selectedRowKeys.length === 0}
         onClick={() =>
