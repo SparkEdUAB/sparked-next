@@ -20,7 +20,7 @@ const useSubject = () => {
   const [selectedSubjectIds, setSelectedSubjectIds] = useState<React.Key[]>([]);
 
   const createSubject = async (fields: T_CreateSubjectFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.CREATE_COURSE;
+    const url = API_LINKS.CREATE_SUBJECT;
     const formData = {
       body: JSON.stringify({ ...fields }),
       method: 'post',
