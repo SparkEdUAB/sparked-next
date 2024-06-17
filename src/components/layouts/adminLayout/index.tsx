@@ -1,6 +1,6 @@
 'use client';
 
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 
 import AdminSidebar from './sidebar';
 import { T_AdminLayout } from './types';
@@ -10,7 +10,7 @@ import { AdminNavbar } from './AdminNavbar';
 
 const AdminLayout: FC<T_AdminLayout> = ({ children, withBreadcrumb = true }) => {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
-  const toggleSidebar = () => setSidebarIsCollapsed((value) => !value);
+  const toggleSidebar = useCallback(() => setSidebarIsCollapsed((value) => !value), [setSidebarIsCollapsed]);
 
   return (
     <main className="h-[calc(100vh_-_62px)]">

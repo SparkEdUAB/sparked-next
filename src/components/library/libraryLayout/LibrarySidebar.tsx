@@ -12,7 +12,7 @@ import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
 import { T_RawTopicFields } from '@hooks/use-topic/types';
 import useNavigation from '@hooks/useNavigation';
 import { useScreenDetector } from '@hooks/useScreenDetactor';
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 
 export function LibrarySidebar({
   subjects,
@@ -49,6 +49,12 @@ export function LibrarySidebar({
     }
   }, [isMediaPage]);
 
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => event.code === 'Escape' && toggleSidebar();
+    document.addEventListener('keyup', handler);
+    return () => document.removeEventListener('keyup', handler);
+  }, [toggleSidebar]);
+
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');
   const filteredUnitId = useSearchParams().get('unit_id');
@@ -58,7 +64,9 @@ export function LibrarySidebar({
   return (
     <>
       <div
-        className={`${sidebarIsCollapsed ? 'hidden' : 'block'} fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] flex-none md:sticky  h-[calc(100vh_-_62px)] overflow-y-clip
+        className={`${
+          sidebarIsCollapsed ? '-left-[300px] md:hidden' : 'left-0 md:block'
+        } fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] transition-all duration-300 flex-none md:sticky h-[calc(100vh_-_62px)] overflow-y-clip
         `}
       >
         <Sidebar
@@ -96,15 +104,15 @@ export function LibrarySidebar({
                   url={`/library?${createQueryString('subject_id', '')}`}
                 />
                 {subjects.map((subject) => (
-                    <Sidebar.Item
-                      active={filteredUnitId == subject._id}
-                      className={styles.item}
-                      as={Link}
-                      href={`/library?${createQueryString('subject_id', subject._id)}`}
-                      key={subject._id}
-                    >
-                      {subject.name}
-                    </Sidebar.Item>
+                  <Sidebar.Item
+                    active={filteredUnitId == subject._id}
+                    className={styles.item}
+                    as={Link}
+                    href={`/library?${createQueryString('subject_id', subject._id)}`}
+                    key={subject._id}
+                  >
+                    {subject.name}
+                  </Sidebar.Item>
                 ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
@@ -181,14 +189,12 @@ export function LibrarySidebar({
           </Sidebar.Items>
         </Sidebar>
       </div>
-
-      {!sidebarIsCollapsed && isMobile && (
-        <div
-          onClick={toggleSidebar}
-          onKeyUp={(key) => key.code === 'Escape' && toggleSidebar()}
-          className="fixed cursor-pointer inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:backdrop-blur-none md:bg-inherit"
-        />
-      )}
+      <div
+        onClick={toggleSidebar}
+        className={`fixed cursor-pointer inset-0 z-40 transition-all duration-300 rounded-br-full bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:backdrop-blur-none md:bg-inherit ${
+          sidebarIsCollapsed || !isMobile ? 'w-0 h-0' : 'w-[200vmax] h-[200vmax]'
+        }`}
+      />
     </>
   );
 }
