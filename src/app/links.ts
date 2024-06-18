@@ -81,6 +81,8 @@ export const API_LINKS: T_link = {
   FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
   FETCH_MEDIA_TYPES: '/api/media-content/fetchMediaTypes',
 
+  FETCH_ALL_STATS: '/api/stats/fetchCounts',
+
   //   SETTINGS > PAGE LINKS
   CREATE_PAGE_LINK: 'api/page-link/createPageLink',
   EDIT_PAGE_LINK: 'api/page-link/editPageLink',

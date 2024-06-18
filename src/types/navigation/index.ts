@@ -77,7 +77,7 @@ export type T_link = {
   FETCH_CATEGORY_BY_ID: string;
   EDIT_CATEGORY: string;
   FIND_CATEGORY_BY_NAME: string;
-
+  FETCH_ALL_STATS: string;
   //config
   READ_CONFIG_FILE: string;
 };
