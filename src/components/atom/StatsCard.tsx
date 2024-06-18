@@ -36,7 +36,7 @@ export const DashbordUsageCard = ({
 
         {!isPercentage && hasLink && value == 0 ? (
           <Link
-            className=" text-sm  text-gray-400 hover:text-gray-700"
+            className=" text-sm  text-blue-400 hover:text-gray-700"
             href={(ADMIN_LINKS as any)[name as string].link}
           >
             Add {i18next.t(name) + ' '}
