@@ -64,8 +64,6 @@ export default async function signup_(request: Request) {
       status: 200,
     });
   } catch (error) {
-    console.log('error', error);
-
     const errorCodeIndex = `${JSON.stringify(error)}`.lastIndexOf('code');
 
     const code = errorCodeIndex === -1 ? 0 : Number(`${error}`.substring(errorCodeIndex).match(/\d+/g));
