@@ -75,7 +75,7 @@ export default async function fetchCounts_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: 500,
     });
   }
 }

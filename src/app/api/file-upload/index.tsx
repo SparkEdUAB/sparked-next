@@ -34,7 +34,7 @@ export default async function uploadFile_(req: Request, session?: Session) {
       code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
     };
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: 500,
     });
   }
 }

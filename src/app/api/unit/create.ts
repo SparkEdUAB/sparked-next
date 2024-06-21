@@ -13,10 +13,11 @@ export default async function createUnit_(request: Request, session?: Session) {
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
+    subjectId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, subjectId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -117,6 +118,7 @@ export default async function createUnit_(request: Request, session?: Session) {
       school_id: new BSON.ObjectId(schoolId),
       program_id: new BSON.ObjectId(programId),
       course_id: new BSON.ObjectId(courseId),
+      subject_id: new BSON.ObjectId(subjectId),
     });
 
     const response = {

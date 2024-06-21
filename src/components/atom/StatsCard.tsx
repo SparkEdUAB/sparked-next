@@ -25,7 +25,7 @@ export const DashbordUsageCard = ({
 
   return (
     <>
-      <Card className="max-w-sm mx-2 my-1 dark:bg-gray-700 h-full">
+      <Card className="  text-center  max-w-sm mx-2 my-1 dark:bg-gray-700 h-full">
         <h5 className="font-semibold text-gray-500 dark:text-gray-400">{i18next.t(name)}</h5>
         <p
           className={`text-3xl font-bold tracking-tight text-gray-900 dark:text-white ${percentageTrend == 'down' ? 'text-red-500' : percentageTrend == 'up' ? 'text-green-400' : null}`}
@@ -36,7 +36,7 @@ export const DashbordUsageCard = ({
 
         {!isPercentage && hasLink && value == 0 ? (
           <Link
-            className=" text-sm  text-gray-400 hover:text-gray-700"
+            className=" text-sm  text-blue-400 hover:text-gray-700"
             href={(ADMIN_LINKS as any)[name as string].link}
           >
             Add {i18next.t(name) + ' '}

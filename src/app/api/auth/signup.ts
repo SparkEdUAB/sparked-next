@@ -1,9 +1,9 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { realmApp } from "../lib/db/realm";
-import AUTH_PROCESS_CODES from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { realmApp } from '../lib/db/realm';
+import AUTH_PROCESS_CODES from './processCodes';
 
 export default async function signup_(request: Request) {
   const schema = zfd.formData({
@@ -64,12 +64,9 @@ export default async function signup_(request: Request) {
       status: 200,
     });
   } catch (error) {
-    const errorCodeIndex = `${JSON.stringify(error)}`.lastIndexOf("code");
+    const errorCodeIndex = `${JSON.stringify(error)}`.lastIndexOf('code');
 
-    const code =
-      errorCodeIndex === -1
-        ? 0
-        : Number(`${error}`.substring(errorCodeIndex).match(/\d+/g));
+    const code = errorCodeIndex === -1 ? 0 : Number(`${error}`.substring(errorCodeIndex).match(/\d+/g));
 
     const resp = {
       isError: true,
