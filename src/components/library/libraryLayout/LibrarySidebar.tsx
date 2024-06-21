@@ -52,6 +52,7 @@ export function LibrarySidebar({
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');
   const filteredUnitId = useSearchParams().get('unit_id');
+  const filteredSubjectId = useSearchParams().get('subject_id');
   const filteredTopicId = useSearchParams().get('topic_id');
   const filteredMediaType = useSearchParams().get('mediaType');
 
@@ -92,19 +93,19 @@ export function LibrarySidebar({
                 <ShowAllOrNoItems
                   ItemName={'Subjects'}
                   items={subjects}
-                  filterItemId={filteredUnitId}
+                  filterItemId={filteredSubjectId}
                   url={`/library?${createQueryString('subject_id', '')}`}
                 />
                 {subjects.map((subject) => (
-                    <Sidebar.Item
-                      active={filteredUnitId == subject._id}
-                      className={styles.item}
-                      as={Link}
-                      href={`/library?${createQueryString('subject_id', subject._id)}`}
-                      key={subject._id}
-                    >
-                      {subject.name}
-                    </Sidebar.Item>
+                  <Sidebar.Item
+                    active={filteredSubjectId == subject._id}
+                    className={styles.item}
+                    as={Link}
+                    href={`/library?${createQueryString('subject_id', subject._id)}`}
+                    key={subject._id}
+                  >
+                    {subject.name}
+                  </Sidebar.Item>
                 ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
@@ -144,7 +145,7 @@ export function LibrarySidebar({
                 {units.map((unit) => (
                   <Sidebar.Item
                     key={unit._id}
-                    active={filteredUnitId == unit.name}
+                    active={filteredUnitId == unit._id}
                     className={styles.item}
                     as={Link}
                     href={`/library?${createQueryString('unit_id', unit._id)}`}
