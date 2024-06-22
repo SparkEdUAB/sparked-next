@@ -48,6 +48,7 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
       grades={grades instanceof Error ? [] : grades}
       mediaTypes={mediaContentTypes instanceof Error ? [] : mediaContentTypes}
       isSubjectsLoading={isSubjectsLoading}
+      isUnitsLoading={isUnitsLoading}
     >
       {children}
     </LibraryLayout>
