@@ -2,12 +2,13 @@
 
 import { ReactNode, useState } from 'react';
 import { T_RawSubjectFields } from '@hooks/useSubject/types';
-import { T_RawUnitFields } from '@hooks/useUnit/types';
 import { LibraryNavbar } from './LibraryNavbar';
 import { LibrarySidebar } from './LibrarySidebar';
 import { T_RawGradeFields } from '@hooks/useGrade/types';
 import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
 import { T_RawTopicFields } from '@hooks/use-topic/types';
+
+import { T_RawUnitFields } from '@hooks/useUnit/types';
 
 export default function LibraryLayout({
   children,
@@ -16,6 +17,8 @@ export default function LibraryLayout({
   grades,
   units,
   mediaTypes,
+  isUnitsLoading,
+  isSubjectsLoading,
 }: {
   children: ReactNode;
   subjects: T_RawSubjectFields[];
@@ -23,6 +26,8 @@ export default function LibraryLayout({
   grades: T_RawGradeFields[];
   units: T_RawUnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
+  isUnitsLoading: boolean;
+  isSubjectsLoading: boolean;
 }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
   const toggleSidebar = () => setSidebarIsCollapsed(!sidebarIsCollapsed);
@@ -39,6 +44,8 @@ export default function LibraryLayout({
           grades={grades}
           units={units}
           mediaTypes={mediaTypes}
+          isUnitsLoading={isUnitsLoading}
+          isSubjectsLoading={isSubjectsLoading}
         />
         <div className="max-h-full overflow-y-hidden w-screen ">{children}</div>
       </div>
