@@ -17,11 +17,6 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
 
   const filteredGradeId = useSearchParams().get('grade_id');
   const filteredSubjectId = useSearchParams().get('subject_id');
-  if (filteredGradeId) {
-    console.log('filteredGradeId', filteredGradeId);
-  }
-
-  console.log('subjects', subjects);
 
   useEffect(() => {
     if (filteredSubjectId) {

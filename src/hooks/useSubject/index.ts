@@ -233,7 +233,6 @@ const useSubject = () => {
       }
 
       const responseData = await resp.json();
-      console.log(responseData);
 
       if (responseData.isError) {
         message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
