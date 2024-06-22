@@ -1,14 +1,14 @@
 'use client';
 
 import { ReactNode, useState } from 'react';
-import { T_RawSubjectFields } from '@hooks/useSubject/types';
+import { T_SubjectFields } from '@hooks/useSubject/types';
 import { LibraryNavbar } from './LibraryNavbar';
 import { LibrarySidebar } from './LibrarySidebar';
-import { T_RawGradeFields } from '@hooks/useGrade/types';
+import { T_GradeFields } from '@hooks/useGrade/types';
 import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
-import { T_RawTopicFields } from '@hooks/use-topic/types';
+import { T_TopicFields } from '@hooks/use-topic/types';
 
-import { T_RawUnitFields } from '@hooks/useUnit/types';
+import { T_UnitFields } from '@hooks/useUnit/types';
 
 export default function LibraryLayout({
   children,
@@ -21,10 +21,10 @@ export default function LibraryLayout({
   isSubjectsLoading,
 }: {
   children: ReactNode;
-  subjects: T_RawSubjectFields[];
-  topics: T_RawTopicFields[];
-  grades: T_RawGradeFields[];
-  units: T_RawUnitFields[];
+  subjects: T_SubjectFields[];
+  topics: T_TopicFields[];
+  grades: T_GradeFields[];
+  units: T_UnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
   isUnitsLoading: boolean;
   isSubjectsLoading: boolean;

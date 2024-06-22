@@ -1,15 +1,15 @@
 import styles from './Layout.module.css';
 import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
-import { T_RawUnitFields } from '@hooks/useUnit/types';
-import { T_RawGradeFields } from '@hooks/useGrade/types';
+import { T_UnitFields } from '@hooks/useUnit/types';
+import { T_GradeFields } from '@hooks/useGrade/types';
 import { useSearchParams } from 'next/navigation';
 
 import { useSearchQuery } from '@hooks/useSearchQuery';
-import { T_RawSubjectFields } from '@hooks/useSubject/types';
+import { T_SubjectFields } from '@hooks/useSubject/types';
 import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
 import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
-import { T_RawTopicFields } from '@hooks/use-topic/types';
+import { T_TopicFields } from '@hooks/use-topic/types';
 import useNavigation from '@hooks/useNavigation';
 import { useScreenDetector } from '@hooks/useScreenDetactor';
 import { useLayoutEffect } from 'react';
@@ -28,10 +28,10 @@ export function LibrarySidebar({
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
-  subjects: T_RawSubjectFields[];
-  grades: T_RawGradeFields[];
-  topics: T_RawTopicFields[];
-  units: T_RawUnitFields[];
+  subjects: T_SubjectFields[];
+  topics: T_TopicFields[];
+  grades: T_GradeFields[];
+  units: T_UnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
   isUnitsLoading: boolean;
   isSubjectsLoading: boolean;
