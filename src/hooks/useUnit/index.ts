@@ -163,10 +163,10 @@ const useUnit = () => {
     withMetaData = false,
   }: {
     subjectId: string;
-    withMetaData: boolean;
+    withMetaData?: boolean;
   }) => {
     const url = API_LINKS.FETCH_UNIT_BY_SUBJECT_ID;
-    const formData = { subjectId };
+    const formData = { subjectId, withMetaData };
 
     try {
       setLoaderStatus(true);
