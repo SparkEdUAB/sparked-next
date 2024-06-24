@@ -1,7 +1,7 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchTopics_, { deleteTopics_, fetchTopicById_, findTopicsByName_ } from '..';
+import fetchTopics_, { deleteTopics_, fetchTopicById_, fetchTopicsBySubjectId_, findTopicsByName_ } from '..';
 import { authOptions } from '../../auth/constants';
 import createTopic_ from '../create';
 import editTopic_ from '../edit';
@@ -23,7 +23,7 @@ export async function POST(
     deleteTopics: deleteTopics_,
   };
 
-  if (topicFunctions[slug] && !session) {
+  if (topicFunctions[slug] && session) {
     return topicFunctions[slug](req, session);
   } else {
     const response = {
@@ -50,6 +50,7 @@ export async function GET(
     fetchTopics: fetchTopics_,
     fetchTopicById: fetchTopicById_,
     findTopicsByName: findTopicsByName_,
+    fetchTopicsBySubjectId: fetchTopicsBySubjectId_,
   };
 
   if (topicFunctions[slug]) {

@@ -282,7 +282,7 @@ export async function fetchTopicsBySubjectId_(request: any) {
 
     let topic: { [key: string]: string } | null;
 
-    if (isWithMetaData) {
+    if (!isWithMetaData) {
       const topics = await db
         .collection(dbCollections.topics.name)
         .aggregate(
@@ -297,7 +297,7 @@ export async function fetchTopicsBySubjectId_(request: any) {
 
       topic = topics.length ? topics[0] : {};
     } else {
-      topic = await db.collection(dbCollections.topics.name).findOne({ _id: new BSON.ObjectId(subjectId) });
+      topic = await db.collection(dbCollections.topics.name).findOne({ subject_id: new BSON.ObjectId(subjectId) });
     }
 
     const response = {
