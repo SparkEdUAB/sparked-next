@@ -220,7 +220,7 @@ const useSubject = () => {
     withMetaData?: boolean;
   }) => {
     const url = API_LINKS.FETCH_SUBJECTS_BY_GRADE_ID;
-    const formData = { gradeId, withMetaData };
+    const formData = { gradeId, withMetaData: String(withMetaData) };
 
     try {
       setLoaderStatus(true);

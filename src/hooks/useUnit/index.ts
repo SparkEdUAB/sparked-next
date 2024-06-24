@@ -166,7 +166,7 @@ const useUnit = () => {
     withMetaData?: boolean;
   }) => {
     const url = API_LINKS.FETCH_UNIT_BY_SUBJECT_ID;
-    const formData = { subjectId, withMetaData };
+    const formData = { subjectId, withMetaData: String(withMetaData) };
 
     try {
       setLoaderStatus(true);
