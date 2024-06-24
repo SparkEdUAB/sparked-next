@@ -3,6 +3,7 @@ import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import fetchUnits_, {
   deleteUnits_,
+  fetchUnitByGradeId_,
   fetchUnitById_,
   fetchUnitBySubjectId_,
   fetchUnitByTopicId_,
@@ -57,6 +58,7 @@ export async function GET(
     findUnitsByName: findUnitsByName_,
     fetchUnitBySubjectId: fetchUnitBySubjectId_,
     fetchUnitByTopicId: fetchUnitByTopicId_,
+    fetchUnitByGradeId: fetchUnitByGradeId_,
   };
 
   if (unitFunctions[slug]) {
