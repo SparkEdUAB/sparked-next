@@ -23,7 +23,7 @@ export async function POST(
     deleteTopics: deleteTopics_,
   };
 
-  if (topicFunctions[slug] && session) {
+  if (topicFunctions[slug] && !session) {
     return topicFunctions[slug](req, session);
   } else {
     const response = {

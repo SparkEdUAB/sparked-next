@@ -29,7 +29,7 @@ export async function POST(
     deleteUnits: deleteUnits_,
   };
 
-  if (unitFunctions[slug] && !session) {
+  if (unitFunctions[slug] && session) {
     return unitFunctions[slug](req, session);
   } else {
     const response = {

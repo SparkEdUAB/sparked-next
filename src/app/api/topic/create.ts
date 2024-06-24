@@ -14,10 +14,11 @@ export default async function createTopic_(request: Request, session?: Session) 
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
+    gradeId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId, gradeId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -107,6 +108,25 @@ export default async function createTopic_(request: Request, session?: Session) 
         status: 200,
       });
     }
+    const grade = gradeId
+      ? await db.collection(dbCollections.grades.name).findOne(
+          {
+            _id: new BSON.ObjectId(gradeId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
+
+    if (!grade && gradeId) {
+      const response = {
+        isError: true,
+        code: TOPIC_PROCESS_CODES.GRADE_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
 
     const unit = await db.collection(dbCollections.units.name).findOne(
       {
@@ -137,6 +157,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       program_id: new BSON.ObjectId(programId),
       course_id: new BSON.ObjectId(courseId),
       unit_id: new BSON.ObjectId(unitId),
+      grade_id: new BSON.ObjectId(gradeId),
     });
 
     const response = {
