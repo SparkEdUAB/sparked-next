@@ -5,7 +5,7 @@ import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useState } from 'react';
-import { T_CreateGradeFields, T_GradeFields, T_RawGradeFields } from './types';
+import { T_CreateGradeFields, T_FetchGrades, T_GradeFields, T_RawGradeFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
 
@@ -16,7 +16,7 @@ const useGrade = () => {
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [grades, setGrades] = useState<Array<T_GradeFields>>([]);
-  const [originalGrades] = useState<Array<T_GradeFields>>([]);
+  const [originalGrades, setOriginalGrades] = useState<Array<T_GradeFields>>([]);
   const [grade, setGrade] = useState<T_GradeFields | null>(null);
   const [selectedGradeIds, setSelectedGradeIds] = useState<React.Key[]>([]);
 
@@ -86,6 +86,39 @@ const useGrade = () => {
 
       onSuccessfullyDone?.();
       message.success(i18next.t('success'));
+    } catch (err: any) {
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      return false;
+    }
+  };
+
+  const fetchGrades = async ({ limit = 1000, skip = 0 }: T_FetchGrades) => {
+    const url = API_LINKS.FETCH_GRADES;
+    const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
+
+    try {
+      setLoaderStatus(true);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+      setLoaderStatus(false);
+
+      if (!resp.ok) {
+        message.warning(i18next.t('unknown_error'));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        return false;
+      }
+
+      const grades = responseData.grades?.map(transformRawGrade);
+
+      setGrades(grades);
+      setOriginalGrades(grades);
+      return grades;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -234,7 +267,7 @@ const useGrade = () => {
 
   return {
     createGrade,
-    // fetchGrades,
+    fetchGrades,
     grades,
     setGrades,
     setSelectedGradeIds,

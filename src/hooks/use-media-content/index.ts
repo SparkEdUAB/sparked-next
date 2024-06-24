@@ -19,6 +19,8 @@ const useMediaContent = () => {
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [mediaContent, setMediaContent] = useState<Array<T_MediaContentFields>>([]);
+  const [mediaContentTypes, setMediaContentTypes] = useState<Array<T_MediaContentFields>>([]);
+  const [tempMediaContentTypes, setTempMediaContentTypes] = useState<Array<T_MediaContentFields>>([]);
   const [tempMediaContent, setTempMediaContent] = useState<Array<T_MediaContentFields>>([]);
   const [targetMediaContent, setTargetMediaContent] = useState<T_MediaContentFields | null>(null);
   const [selectedMediaContentIds, setSelectedMediaContentIds] = useState<T_React_key[]>([]);
@@ -142,6 +144,41 @@ const useMediaContent = () => {
       setMediaContent(_mediaContent);
       setTempMediaContent(_mediaContent);
       return _mediaContent;
+    } catch (err: any) {
+      setLoaderStatus(false);
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      return false;
+    }
+  };
+
+  const fetchMediaContentTypes = async ({ limit = 1000, skip = 0 }: T_FetchTopic) => {
+    const url = API_LINKS.FETCH_MEDIA_TYPES;
+    const params = { limit: `${limit}`, skip: `${skip}`, withMetaData: 'true' };
+
+    try {
+      setLoaderStatus(true);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+      setLoaderStatus(false);
+
+      if (!resp.ok) {
+        message.warning(i18next.t('unknown_error'));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        return false;
+      }
+
+      const _mediaContentTypes = (responseData.mediaContents as T_RawMediaContentFields[])?.map<T_MediaContentFields>(
+        transformRawMediaContent,
+      );
+
+      setMediaContentTypes(_mediaContentTypes);
+      setTempMediaContentTypes(_mediaContentTypes);
+      return _mediaContentTypes;
     } catch (err: any) {
       setLoaderStatus(false);
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -332,7 +369,9 @@ const useMediaContent = () => {
   return {
     createResource,
     fetchMediaContent,
+    fetchMediaContentTypes,
     mediaContent,
+    mediaContentTypes,
     setMediaContent,
     setSelectedMediaContentIds,
     selectedMediaContentIds,

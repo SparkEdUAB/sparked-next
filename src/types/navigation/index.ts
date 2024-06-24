@@ -23,12 +23,15 @@ export type T_link = {
   EDIT_COURSE: string;
   DELETE_COURSES: string;
   FIND_COURSE_BY_NAME: string;
+  // UNITS
   CREATE_UNIT: string;
   FETCH_UNITS: string;
   DELETE_UNITS: string;
   FETCH_UNIT_BY_ID: string;
+  FETCH_UNIT_BY_SUBJECT_ID: string;
   EDIT_UNIT: string;
   FIND_UNITS_BY_NAME: string;
+
   CREATE_TOPIC: string;
   FETCH_TOPICS: string;
   DELETE_TOPICS: string;
@@ -67,6 +70,7 @@ export type T_link = {
   FETCH_SUBJECTS: string;
   DELETE_SUBJECTS: string;
   FETCH_SUBJECT_BY_ID: string;
+  FETCH_SUBJECTS_BY_GRADE_ID: string;
   EDIT_SUBJECT: string;
   FIND_SUBJECT_BY_NAME: string;
 

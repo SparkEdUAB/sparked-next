@@ -158,6 +158,47 @@ const useUnit = () => {
     }
   };
 
+  const fetchUnitBySubjectsId = async ({
+    subjectId,
+    withMetaData = false,
+  }: {
+    subjectId: string;
+    withMetaData?: boolean;
+  }) => {
+    const url = API_LINKS.FETCH_UNIT_BY_SUBJECT_ID;
+    const formData = { subjectId, withMetaData: String(withMetaData) };
+
+    try {
+      setLoaderStatus(true);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(formData));
+      setLoaderStatus(false);
+
+      if (!resp.ok) {
+        message.warning(i18next.t('unknown_error'));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        return false;
+      }
+
+      if (responseData.units) {
+        const _units = (responseData.units as T_RawUnitFields[])?.map<T_UnitFields>(transformRawUnit);
+        setUnits(_units);
+        setTempUnits(_units);
+        return _units;
+      } else {
+        return null;
+      }
+    } catch (err: any) {
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      return false;
+    }
+  };
+
   const triggerDelete = async () => {
     if (!selectedUnitIds.length) {
       return message.warning(i18next.t('select_items'));
@@ -274,6 +315,7 @@ const useUnit = () => {
     triggerDelete,
     triggerEdit,
     fetchUnitById,
+    fetchUnitBySubjectsId,
     router,
     unit,
     isLoading,
