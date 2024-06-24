@@ -212,6 +212,47 @@ const useSubject = () => {
       return false;
     }
   };
+  const fetchSubjectsByGradeId = async ({
+    gradeId,
+    withMetaData = false,
+  }: {
+    gradeId: string;
+    withMetaData?: boolean;
+  }) => {
+    const url = API_LINKS.FETCH_SUBJECTS_BY_GRADE_ID;
+    const formData = { gradeId, withMetaData: String(withMetaData) };
+
+    try {
+      setLoaderStatus(true);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(formData));
+      setLoaderStatus(false);
+
+      if (!resp.ok) {
+        message.warning(i18next.t('unknown_error'));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        return false;
+      }
+
+      if (responseData.subjects) {
+        const _subjects = (responseData.subjects as T_RawSubjectFields[])?.map<T_SubjectFields>(transformRawSubject);
+        setSubjects(_subjects);
+        setOriginalSubjects(_subjects);
+        return _subjects;
+      } else {
+        return null;
+      }
+    } catch (err: any) {
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      return false;
+    }
+  };
+
   const findSubjectByName = async () => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
@@ -274,6 +315,7 @@ const useSubject = () => {
   return {
     createSubject,
     fetchSubjects,
+    fetchSubjectsByGradeId,
     subjects,
     setSubjects,
     setSelectedSubjectIds,
