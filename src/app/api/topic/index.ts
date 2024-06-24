@@ -254,3 +254,69 @@ export async function findTopicsByName_(request: any) {
     });
   }
 }
+
+
+
+export async function fetchTopicByGradeId_(request: any) {
+  const schema = zfd.formData({
+    gradeId: zfd.text(),
+    withMetaData: zfd.text().optional(),
+  });
+  const params = request.nextUrl.searchParams;
+
+  const { gradeId, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
+
+  try {
+    const db = await dbClient();
+
+    if (!db) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+      };
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+
+    let topic: { [key: string]: string } | null;
+
+    if (isWithMetaData) {
+      const topics = await db
+        .collection(dbCollections.topics.name)
+        .aggregate(
+          p_fetchTopicsWithMetaData({
+            project,
+            query: {
+              grade_id: new BSON.ObjectId(gradeId),
+            },
+          }),
+        )
+        .toArray();
+
+      topic = topics.length ? topics[0] : {};
+    } else {
+      topic = await db.collection(dbCollections.topics.name).findOne({ grade_id: new BSON.ObjectId(gradeId) });
+    }
+
+    const response = {
+      isError: false,
+      topic,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  } catch (error) {
+    const resp = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+    };
+
+    return new Response(JSON.stringify(resp), {
+      status: 200,
+    });
+  }
+}
