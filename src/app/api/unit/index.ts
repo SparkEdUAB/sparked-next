@@ -328,3 +328,67 @@ export async function fetchUnitBySubjectId_(request: any) {
     });
   }
 }
+export async function fetchUnitByTopicId_(request: any) {
+  const schema = zfd.formData({
+    topicId: zfd.text(),
+    withMetaData: zfd.text().optional(), // this should boolean but changing for now to match the rest and FE
+  });
+  const params = request.nextUrl.searchParams;
+
+  const { topicId, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
+
+  try {
+    const db = await dbClient();
+
+    if (!db) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+      };
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+
+    let units: T_RECORD[];
+
+    if (isWithMetaData) {
+      units = await db
+        .collection(dbCollections.units.name)
+        .aggregate(
+          p_fetchUnitsWithMetaData({
+            project,
+            query: {
+              topic_id: new BSON.ObjectId(topicId),
+            },
+          }),
+        )
+        .toArray();
+    } else {
+      units = await db
+        .collection(dbCollections.units.name)
+        .find({ topic_id: new BSON.ObjectId(topicId) })
+        .toArray();
+    }
+
+    const response = {
+      isError: false,
+      units,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+    });
+  } catch (error) {
+    const resp = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+    };
+
+    return new Response(JSON.stringify(resp), {
+      status: 200,
+    });
+  }
+}
