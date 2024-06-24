@@ -1,7 +1,14 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchUnits_, { deleteUnits_, fetchUnitById_, fetchUnitBySubjectId_, findUnitsByName_ } from '..';
+import fetchUnits_, {
+  deleteUnits_,
+  fetchUnitByGradeId_,
+  fetchUnitById_,
+  fetchUnitBySubjectId_,
+  fetchUnitByTopicId_,
+  findUnitsByName_,
+} from '..';
 import { authOptions } from '../../auth/constants';
 import createUnit_ from '../create';
 import editUnit_ from '../edit';
@@ -50,6 +57,8 @@ export async function GET(
     fetchUnitById: fetchUnitById_,
     findUnitsByName: findUnitsByName_,
     fetchUnitBySubjectId: fetchUnitBySubjectId_,
+    fetchUnitByTopicId: fetchUnitByTopicId_,
+    fetchUnitByGradeId: fetchUnitByGradeId_,
   };
 
   if (unitFunctions[slug]) {

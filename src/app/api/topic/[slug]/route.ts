@@ -1,7 +1,7 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchTopics_, { deleteTopics_, fetchTopicById_, fetchTopicsBySubjectId_, findTopicsByName_ } from '..';
+import fetchTopics_, { deleteTopics_, fetchTopicByGradeId_, fetchTopicById_, findTopicsByName_ ,fetchTopicsBySubjectId_} from '..';
 import { authOptions } from '../../auth/constants';
 import createTopic_ from '../create';
 import editTopic_ from '../edit';
@@ -50,6 +50,7 @@ export async function GET(
     fetchTopics: fetchTopics_,
     fetchTopicById: fetchTopicById_,
     findTopicsByName: findTopicsByName_,
+    fetchTopicByGradeId: fetchTopicByGradeId_,
     fetchTopicsBySubjectId: fetchTopicsBySubjectId_,
   };
 
