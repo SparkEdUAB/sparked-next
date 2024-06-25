@@ -54,8 +54,6 @@ const EditMediaContentView = ({
       let fileUrl = file ? await uploadFile(file) : undefined;
       let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
-      console.log(mediaContent);
-
       await editMediaContent(
         { ...mediaContent, ...result, topicId: topicId || mediaContent.topicId, unitId: unitId || mediaContent.unitId },
         fileUrl || undefined,

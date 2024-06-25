@@ -73,7 +73,6 @@ const useMediaContent = () => {
     thumbnailUrl?: string,
     onSuccessfullyDone?: () => void,
   ) => {
-    console.log(fields);
     const url = API_LINKS.EDIT_MEDIA_CONTENT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
