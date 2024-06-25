@@ -20,7 +20,7 @@ export default async function uploadFile_(req: Request, session?: Session) {
     let url = ""
     const isOnRender = req.url?.includes(RENDER_URL) // If true then this is serverless and we won't have access to disk
     if (!isOnRender) {
-      url = join(process.cwd(), 'public', file.name)
+      url = join(process.cwd(), 'public/uploads', file.name)
       await writeFile(url, buffer)
     } else {
       url = await s3Upload({
