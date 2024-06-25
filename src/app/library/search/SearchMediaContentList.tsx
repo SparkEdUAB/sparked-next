@@ -9,10 +9,18 @@ import { LibraryInfiniteScrollList } from '@components/library/LibraryInfiniteSc
 
 export function SearchMediaContentList({ initialMediaContent }: { initialMediaContent: T_RawMediaContentFields[] }) {
   let params = useSearchParams();
+  const searchTerm = params.get('q') || '';
 
   let { error, hasMore, loadMore, mediaContent } = useLibraryInfiniteScroll(initialMediaContent, async (offset) =>
-    searchMedia(offset, params.get('q') || ''),
+    searchMedia(offset, searchTerm),
   );
 
-  return <LibraryInfiniteScrollList mediaContent={mediaContent} loadMore={loadMore} hasMore={hasMore} error={error} />;
+  return (
+    <>
+      <p className="ml-3">
+        Showing results for <b>{searchTerm}</b>
+      </p>
+      <LibraryInfiniteScrollList mediaContent={mediaContent} loadMore={loadMore} hasMore={hasMore} error={error} />
+    </>
+  );
 }
