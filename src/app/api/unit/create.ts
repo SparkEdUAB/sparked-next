@@ -13,10 +13,13 @@ export default async function createUnit_(request: Request, session?: Session) {
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
+    subjectId: zfd.text().optional(),
+    topicId: zfd.text().optional(),
+    gradeId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, subjectId, topicId, gradeId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -107,6 +110,45 @@ export default async function createUnit_(request: Request, session?: Session) {
       });
     }
 
+    const topic = topicId
+      ? await db.collection(dbCollections.topics.name).findOne(
+          {
+            _id: new BSON.ObjectId(topicId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
+
+    if (!topic && topicId) {
+      const response = {
+        isError: true,
+        code: UNIT_PROCESS_CODES.TOPIC_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+    const grade = gradeId
+      ? await db.collection(dbCollections.grades.name).findOne(
+          {
+            _id: new BSON.ObjectId(gradeId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
+
+    if (!grade && gradeId) {
+      const response = {
+        isError: true,
+        code: UNIT_PROCESS_CODES.GRADE_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
     await db.collection(dbCollections.units.name).insertOne({
       name,
       description,
@@ -117,6 +159,9 @@ export default async function createUnit_(request: Request, session?: Session) {
       school_id: new BSON.ObjectId(schoolId),
       program_id: new BSON.ObjectId(programId),
       course_id: new BSON.ObjectId(courseId),
+      subject_id: new BSON.ObjectId(subjectId),
+      topic_id: new BSON.ObjectId(topicId),
+      grade_id: new BSON.ObjectId(gradeId),
     });
 
     const response = {

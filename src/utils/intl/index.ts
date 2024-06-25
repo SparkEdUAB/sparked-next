@@ -120,6 +120,8 @@ i18next.init({
         failed_to_upload: 'Failed to upload',
         failed_with_error_code: 'The operation failed with an error code',
         fill_required_fields: 'Please fill in all required fields',
+        page_views: 'Page Views',
+        searches: 'Searches',
       },
     },
   },

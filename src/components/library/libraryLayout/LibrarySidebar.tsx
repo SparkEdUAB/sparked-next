@@ -1,18 +1,19 @@
 import styles from './Layout.module.css';
 import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
-import { T_RawUnitFields } from '@hooks/useUnit/types';
-import { T_RawGradeFields } from '@hooks/useGrade/types';
+import { T_UnitFields } from '@hooks/useUnit/types';
+import { T_GradeFields } from '@hooks/useGrade/types';
 import { useSearchParams } from 'next/navigation';
 
 import { useSearchQuery } from '@hooks/useSearchQuery';
-import { T_RawSubjectFields } from '@hooks/useSubject/types';
+import { T_SubjectFields } from '@hooks/useSubject/types';
 import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
 import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
-import { T_RawTopicFields } from '@hooks/use-topic/types';
+import { T_TopicFields } from '@hooks/use-topic/types';
 import useNavigation from '@hooks/useNavigation';
 import { useScreenDetector } from '@hooks/useScreenDetactor';
 import { useEffect, useLayoutEffect } from 'react';
+import Skeleton from 'react-loading-skeleton';
 
 export function LibrarySidebar({
   subjects,
@@ -22,14 +23,18 @@ export function LibrarySidebar({
   units,
   topics,
   mediaTypes,
+  isUnitsLoading,
+  isSubjectsLoading,
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
-  subjects: T_RawSubjectFields[];
-  grades: T_RawGradeFields[];
-  topics: T_RawTopicFields[];
-  units: T_RawUnitFields[];
+  subjects: T_SubjectFields[];
+  topics: T_TopicFields[];
+  grades: T_GradeFields[];
+  units: T_UnitFields[];
   mediaTypes: T_RawMediaTypeFieldes[];
+  isUnitsLoading: boolean;
+  isSubjectsLoading: boolean;
 }) {
   const { isMobile } = useScreenDetector();
   const { pathname } = useNavigation();
@@ -58,6 +63,7 @@ export function LibrarySidebar({
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');
   const filteredUnitId = useSearchParams().get('unit_id');
+  const filteredSubjectId = useSearchParams().get('subject_id');
   const filteredTopicId = useSearchParams().get('topic_id');
   const filteredMediaType = useSearchParams().get('mediaType');
 
@@ -95,25 +101,35 @@ export function LibrarySidebar({
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
+            {/* Subjects */}
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Subjects">
-                <ShowAllOrNoItems
-                  ItemName={'Subjects'}
-                  items={subjects}
-                  filterItemId={filteredUnitId}
-                  url={`/library?${createQueryString('subject_id', '')}`}
-                />
-                {subjects.map((subject) => (
-                  <Sidebar.Item
-                    active={filteredUnitId == subject._id}
-                    className={styles.item}
-                    as={Link}
-                    href={`/library?${createQueryString('subject_id', subject._id)}`}
-                    key={subject._id}
-                  >
-                    {subject.name}
+                {!isSubjectsLoading && (
+                  <ShowAllOrNoItems
+                    ItemName={'Subjects'}
+                    items={subjects}
+                    filterItemId={filteredSubjectId}
+                    url={`/library?${createQueryString('subject_id', '')}`}
+                  />
+                )}
+                {isSubjectsLoading && (
+                  <Sidebar.Item diactivate href={'#'}>
+                    <Skeleton className="h-6" count={1} />
                   </Sidebar.Item>
-                ))}
+                )}
+
+                {!isSubjectsLoading &&
+                  subjects.map((subject) => (
+                    <Sidebar.Item
+                      active={filteredSubjectId == subject._id}
+                      className={styles.item}
+                      as={Link}
+                      href={`/library?${createQueryString('subject_id', subject._id)}`}
+                      key={subject._id}
+                    >
+                      {subject.name}
+                    </Sidebar.Item>
+                  ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
@@ -126,6 +142,7 @@ export function LibrarySidebar({
                   filterItemId={filteredTopicId}
                   url={`/library?${createQueryString('topics_id', '')}`}
                 />
+
                 {topics.map((topic) => (
                   <Sidebar.Item
                     active={filteredTopicId == topic._id}
@@ -143,23 +160,32 @@ export function LibrarySidebar({
             {/* Units */}
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Units">
-                <ShowAllOrNoItems
-                  ItemName={'Units'}
-                  items={units}
-                  filterItemId={filteredUnitId}
-                  url={`/library?${createQueryString('unit_id', '')}`}
-                />
-                {units.map((unit) => (
-                  <Sidebar.Item
-                    key={unit._id}
-                    active={filteredUnitId == unit.name}
-                    className={styles.item}
-                    as={Link}
-                    href={`/library?${createQueryString('unit_id', unit._id)}`}
-                  >
-                    {unit.name}
+                {!isUnitsLoading && (
+                  <ShowAllOrNoItems
+                    ItemName={'Units'}
+                    items={units}
+                    filterItemId={filteredUnitId}
+                    url={`/library?${createQueryString('unit_id', '')}`}
+                  />
+                )}
+                {isUnitsLoading && (
+                  <Sidebar.Item diactivate href={'#'}>
+                    <Skeleton className="h-6" count={1} />
                   </Sidebar.Item>
-                ))}
+                )}
+
+                {!isUnitsLoading &&
+                  units.map((unit) => (
+                    <Sidebar.Item
+                      key={unit._id}
+                      active={filteredUnitId == unit._id}
+                      className={styles.item}
+                      as={Link}
+                      href={`/library?${createQueryString('unit_id', unit._id)}`}
+                    >
+                      {unit.name}
+                    </Sidebar.Item>
+                  ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
