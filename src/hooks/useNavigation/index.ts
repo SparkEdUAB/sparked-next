@@ -64,13 +64,22 @@ const useNavigation = () => {
       for (const menuItem in menuItems) {
         const targetLinkSegment = linkSegments.slice(0, index + 1).join('/');
 
-        //@ts-ignore
-        if (menuItems[menuItem].link === targetLinkSegment) {
+        if (menuItems[menuItem as keyof T_MenuItemLink]?.link === targetLinkSegment) {
           breadcrumbItems.push({
             link: targetLinkSegment,
-            //@ts-ignore
-            label: menuItems[menuItem].label,
+            label: menuItems[menuItem as keyof T_MenuItemLink]?.label || '',
           });
+
+          for (let child of menuItems[menuItem as keyof T_MenuItemLink]?.children || []) {
+            const targetLinkSegment = linkSegments.slice(0, index + 2).join('/');
+
+            if (child.link === targetLinkSegment) {
+              breadcrumbItems.push({
+                link: targetLinkSegment,
+                label: child.label,
+              });
+            }
+          }
         }
       }
     });

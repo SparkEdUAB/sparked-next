@@ -11,6 +11,7 @@ import {
   AiOutlineHdd,
   AiOutlineMessage,
   AiOutlineUser,
+  AiOutlineSetting,
 } from 'react-icons/ai';
 
 // Todo:
@@ -26,13 +27,35 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     icon: () => <AiOutlineDashboard />,
     index: 1,
   },
+  settings: {
+    link: '/admin/settings',
+    roles: ['admin'],
+    label: i18next.t('settings'),
+    key: 'admin_settings',
+    icon: () => <AiOutlineSetting />,
+    index: 2,
+    children: [
+      {
+        label: 'Pages',
+        key: 'pages',
+        link: '/admin/settings/pages',
+        roles: ['admin'],
+      },
+      {
+        label: 'Roles',
+        key: 'roles',
+        link: '/admin/settings/roles',
+        roles: ['admin'],
+      },
+    ],
+  },
   users: {
     link: '/admin/users',
     roles: ['admin'],
     label: i18next.t('users'),
     key: 'admin_users',
     icon: () => <AiOutlineUser />,
-    index: 2,
+    index: 3,
     children: [
       {
         label: 'create',
@@ -77,7 +100,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('grades'),
     key: 'admin_grades',
     icon: () => <AiOutlineBook />,
-    index: 3,
+    index: 4,
     children: [
       {
         label: 'create',
@@ -99,7 +122,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('subjects'),
     key: 'admin_subjects',
     icon: () => <AiOutlineHdd />,
-    index: 4,
+    index: 5,
     children: [
       {
         label: 'create',
@@ -121,7 +144,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('topics'),
     key: 'admin_topics',
     icon: () => <AiOutlineBulb />,
-    index: 5,
+    index: 6,
     children: [
       {
         label: 'create',
@@ -187,7 +210,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('units'),
     key: 'admin_units',
     icon: () => <AiOutlineBlock />,
-    index: 6,
+    index: 7,
     children: [
       {
         label: 'create',
@@ -209,7 +232,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: 'Media Content',
     key: 'admin_media-content',
     icon: () => <AiOutlineContainer />,
-    index: 7,
+    index: 8,
     children: [
       {
         label: 'create',
@@ -231,7 +254,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('statistics'),
     key: 'admin_statistics',
     icon: () => <AiOutlineBarChart />,
-    index: 8,
+    index: 9,
   },
   feedback: {
     link: '/feedback',
@@ -239,6 +262,6 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('feedback'),
     key: 'admin_feedback',
     icon: () => <AiOutlineMessage />,
-    index: 9,
+    index: 10,
   },
 };

@@ -91,6 +91,7 @@ i18next.init({
         upload_file: 'Upload File',
         upload_thumbnail: 'Upload Thumbnail (optional)',
 
+        settings: 'Settings',
         users: 'Users',
         units: 'Units',
         topics: 'Topics',
