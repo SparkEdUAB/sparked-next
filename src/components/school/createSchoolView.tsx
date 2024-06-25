@@ -10,6 +10,7 @@ import { FormEventHandler } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_SchoolFields } from './types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { T_CreateSchoolFields } from '@hooks/useSchool/types';
 
 const CreateSchoolView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createSchool, isLoading } = useSchool();
@@ -19,7 +20,7 @@ const CreateSchoolView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => v
 
     const keys = [SCHOOL_FORM_FIELDS.name.key, SCHOOL_FORM_FIELDS.description.key];
 
-    let result = extractValuesFromFormEvent<T_SchoolFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_CreateSchoolFields>(e, keys);
     createSchool(result, onSuccessfullyDone);
   };
 

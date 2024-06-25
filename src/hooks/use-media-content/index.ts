@@ -73,6 +73,7 @@ const useMediaContent = () => {
     thumbnailUrl?: string,
     onSuccessfullyDone?: () => void,
   ) => {
+    console.log(fields);
     const url = API_LINKS.EDIT_MEDIA_CONTENT;
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
@@ -402,7 +403,7 @@ export function transformRawMediaContent(i: T_RawMediaContentFields, index: numb
     courseId: i.course?._id,
     school: i.school,
     schoolId: i.school?._id,
-    unitId: i.course?._id,
+    unitId: i.unit?._id,
     schoolName: i.school?.name,
     programName: i.program?.name,
     courseName: i.course?.name,

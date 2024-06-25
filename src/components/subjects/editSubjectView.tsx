@@ -16,6 +16,7 @@ import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { API_LINKS } from 'app/links';
 import { T_GradeFields } from '@hooks/useGrade/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
+import { T_NameAndDescription } from 'types';
 
 const EditSubjectView = ({
   subject,
@@ -41,9 +42,9 @@ const EditSubjectView = ({
 
       const keys = [SUBJECT_FORM_FIELDS.name.key, SUBJECT_FORM_FIELDS.description.key];
 
-      let result = extractValuesFromFormEvent<T_SubjectFields>(e, keys);
+      let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
 
-      await editSubject({ ...result, gradeId: gradeId as string }, onSuccessfullyDone);
+      await editSubject({ ...subject, ...result, gradeId: gradeId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }

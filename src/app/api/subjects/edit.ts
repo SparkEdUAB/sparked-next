@@ -30,9 +30,10 @@ export default async function editSubject_(request: Request, session?: Session) 
         status: 200,
       });
     }
+
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const gradeData = await db.collection(dbCollections.subjects.name).findOne(
+    const subjectData = await db.collection(dbCollections.subjects.name).findOne(
       {
         name: { $regex: regexPattern },
         _id: { $ne: new BSON.ObjectId(subjectId) },
@@ -44,7 +45,7 @@ export default async function editSubject_(request: Request, session?: Session) 
       },
     );
 
-    if (gradeData) {
+    if (subjectData) {
       const response = {
         isError: true,
         code: SUBJECT_PROCESS_CODES.SUBJECT_EXIST,
