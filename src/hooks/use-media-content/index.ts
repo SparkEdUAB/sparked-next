@@ -402,7 +402,7 @@ export function transformRawMediaContent(i: T_RawMediaContentFields, index: numb
     courseId: i.course?._id,
     school: i.school,
     schoolId: i.school?._id,
-    unitId: i.course?._id,
+    unitId: i.unit?._id,
     schoolName: i.school?.name,
     programName: i.program?.name,
     courseName: i.course?.name,

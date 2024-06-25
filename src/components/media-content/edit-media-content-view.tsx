@@ -20,6 +20,7 @@ import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { T_UnitFields } from '@hooks/useUnit/types';
+import { T_NameAndDescription } from 'types';
 
 const EditMediaContentView = ({
   mediaContent,
@@ -45,7 +46,7 @@ const EditMediaContentView = ({
 
     const keys = [MEDIA_CONTENT_FORM_FIELDS.name.key, MEDIA_CONTENT_FORM_FIELDS.description.key];
 
-    let result = extractValuesFromFormEvent<T_MediaContentFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
 
     setUploading(true);
 
@@ -54,7 +55,7 @@ const EditMediaContentView = ({
       let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
       await editMediaContent(
-        { ...mediaContent, ...result, topicId: topicId as string, unitId: unitId as string },
+        { ...mediaContent, ...result, topicId: topicId || mediaContent.topicId, unitId: unitId || mediaContent.unitId },
         fileUrl || undefined,
         thumbnailUrl || undefined,
         onSuccessfullyDone,

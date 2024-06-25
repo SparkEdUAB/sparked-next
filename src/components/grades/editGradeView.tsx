@@ -13,6 +13,7 @@ import { T_GradeFields } from '@hooks/useGrade/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
+import { T_NameAndDescription } from 'types';
 
 const EditGradeView = ({ grade, onSuccessfullyDone }: { grade: T_GradeFields; onSuccessfullyDone: () => void }) => {
   const { editGrade, deleteGrade } = useGrade();
@@ -27,7 +28,7 @@ const EditGradeView = ({ grade, onSuccessfullyDone }: { grade: T_GradeFields; on
 
       const keys = [GRADE_FORM_FIELDS.name.key, GRADE_FORM_FIELDS.description.key];
 
-      let result = extractValuesFromFormEvent<T_GradeFields>(e, keys);
+      let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
 
       await editGrade({ ...grade, ...result }, onSuccessfullyDone);
     } finally {

@@ -61,7 +61,7 @@ const useUnit = () => {
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
       body: JSON.stringify({ ...unit, ...fields, unitId: (unit || fields)?._id }),
-      method: 'post',
+      method: 'put',
       headers: {
         'Content-Type': 'application/json',
       },
