@@ -2,7 +2,7 @@ import { Session } from 'next-auth';
 import s3Upload from './s3';
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { writeFile } from 'fs/promises'
-import { join } from 'path'
+import { join, basename } from 'path'
 
 const RENDER_URL = "onrender.com"
 export default async function uploadFile_(req: Request, session?: Session) {
@@ -20,8 +20,11 @@ export default async function uploadFile_(req: Request, session?: Session) {
     let url = ""
     const isOnRender = req.url?.includes(RENDER_URL) // If true then this is serverless and we won't have access to disk
     if (!isOnRender) {
-      url = join(process.cwd(), 'public/uploads', file.name)
-      await writeFile(url, buffer)
+      const sanitizedFilename = basename(file.name).replace(/[^a-zA-Z0-9.-]/g, '_')
+
+      const savePath = join(process.cwd(), 'public', 'uploads', sanitizedFilename)
+      await writeFile(savePath, buffer)
+      url = `/uploads/${sanitizedFilename}`
     } else {
       url = await s3Upload({
         file: buffer,
