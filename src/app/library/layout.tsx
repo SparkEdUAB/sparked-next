@@ -9,7 +9,7 @@ import useTopic from '@hooks/use-topic';
 import useMediaContent from '@hooks/use-media-content';
 
 export default function Layout({ children, params }: { children: ReactNode | ReactNode[]; params: any }) {
-  const { fetchUnitBySubjectsId, units, isLoading: isUnitsLoading } = useUnit();
+  const { fetchUnitBySubjectsId, fetchUnitsByTopicId, units, isLoading: isUnitsLoading } = useUnit();
   const { subjects, fetchSubjects, fetchSubjectsByGradeId, isLoading: isSubjectsLoading } = useSubject();
   const { grades, fetchGrades } = useGrade();
   const { topics, fetchTopics, fetchTopicsByGradeId } = useTopic();
@@ -17,6 +17,7 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
 
   const filteredGradeId = useSearchParams().get('grade_id');
   const filteredSubjectId = useSearchParams().get('subject_id');
+  const filteredTopicId = useSearchParams().get('topic_id');
 
   useEffect(() => {
     if (filteredSubjectId) {
@@ -30,11 +31,14 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
       fetchSubjects({ limit: 20, skip: 0 });
       fetchTopics({ limit: 20, skip: 0 });
     }
+    if (filteredTopicId) {
+      fetchUnitsByTopicId({ topicId: filteredTopicId as string });
+    }
 
     fetchGrades({ limit: 20, skip: 0 });
 
     fetchMediaContentTypes({ limit: 20, skip: 0 });
-  }, [filteredSubjectId, filteredGradeId]);
+  }, [filteredSubjectId, filteredGradeId, filteredTopicId]);
 
   return (
     <LibraryLayout

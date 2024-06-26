@@ -29,6 +29,7 @@ export type T_link = {
   DELETE_UNITS: string;
   FETCH_UNIT_BY_ID: string;
   FETCH_UNIT_BY_SUBJECT_ID: string;
+  FETCH_UNITS_BY_TOPIC_ID: string;
   EDIT_UNIT: string;
   FIND_UNITS_BY_NAME: string;
 
