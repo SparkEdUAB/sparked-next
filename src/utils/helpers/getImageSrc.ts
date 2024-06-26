@@ -8,7 +8,7 @@ export function getImageSrc (item: T_RawMediaContentFields) {
     }
     if (item.file_url) {
       if (item.file_url.includes('uploads')) {
-        return `/${item.file_url}`;
+        return `${item.file_url}`;
       }
       if (determineFileType(item.file_url) === 'image') {
         return item.file_url;
