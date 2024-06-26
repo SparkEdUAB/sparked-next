@@ -40,6 +40,7 @@ export const API_LINKS: T_link = {
   FETCH_TOPICS: '/api/topic/fetchTopics',
   DELETE_TOPICS: '/api/topic/deleteTopics',
   FETCH_TOPIC_BY_ID: '/api/topic/fetchTopicById',
+  FETCH_TOPICS_BY_GRADE_ID: '/api/topic/fetchTopicsByGradeId',
   EDIT_TOPIC: '/api/topic/editTopic',
   FIND_TOPIC_BY_NAME: '/api/topic/findTopicsByName',
 

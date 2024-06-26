@@ -12,7 +12,7 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
   const { fetchUnitBySubjectsId, units, isLoading: isUnitsLoading } = useUnit();
   const { subjects, fetchSubjects, fetchSubjectsByGradeId, isLoading: isSubjectsLoading } = useSubject();
   const { grades, fetchGrades } = useGrade();
-  const { topics, fetchTopics } = useTopic();
+  const { topics, fetchTopics, fetchTopicsByGradeId } = useTopic();
   const { mediaContentTypes, fetchMediaContentTypes } = useMediaContent();
 
   const filteredGradeId = useSearchParams().get('grade_id');
@@ -25,13 +25,14 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
 
     if (filteredGradeId) {
       fetchSubjectsByGradeId({ gradeId: filteredGradeId as string });
+      fetchTopicsByGradeId({ gradeId: filteredGradeId as string });
     } else {
       fetchSubjects({ limit: 20, skip: 0 });
+      fetchTopics({ limit: 20, skip: 0 });
     }
 
     fetchGrades({ limit: 20, skip: 0 });
 
-    fetchTopics({ limit: 20, skip: 0 });
     fetchMediaContentTypes({ limit: 20, skip: 0 });
   }, [filteredSubjectId, filteredGradeId]);
 
