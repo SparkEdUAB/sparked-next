@@ -26,6 +26,8 @@ export function LibrarySidebar({
   isUnitsLoading,
   isSubjectsLoading,
   isTopicsLoading,
+  isGradesLoading,
+  isMediaTypesLoading,
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
@@ -37,6 +39,8 @@ export function LibrarySidebar({
   isUnitsLoading: boolean;
   isSubjectsLoading: boolean;
   isTopicsLoading: boolean;
+  isGradesLoading: boolean;
+  isMediaTypesLoading: boolean;
 }) {
   const { isMobile } = useScreenDetector();
   const { pathname } = useNavigation();
@@ -75,23 +79,33 @@ export function LibrarySidebar({
           <Sidebar.Items>
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Grades" data-collapse-toggle="true">
-                <ShowAllOrNoItems
-                  ItemName={'Grades'}
-                  items={grades}
-                  filterItemId={filterGradeId}
-                  url={`/library?${createQueryString('grade_id', '')}`}
-                />
-                {grades.map((grade) => (
-                  <Sidebar.Item
-                    active={filterGradeId == grade._id}
-                    className={styles.item}
-                    as={Link}
-                    href={`/library?${createQueryString('grade_id', grade._id)}`}
-                    key={grade._id}
-                  >
-                    {grade.name}
+                {!isGradesLoading && (
+                  <ShowAllOrNoItems
+                    ItemName={'Grades'}
+                    items={grades}
+                    filterItemId={filterGradeId}
+                    url={`/library?${createQueryString('grade_id', '')}`}
+                  />
+                )}
+
+                {isGradesLoading && (
+                  <Sidebar.Item diactivate href={'#'}>
+                    <Skeleton className="h-6" count={1} />
                   </Sidebar.Item>
-                ))}
+                )}
+
+                {!isGradesLoading &&
+                  grades.map((grade) => (
+                    <Sidebar.Item
+                      active={filterGradeId == grade._id}
+                      className={styles.item}
+                      as={Link}
+                      href={`/library?${createQueryString('grade_id', grade._id)}`}
+                      key={grade._id}
+                    >
+                      {grade.name}
+                    </Sidebar.Item>
+                  ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
@@ -194,24 +208,31 @@ export function LibrarySidebar({
             {/* Media Types */}
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Media Types">
-                <ShowAllOrNoItems
-                  ItemName={'Media'}
-                  items={mediaTypes}
-                  filterItemId={filteredMediaType}
-                  url={`/library?${createQueryString('mediaType', '')}`}
-                />
-
-                {mediaTypes.map((mediaType) => (
-                  <Sidebar.Item
-                    key={mediaType._id}
-                    active={filteredMediaType == mediaType.name}
-                    className={styles.item}
-                    as={Link}
-                    href={`/library?${createQueryString('mediaType', mediaType.name)}`}
-                  >
-                    {mediaType.name}
+                {!isMediaTypesLoading && (
+                  <ShowAllOrNoItems
+                    ItemName={'Media'}
+                    items={mediaTypes}
+                    filterItemId={filteredMediaType}
+                    url={`/library?${createQueryString('mediaType', '')}`}
+                  />
+                )}
+                {isMediaTypesLoading && (
+                  <Sidebar.Item diactivate href={'#'}>
+                    <Skeleton className="h-6" count={1} />
                   </Sidebar.Item>
-                ))}
+                )}
+                {!isMediaTypesLoading &&
+                  mediaTypes.map((mediaType) => (
+                    <Sidebar.Item
+                      key={mediaType._id}
+                      active={filteredMediaType == mediaType.name}
+                      className={styles.item}
+                      as={Link}
+                      href={`/library?${createQueryString('mediaType', mediaType.name)}`}
+                    >
+                      {mediaType.name}
+                    </Sidebar.Item>
+                  ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
           </Sidebar.Items>

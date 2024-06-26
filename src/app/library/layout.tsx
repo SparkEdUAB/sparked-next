@@ -11,9 +11,9 @@ import useMediaContent from '@hooks/use-media-content';
 export default function Layout({ children, params }: { children: ReactNode | ReactNode[]; params: any }) {
   const { fetchUnitBySubjectsId, fetchUnitsByTopicId, units, isLoading: isUnitsLoading } = useUnit();
   const { subjects, fetchSubjects, fetchSubjectsByGradeId, isLoading: isSubjectsLoading } = useSubject();
-  const { grades, fetchGrades } = useGrade();
+  const { grades, fetchGrades, isLoading: isGradesLoading } = useGrade();
   const { topics, fetchTopics, fetchTopicsByGradeId, fetchTopicsBySubjectId, isLoading: isTopicsLoading } = useTopic();
-  const { mediaContentTypes, fetchMediaContentTypes } = useMediaContent();
+  const { mediaContentTypes, fetchMediaContentTypes, isLoading: isMediaTypesLoading } = useMediaContent();
 
   const filteredGradeId = useSearchParams().get('grade_id');
   const filteredSubjectId = useSearchParams().get('subject_id');
@@ -54,6 +54,8 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
       isSubjectsLoading={isSubjectsLoading}
       isUnitsLoading={isUnitsLoading}
       isTopicsLoading={isTopicsLoading}
+      isGradesLoading={isGradesLoading}
+      isMediaTypesLoading={isMediaTypesLoading}
     >
       {children}
     </LibraryLayout>
