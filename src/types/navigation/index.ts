@@ -39,6 +39,7 @@ export type T_link = {
   DELETE_TOPICS: string;
   FETCH_TOPIC_BY_ID: string;
   FETCH_TOPICS_BY_GRADE_ID: string;
+  FETCH_TOPICS_BY_SUBJECT_ID: string;
   FIND_TOPIC_BY_NAME: string;
   EDIT_TOPIC: string;
   CREATE_MEDIA_CONTENT: string;

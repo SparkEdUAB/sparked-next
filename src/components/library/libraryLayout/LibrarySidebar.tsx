@@ -25,6 +25,7 @@ export function LibrarySidebar({
   mediaTypes,
   isUnitsLoading,
   isSubjectsLoading,
+  isTopicsLoading,
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
@@ -35,6 +36,7 @@ export function LibrarySidebar({
   mediaTypes: T_RawMediaTypeFieldes[];
   isUnitsLoading: boolean;
   isSubjectsLoading: boolean;
+  isTopicsLoading: boolean;
 }) {
   const { isMobile } = useScreenDetector();
   const { pathname } = useNavigation();
@@ -128,24 +130,32 @@ export function LibrarySidebar({
             {/* Topics */}
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Topics">
-                <ShowAllOrNoItems
-                  ItemName={'Topics'}
-                  items={topics}
-                  filterItemId={filteredTopicId}
-                  url={`/library?${createQueryString('topics_id', '')}`}
-                />
+                {!isTopicsLoading && (
+                  <ShowAllOrNoItems
+                    ItemName={'Topics'}
+                    items={topics}
+                    filterItemId={filteredTopicId}
+                    url={`/library?${createQueryString('topics_id', '')}`}
+                  />
+                )}
 
-                {topics.map((topic) => (
-                  <Sidebar.Item
-                    active={filteredTopicId == topic._id}
-                    className={styles.item}
-                    as={Link}
-                    href={`/library?${createQueryString('topic_id', topic._id)}`}
-                    key={topic._id}
-                  >
-                    {topic.name}
+                {isTopicsLoading && (
+                  <Sidebar.Item diactivate href={'#'}>
+                    <Skeleton className="h-6" count={1} />
                   </Sidebar.Item>
-                ))}
+                )}
+                {!isTopicsLoading &&
+                  topics.map((topic) => (
+                    <Sidebar.Item
+                      active={filteredTopicId == topic._id}
+                      className={styles.item}
+                      as={Link}
+                      href={`/library?${createQueryString('topic_id', topic._id)}`}
+                      key={topic._id}
+                    >
+                      {topic.name}
+                    </Sidebar.Item>
+                  ))}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
