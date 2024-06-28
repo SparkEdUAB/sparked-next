@@ -1,0 +1,12 @@
+import { TProcessCode } from 'types/navigation';
+
+//7000 - 7499
+const CATEGORIES_PROCESS_CODES = {
+  CATEGORY_EXIST: 7000,
+  CATEGORY_NOT_FOUND: 7001,
+  CATEGORY_EDITED: 7002,
+  CATEGORY_CREATED: 7003,
+  CATEGORIES_DELETED: 7004,
+} satisfies TProcessCode;
+
+export default CATEGORIES_PROCESS_CODES;
