@@ -39,10 +39,12 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
       fetchUnitsByTopicId({ topicId: filteredTopicId as string });
     }
 
-    fetchGrades({ limit: 20, skip: 0 });
-
     fetchMediaContentTypes({ limit: 20, skip: 0 });
   }, [filteredSubjectId, filteredGradeId, filteredTopicId]);
+
+  useEffect(() => {
+    fetchGrades({ limit: 20, skip: 0 });
+  }, []);
 
   return (
     <LibraryLayout
