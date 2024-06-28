@@ -20,8 +20,20 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
   const filteredTopicId = useSearchParams().get('topic_id');
 
   useEffect(() => {
-    if (!filteredSubjectId && !filteredGradeId) {
+    fetchGrades({ limit: 20, skip: 0 });
+  }, []);
+
+  useEffect(() => {
+    if (!filteredGradeId) {
+      fetchSubjects({ limit: 20, skip: 0 });
+    }
+    if (!filteredSubjectId) {
       fetchTopics({ limit: 20, skip: 0 });
+    }
+
+    if (filteredGradeId) {
+      fetchSubjectsByGradeId({ gradeId: filteredGradeId as string });
+      fetchTopicsByGradeId({ gradeId: filteredGradeId as string });
     }
 
     if (filteredSubjectId) {
@@ -29,22 +41,12 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
       fetchUnitBySubjectsId({ subjectId: filteredSubjectId as string });
     }
 
-    if (filteredGradeId) {
-      fetchSubjectsByGradeId({ gradeId: filteredGradeId as string });
-      fetchTopicsByGradeId({ gradeId: filteredGradeId as string });
-    } else {
-      fetchSubjects({ limit: 20, skip: 0 });
-    }
     if (filteredTopicId) {
       fetchUnitsByTopicId({ topicId: filteredTopicId as string });
     }
 
     fetchMediaContentTypes({ limit: 20, skip: 0 });
   }, [filteredSubjectId, filteredGradeId, filteredTopicId]);
-
-  useEffect(() => {
-    fetchGrades({ limit: 20, skip: 0 });
-  }, []);
 
   return (
     <LibraryLayout
