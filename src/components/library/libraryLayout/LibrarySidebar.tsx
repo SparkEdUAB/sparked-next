@@ -70,7 +70,9 @@ export function LibrarySidebar({
   return (
     <>
       <div
-        className={`${sidebarIsCollapsed ? 'hidden' : 'block'} fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] flex-none md:sticky  h-[calc(100vh_-_62px)] overflow-y-clip
+        className={`${
+          sidebarIsCollapsed ? 'hidden' : 'block'
+        } fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] flex-none md:sticky  h-[calc(100vh_-_62px)] overflow-y-clip
         `}
       >
         <Sidebar
@@ -149,7 +151,7 @@ export function LibrarySidebar({
                     ItemName={'Topics'}
                     items={topics}
                     filterItemId={filteredTopicId}
-                    url={`/library?${createQueryString('topics_id', '')}`}
+                    url={`/library?${createQueryString('topic_id', '')}`}
                   />
                 )}
 
