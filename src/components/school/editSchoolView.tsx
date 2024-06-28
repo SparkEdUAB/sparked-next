@@ -11,12 +11,14 @@ import { SCHOOL_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_SchoolFields } from './types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { T_CreateSchoolFields } from '@hooks/useSchool/types';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
 const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; onSuccessfullyDone?: () => void }) => {
   const { editSchool, fetchSchool, school, isLoading } = useSchool();
 
   const searchParams = useSearchParams();
-
+  const message = useToastMessage();
   useEffect(() => {
     fetchSchool(schoolId || (searchParams.get('schoolId') as string));
   }, []);
@@ -24,10 +26,14 @@ const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; o
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
+    if (!school) {
+      return message.error('The School value provided is empty');
+    }
+
     const keys = [SCHOOL_FORM_FIELDS.name.key, SCHOOL_FORM_FIELDS.description.key];
 
-    let result = extractValuesFromFormEvent<T_SchoolFields>(e, keys);
-    editSchool(result, onSuccessfullyDone);
+    let result = extractValuesFromFormEvent<T_CreateSchoolFields>(e, keys);
+    editSchool({ ...school, ...result }, onSuccessfullyDone);
   };
 
   return (

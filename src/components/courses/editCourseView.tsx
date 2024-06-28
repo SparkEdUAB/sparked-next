@@ -12,6 +12,7 @@ import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormE
 import { T_CourseFields } from '@hooks/useCourse/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
+import { T_NameAndDescription } from 'types';
 
 const EditCourseView = ({ course, onSuccessfullyDone }: { course: T_CourseFields; onSuccessfullyDone: () => void }) => {
   const { editCourse, deleteCourse } = useCourse();
@@ -50,7 +51,7 @@ const EditCourseView = ({ course, onSuccessfullyDone }: { course: T_CourseFields
         // COURSE_FORM_FIELDS.program.key,
       ];
 
-      let result = extractValuesFromFormEvent<T_CourseFields>(e, keys);
+      let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
 
       await editCourse({ ...course, ...result }, onSuccessfullyDone);
     } finally {

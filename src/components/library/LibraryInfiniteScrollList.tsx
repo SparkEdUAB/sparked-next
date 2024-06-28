@@ -3,9 +3,9 @@
 import React from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
 import { T_RawMediaContentFields } from 'types/media-content';
-import { determineFileType } from 'utils/helpers/determineFileType';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
+import { getImageSrc } from 'utils/helpers/getImageSrc';
 
 export function LibraryInfiniteScrollList({
   mediaContent,
@@ -42,12 +42,7 @@ export function LibraryInfiniteScrollList({
           <div key={item._id} className="gutter-row px-0 py-2 h-full">
             <ContentCardView
               url={`/library/media/${item._id}`}
-              image={
-                item.thumbnailUrl ||
-                (item.file_url && determineFileType(item.file_url) === 'image'
-                  ? item.file_url
-                  : '/assets/images/no picture yet.svg')
-              }
+              image={getImageSrc(item)}
               title={item.name}
               description={item.description}
             />

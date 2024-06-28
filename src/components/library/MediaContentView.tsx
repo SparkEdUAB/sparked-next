@@ -8,6 +8,7 @@ import { LibraryErrorMessage } from './LibraryErrorMessage/LibraryErrorMessage';
 import Image from 'next/image';
 import { RelatedMediaContentList } from './RelatedMediaContentList';
 import dynamic from 'next/dynamic';
+import { getFileUrl } from 'utils/helpers/getFileUrl';
 
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
@@ -21,18 +22,19 @@ export function MediaContentView({
   relatedMediaContent: T_RawMediaContentFields[] | null;
 }) {
   const fileType = determineFileType(mediaContent?.file_url || '');
+  const fileUrl = mediaContent.file_url ? getFileUrl(mediaContent.file_url) : '';
 
   return (
     <div className="xl:grid xl:grid-cols-[calc(100%_-_300px)_300px] 2xl:grid-cols-[calc(100%_-_400px)_400px] px-4 md:px-8 w-full ">
       <section>
         <div>
-          {!mediaContent.file_url ? (
+          {!fileUrl ? (
             <LibraryErrorMessage className="h-fit min-h-0">
               The <code>file_url</code> property is <code>null</code>
             </LibraryErrorMessage>
           ) : fileType === 'image' ? (
             <Image
-              src={mediaContent.file_url}
+              src={fileUrl}
               alt={mediaContent.name}
               className="max-h-[500px] max-w-full object-contain object-left"
               width={800}
@@ -40,12 +42,12 @@ export function MediaContentView({
             />
           ) : fileType === 'video' ? (
             <video
-              src={mediaContent.file_url}
+              src={fileUrl}
               className="max-h-[500px] max-w-full border-2 border-none rounded-xl "
               controls
             ></video>
           ) : fileType === 'pdf' ? (
-            <PdfViewer file={mediaContent.file_url} />
+            <PdfViewer file={fileUrl} />
           ) : (
             <LibraryErrorMessage>Could not recognize the file type</LibraryErrorMessage>
           )}
