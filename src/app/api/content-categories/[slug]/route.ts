@@ -22,7 +22,7 @@ export async function POST(
     createContentCategory: createContentCategory_,
   };
 
-  if (gradeApiFunctions[slug] && !session) {
+  if (gradeApiFunctions[slug] && session) {
     return gradeApiFunctions[slug](req, session);
   } else {
     const response = {
