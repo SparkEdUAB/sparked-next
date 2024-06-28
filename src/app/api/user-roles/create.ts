@@ -12,11 +12,13 @@ export default async function createUserRole_(request: Request, session?: Sessio
     description: zfd.text(),
   });
 
-  const formBody = await request.json();
 
-  const { name, description } = schema.parse(formBody);
 
   try {
+    const formBody = await request.json();
+
+    const { name, description } = schema.parse(formBody);
+
     const db = await dbClient();
 
     if (!db) {
