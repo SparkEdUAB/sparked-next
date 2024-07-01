@@ -40,7 +40,7 @@
     "react-loading-skeleton": "^3.4.0",
     "realm": "^12.1.0",
     "swr": "^2.2.5",
-    "typescript": "5.4.5",
+    "typescript": "5.5.3",
     "zod": "^3.23.8",
     "zod-form-data": "^2.0.1"
   },
