@@ -24,7 +24,7 @@
     "eslint": "8.57.0",
     "eslint-config-next": "^14.2.3",
     "flowbite": "^2.0.0",
-    "flowbite-react": "^0.9.0",
+    "flowbite-react": "^0.10.0",
     "i18next": "^23.11.1",
     "i18next-resources-to-backend": "^1.2.1",
     "mongodb": "^6.1.0",
