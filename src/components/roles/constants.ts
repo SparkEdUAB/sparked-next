@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 import { I_FormFields } from 'types/form';
 
-export const COURSE_FORM_FIELDS = {
+export const ROLE_FORM_FIELDS = {
   ['name']: {
     label: i18next.t('name'),
     key: 'name',
@@ -9,13 +9,5 @@ export const COURSE_FORM_FIELDS = {
   ['description']: {
     label: i18next.t('description'),
     key: 'description',
-  },
-  ['school']: {
-    label: i18next.t('school'),
-    key: 'schoolId',
-  },
-  ['program']: {
-    label: i18next.t('program'),
-    key: 'programId',
   },
 } satisfies I_FormFields;

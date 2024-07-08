@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 import { I_FormFields } from 'types/form';
 
-export const USER_FORM_FIELDS: I_FormFields = {
+export const USER_FORM_FIELDS = {
   ['first_name']: {
     label: i18next.t('fname'),
     key: 'fname',
@@ -22,7 +22,6 @@ export const USER_FORM_FIELDS: I_FormFields = {
     label: i18next.t('confirm_password'),
     key: 'confirm_password',
   },
-
   ['gender']: {
     label: i18next.t('gender'),
     key: 'gender',
@@ -31,4 +30,4 @@ export const USER_FORM_FIELDS: I_FormFields = {
     label: i18next.t('email_password'),
     key: 'email_password',
   },
-};
+} satisfies I_FormFields;
