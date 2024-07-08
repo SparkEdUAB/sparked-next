@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { T_CreateGradeFields, T_FetchGrades, T_GradeFields, T_RawGradeFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
+import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
 const useGrade = () => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -43,7 +44,7 @@ const useGrade = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -80,7 +81,7 @@ const useGrade = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -110,7 +111,7 @@ const useGrade = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -143,7 +144,7 @@ const useGrade = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -191,7 +192,7 @@ const useGrade = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -231,7 +232,7 @@ const useGrade = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
       message.success(responseData.grades.length + ' ' + i18next.t('grades_found'));

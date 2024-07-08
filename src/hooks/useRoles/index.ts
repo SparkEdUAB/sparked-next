@@ -5,6 +5,7 @@ import { useToastMessage } from 'providers/ToastMessageContext';
 import { useState } from 'react';
 import NETWORK_UTILS from 'utils/network';
 import { T_CreateRoleFields, T_RoleFields } from './types';
+import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
 export function useRoles() {
   const message = useToastMessage();
@@ -38,7 +39,7 @@ export function useRoles() {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -75,7 +76,7 @@ export function useRoles() {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -106,7 +107,7 @@ export function useRoles() {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -139,7 +140,7 @@ export function useRoles() {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -187,7 +188,7 @@ export function useRoles() {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -227,7 +228,7 @@ export function useRoles() {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 

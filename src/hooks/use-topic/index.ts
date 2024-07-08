@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import { T_CreateTopicFields, T_FetchTopic, T_TopicFields, T_RawTopicFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
+import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
 const useTopic = () => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -44,7 +45,7 @@ const useTopic = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -81,7 +82,7 @@ const useTopic = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -115,7 +116,7 @@ const useTopic = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -150,7 +151,7 @@ const useTopic = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -193,7 +194,7 @@ const useTopic = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -233,7 +234,7 @@ const useTopic = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -280,7 +281,7 @@ const useTopic = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -324,7 +325,7 @@ const useTopic = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
       message.success(responseData.topics.length + ' ' + i18next.t('topics_found'));

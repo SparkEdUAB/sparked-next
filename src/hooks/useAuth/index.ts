@@ -9,6 +9,7 @@ import AUTH_PROCESS_CODES from '@app/api/auth/processCodes';
 import { useState } from 'react';
 import { useRouter } from 'next-nprogress-bar';
 import { useToastMessage } from 'providers/ToastMessageContext';
+import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
 const useAuth = () => {
   const { data: session, status } = useSession();
@@ -39,16 +40,10 @@ const useAuth = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(
-          responseData.code === AUTH_PROCESS_CODES.USER_ALREADY_EXIST
-            ? i18next.t('user_already_exist')
-            : i18next.t('unknown_error'),
-        );
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
-      message.success(
-        responseData.code === AUTH_PROCESS_CODES.USER_CREATED ? i18next.t('user_created') : i18next.t('unknown_error'),
-      );
+      message.success(getProcessCodeMeaning(responseData.code));
       router.replace('/');
     } catch (err: any) {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -79,7 +74,7 @@ const useAuth = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 

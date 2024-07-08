@@ -11,6 +11,7 @@ import { T_RawMediaContentFields, T_MediaContentFields } from 'types/media-conte
 import { T_React_key } from 'types/navigation';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
+import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
 const useMediaContent = () => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -53,7 +54,7 @@ const useMediaContent = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -103,7 +104,7 @@ const useMediaContent = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -133,7 +134,7 @@ const useMediaContent = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -168,7 +169,7 @@ const useMediaContent = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -208,7 +209,7 @@ const useMediaContent = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -279,7 +280,7 @@ const useMediaContent = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -333,7 +334,7 @@ const useMediaContent = () => {
       const responseData = await resp.json();
 
       if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
       message.success(responseData.mediaContent.length + ' ' + i18next.t('media_content_found'));

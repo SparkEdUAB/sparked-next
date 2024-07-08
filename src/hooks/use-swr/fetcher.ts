@@ -1,3 +1,5 @@
+import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
+
 export async function fetcher<JSON = any>(input: RequestInfo, init?: RequestInit): Promise<JSON | Error> {
   const res = await fetch(input, init);
 
@@ -8,7 +10,7 @@ export async function fetcher<JSON = any>(input: RequestInfo, init?: RequestInit
   const data = await res.json();
 
   if (data.isError) {
-    return new Error('Server returned an error status code: ' + data.code);
+    return new Error('Server returned an error status code: ' + getProcessCodeMeaning(data.code));
   }
 
   return data as JSON;
