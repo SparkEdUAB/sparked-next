@@ -2,7 +2,7 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as AUTH_PROCESS_CODES, default as SCHOOL_PROCESS_CODES } from './processCodes';
+import SCHOOL_PROCESS_CODES from './processCodes';
 import { Session } from 'next-auth';
 import { BSON } from 'mongodb';
 

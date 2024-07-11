@@ -1,4 +1,3 @@
-import i18next from 'i18next';
 import { T_SubjectFields } from '@hooks/useSubject/types';
 import { T_ColumnData } from '@components/admin/AdminTable/types';
 

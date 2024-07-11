@@ -1,7 +1,10 @@
 {
   "extends": ["next/core-web-vitals", "next", "prettier"],
+  "parser": "@typescript-eslint/parser",
   "rules": {
     "no-console": ["error", { "allow": ["warn", "error"] }],
-    "no-unused-vars": "warn"
-  }
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn" // WHY?: https://stackoverflow.com/questions/67411154/eslint-no-unused-vars-on-function-parameters-within-typescript-types-interfa
+  },
+  "plugins": ["@typescript-eslint"]
 }

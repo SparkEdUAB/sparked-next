@@ -5,7 +5,7 @@ import sharedConfig from 'app/shared/config';
 import i18next from 'i18next';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import { useCallback, useState } from 'react';
-import { T_CONFIG, T_CONFIG_VARIABLES } from 'types/config';
+import { T_CONFIG_VARIABLES } from 'types/config';
 import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
 const useConfig = () => {

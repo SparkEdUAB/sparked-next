@@ -1,11 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { T_SchoolFields } from '@components/school/types';
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { T_CreateSchoolFields, T_FetchSchools } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
@@ -22,156 +21,168 @@ const useSchool = () => {
   const [school, setSchool] = useState<T_SchoolFields | null>(null);
   const [selectedSchoolIds, setSelectedSchoolIds] = useState<React.Key[]>([]);
 
-  const createSchool = async (fields: T_CreateSchoolFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.CREATE_SCHOOL;
-    const formData = {
-      body: JSON.stringify({ ...fields }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url, formData);
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(getProcessCodeMeaning(responseData.code));
-        return false;
-      }
-
-      onSuccessfullyDone?.();
-      message.success(i18next.t('school_created'));
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const editSchool = async (fields: T_SchoolFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.EDIT_SCHOOL;
-    const formData = {
-      body: JSON.stringify({ ...fields, _id: (school || fields)?._id }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url, formData);
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(getProcessCodeMeaning(responseData.code));
-        return false;
-      }
-
-      onSuccessfullyDone?.();
-      message.success(i18next.t('success'));
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const fetchSchools = async ({ limit = 1000, skip = 0 }: T_FetchSchools) => {
-    const url = API_LINKS.FETCH_SCHOOLS;
-    const params = { limit: limit.toString(), skip: skip.toString() };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(getProcessCodeMeaning(responseData.code));
-        return false;
-      }
-
-      const _schools = responseData.schools?.map(transformRawSchool);
-
-      setSchools(_schools);
-      setTempSchools(_schools);
-      return _schools;
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const fetchSchool = async (schoolId: string) => {
-    const url = API_LINKS.FETCH_SCHOOL;
-    const params = { schoolId };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(getProcessCodeMeaning(responseData.code));
-        return false;
-      }
-
-      const { _id, name, description } = responseData.school as T_SchoolFields;
-
-      const _school = {
-        _id,
-        name,
-        description,
+  const createSchool = useCallback(
+    async (fields: T_CreateSchoolFields, onSuccessfullyDone?: () => void) => {
+      const url = API_LINKS.CREATE_SCHOOL;
+      const formData = {
+        body: JSON.stringify({ ...fields }),
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       };
 
-      setSchool(_school as T_SchoolFields);
-      return _school;
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        setLoaderStatus(false);
 
-  const triggerDelete = async () => {
+        if (!resp.ok) {
+          message.warning(i18next.t('unknown_error'));
+          return false;
+        }
+
+        const responseData = await resp.json();
+
+        if (responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        onSuccessfullyDone?.();
+        message.success(i18next.t('school_created'));
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      }
+    },
+    [message],
+  );
+
+  const editSchool = useCallback(
+    async (fields: T_SchoolFields, onSuccessfullyDone?: () => void) => {
+      const url = API_LINKS.EDIT_SCHOOL;
+      const formData = {
+        body: JSON.stringify({ ...fields, _id: (school || fields)?._id }),
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        setLoaderStatus(false);
+
+        if (!resp.ok) {
+          message.warning(i18next.t('unknown_error'));
+          return false;
+        }
+
+        const responseData = await resp.json();
+
+        if (responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        onSuccessfullyDone?.();
+        message.success(i18next.t('success'));
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      }
+    },
+    [message, school],
+  );
+
+  const fetchSchools = useCallback(
+    async ({ limit = 1000, skip = 0 }: T_FetchSchools) => {
+      const url = API_LINKS.FETCH_SCHOOLS;
+      const params = { limit: limit.toString(), skip: skip.toString() };
+
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+        setLoaderStatus(false);
+
+        if (!resp.ok) {
+          message.warning(i18next.t('unknown_error'));
+          return false;
+        }
+
+        const responseData = await resp.json();
+
+        if (responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        const _schools = responseData.schools?.map(transformRawSchool);
+
+        setSchools(_schools);
+        setTempSchools(_schools);
+        return _schools;
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      }
+    },
+    [message],
+  );
+
+  const fetchSchool = useCallback(
+    async (schoolId: string) => {
+      const url = API_LINKS.FETCH_SCHOOL;
+      const params = { schoolId };
+
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+        setLoaderStatus(false);
+
+        if (!resp.ok) {
+          message.warning(i18next.t('unknown_error'));
+          return false;
+        }
+
+        const responseData = await resp.json();
+
+        if (responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        const { _id, name, description } = responseData.school as T_SchoolFields;
+
+        const _school = {
+          _id,
+          name,
+          description,
+        };
+
+        setSchool(_school as T_SchoolFields);
+        return _school;
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      }
+    },
+    [message],
+  );
+
+  const triggerDelete = useCallback(async () => {
     if (!selectedSchoolIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-  };
+  }, [message, selectedSchoolIds.length]);
 
-  const deleteSchools = async () => {
+  const deleteSchools = useCallback(async () => {
     const url = API_LINKS.DELETE_SCHOOLS;
     const formData = {
       body: JSON.stringify({ schoolIds: selectedSchoolIds }),
@@ -209,8 +220,9 @@ const useSchool = () => {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
-  };
-  const findSchoolsByName = async () => {
+  }, [message, schools, selectedSchoolIds]);
+
+  const findSchoolsByName = useCallback(async () => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
@@ -250,15 +262,18 @@ const useSchool = () => {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
-  };
+  }, [isLoading, message, searchQuery]);
 
-  const onSearchQueryChange = (text: string) => {
-    setSearchQuery(text);
+  const onSearchQueryChange = useCallback(
+    (text: string) => {
+      setSearchQuery(text);
 
-    if (!text.trim().length) {
-      setSchools(tempSchools);
-    }
-  };
+      if (!text.trim().length) {
+        setSchools(tempSchools);
+      }
+    },
+    [tempSchools],
+  );
 
   // const triggerEdit = async () => {
   //   if (!selectedSchoolIds.length) {

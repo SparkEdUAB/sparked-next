@@ -58,7 +58,7 @@ export function LibrarySidebar({
     if (isLibrary && !isMediaPage && sidebarIsCollapsed) {
       toggleSidebar();
     }
-  }, [isMediaPage]);
+  }, [isLibrary, isMediaPage, sidebarIsCollapsed, toggleSidebar]);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => event.code === 'Escape' && toggleSidebar();

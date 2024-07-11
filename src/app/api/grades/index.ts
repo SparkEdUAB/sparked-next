@@ -64,9 +64,7 @@ export async function fetchGradeById_(request: any) {
   });
   const params = request.nextUrl.searchParams;
 
-  const { gradeId, withMetaData } = schema.parse(params);
-
-  const isWithMetaData = Boolean(withMetaData);
+  const { gradeId } = schema.parse(params);
 
   try {
     const db = await dbClient();
@@ -157,8 +155,7 @@ export async function findGradeByName_(request: any) {
   });
   const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const { name, limit, skip } = schema.parse(params);
 
   try {
     const db = await dbClient();
@@ -176,9 +173,12 @@ export async function findGradeByName_(request: any) {
 
     const grades = await db
       .collection(dbCollections.grades.name)
-      .find({
-        name: { $regex: regexPattern },
-      })
+      .find(
+        {
+          name: { $regex: regexPattern },
+        },
+        { limit, skip },
+      )
       .toArray();
 
     const response = {

@@ -1,4 +1,4 @@
-export function GET(req: Request) {
+export function GET() {
   const response = {
     isError: true,
   };

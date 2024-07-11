@@ -45,16 +45,19 @@ const useNavigation = () => {
     }
   }, [pathname, fetchAdminMenuItems]);
 
-  const isActiveMenuItem = (menuItem: T_MenuItemLinkParams): boolean => {
-    if (pathname === menuItem.link) {
-      return true;
-    }
+  const isActiveMenuItem = useCallback(
+    (menuItem: T_MenuItemLinkParams): boolean => {
+      if (pathname === menuItem.link) {
+        return true;
+      }
 
-    const childActiveMenus = menuItem.children?.filter((i) => i.link === pathname);
-    return menuItem.children && childActiveMenus?.length !== 0 ? true : false;
-  };
+      const childActiveMenus = menuItem.children?.filter((i) => i.link === pathname);
+      return menuItem.children && childActiveMenus?.length !== 0 ? true : false;
+    },
+    [pathname],
+  );
 
-  const generateBreadcrumbItems = (menuItems: T_MenuItemLink, targetLink: string) => {
+  const generateBreadcrumbItems = useCallback((menuItems: T_MenuItemLink, targetLink: string) => {
     const breadcrumbItems: T_BreadcrumbItems = [];
 
     if (!targetLink) return breadcrumbItems;
@@ -85,9 +88,9 @@ const useNavigation = () => {
     });
 
     return breadcrumbItems;
-  };
+  }, []);
 
-  const getChildLinkByKey = (key: string, parentLink: T_MenuItemLinkParams) => {
+  const getChildLinkByKey = useCallback((key: string, parentLink: T_MenuItemLinkParams) => {
     const links = parentLink.children?.filter((i) => i.key === key);
 
     if (links?.length) {
@@ -95,7 +98,7 @@ const useNavigation = () => {
     } else {
       return '';
     }
-  };
+  }, []);
 
   const apiNavigator = axios;
 

@@ -7,11 +7,7 @@ import editSubject_ from '../edit';
 import deleteSubjects_ from '../delete';
 import fetchSubjects_, { fetchSubjectsByGradeId_, findSubjectByName_ } from '..';
 
-export async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -36,11 +32,7 @@ export async function POST(
   }
 }
 
-export async function PUT(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function PUT(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -65,11 +57,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function DELETE(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -93,11 +81,8 @@ export async function DELETE(
     });
   }
 }
-export async function GET(
-  req: Request,
 
-  { params }: { params: { slug: string } },
-) {
+export async function GET(req: Request, { params }: { params: { slug: string } }) {
   const slug = params.slug;
 
   const subjectApiFunctions: {

@@ -3,21 +3,20 @@ import i18next from 'i18next';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import { useCallback, useState } from 'react';
 import NETWORK_UTILS from 'utils/network';
-import { T_CreateRoleFields, T_RawRoleFields, T_RoleFields } from './types';
+import { T_CreatePageLinkFields, T_PageLinkFields, T_RawPageLinkFields } from './types';
 import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
-export function useRoles() {
+export function usePageLinks() {
   const message = useToastMessage();
 
-  const [selectedRoleIds, setSelectedRoleIds] = useState<React.Key[]>([]);
+  const [selectedPageLinkIds, setSelectedPageLinkIds] = useState<React.Key[]>([]);
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
-  const [tempRoles, setTempRoles] = useState<Array<T_RoleFields>>([]);
-  const [roles, setRoles] = useState<Array<T_RoleFields>>([]);
-  const [role, setRole] = useState<T_RoleFields | null>(null);
+  const [tempPageLinks, setTempPageLinks] = useState<Array<T_PageLinkFields>>([]);
+  const [pageLinks, setPageLinks] = useState<Array<T_PageLinkFields>>([]);
 
-  const createRole = useCallback(
-    async (fields: T_CreateRoleFields, onSuccessfullyDone?: () => void) => {
-      const url = API_LINKS.CREATE_USER_ROLE;
+  const createPageLink = useCallback(
+    async (fields: T_CreatePageLinkFields, onSuccessfullyDone?: () => void) => {
+      const url = API_LINKS.CREATE_PAGE_LINK;
       const formData = {
         body: JSON.stringify({ ...fields }),
         method: 'post',
@@ -45,7 +44,8 @@ export function useRoles() {
 
         onSuccessfullyDone?.();
 
-        message.success(i18next.t('role_created'));
+        message.success(i18next.t('pageLink_created'));
+        return true;
       } catch (err: any) {
         setLoaderStatus(false);
         message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -55,12 +55,12 @@ export function useRoles() {
     [message],
   );
 
-  const editRole = useCallback(
-    async (fields: T_RoleFields, onSuccessfullyDone?: () => void) => {
-      const url = API_LINKS.EDIT_USER_ROLE;
+  const editPageLink = useCallback(
+    async (fields: T_PageLinkFields, onSuccessfullyDone?: () => void) => {
+      const url = API_LINKS.EDIT_PAGE_LINK;
       const formData = {
-        body: JSON.stringify({ ...fields, _id: fields?._id || role?._id }),
-        method: 'put',
+        body: JSON.stringify({ ...fields, _id: fields._id }),
+        method: 'post',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -92,12 +92,12 @@ export function useRoles() {
         return false;
       }
     },
-    [message, role?._id],
+    [message],
   );
 
-  const fetchRoles = useCallback(
+  const fetchPageLinks = useCallback(
     async ({ limit = 1000, skip = 0 }: { limit: number; skip: number }) => {
-      const url = API_LINKS.FETCH_USER_ROLES;
+      const url = API_LINKS.FETCH_PAGE_LINKS;
       const params = { limit: limit.toString(), skip: skip.toString() };
 
       try {
@@ -117,11 +117,11 @@ export function useRoles() {
           return false;
         }
 
-        const _roles = (responseData.roles as T_RawRoleFields[]).map(transformRawRole);
+        const _pageLinks = (responseData.pageLinks as T_RawPageLinkFields[]).map(transformRawPageLink);
 
-        setRoles(_roles);
-        setTempRoles(_roles);
-        return _roles;
+        setPageLinks(_pageLinks);
+        setTempPageLinks(_pageLinks);
+        return _pageLinks;
       } catch (err: any) {
         setLoaderStatus(false);
         message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -131,49 +131,11 @@ export function useRoles() {
     [message],
   );
 
-  const fetchRoleById = useCallback(
-    async ({ userRoleId, withMetaData = false }: { userRoleId: string; withMetaData: boolean }) => {
-      const url = API_LINKS.FETCH_USER_ROLE_BY_ID;
-      const params = { userRoleId, withMetaData: withMetaData.toString() };
-
-      try {
-        setLoaderStatus(true);
-        const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
-        setLoaderStatus(false);
-
-        if (!resp.ok) {
-          message.warning(i18next.t('unknown_error'));
-          return false;
-        }
-
-        const responseData = await resp.json();
-
-        if (responseData.isError) {
-          message.warning(getProcessCodeMeaning(responseData.code));
-          return false;
-        }
-
-        if (responseData.role) {
-          const _role = transformRawRole(responseData.role, 0);
-          setRole(_role);
-          return _role;
-        } else {
-          return null;
-        }
-      } catch (err: any) {
-        setLoaderStatus(false);
-        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-        return false;
-      }
-    },
-    [message],
-  );
-
-  const deleteRoles = useCallback(
-    async (roleIds?: Array<string>) => {
-      const url = API_LINKS.DELETE_USER_ROLES;
+  const deletePageLinks = useCallback(
+    async (pageIds?: Array<string>) => {
+      const url = API_LINKS.DELETE_PAGE_LINK;
       const formData = {
-        body: JSON.stringify({ roleIds: [...selectedRoleIds, ...(roleIds || [])] }),
+        body: JSON.stringify({ pageLinkIds: [...selectedPageLinkIds, ...(pageIds || [])] }),
         method: 'delete',
         headers: {
           'Content-Type': 'application/json',
@@ -199,7 +161,7 @@ export function useRoles() {
 
         message.success(i18next.t('success'));
 
-        setRoles(roles.filter((i) => selectedRoleIds.indexOf(i._id) == -1));
+        setPageLinks(pageLinks.filter((i) => selectedPageLinkIds.indexOf(i._id) == -1));
 
         return responseData.results;
       } catch (err: any) {
@@ -209,15 +171,15 @@ export function useRoles() {
         return false;
       }
     },
-    [message, roles, selectedRoleIds],
+    [message, pageLinks, selectedPageLinkIds],
   );
 
-  const assignUserRole = useCallback(
-    async (userId: string, roleId: string) => {
-      const url = API_LINKS.ASSIGN_USER_ROLE;
-      const formData: RequestInit = {
-        body: JSON.stringify({ userId, roleId }),
-        method: 'put',
+  const assignPageLinkToPageLink = useCallback(
+    async (pageLinkId: string, pageActionId: string) => {
+      const url = API_LINKS.ASSIGN_PAGE_ACTION_TO_PAGE_LINK;
+      const formData = {
+        body: JSON.stringify({ pageLinkId, pageActionId }),
+        method: 'post',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -241,11 +203,49 @@ export function useRoles() {
         }
 
         message.success(i18next.t('success'));
-
         return true;
       } catch (err: any) {
         setLoaderStatus(false);
-        message.error(`${i18next.t('unknown_error')}. ${err.message ? err.message : ''}`);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      }
+    },
+    [message],
+  );
+
+  const unAssignPageLinkToPageLink = useCallback(
+    async (pageLinkId: string, pageActionId: string) => {
+      const url = API_LINKS.UNASSIGN_PAGE_ACTION_TO_PAGE_LINK;
+      const formData = {
+        body: JSON.stringify({ pageLinkId, pageActionId }),
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        setLoaderStatus(false);
+
+        if (!resp.ok) {
+          message.warning(i18next.t('unknown_error'));
+          return false;
+        }
+
+        const responseData = await resp.json();
+
+        if (responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        message.success(i18next.t('success'));
+        return true;
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
     },
@@ -253,23 +253,22 @@ export function useRoles() {
   );
 
   return {
-    selectedRoleIds,
-    setSelectedRoleIds,
-    createRole,
-    fetchRoles,
-    roles,
-    setRoles,
-    fetchRoleById,
-    role,
+    selectedPageLinkIds,
+    setSelectedPageLinkIds,
+    createPageLink,
+    fetchPageLinks,
+    pageLinks,
+    setPageLinks,
     isLoading,
-    editRole,
-    tempRoles,
-    deleteRoles,
-    assignUserRole,
+    editPageLink,
+    tempPageLinks,
+    deletePageLinks,
+    assignPageLinkToPageLink,
+    unAssignPageLinkToPageLink,
   };
 }
 
-export function transformRawRole(item: T_RawRoleFields, index: number): T_RoleFields {
+export function transformRawPageLink(item: T_RawPageLinkFields, index: number): T_PageLinkFields {
   return {
     ...item,
     key: item._id,

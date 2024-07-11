@@ -226,15 +226,20 @@ export async function findCourseByName_(request: any) {
             query: {
               name: { $regex: regexPattern },
             },
+            limit,
+            skip,
           }),
         )
         .toArray();
     } else {
       courses = await db
         .collection(dbCollections.courses.name)
-        .find({
-          name: { $regex: regexPattern },
-        })
+        .find(
+          {
+            name: { $regex: regexPattern },
+          },
+          { limit, skip },
+        )
         .toArray();
     }
 

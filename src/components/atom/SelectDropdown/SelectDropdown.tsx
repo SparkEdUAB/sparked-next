@@ -23,11 +23,11 @@ export function SelectDropdown<ValueType extends string>({
     >
       {options.map((item) =>
         typeof item === 'string' ? (
-          <Dropdown.Item value={item} onClick={() => setSelected(item)}>
+          <Dropdown.Item key={item} value={item} onClick={() => setSelected(item)}>
             {item}
           </Dropdown.Item>
         ) : (
-          <Dropdown.Item value={item.value} onClick={() => setSelected(item.value)}>
+          <Dropdown.Item key={item.value} value={item.value} onClick={() => setSelected(item.value)}>
             {item.label}
           </Dropdown.Item>
         ),

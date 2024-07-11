@@ -10,8 +10,6 @@ import { FormEventHandler } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_LoginFields } from '@hooks/useAuth/types';
 
-const onFinishFailed = (errorInfo: any) => {};
-
 const Login: React.FC = () => {
   const { handleLogin, loading } = useAuth();
 

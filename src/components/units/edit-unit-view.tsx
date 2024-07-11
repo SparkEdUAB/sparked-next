@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
 
-import { Button, Spinner } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 
 import { FormEventHandler, useState } from 'react';
@@ -32,7 +31,7 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
   const [subjectId, setSubjectId] = useState<string | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const { item: subject, isLoading: loadingCourses } = useAdminItemById(
+  const { item: subject } = useAdminItemById(
     API_LINKS.FETCH_SUBJECT_BY_ID,
     unit.subjectId as string,
     'subject',

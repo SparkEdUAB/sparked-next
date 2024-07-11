@@ -12,7 +12,6 @@ import { Metadata, ResolvingMetadata } from 'next';
  * @param parent The metadata of the parent view
  * @returns A function which generates the metadata
  */
-
 export async function getMetadataGenerator(parent: ResolvingMetadata) {
   // optionally access and extend (rather than replace) parent metadata
   const previousImages = (await parent).openGraph?.images || [DEFAULT_OPEN_GRAPH_PREVIEW];

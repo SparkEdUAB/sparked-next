@@ -223,6 +223,8 @@ export async function findTopicsByName_(request: any) {
             query: {
               name: { $regex: regexPattern },
             },
+            skip,
+            limit,
           }),
         )
         .toArray();
@@ -255,15 +257,12 @@ export async function findTopicsByName_(request: any) {
   }
 }
 
-
-
 export async function fetchTopicsBySubjectId_(request: any) {
   const schema = zfd.formData({
     subjectId: zfd.text(),
     withMetaData: zfd.text().optional(),
   });
   const params = request.nextUrl.searchParams;
-
 
   const { subjectId, withMetaData } = schema.parse(params);
   const isWithMetaData = Boolean(withMetaData);
@@ -291,7 +290,6 @@ export async function fetchTopicsBySubjectId_(request: any) {
           p_fetchTopicsWithMetaData({
             project,
             query: {
-
               subject_id: new BSON.ObjectId(subjectId),
             },
           }),
@@ -300,7 +298,6 @@ export async function fetchTopicsBySubjectId_(request: any) {
 
       topic = topics.length ? topics[0] : {};
     } else {
-
       topic = await db.collection(dbCollections.topics.name).findOne({ subject_id: new BSON.ObjectId(subjectId) });
     }
 
@@ -323,8 +320,6 @@ export async function fetchTopicsBySubjectId_(request: any) {
     });
   }
 }
-
-
 
 export async function fetchTopicByGradeId_(request: any) {
   const schema = zfd.formData({

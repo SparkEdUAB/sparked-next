@@ -1,5 +1,5 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
+import NextAuth, { NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 export const authOptions: NextAuthOptions = {
   pages: {
@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
         username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         //@ts-ignore
         const { user } = credentials;
 
@@ -29,13 +29,13 @@ export const authOptions: NextAuthOptions = {
     colorScheme: 'light',
   },
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (!session || !session.user) return session;
       //@ts-ignore
       session.user.id = token.id;
       return session;
     },
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
       }

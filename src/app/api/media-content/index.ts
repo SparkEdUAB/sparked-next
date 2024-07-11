@@ -203,8 +203,8 @@ export async function deleteMediaContentByIds_(request: Request) {
 export async function findMediaContentByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
-    skip: zfd.text(),
-    limit: zfd.text(),
+    skip: zfd.numeric(),
+    limit: zfd.numeric(),
     // withMetaData: z.boolean(),
     school_id: z.string().optional(),
     program_id: z.string().optional(),
@@ -254,16 +254,21 @@ export async function findMediaContentByName_(request: any) {
               name: { $regex: regexPattern },
               ...query,
             },
+            limit,
+            skip,
           }),
         )
         .toArray();
     } else {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .find({
-          name: { $regex: regexPattern },
-          ...query,
-        })
+        .find(
+          {
+            name: { $regex: regexPattern },
+            ...query,
+          },
+          { limit, skip },
+        )
         .toArray();
     }
 

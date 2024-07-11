@@ -6,11 +6,7 @@ import { authOptions } from '../../auth/constants';
 import editCourse_ from '../edit';
 import createCourse_ from '../create';
 
-export async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -37,11 +33,7 @@ export async function POST(
   }
 }
 
-export async function GET(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function GET(req: Request, { params }: { params: { slug: string } }) {
   const slug = params.slug;
 
   const CourseFunctions: {

@@ -10,8 +10,6 @@ import i18next from 'i18next';
 import { AiOutlineLock } from 'react-icons/ai';
 import { LuUser2 } from 'react-icons/lu';
 
-const onFinishFailed = (errorInfo: any) => {};
-
 const Signup = () => {
   const { handleSignup, loading } = useAuth();
 

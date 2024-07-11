@@ -4,11 +4,7 @@ import { authOptions } from '../../auth/constants';
 import { Session } from 'next-auth';
 import uploadFile_ from '..';
 
-const fileUploadApiHandler_ = async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+const fileUploadApiHandler_ = async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;

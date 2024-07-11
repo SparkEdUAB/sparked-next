@@ -1,8 +1,8 @@
-import { dbClient } from "../lib/db";
-import { realmApp } from "../lib/db/realm";
-import AUTH_PROCESS_CODES from "./processCodes";
+import { dbClient } from '../lib/db';
+import { realmApp } from '../lib/db/realm';
+import AUTH_PROCESS_CODES from './processCodes';
 
-export default async function logout_(request: Request) {
+export default async function logout_() {
   try {
     const db = await dbClient();
 

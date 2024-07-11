@@ -7,11 +7,7 @@ import editPageLink_ from '../edit';
 import deletePageLink_ from '../delete';
 import fetchPageLinks_, { assignPageActionToPageLink_, unAssignPageActionToPageLink_ } from '..';
 
-export async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function POST(request: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -26,7 +22,7 @@ export async function POST(
   };
 
   if (pageLinksFunctions[slug] && session) {
-    return pageLinksFunctions[slug](req, session);
+    return pageLinksFunctions[slug](request, session);
   } else {
     const response = {
       isError: true,
