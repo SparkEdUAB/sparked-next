@@ -5,7 +5,7 @@ import { API_LINKS } from 'app/links';
 import NETWORK_UTILS from 'utils/network';
 import { MEDIA_CONTENT_LIMIT } from '@components/library/constants';
 
-type SORT_BY = string | undefined | null;
+type SORT_BY = string  ;
 
 export async function searchMedia(skip: number, searchText: string, sort_by: SORT_BY) {
   return await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
