@@ -24,8 +24,6 @@ jobs:
         run: |
           # Use sshpass to execute commands on the remote server
           sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_SERVER << 'EOF'
-          # Ensure deploy.sh is executable
-          chmod +x ~/deploy.sh
 
           # Run the deployment script
           ~/deploy.sh
