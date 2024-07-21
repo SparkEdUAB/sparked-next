@@ -5,7 +5,9 @@ import { API_LINKS } from 'app/links';
 import NETWORK_UTILS from 'utils/network';
 import { MEDIA_CONTENT_LIMIT } from '@components/library/constants';
 
-export async function searchMedia(skip: number, searchText: string) {
+type SORT_BY = string;
+
+export async function searchMedia(skip: number, searchText: string, sort_by: SORT_BY = '') {
   return await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
     (BASE_URL || '') +
       API_LINKS.FIND_MEDIA_CONTENT_BY_NAME +
@@ -14,6 +16,7 @@ export async function searchMedia(skip: number, searchText: string) {
         skip: skip.toString(),
         limit: MEDIA_CONTENT_LIMIT.toString(),
         withMetaData: 'false',
+        sort_by: sort_by,
       }),
     { next: { revalidate: 3600 } },
   );

@@ -121,6 +121,10 @@ i18next.init({
         fill_required_fields: 'Please fill in all required fields',
         page_views: 'Page Views',
         searches: 'Searches',
+
+        most_viewed: 'Most Viewed',
+        newest: 'Newest',
+        sort_by: 'Sort By'
       },
     },
   },
