@@ -26,7 +26,7 @@ jobs:
           #!/bin/bash
 
           # Configuration
-          APP_DIR="/var/www/spark-server"
+          APP_DIR="/var/www/sparked-next"
           GITHUB_REPO="https://github.com/SparkEdUAB/sparked-next.git"
           BRANCH="main"
           PM2_APP_NAME="sparked-app"
