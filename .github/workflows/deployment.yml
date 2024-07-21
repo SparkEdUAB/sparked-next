@@ -40,6 +40,7 @@ jobs:
 
           # Install dependencies
           echo "Installing dependencies..."
+          npm install --global yarn # we deliberately don't want to use npm because of some errors
           yarn
 
           # Build the Next.js app
