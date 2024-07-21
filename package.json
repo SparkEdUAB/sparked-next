@@ -39,6 +39,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-loading-skeleton": "^3.4.0",
     "realm": "^12.1.0",
+    "sharp": "^0.33.4",
     "swr": "^2.2.5",
     "typescript": "5.4.5",
     "zod": "^3.23.8",
