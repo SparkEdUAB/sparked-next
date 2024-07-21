@@ -25,6 +25,8 @@ jobs:
           sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_SERVER 'bash -s' << 'EOF'
           #!/bin/bash
 
+          export PATH=$PATH:/usr/local/bin
+
           # Configuration
           SCRIPT_PATH="$HOME/deploy.sh"
 
