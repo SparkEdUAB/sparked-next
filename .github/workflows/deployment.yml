@@ -22,17 +22,11 @@ jobs:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
-          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_SERVER 'bash -s' << 'EOF'
-          #!/bin/bash
+          # Use sshpass to execute commands on the remote server
+          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_SERVER << 'EOF'
+          # Ensure deploy.sh is executable
+          chmod +x ~/deploy.sh
 
-          export PATH=$PATH:/usr/local/bin
-
-          # Configuration
-          SCRIPT_PATH="$HOME/deploy.sh"
-
-          # Ensure the deploy.sh script is executable
-          chmod +x $SCRIPT_PATH
-
-          # Run the deploy.sh script
-          $SCRIPT_PATH
+          # Run the deployment script
+          ~/deploy.sh
           EOF
