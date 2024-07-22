@@ -1,11 +1,8 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchUserRoles_, { assignUserRole_, fetchUserRoleById_ } from '..';
 import { authOptions } from '../../auth/constants';
 import createContentCategory_ from '../create';
-import deleteUserRoles_ from '../delete';
-import editUserRole_ from '../edit';
 
 export async function POST(
   req: Request,
@@ -16,14 +13,14 @@ export async function POST(
 
   const slug = params.slug;
 
-  const gradeApiFunctions: {
+  const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createContentCategory: createContentCategory_,
   };
 
-  if (gradeApiFunctions[slug] && session) {
-    return gradeApiFunctions[slug](req, session);
+  if (contentCategoryFunctions[slug] && session) {
+    return contentCategoryFunctions[slug](req, session);
   } else {
     const response = {
       isError: true,
@@ -45,15 +42,12 @@ export async function PUT(
 
   const slug = params.slug;
 
-  const gradeApiFunctions: {
+  const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
-  } = {
-    editUserRole: editUserRole_,
-    assignUserRole: assignUserRole_,
-  };
+  } = {};
 
-  if (gradeApiFunctions[slug] && session) {
-    return gradeApiFunctions[slug](req, session);
+  if (contentCategoryFunctions[slug] && session) {
+    return contentCategoryFunctions[slug](req, session);
   } else {
     const response = {
       isError: true,
@@ -75,14 +69,12 @@ export async function DELETE(
 
   const slug = params.slug;
 
-  const gradeApiFunctions: {
+  const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
-  } = {
-    deleteUserRoles: deleteUserRoles_,
-  };
+  } = {};
 
-  if (gradeApiFunctions[slug] && session) {
-    return gradeApiFunctions[slug](req, session);
+  if (contentCategoryFunctions[slug] && session) {
+    return contentCategoryFunctions[slug](req, session);
   } else {
     const response = {
       isError: true,
@@ -102,15 +94,12 @@ export async function GET(
 ) {
   const slug = params.slug;
 
-  const GradeFunctions: {
+  const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
-  } = {
-    fetchUserRoles: fetchUserRoles_,
-    fetchUserRoleById: fetchUserRoleById_,
-  };
+  } = {};
 
-  if (GradeFunctions[slug]) {
-    return GradeFunctions[slug](req);
+  if (contentCategoryFunctions[slug]) {
+    return contentCategoryFunctions[slug](req);
   } else {
     const response = {
       isError: true,
