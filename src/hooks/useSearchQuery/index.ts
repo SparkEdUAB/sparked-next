@@ -1,8 +1,9 @@
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { useCallback } from 'react';
 
 export const useSearchQuery = () => {
   const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -16,5 +17,5 @@ export const useSearchQuery = () => {
     [searchParams],
   );
 
-  return { createQueryString };
+  return { createQueryString, pathname };
 };
