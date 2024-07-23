@@ -61,4 +61,8 @@ export const dbCollections: T_dbCollection = {
     name: 'searches',
     label: 'Searches',
   },
+  content_categories: {
+    name: 'content-categories',
+    label: 'content categories',
+  },
 };

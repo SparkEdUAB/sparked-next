@@ -8,7 +8,7 @@ const RENDER_URL = 'onrender.com';
 export default async function uploadFile_(request: Request) {
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as Blob;
+    const file = formData.get('file') as File;
 
     let ext = file?.type.split('/')[1];
 

@@ -130,6 +130,10 @@ i18next.init({
         page_views: 'Page Views',
         searches: 'Searches',
 
+        most_viewed: 'Most Viewed',
+        newest: 'Newest',
+        sort_by: 'Sort By',
+
         // General process codes
         process_code_100: 'An unknown error occurred',
         process_code_101: 'The specified API method was not found',
