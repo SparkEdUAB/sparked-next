@@ -5,7 +5,8 @@ import sharedConfig from 'app/shared/config';
 import i18next from 'i18next';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import { useCallback, useState } from 'react';
-import { T_CONFIG, T_CONFIG_VARIABLES } from 'types/config';
+import { T_CONFIG_VARIABLES } from 'types/config';
+import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
 const useConfig = () => {
   const message = useToastMessage();
@@ -29,7 +30,7 @@ const useConfig = () => {
         const responseData = await resp.json();
 
         if (responseData.isError) {
-          message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+          message.warning(getProcessCodeMeaning(responseData.code));
           return false;
         }
 

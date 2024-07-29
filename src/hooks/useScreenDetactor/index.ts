@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 
 export const useScreenDetector = () => {
@@ -18,8 +20,8 @@ export const useScreenDetector = () => {
   }, []);
 
   const isMobile = width <= 768;
-  const isTable = width <= 1024;
+  const isTablet = width <= 1024;
   const isDesktop = width > 1024;
 
-  return { isMobile, isTable, isDesktop };
+  return { isMobile, isTablet, isDesktop };
 };

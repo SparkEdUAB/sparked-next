@@ -2,11 +2,7 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import readConfigFile_ from '..';
 
-export async function GET(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function GET(req: Request, { params }: { params: { slug: string } }) {
   const slug = params.slug;
 
   const configFunctions: {

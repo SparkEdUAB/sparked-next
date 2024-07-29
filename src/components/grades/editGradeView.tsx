@@ -1,8 +1,7 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Button, Spinner } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { GRADE_FORM_FIELDS } from './constants';

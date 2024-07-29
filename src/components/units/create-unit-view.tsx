@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
@@ -10,7 +9,6 @@ import { UNIT_FORM_FIELDS } from './constants';
 import useUnit from '@hooks/useUnit';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateUnitFields } from '@hooks/useUnit/types';
-import { AdminFormSelector } from '../admin/AdminForm/AdminFormSelector';
 import { AdminFormInput } from '../admin/AdminForm/AdminFormInput';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
@@ -21,11 +19,7 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
   const { createUnit, isLoading } = useUnit();
   const [subjectId, setSubjectId] = useState<string | null>(null);
 
-  const { items: courses, isLoading: loadingCourses } = useAdminListViewData(
-    API_LINKS.FETCH_COURSES,
-    'courses',
-    transformRawCourse,
-  );
+  const { items: courses } = useAdminListViewData(API_LINKS.FETCH_COURSES, 'courses', transformRawCourse);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();

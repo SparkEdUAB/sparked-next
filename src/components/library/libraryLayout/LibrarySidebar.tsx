@@ -12,7 +12,7 @@ import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import useNavigation from '@hooks/useNavigation';
 import { useScreenDetector } from '@hooks/useScreenDetactor';
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import Skeleton from 'react-loading-skeleton';
 
 export function LibrarySidebar({
@@ -54,11 +54,18 @@ export function LibrarySidebar({
     if (isLibrary && isMediaPage && !sidebarIsCollapsed) {
       toggleSidebar();
     }
-    // if is Library Page and SideNav is collapsed on navigate set to flase
+    // if is Library Page and SideNav is collapsed on navigate set to false
     if (isLibrary && !isMediaPage && sidebarIsCollapsed) {
       toggleSidebar();
     }
-  }, [isMediaPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLibrary, isMediaPage]);
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => event.code === 'Escape' && toggleSidebar();
+    document.addEventListener('keyup', handler);
+    return () => document.removeEventListener('keyup', handler);
+  }, [toggleSidebar]);
 
   const { createQueryString } = useSearchQuery();
   const filterGradeId = useSearchParams().get('grade_id');
@@ -71,8 +78,8 @@ export function LibrarySidebar({
     <>
       <div
         className={`${
-          sidebarIsCollapsed ? 'hidden' : 'block'
-        } fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] flex-none md:sticky  h-[calc(100vh_-_62px)] overflow-y-clip
+          sidebarIsCollapsed ? '-left-[300px] md:hidden' : 'left-0 md:block'
+        } fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] transition-all duration-300 flex-none md:sticky h-[calc(100vh_-_62px)] overflow-y-clip
         `}
       >
         <Sidebar
@@ -240,14 +247,12 @@ export function LibrarySidebar({
           </Sidebar.Items>
         </Sidebar>
       </div>
-
-      {!sidebarIsCollapsed && isMobile && (
-        <div
-          onClick={toggleSidebar}
-          onKeyUp={(key) => key.code === 'Escape' && toggleSidebar()}
-          className="fixed cursor-pointer inset-0 z-40 bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:backdrop-blur-none md:bg-inherit"
-        />
-      )}
+      <div
+        onClick={toggleSidebar}
+        className={`fixed cursor-pointer inset-0 z-40 transition-all duration-300 rounded-br-full bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:backdrop-blur-none md:bg-inherit ${
+          sidebarIsCollapsed || !isMobile ? 'w-0 h-0' : 'w-[200vmax] h-[200vmax]'
+        }`}
+      />
     </>
   );
 }

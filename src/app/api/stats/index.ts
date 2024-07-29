@@ -2,7 +2,7 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 
-export default async function fetchCounts_(request: any) {
+export default async function fetchCounts_() {
   try {
     const db = await dbClient();
 

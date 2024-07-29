@@ -101,9 +101,12 @@ export async function findSubjectByName_(request: any) {
 
     const subjects = await db
       .collection(dbCollections.subjects.name)
-      .find({
-        name: { $regex: regexPattern },
-      })
+      .find(
+        {
+          name: { $regex: regexPattern },
+        },
+        { skip, limit },
+      )
       .toArray();
 
     const response = {
@@ -125,6 +128,7 @@ export async function findSubjectByName_(request: any) {
     });
   }
 }
+
 export async function fetchSubjectsByGradeId_(request: any) {
   const schema = zfd.formData({
     gradeId: zfd.text(),
@@ -150,9 +154,12 @@ export async function fetchSubjectsByGradeId_(request: any) {
 
     const subjects = await db
       .collection(dbCollections.subjects.name)
-      .find({
-        grade_id: new BSON.ObjectId(gradeId),
-      })
+      .find(
+        {
+          grade_id: new BSON.ObjectId(gradeId),
+        },
+        { skip, limit },
+      )
       .toArray();
 
     const response = {

@@ -6,11 +6,7 @@ import { authOptions } from '../../auth/constants';
 import createProgram_ from '../create';
 import editProgram_ from '../edit';
 
-const schoolApiHandler_ = async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+const schoolApiHandler_ = async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;

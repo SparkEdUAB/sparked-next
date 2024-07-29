@@ -34,7 +34,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   };
   items: ItemType[];
   isLoading: boolean;
-  onSearchQueryChange: (text: string) => void;
+  onSearchQueryChange?: (text: string) => void;
   createNew: () => void;
   editItem: (item: ItemType) => void;
   columns: T_ColumnData<ItemType>[];
@@ -54,18 +54,20 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
 
   return (
     <>
-      <TextInput
-        icon={HiMagnifyingGlass}
-        className="table-search-box"
-        placeholder={i18next.t('search_items')}
-        required
-        type="text"
-        onKeyDown={(e) => {
-          e.keyCode === 13 || (e.target as HTMLInputElement).value.trim() === ''
-            ? onSearchQueryChange((e.target as HTMLInputElement).value)
-            : null;
-        }}
-      />
+      {onSearchQueryChange && (
+        <TextInput
+          icon={HiMagnifyingGlass}
+          className="table-search-box max-w-4xl"
+          placeholder={i18next.t('search_items')}
+          required
+          type="text"
+          onKeyDown={(e) => {
+            e.keyCode === 13 || (e.target as HTMLInputElement).value.trim() === ''
+              ? onSearchQueryChange((e.target as HTMLInputElement).value)
+              : null;
+          }}
+        />
+      )}
       <AdminTableButtonGroup
         createNew={createNew}
         rowSelection={rowSelection}

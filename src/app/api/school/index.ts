@@ -1,9 +1,9 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { p_fetchSchoolsWithCreator } from "./pipelines";
-import { BSON } from "mongodb";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { p_fetchSchoolsWithCreator } from './pipelines';
+import { BSON } from 'mongodb';
 
 export default async function fetchSchools_(request: Request) {
   const schema = zfd.formData({
@@ -29,7 +29,7 @@ export default async function fetchSchools_(request: Request) {
 
     const schools = await db
       .collection(dbCollections.schools.name)
-      .aggregate(p_fetchSchoolsWithCreator())
+      .aggregate(p_fetchSchoolsWithCreator(limit, skip))
       .toArray();
 
     const response = {
@@ -73,9 +73,7 @@ export async function fetchSchool_(request: Request) {
       });
     }
 
-    const school = await db
-      .collection(dbCollections.schools.name)
-      .findOne({ _id: new BSON.ObjectId(schoolId) });
+    const school = await db.collection(dbCollections.schools.name).findOne({ _id: new BSON.ObjectId(schoolId) });
 
     const response = {
       isError: false,
@@ -152,7 +150,7 @@ export async function findSchoolsByName_(request: Request) {
   });
   const formBody = await request.json();
 
-  const { name,limit,skip } = schema.parse(formBody);
+  const { name, limit, skip } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -166,7 +164,7 @@ export async function findSchoolsByName_(request: Request) {
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(name, 'i');
 
     const schools = await db
       .collection(dbCollections.schools.name)
@@ -174,7 +172,7 @@ export async function findSchoolsByName_(request: Request) {
         {
           name: { $regex: regexPattern },
         },
-        { limit, skip }
+        { limit, skip },
       )
       .toArray();
 

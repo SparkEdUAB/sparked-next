@@ -10,7 +10,6 @@
     "pm2": "pm2 start npm --name \"sparked-next\" -- start"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.2.6",
     "@auth/mongodb-adapter": "^3.0.0",
     "@aws-sdk/client-s3": "^3.598.0",
     "@headlessui/react": "^2.0.0",
@@ -47,6 +46,8 @@
   },
   "devDependencies": {
     "@types/formidable": "^3.4.5",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "autoprefixer": "^10.4.15",
     "eslint-config-prettier": "^9.1.0",
     "lint-staged": "^15.0.0",

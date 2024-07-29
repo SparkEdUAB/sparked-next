@@ -1,12 +1,11 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { BSON } from 'mongodb';
-import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import PAGE_ACTIONS_PROCESS_CODES from './processCodes';
 
-export default async function deletePageActions_(request: Request, session?: Session) {
+export default async function deletePageActions_(request: Request) {
   const schema = zfd.formData({
     pageActionIds: zfd.repeatableOfType(zfd.text()),
   });

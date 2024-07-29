@@ -142,7 +142,6 @@ export const p_fetchRandomMediaContent = ({
   {
     $sample: { size: limit },
   },
-
   {
     $lookup: {
       from: dbCollections.users.name,

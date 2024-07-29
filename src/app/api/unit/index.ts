@@ -1,6 +1,5 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { BSON } from 'mongodb';
-import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
@@ -238,6 +237,7 @@ export async function findUnitsByName_(request: any) {
           },
           {
             limit,
+            skip,
           },
         )
         .toArray();

@@ -1,5 +1,5 @@
 import useSWRInfinite from 'swr/infinite';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import NETWORK_UTILS from 'utils/network';
 import { fetcher } from '@hooks/use-swr/fetcher';
 import { useToastMessage } from 'providers/ToastMessageContext';
@@ -19,52 +19,58 @@ export function useAdminListViewData<Result extends Record<string, any>, RawData
   const [hasMore, setHasMore] = useState(true);
   const message = useToastMessage();
 
-  const getKey = (index: number) => {
-    if (searchQuery && searchUrl) {
-      return (
-        searchUrl +
-        NETWORK_UTILS.formatGetParams({
-          name: searchQuery,
-          limit: ITEMS_PER_PAGE.toString(),
-          skip: (ITEMS_PER_PAGE * index).toString(),
-          withMetaData: 'true',
-        })
-      );
-    } else {
-      return (
-        url +
-        NETWORK_UTILS.formatGetParams({
-          limit: ITEMS_PER_PAGE.toString(),
-          skip: (ITEMS_PER_PAGE * index).toString(),
-          withMetaData: 'true',
-        })
-      );
-    }
-  };
+  const getKey = useCallback(
+    (index: number) => {
+      if (searchQuery && searchUrl) {
+        return (
+          searchUrl +
+          NETWORK_UTILS.formatGetParams({
+            name: searchQuery,
+            limit: ITEMS_PER_PAGE.toString(),
+            skip: (ITEMS_PER_PAGE * index).toString(),
+            withMetaData: 'true',
+          })
+        );
+      } else {
+        return (
+          url +
+          NETWORK_UTILS.formatGetParams({
+            limit: ITEMS_PER_PAGE.toString(),
+            skip: (ITEMS_PER_PAGE * index).toString(),
+            withMetaData: 'true',
+          })
+        );
+      }
+    },
+    [searchQuery, searchUrl, url],
+  );
 
-  const infiniteFetcher = async (input: RequestInfo, init?: RequestInit) => {
-    const result = await fetcher<Record<string, any>>(input, { ...init, cache: 'default' });
+  const infiniteFetcher = useCallback(
+    async (input: RequestInfo, init?: RequestInit) => {
+      const result = await fetcher<Record<string, any>>(input, { ...init, cache: 'default' });
 
-    if (result instanceof Error) {
-      message.error(result.message);
-      setHasMore(false);
-      throw result;
-    } else {
-      const data = result[field] as RawData[];
-      if (data.length < ITEMS_PER_PAGE) {
+      if (result instanceof Error) {
+        message.error(result.message);
         setHasMore(false);
+        throw result;
+      } else {
+        const data = result[field] as RawData[];
+        if (data.length < ITEMS_PER_PAGE) {
+          setHasMore(false);
+          return data;
+        }
+        setHasMore(true); // TODO: Needs to be revisited
         return data;
       }
-      setHasMore(true); // TODO: Needs to be revisited
-      return data;
-    }
-  };
+    },
+    [field, message],
+  );
 
   const { data, isLoading, mutate, size, setSize, error, isValidating } = useSWRInfinite(getKey, infiniteFetcher);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     setSize((value) => value + 1);
-  };
+  }, [setSize]);
 
   const items: Result[] = useMemo(
     () =>

@@ -1,6 +1,6 @@
 import { T_link } from '../types/navigation';
 
-export const API_LINKS: T_link = {
+export const API_LINKS = {
   SIGNUP: '/api/authentication/signup',
   LOGIN: '/api/authentication/login',
   LOGOUT: '/api/authentication/logout',
@@ -89,11 +89,28 @@ export const API_LINKS: T_link = {
   FETCH_ALL_STATS: '/api/stats/fetchCounts',
 
   //   SETTINGS > PAGE LINKS
-  CREATE_PAGE_LINK: 'api/page-link/createPageLink',
-  EDIT_PAGE_LINK: 'api/page-link/editPageLink',
-  DELETE_PAGE_LINK: 'api/page-link/deletePageLink',
+  CREATE_PAGE_LINK: '/api/page-link/createPageLink',
+  EDIT_PAGE_LINK: '/api/page-link/editPageLink',
+  DELETE_PAGE_LINK: '/api/page-link/deletePageLink',
+  FETCH_PAGE_LINKS: '/api/page-link/fetchPageLinks',
+  ASSIGN_PAGE_ACTION_TO_PAGE_LINK: '/api/page-link/assignPageActionToPageLink',
+  UNASSIGN_PAGE_ACTION_TO_PAGE_LINK: '/api/page-link/unAssignPageActionToPageLink',
+
+  //   SETTINGS > PAGE ACTIONS
+  CREATE_PAGE_ACTION: '/api/page-actions/createPageAction',
+  EDIT_PAGE_ACTION: '/api/page-actions/editPageAction',
+  DELETE_PAGE_ACTION: '/api/page-actions/deletePageActions',
+  FETCH_PAGE_ACTION: '/api/page-actions/fetchPageActions',
+
+  // SETTINGS > USER ROLES
+  CREATE_USER_ROLE: '/api/user-roles/createUserRole',
+  EDIT_USER_ROLE: '/api/user-roles/editUserRole',
+  ASSIGN_USER_ROLE: '/api/user-roles/assignUserRole',
+  DELETE_USER_ROLES: '/api/user-roles/deleteUserRoles',
+  FETCH_USER_ROLES: '/api/user-roles/fetchUserRoles',
+  FETCH_USER_ROLE_BY_ID: '/api/user-roles/fetchUserRoleById',
 
   //   resources
   FILE_UPLOAD: '/api/file-upload/uploadFile',
   READ_CONFIG_FILE: '/api/config/readConfigFile',
-};
+} satisfies T_link;

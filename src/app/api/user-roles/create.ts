@@ -9,14 +9,14 @@ import { default as USER_ROLES_PROCESS_CODES } from './processCodes';
 export default async function createUserRole_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
-    description: zfd.text(),
+    description: zfd.text().optional(),
   });
 
-  const formBody = await request.json();
-
-  const { name, description } = schema.parse(formBody);
-
   try {
+    const formBody = await request.json();
+
+    const { name, description } = schema.parse(formBody);
+
     const db = await dbClient();
 
     if (!db) {

@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 import { IoMdEye } from 'react-icons/io';
 import { determineFileType } from 'utils/helpers/determineFileType';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
@@ -36,7 +37,7 @@ function FilePreview({ file }: { file: File }) {
   return (
     <div>
       {fileType === 'image' ? (
-        <img
+        <Image
           src={fileUrl}
           alt="Media content file"
           className="max-h-[calc(100vh_-_200px)] inline-block my-2 object-contain object-center"

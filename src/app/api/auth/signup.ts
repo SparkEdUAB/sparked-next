@@ -42,7 +42,7 @@ export default async function signup_(request: Request) {
       });
     }
 
-    const resp = await realmApp.emailPasswordAuth.registerUser({
+    await realmApp.emailPasswordAuth.registerUser({
       email,
       password,
     });

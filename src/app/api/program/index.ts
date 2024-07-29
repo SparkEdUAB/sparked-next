@@ -1,13 +1,10 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import {
-  p_fetchProgramWithMetaData,
-  p_fetchProgramsWithCreator,
-} from "./pipelines";
-import { BSON } from "mongodb";
-import { z } from "zod";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { p_fetchProgramWithMetaData, p_fetchProgramsWithCreator } from './pipelines';
+import { BSON } from 'mongodb';
+import { z } from 'zod';
 
 export default async function fetchPrograms_(request: Request) {
   const schema = zfd.formData({
@@ -33,7 +30,7 @@ export default async function fetchPrograms_(request: Request) {
 
     const programs = await db
       .collection(dbCollections.programs.name)
-      .aggregate(p_fetchProgramsWithCreator())
+      .aggregate(p_fetchProgramsWithCreator(limit, skip))
       .toArray();
 
     const response = {
@@ -88,15 +85,15 @@ export async function fetchProgramById_(request: Request) {
             query: {
               _id: new BSON.ObjectId(programId),
             },
-          })
+            limit: 1,
+            skip: 0,
+          }),
         )
         .toArray();
 
       program = program.length ? program[0] : null;
     } else {
-      program = await db
-        .collection(dbCollections.programs.name)
-        .findOne({ _id: new BSON.ObjectId(programId) });
+      program = await db.collection(dbCollections.programs.name).findOne({ _id: new BSON.ObjectId(programId) });
     }
 
     const response = {
@@ -140,13 +137,11 @@ export async function deletePrograms_(request: Request) {
       });
     }
 
-    const results = await db
-      .collection(dbCollections.programs.name)
-      .deleteMany({
-        _id: {
-          $in: programIds.map((i) => new BSON.ObjectId(i)),
-        },
-      });
+    const results = await db.collection(dbCollections.programs.name).deleteMany({
+      _id: {
+        $in: programIds.map((i) => new BSON.ObjectId(i)),
+      },
+    });
 
     const response = {
       isError: false,
@@ -191,7 +186,7 @@ export async function findProgramsByName_(request: Request) {
         status: 200,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(name, 'i');
 
     let programs = null;
 
@@ -203,15 +198,20 @@ export async function findProgramsByName_(request: Request) {
             query: {
               name: { $regex: regexPattern },
             },
-          })
+            skip: skip || 0,
+            limit: limit || 20,
+          }),
         )
         .toArray();
     } else {
       programs = await db
         .collection(dbCollections.programs.name)
-        .find({
-          name: { $regex: regexPattern },
-        })
+        .find(
+          {
+            name: { $regex: regexPattern },
+          },
+          { skip, limit },
+        )
         .toArray();
     }
 
