@@ -143,9 +143,43 @@ export function LibrarySidebar({
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
-            {/* Topics */}
+
+            {/* Units */}
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Topics">
+                {!isUnitsLoading && (
+                    <ShowAllOrNoItems
+                        ItemName={'Units'}
+                        items={units}
+                        filterItemId={filteredUnitId}
+                        url={`/library?${createQueryString('unit_id', '')}`}
+                    />
+                )}
+                {isUnitsLoading && (
+                    <Sidebar.Item diactivate href={'#'}>
+                      <Skeleton className="h-6" count={1} />
+                    </Sidebar.Item>
+                )}
+
+                {!isUnitsLoading &&
+                    units.map((unit) => (
+                        <Sidebar.Item
+                            key={unit._id}
+                            active={filteredUnitId == unit._id}
+                            className={styles.item}
+                            as={Link}
+                            href={`/library?${createQueryString('unit_id', unit._id)}`}
+                        >
+                          {unit.name}
+                        </Sidebar.Item>
+                    ))}
+              </Sidebar.Collapse>
+            </Sidebar.ItemGroup>
+
+
+            {/* Topics */}
+            <Sidebar.ItemGroup>
+              <Sidebar.Collapse label="Units">
                 {!isTopicsLoading && (
                   <ShowAllOrNoItems
                     ItemName={'Topics'}
@@ -175,37 +209,7 @@ export function LibrarySidebar({
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
-            {/* Units */}
-            <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Units">
-                {!isUnitsLoading && (
-                  <ShowAllOrNoItems
-                    ItemName={'Units'}
-                    items={units}
-                    filterItemId={filteredUnitId}
-                    url={`/library?${createQueryString('unit_id', '')}`}
-                  />
-                )}
-                {isUnitsLoading && (
-                  <Sidebar.Item diactivate href={'#'}>
-                    <Skeleton className="h-6" count={1} />
-                  </Sidebar.Item>
-                )}
 
-                {!isUnitsLoading &&
-                  units.map((unit) => (
-                    <Sidebar.Item
-                      key={unit._id}
-                      active={filteredUnitId == unit._id}
-                      className={styles.item}
-                      as={Link}
-                      href={`/library?${createQueryString('unit_id', unit._id)}`}
-                    >
-                      {unit.name}
-                    </Sidebar.Item>
-                  ))}
-              </Sidebar.Collapse>
-            </Sidebar.ItemGroup>
 
             {/* Media Types */}
             <Sidebar.ItemGroup>
