@@ -54,11 +54,12 @@ export function LibrarySidebar({
     if (isLibrary && isMediaPage && !sidebarIsCollapsed) {
       toggleSidebar();
     }
-    // if is Library Page and SideNav is collapsed on navigate set to flase
+    // if is Library Page and SideNav is collapsed on navigate set to false
     if (isLibrary && !isMediaPage && sidebarIsCollapsed) {
       toggleSidebar();
     }
-  }, [isLibrary, isMediaPage, sidebarIsCollapsed, toggleSidebar]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLibrary, isMediaPage]);
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => event.code === 'Escape' && toggleSidebar();
