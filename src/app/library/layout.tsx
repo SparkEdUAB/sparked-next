@@ -12,7 +12,7 @@ export default function Layout({ children, params }: { children: ReactNode | Rea
   const { fetchUnitBySubjectsId, fetchUnitsByTopicId, units, isLoading: isUnitsLoading } = useUnit();
   const { subjects, fetchSubjects, fetchSubjectsByGradeId, isLoading: isSubjectsLoading } = useSubject();
   const { grades, fetchGrades, isLoading: isGradesLoading } = useGrade();
-  const { topics, fetchTopics, fetchTopicsByGradeId, fetchTopicsBySubjectId, isLoading: isTopicsLoading } = useTopic();
+  const { topics, fetchTopics, fetchTopicsByGradeId, fetchTopicsByUnitId, isLoading: isTopicsLoading } = useTopic();
   const { mediaContentTypes, fetchMediaContentTypes, isLoading: isMediaTypesLoading } = useMediaContent();
 
   const filteredGradeId = useSearchParams().get('grade_id');

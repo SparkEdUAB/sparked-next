@@ -31,7 +31,7 @@ export const API_LINKS: T_link = {
   FETCH_UNITS: '/api/unit/fetchUnits',
   DELETE_UNITS: '/api/unit/deleteUnits',
   FETCH_UNIT_BY_ID: '/api/unit/fetchUnitById',
-  FETCH_UNIT_BY_SUBJECT_ID: '/api/unit/fetchUnitBySubjectId',
+  FETCH_UNIT_BY_SUBJECT_ID: '/api/unit/fetchUnitsBySubjectId',
   FETCH_UNITS_BY_TOPIC_ID: '/api/unit/fetchUnitsByTopicId',
   EDIT_UNIT: '/api/unit/editUnit',
   FIND_UNITS_BY_NAME: '/api/unit/findUnitsByName',
@@ -43,6 +43,7 @@ export const API_LINKS: T_link = {
   FETCH_TOPIC_BY_ID: '/api/topic/fetchTopicById',
   FETCH_TOPICS_BY_GRADE_ID: '/api/topic/fetchTopicsByGradeId',
   FETCH_TOPICS_BY_SUBJECT_ID: '/api/topic/fetchTopicsBySubjectId',
+  FETCH_TOPICS_BY_UNIT_ID: '/api/topic/fetchTopicsByUnitId',
   EDIT_TOPIC: '/api/topic/editTopic',
   FIND_TOPIC_BY_NAME: '/api/topic/findTopicsByName',
 

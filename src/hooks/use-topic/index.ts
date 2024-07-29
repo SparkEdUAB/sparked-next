@@ -250,6 +250,46 @@ const useTopic = () => {
       return false;
     }
   };
+  const fetchTopicsByUnitId = async ({
+    unitId,
+    withMetaData = false,
+  }: {
+    unitId: string;
+    withMetaData?: boolean;
+  }) => {
+    const url = API_LINKS.FETCH_TOPICS_BY_UNIT_ID;
+    const formData = { unitId, withMetaData: String(withMetaData) };
+
+    try {
+      setLoaderStatus(true);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(formData));
+      setLoaderStatus(false);
+
+      if (!resp.ok) {
+        message.warning(i18next.t('unknown_error'));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        return false;
+      }
+
+      if (responseData.topics) {
+        const _topics = (responseData.topics as T_RawTopicFields[])?.map<T_TopicFields>(transformRawTopic);
+        setTopics(_topics);
+        setOriginalTopics(_topics);
+        return _topics;
+      } else {
+        return null;
+      }
+    } catch (err: any) {
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      return false;
+    }
+  };
 
   const triggerDelete = async () => {
     if (!selectedTopicIds.length) {
@@ -370,6 +410,7 @@ const useTopic = () => {
     fetchTopicById,
     fetchTopicsByGradeId,
     fetchTopicsBySubjectId,
+    fetchTopicsByUnitId,
     router,
     topic,
     isLoading,
