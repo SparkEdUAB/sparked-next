@@ -149,9 +149,18 @@ i18next.init({
         process_code_506: 'User already exists',
         process_code_507: 'User was successfully created',
 
-        // Config process codes
-        process_code_4000: 'Failed to read config file',
-        process_code_4001: 'The file was read successfully',
+        // School process codes
+        process_code_800: 'School already exists',
+        process_code_801: 'School not found',
+        process_code_802: 'School edited successfully',
+        process_code_803: 'School created successfully',
+
+        // Program process codes
+        process_code_1000: 'Program already exists',
+        process_code_1001: 'Program not found',
+        process_code_1002: 'Program edited successfully',
+        process_code_1003: 'Program created successfully',
+        process_code_1004: 'School not found',
 
         // Course process codes
         process_code_1200: 'Course already exists',
@@ -161,16 +170,25 @@ i18next.init({
         process_code_1204: 'School not found',
         process_code_1205: 'Program not found',
 
-        // File process codes
-        process_code_2600: 'Media uploaded successfully',
-        process_code_2601: 'Media upload failed',
+        // Unit process codes
+        process_code_1400: 'Unit already exists',
+        process_code_1401: 'Course not found',
+        process_code_1402: 'Unit edited successfully',
+        process_code_1403: 'Unit created successfully',
+        process_code_1404: 'School not found',
+        process_code_1405: 'Program not found',
+        process_code_1406: 'Unit not found',
 
-        // Grade process codes
-        process_code_5000: 'Grade already exists',
-        process_code_5001: 'Grade not found',
-        process_code_5002: 'Grade edited successfully',
-        process_code_5003: 'Grade created successfully',
-        process_code_5004: 'Grade deleted successfully',
+        // Topic process codes
+        process_code_1600: 'Topic already exists',
+        process_code_1601: 'Course not found',
+        process_code_1602: 'Topic edited successfully',
+        process_code_1603: 'Topic created successfully',
+        process_code_1604: 'School not found',
+        process_code_1605: 'Program not found',
+        process_code_1606: 'Topic not found',
+        process_code_1607: 'Subject not found',
+        process_code_1608: 'Grade not found',
 
         // Media process codes
         process_code_2100: 'Resource already exists',
@@ -185,27 +203,22 @@ i18next.init({
         process_code_2109: 'Media content not found',
         process_code_2110: 'Media content edited successfully',
 
-        // Program process codes
-        process_code_1000: 'Program already exists',
-        process_code_1001: 'Program not found',
-        process_code_1002: 'Program edited successfully',
-        process_code_1003: 'Program created successfully',
-        process_code_1004: 'School not found',
+        // File process codes
+        process_code_2600: 'Media uploaded successfully',
+        process_code_2601: 'Media upload failed',
 
-        // School process codes
-        process_code_800: 'School already exists',
-        process_code_801: 'School not found',
-        process_code_802: 'School edited successfully',
-        process_code_803: 'School created successfully',
+        // Stats Process codes (3000 - 3499)
 
-        // Unit process codes
-        process_code_1400: 'Unit already exists',
-        process_code_1401: 'Course not found',
-        process_code_1402: 'Unit edited successfully',
-        process_code_1403: 'Unit created successfully',
-        process_code_1404: 'School not found',
-        process_code_1405: 'Program not found',
-        process_code_1406: 'Unit not found',
+        // Config process codes
+        process_code_4000: 'Failed to read config file',
+        process_code_4001: 'The file was read successfully',
+
+        // Grade process codes
+        process_code_5000: 'Grade already exists',
+        process_code_5001: 'Grade not found',
+        process_code_5002: 'Grade edited successfully',
+        process_code_5003: 'Grade created successfully',
+        process_code_5004: 'Grade deleted successfully',
 
         // Subject process codes
         process_code_6000: 'Subject already exists',
@@ -214,23 +227,38 @@ i18next.init({
         process_code_6003: 'Subject created successfully',
         process_code_6004: 'Subject deleted successfully',
 
-        // Topic process codes
-        process_code_1600: 'Topic already exists',
-        process_code_1601: 'Course not found',
-        process_code_1602: 'Topic edited successfully',
-        process_code_1603: 'Topic created successfully',
-        process_code_1604: 'School not found',
-        process_code_1605: 'Program not found',
-        process_code_1606: 'Topic not found',
-        process_code_1607: 'Subject not found',
-        process_code_1608: 'Grade not found',
-
         // User process codes
         process_code_6500: 'User already exists',
         process_code_6501: 'User not found',
         process_code_6502: 'User edited successfully',
         process_code_6503: 'User created successfully',
         process_code_6504: 'Users deleted successfully',
+
+        // Page action process codes
+        process_code_7000: 'Page action already exists',
+        process_code_7001: 'Page action not found',
+        process_code_7002: 'Page action edited successfully',
+        process_code_7003: 'Page action created successfully',
+        process_code_7004: 'Page actions deleted successfully',
+
+        // Page link process codes
+        process_code_7500: 'Page link already exists',
+        process_code_7501: 'Page link not found',
+        process_code_7502: 'Page link edited successfully',
+        process_code_7503: 'Page link created successfully',
+        process_code_7504: 'Page links deleted successfully',
+        process_code_7505: 'Page action already linked',
+        process_code_7506: 'Page action linked',
+        process_code_7507: 'Page action not found',
+        process_code_7508: 'Page action unlinked',
+
+        // User role process codes
+        process_code_8500: 'User role already exists',
+        process_code_8501: 'User role not found',
+        process_code_8502: 'User role edited successfully',
+        process_code_8503: 'User role created successfully',
+        process_code_8504: 'User roles deleted successfully',
+        process_code_8505: 'User role assigned successfully',
       },
     },
   },

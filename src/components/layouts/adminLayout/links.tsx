@@ -56,20 +56,6 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     key: 'admin_users',
     icon: () => <AiOutlineUser />,
     index: 3,
-    children: [
-      {
-        label: 'create',
-        key: 'create',
-        link: '/admin/users/create',
-        roles: ['admin'],
-      },
-      {
-        label: 'edit',
-        key: 'edit',
-        link: '/admin/users/edit',
-        roles: ['admin'],
-      },
-    ],
   },
   // We won't need list of courses for now, This should be configurable in settings page
   // courses: {
@@ -101,20 +87,6 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     key: 'admin_grades',
     icon: () => <AiOutlineBook />,
     index: 4,
-    children: [
-      {
-        label: 'create',
-        key: 'create',
-        link: '/admin/grades/create',
-        roles: ['admin'],
-      },
-      {
-        label: 'edit',
-        key: 'edit',
-        link: '/admin/grades/edit',
-        roles: ['admin'],
-      },
-    ],
   },
   subjects: {
     link: '/admin/subjects',
@@ -123,20 +95,6 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     key: 'admin_subjects',
     icon: () => <AiOutlineHdd />,
     index: 5,
-    children: [
-      {
-        label: 'create',
-        key: 'create',
-        link: '/admin/subjects/create',
-        roles: ['admin'],
-      },
-      {
-        label: 'edit',
-        key: 'edit',
-        link: '/admin/subjects/edit',
-        roles: ['admin'],
-      },
-    ],
   },
   topics: {
     link: '/admin/topics',
@@ -145,20 +103,6 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     key: 'admin_topics',
     icon: () => <AiOutlineBulb />,
     index: 6,
-    children: [
-      {
-        label: 'create',
-        key: 'create',
-        link: '/admin/topics/create',
-        roles: ['admin'],
-      },
-      {
-        label: 'edit',
-        key: 'edit',
-        link: '/admin/topics/edit',
-        roles: ['admin'],
-      },
-    ],
   },
   // schools: {
   //   link: '/admin/schools',
@@ -211,20 +155,6 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     key: 'admin_units',
     icon: () => <AiOutlineBlock />,
     index: 7,
-    children: [
-      {
-        label: 'create',
-        key: 'create',
-        link: '/admin/units/create',
-        roles: ['admin'],
-      },
-      {
-        label: 'edit',
-        key: 'edit',
-        link: '/admin/units/edit',
-        roles: ['admin'],
-      },
-    ],
   },
   media_content: {
     link: '/admin/media-content',
@@ -233,23 +163,9 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     key: 'admin_media-content',
     icon: () => <AiOutlineContainer />,
     index: 8,
-    children: [
-      {
-        label: 'create',
-        key: 'create',
-        link: '/admin/media-content/create',
-        roles: ['admin'],
-      },
-      {
-        label: 'edit',
-        key: 'edit',
-        link: '/admin/media-content/edit',
-        roles: ['admin'],
-      },
-    ],
   },
   statistics: {
-    link: '/statistics',
+    link: '/admin/statistics',
     roles: ['admin'],
     label: i18next.t('statistics'),
     key: 'admin_statistics',
@@ -257,7 +173,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     index: 9,
   },
   feedback: {
-    link: '/feedback',
+    link: '/admin/feedback',
     roles: ['admin'],
     label: i18next.t('feedback'),
     key: 'admin_feedback',

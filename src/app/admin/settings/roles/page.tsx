@@ -1,7 +1,7 @@
 'use client';
 
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
-import { RolesListView } from './RolesListView';
+import { RolesListView } from '../../../../components/roles/RolesListView';
 
 export default function Roles() {
   useDocumentTitle('Roles');

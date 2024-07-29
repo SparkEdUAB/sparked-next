@@ -89,26 +89,26 @@ export const API_LINKS = {
   FETCH_ALL_STATS: '/api/stats/fetchCounts',
 
   //   SETTINGS > PAGE LINKS
-  CREATE_PAGE_LINK: 'api/page-link/createPageLink',
-  EDIT_PAGE_LINK: 'api/page-link/editPageLink',
-  DELETE_PAGE_LINK: 'api/page-link/deletePageLink',
-  FETCH_PAGE_LINKS: 'api/page-link/fetchPageLinks',
-  ASSIGN_PAGE_ACTION_TO_PAGE_LINK: 'api/page-link/assignPageActionToPageLink',
-  UNASSIGN_PAGE_ACTION_TO_PAGE_LINK: 'api/page-link/unAssignPageActionToPageLink',
+  CREATE_PAGE_LINK: '/api/page-link/createPageLink',
+  EDIT_PAGE_LINK: '/api/page-link/editPageLink',
+  DELETE_PAGE_LINK: '/api/page-link/deletePageLink',
+  FETCH_PAGE_LINKS: '/api/page-link/fetchPageLinks',
+  ASSIGN_PAGE_ACTION_TO_PAGE_LINK: '/api/page-link/assignPageActionToPageLink',
+  UNASSIGN_PAGE_ACTION_TO_PAGE_LINK: '/api/page-link/unAssignPageActionToPageLink',
 
   //   SETTINGS > PAGE ACTIONS
-  CREATE_PAGE_ACTION: 'api/page-actions/createPageAction',
-  EDIT_PAGE_ACTION: 'api/page-actions/editPageAction',
-  DELETE_PAGE_ACTION: 'api/page-actions/deletePageActions',
-  FETCH_PAGE_ACTION: 'api/page-actions/fetchPageActions',
+  CREATE_PAGE_ACTION: '/api/page-actions/createPageAction',
+  EDIT_PAGE_ACTION: '/api/page-actions/editPageAction',
+  DELETE_PAGE_ACTION: '/api/page-actions/deletePageActions',
+  FETCH_PAGE_ACTION: '/api/page-actions/fetchPageActions',
 
   // SETTINGS > USER ROLES
-  CREATE_USER_ROLE: 'api/page-actions/createUserRole',
-  EDIT_USER_ROLE: 'api/page-actions/editUserRole',
-  ASSIGN_USER_ROLE: 'api/page-actions/assignUserRole',
-  DELETE_USER_ROLES: 'api/page-actions/deleteUserRoles',
-  FETCH_USER_ROLES: 'api/page-actions/fetchUserRoles',
-  FETCH_USER_ROLE_BY_ID: 'api/page-actions/fetchUserRoleById',
+  CREATE_USER_ROLE: '/api/user-roles/createUserRole',
+  EDIT_USER_ROLE: '/api/user-roles/editUserRole',
+  ASSIGN_USER_ROLE: '/api/user-roles/assignUserRole',
+  DELETE_USER_ROLES: '/api/user-roles/deleteUserRoles',
+  FETCH_USER_ROLES: '/api/user-roles/fetchUserRoles',
+  FETCH_USER_ROLE_BY_ID: '/api/user-roles/fetchUserRoleById',
 
   //   resources
   FILE_UPLOAD: '/api/file-upload/uploadFile',
