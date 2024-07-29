@@ -67,6 +67,10 @@ export function LibrarySidebar({
   const filteredTopicId = useSearchParams().get('topic_id');
   const filteredMediaType = useSearchParams().get('mediaType');
 
+  const hasGradeBeenSelected = filterGradeId != null;
+  const hasSubjectBeenSelected = filteredSubjectId != null;
+  const hasUnitBeenSelected = filteredUnitId != null;
+  const hasTopicBeenSelected = filteredTopicId != null;
   return (
     <>
       <div
@@ -77,10 +81,11 @@ export function LibrarySidebar({
       >
         <Sidebar
           className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)] bg-white dark:bg-gray-800 `}
+
         >
           <Sidebar.Items>
             <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Grades" data-collapse-toggle="true">
+              <Sidebar.Collapse label="Grades" data-collapse-toggle="true" open={true} >
                 {!isGradesLoading && (
                   <ShowAllOrNoItems
                     ItemName={'Grades'}
@@ -113,7 +118,7 @@ export function LibrarySidebar({
 
             {/* Subjects */}
             <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Subjects">
+              <Sidebar.Collapse label="Subjects" open={hasGradeBeenSelected }>
                 {!isSubjectsLoading && (
                   <ShowAllOrNoItems
                     ItemName={'Subjects'}
@@ -146,7 +151,7 @@ export function LibrarySidebar({
 
             {/* Units */}
             <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Topics">
+              <Sidebar.Collapse label="Units" open={hasSubjectBeenSelected}>
                 {!isUnitsLoading && (
                     <ShowAllOrNoItems
                         ItemName={'Units'}
@@ -179,7 +184,7 @@ export function LibrarySidebar({
 
             {/* Topics */}
             <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Units">
+              <Sidebar.Collapse label="Topics" open={hasUnitBeenSelected}>
                 {!isTopicsLoading && (
                   <ShowAllOrNoItems
                     ItemName={'Topics'}
@@ -213,7 +218,7 @@ export function LibrarySidebar({
 
             {/* Media Types */}
             <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Media Types">
+              <Sidebar.Collapse label="Media Types" open={hasUnitBeenSelected}>
                 {!isMediaTypesLoading && (
                   <ShowAllOrNoItems
                     ItemName={'Media'}
