@@ -25,7 +25,7 @@ export type T_RawSubjectFields = {
   };
   grade?: {
     name: string;
-    id: string;
+    _id: string;
   };
 };
 
@@ -34,9 +34,19 @@ export type T_SubjectFields = {
   key: string;
   _id: string;
   name: string;
-  gradeId: string;
+  gradeId?: string;
   gradeName?: string;
   description: string;
   created_by?: string;
   created_at: string;
+};
+
+export type T_SubjectSearchedByName = {
+  _id: string;
+  name: string;
+  description: string;
+  created_at?: string;
+  updated_at: string;
+  created_by_id?: string;
+  grade_id?: string;
 };

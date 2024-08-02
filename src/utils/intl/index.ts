@@ -202,6 +202,8 @@ i18next.init({
         process_code_2108: 'Topic not found',
         process_code_2109: 'Media content not found',
         process_code_2110: 'Media content edited successfully',
+        process_code_2111: 'Grade not found',
+        process_code_2112: 'Subject not found',
 
         // File process codes
         process_code_2600: 'Media uploaded successfully',

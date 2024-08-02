@@ -96,13 +96,21 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     icon: () => <AiOutlineHdd />,
     index: 5,
   },
+  units: {
+    link: '/admin/units',
+    roles: ['admin'],
+    label: i18next.t('units'),
+    key: 'admin_units',
+    icon: () => <AiOutlineBlock />,
+    index: 6,
+  },
   topics: {
     link: '/admin/topics',
     roles: ['admin'],
     label: i18next.t('topics'),
     key: 'admin_topics',
     icon: () => <AiOutlineBulb />,
-    index: 6,
+    index: 7,
   },
   // schools: {
   //   link: '/admin/schools',
@@ -148,14 +156,6 @@ export const ADMIN_LINKS: T_MenuItemLink = {
   //     },
   //   ],
   // },
-  units: {
-    link: '/admin/units',
-    roles: ['admin'],
-    label: i18next.t('units'),
-    key: 'admin_units',
-    icon: () => <AiOutlineBlock />,
-    index: 7,
-  },
   media_content: {
     link: '/admin/media-content',
     roles: ['admin'],

@@ -4,8 +4,11 @@ export type T_CreateTopicFields = {
   schoolId?: string;
   programId?: string;
   courseId?: string;
+  subjectId?: string;
+  gradeId?: string;
   unitId?: string;
 };
+
 export type T_FetchTopic = {
   limit?: number;
   skip?: number;
@@ -47,6 +50,14 @@ export type T_RawTopicFields = {
     name: string;
     _id: string;
   };
+  grade?: {
+    name: string;
+    _id: string;
+  };
+  subject?: {
+    name: string;
+    _id: string;
+  };
 };
 
 export type T_TopicFields = {
@@ -62,6 +73,8 @@ export type T_TopicFields = {
   };
 
   unitId: string | undefined;
+  subjectId: string | undefined;
+  gradeId: string | undefined;
   // schoolId: string | undefined;
   // programId: string | undefined;
   // courseId: string | undefined;
@@ -70,7 +83,24 @@ export type T_TopicFields = {
   // programName: string | undefined;
   // courseName: string | undefined;
   unitName: string | undefined;
+  subjectName: string | undefined;
+  gradeName: string | undefined;
 
   created_by: string | undefined;
   created_at: string;
+};
+
+export type T_TopicSearchedByName = {
+  _id: string;
+  name: string;
+  description: string;
+  created_at?: string;
+  updated_at: string;
+  created_by_id?: string;
+  school_id?: string;
+  program_id?: string;
+  course_id?: string;
+  unit_id?: string;
+  grade_id?: string;
+  subject_id?: string;
 };

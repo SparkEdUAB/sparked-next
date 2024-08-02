@@ -129,6 +129,7 @@ export default async function createUnit_(request: Request, session?: Session) {
         status: 200,
       });
     }
+
     const grade = gradeId
       ? await db.collection(dbCollections.grades.name).findOne(
           {

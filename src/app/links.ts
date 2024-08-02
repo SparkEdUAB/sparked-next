@@ -31,8 +31,9 @@ export const API_LINKS = {
   FETCH_UNITS: '/api/unit/fetchUnits',
   DELETE_UNITS: '/api/unit/deleteUnits',
   FETCH_UNIT_BY_ID: '/api/unit/fetchUnitById',
-  FETCH_UNIT_BY_SUBJECT_ID: '/api/unit/fetchUnitBySubjectId',
+  FETCH_UNITS_BY_SUBJECT_ID: '/api/unit/fetchUnitsBySubjectId',
   FETCH_UNITS_BY_TOPIC_ID: '/api/unit/fetchUnitsByTopicId',
+  FETCH_UNITS_BY_GRADE_ID: '/api/unit/fetchUnitsByGradeId',
   EDIT_UNIT: '/api/unit/editUnit',
   FIND_UNITS_BY_NAME: '/api/unit/findUnitsByName',
 
@@ -41,6 +42,7 @@ export const API_LINKS = {
   FETCH_TOPICS: '/api/topic/fetchTopics',
   DELETE_TOPICS: '/api/topic/deleteTopics',
   FETCH_TOPIC_BY_ID: '/api/topic/fetchTopicById',
+  FETCH_TOPICS_BY_UNIT_ID: '/api/topic/fetchTopicsByUnitId',
   FETCH_TOPICS_BY_GRADE_ID: '/api/topic/fetchTopicsByGradeId',
   FETCH_TOPICS_BY_SUBJECT_ID: '/api/topic/fetchTopicsBySubjectId',
   EDIT_TOPIC: '/api/topic/editTopic',

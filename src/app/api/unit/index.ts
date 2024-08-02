@@ -41,7 +41,7 @@ export default async function fetchUnits_(request: any) {
     if (isWithMetaData) {
       units = await db
         .collection(dbCollections.units.name)
-        .aggregate(p_fetchUnitsWithMetaData({ query: {}, project }))
+        .aggregate(p_fetchUnitsWithMetaData({ query: {}, limit, skip, project }))
         .toArray();
     } else {
       units = await db
@@ -263,7 +263,7 @@ export async function findUnitsByName_(request: any) {
   }
 }
 
-export async function fetchUnitBySubjectId_(request: any) {
+export async function fetchUnitsBySubjectId_(request: any) {
   const schema = zfd.formData({
     subjectId: zfd.text(),
     withMetaData: zfd.text().optional(), // this should boolean but changing for now to match the rest and FE
@@ -327,7 +327,7 @@ export async function fetchUnitBySubjectId_(request: any) {
     });
   }
 }
-export async function fetchUnitByTopicId_(request: any) {
+export async function fetchUnitsByTopicId_(request: any) {
   const schema = zfd.formData({
     topicId: zfd.text(),
     withMetaData: zfd.text().optional(), // this should boolean but changing for now to match the rest and FE
@@ -392,7 +392,7 @@ export async function fetchUnitByTopicId_(request: any) {
   }
 }
 
-export async function fetchUnitByGradeId_(request: any) {
+export async function fetchUnitsByGradeId_(request: any) {
   const schema = zfd.formData({
     gradeId: zfd.text(),
     withMetaData: zfd.text().optional(), // this should boolean but changing for now to match the rest and FE

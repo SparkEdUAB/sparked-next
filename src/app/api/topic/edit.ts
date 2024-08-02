@@ -13,12 +13,15 @@ export default async function editTopic_(request: Request, session?: Session) {
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(), // add subjectId instead
+    gradeId: zfd.text().optional(),
+    subjectId: zfd.text().optional(),
     unitId: zfd.text(),
     topicId: zfd.text(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId, topicId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId, topicId, gradeId, subjectId } =
+    schema.parse(formBody);
   try {
     const db = await dbClient();
 
@@ -92,6 +95,46 @@ export default async function editTopic_(request: Request, session?: Session) {
       });
     }
 
+    const grade = gradeId
+      ? await db.collection(dbCollections.grades.name).findOne(
+          {
+            _id: new BSON.ObjectId(gradeId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
+
+    if (!grade && gradeId) {
+      const response = {
+        isError: true,
+        code: TOPIC_PROCESS_CODES.GRADE_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
+    const subject = subjectId
+      ? await db.collection(dbCollections.subjects.name).findOne(
+          {
+            _id: new BSON.ObjectId(subjectId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
+
+    if (!subject && subjectId) {
+      const response = {
+        isError: true,
+        code: TOPIC_PROCESS_CODES.SUBJECT_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
     const unit = await db.collection(dbCollections.units.name).findOne(
       {
         _id: new BSON.ObjectId(unitId),
@@ -140,6 +183,8 @@ export default async function editTopic_(request: Request, session?: Session) {
       course_id: new BSON.ObjectId(courseId),
       program_id: new BSON.ObjectId(programId),
       unit_id: new BSON.ObjectId(unitId),
+      grade_id: new BSON.ObjectId(gradeId),
+      subject_id: new BSON.ObjectId(subjectId),
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };
