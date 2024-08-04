@@ -42,9 +42,7 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
   const [failedToUpload, setFailedToUpload] = useState(false);
 
-  const handleTopicSelect = (topic: T_TopicFields) => {
-    setTopic(topic);
-  };
+  const handleTopicSelect = (topic: T_TopicFields) => setTopic(topic);
 
   const chosenTopic = () => {
     if (!topic) {
@@ -89,8 +87,10 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
           {
             name: resource.name,
             description: resource.description,
-            topicId: topic._id,
             unitId: topic.unitId,
+            topicId: topic._id,
+            gradeId: topic.gradeId,
+            subjectId: topic.subjectId,
           },
           fileUrl,
         );

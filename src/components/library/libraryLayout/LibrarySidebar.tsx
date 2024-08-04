@@ -13,7 +13,7 @@ import { T_TopicFields } from '@hooks/use-topic/types';
 import useNavigation from '@hooks/useNavigation';
 import { useScreenDetector } from '@hooks/useScreenDetactor';
 import { useEffect, useLayoutEffect } from 'react';
-import Skeleton from 'react-loading-skeleton';
+import NETWORK_UTILS from 'utils/network';
 
 export function LibrarySidebar({
   subjects,
@@ -68,7 +68,7 @@ export function LibrarySidebar({
   }, [toggleSidebar]);
 
   const { createQueryString } = useSearchQuery();
-  const filterGradeId = useSearchParams().get('grade_id');
+  const filteredGradeId = useSearchParams().get('grade_id');
   const filteredUnitId = useSearchParams().get('unit_id');
   const filteredSubjectId = useSearchParams().get('subject_id');
   const filteredTopicId = useSearchParams().get('topic_id');
@@ -92,127 +92,162 @@ export function LibrarySidebar({
                   <ShowAllOrNoItems
                     ItemName={'Grades'}
                     items={grades}
-                    filterItemId={filterGradeId}
-                    url={`/library?${createQueryString('grade_id', '')}`}
+                    filterItemId={filteredGradeId}
+                    url={`/library`}
                   />
                 )}
 
-                {isGradesLoading && (
-                  <Sidebar.Item diactivate href={'#'}>
-                    <Skeleton className="h-6" count={1} />
-                  </Sidebar.Item>
-                )}
-
-                {!isGradesLoading &&
+                {isGradesLoading ? (
+                  <SidebarItemsSkeleton />
+                ) : (
+                  !isGradesLoading &&
                   grades.map((grade) => (
                     <Sidebar.Item
-                      active={filterGradeId == grade._id}
+                      active={filteredGradeId == grade._id}
                       className={styles.item}
                       as={Link}
-                      href={`/library?${createQueryString('grade_id', grade._id)}`}
+                      href={`/library?grade_id=${grade._id}`}
                       key={grade._id}
                     >
                       {grade.name}
                     </Sidebar.Item>
-                  ))}
+                  ))
+                )}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
 
             {/* Subjects */}
-            <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Subjects">
-                {!isSubjectsLoading && (
-                  <ShowAllOrNoItems
-                    ItemName={'Subjects'}
-                    items={subjects}
-                    filterItemId={filteredSubjectId}
-                    url={`/library?${createQueryString('subject_id', '')}`}
-                  />
-                )}
-                {isSubjectsLoading && (
-                  <Sidebar.Item diactivate href={'#'}>
-                    <Skeleton className="h-6" count={1} />
-                  </Sidebar.Item>
-                )}
+            {(!!filteredGradeId || !!filteredSubjectId || !!filteredUnitId || !!filteredTopicId) && (
+              <Sidebar.ItemGroup>
+                <Sidebar.Collapse label="Subjects">
+                  {!isSubjectsLoading && (
+                    <ShowAllOrNoItems
+                      ItemName={'Subjects'}
+                      items={subjects}
+                      filterItemId={filteredSubjectId}
+                      url={`/library?grade_id=${filteredGradeId}`}
+                    />
+                  )}
 
-                {!isSubjectsLoading &&
-                  subjects.map((subject) => (
-                    <Sidebar.Item
-                      active={filteredSubjectId == subject._id}
-                      className={styles.item}
-                      as={Link}
-                      href={`/library?${createQueryString('subject_id', subject._id)}`}
-                      key={subject._id}
-                    >
-                      {subject.name}
-                    </Sidebar.Item>
-                  ))}
-              </Sidebar.Collapse>
-            </Sidebar.ItemGroup>
-
-            {/* Topics */}
-            <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Topics">
-                {!isTopicsLoading && (
-                  <ShowAllOrNoItems
-                    ItemName={'Topics'}
-                    items={topics}
-                    filterItemId={filteredTopicId}
-                    url={`/library?${createQueryString('topic_id', '')}`}
-                  />
-                )}
-
-                {isTopicsLoading && (
-                  <Sidebar.Item diactivate href={'#'}>
-                    <Skeleton className="h-6" count={1} />
-                  </Sidebar.Item>
-                )}
-                {!isTopicsLoading &&
-                  topics.map((topic) => (
-                    <Sidebar.Item
-                      active={filteredTopicId == topic._id}
-                      className={styles.item}
-                      as={Link}
-                      href={`/library?${createQueryString('topic_id', topic._id)}`}
-                      key={topic._id}
-                    >
-                      {topic.name}
-                    </Sidebar.Item>
-                  ))}
-              </Sidebar.Collapse>
-            </Sidebar.ItemGroup>
+                  {isSubjectsLoading ? (
+                    <SidebarItemsSkeleton />
+                  ) : (
+                    !isSubjectsLoading &&
+                    subjects.map((subject) => (
+                      <Sidebar.Item
+                        active={filteredSubjectId == subject._id}
+                        className={styles.item}
+                        as={Link}
+                        href={
+                          '/library' +
+                          NETWORK_UTILS.formatGetParams({
+                            grade_id: filteredGradeId as string,
+                            subject_id: subject._id,
+                          })
+                        }
+                        key={subject._id}
+                      >
+                        {subject.name}
+                      </Sidebar.Item>
+                    ))
+                  )}
+                </Sidebar.Collapse>
+              </Sidebar.ItemGroup>
+            )}
 
             {/* Units */}
-            <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Units">
-                {!isUnitsLoading && (
-                  <ShowAllOrNoItems
-                    ItemName={'Units'}
-                    items={units}
-                    filterItemId={filteredUnitId}
-                    url={`/library?${createQueryString('unit_id', '')}`}
-                  />
-                )}
-                {isUnitsLoading && (
-                  <Sidebar.Item diactivate href={'#'}>
-                    <Skeleton className="h-6" count={1} />
-                  </Sidebar.Item>
-                )}
+            {(!!filteredSubjectId || !!filteredUnitId || !!filteredTopicId) && (
+              <Sidebar.ItemGroup>
+                <Sidebar.Collapse label="Units">
+                  {!isUnitsLoading && (
+                    <ShowAllOrNoItems
+                      ItemName={'Units'}
+                      items={units}
+                      filterItemId={filteredUnitId}
+                      url={
+                        '/library' +
+                        NETWORK_UTILS.formatGetParams({
+                          grade_id: filteredGradeId as string,
+                          subject_id: filteredSubjectId as string,
+                        })
+                      }
+                    />
+                  )}
 
-                {!isUnitsLoading &&
-                  units.map((unit) => (
-                    <Sidebar.Item
-                      key={unit._id}
-                      active={filteredUnitId == unit._id}
-                      className={styles.item}
-                      as={Link}
-                      href={`/library?${createQueryString('unit_id', unit._id)}`}
-                    >
-                      {unit.name}
-                    </Sidebar.Item>
-                  ))}
-              </Sidebar.Collapse>
-            </Sidebar.ItemGroup>
+                  {isUnitsLoading ? (
+                    <SidebarItemsSkeleton />
+                  ) : (
+                    !isUnitsLoading &&
+                    units.map((unit) => (
+                      <Sidebar.Item
+                        key={unit._id}
+                        active={filteredUnitId == unit._id}
+                        className={styles.item}
+                        as={Link}
+                        href={
+                          '/library' +
+                          NETWORK_UTILS.formatGetParams({
+                            grade_id: filteredGradeId as string,
+                            subject_id: filteredSubjectId as string,
+                            unit_id: unit._id,
+                          })
+                        }
+                      >
+                        {unit.name}
+                      </Sidebar.Item>
+                    ))
+                  )}
+                </Sidebar.Collapse>
+              </Sidebar.ItemGroup>
+            )}
+
+            {/* Topics */}
+            {(!!filteredUnitId || !!filteredTopicId) && (
+              <Sidebar.ItemGroup>
+                <Sidebar.Collapse label="Topics">
+                  {!isTopicsLoading && (
+                    <ShowAllOrNoItems
+                      ItemName={'Topics'}
+                      items={topics}
+                      filterItemId={filteredTopicId}
+                      url={
+                        '/library' +
+                        NETWORK_UTILS.formatGetParams({
+                          grade_id: filteredGradeId as string,
+                          subject_id: filteredSubjectId as string,
+                          unit_id: filteredUnitId as string,
+                        })
+                      }
+                    />
+                  )}
+
+                  {isTopicsLoading ? (
+                    <SidebarItemsSkeleton />
+                  ) : (
+                    !isTopicsLoading &&
+                    topics.map((topic) => (
+                      <Sidebar.Item
+                        active={filteredTopicId == topic._id}
+                        className={styles.item}
+                        as={Link}
+                        href={
+                          '/library' +
+                          NETWORK_UTILS.formatGetParams({
+                            grade_id: filteredGradeId as string,
+                            subject_id: filteredSubjectId as string,
+                            unit_id: filteredUnitId as string,
+                            topic_id: topic._id,
+                          })
+                        }
+                        key={topic._id}
+                      >
+                        {topic.name}
+                      </Sidebar.Item>
+                    ))
+                  )}
+                </Sidebar.Collapse>
+              </Sidebar.ItemGroup>
+            )}
 
             {/* Media Types */}
             <Sidebar.ItemGroup>
@@ -225,12 +260,11 @@ export function LibrarySidebar({
                     url={`/library?${createQueryString('mediaType', '')}`}
                   />
                 )}
-                {isMediaTypesLoading && (
-                  <Sidebar.Item diactivate href={'#'}>
-                    <Skeleton className="h-6" count={1} />
-                  </Sidebar.Item>
-                )}
-                {!isMediaTypesLoading &&
+
+                {isMediaTypesLoading ? (
+                  <SidebarItemsSkeleton />
+                ) : (
+                  !isMediaTypesLoading &&
                   mediaTypes.map((mediaType) => (
                     <Sidebar.Item
                       key={mediaType._id}
@@ -241,7 +275,8 @@ export function LibrarySidebar({
                     >
                       {mediaType.name}
                     </Sidebar.Item>
-                  ))}
+                  ))
+                )}
               </Sidebar.Collapse>
             </Sidebar.ItemGroup>
           </Sidebar.Items>
@@ -254,5 +289,16 @@ export function LibrarySidebar({
         }`}
       />
     </>
+  );
+}
+
+function SidebarItemsSkeleton() {
+  return (
+    <div role="status" className="max-w-sm animate-pulse pl-10">
+      <div className="h-6 bg-gray-200 rounded-md dark:bg-gray-700 w-full mb-4"></div>
+      <div className="h-6 bg-gray-200 rounded-md dark:bg-gray-700 w-full mb-4"></div>
+      <div className="h-6 bg-gray-200 rounded-md dark:bg-gray-700 w-full mb-4"></div>
+      <span className="sr-only">Loading...</span>
+    </div>
   );
 }

@@ -85,6 +85,20 @@ export const p_fetchUnitsWithMetaData = ({
     },
   },
   {
+    $lookup: {
+      from: dbCollections.grades.name,
+      localField: 'grade_id',
+      foreignField: '_id',
+      as: 'grade',
+    },
+  },
+  {
+    $unwind: {
+      path: '$grade',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  {
     $project: {
       updated_at: 1,
       name: 1,
@@ -96,6 +110,8 @@ export const p_fetchUnitsWithMetaData = ({
       'user.email': 1,
       'subject._id': 1,
       'subject.name': 1,
+      'grade.name': 1,
+      'grade._id': 1,
       ...project,
     },
   },

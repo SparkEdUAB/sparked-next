@@ -185,7 +185,7 @@ const useSubject = () => {
       const url = API_LINKS.DELETE_SUBJECTS;
       const formData = {
         body: JSON.stringify({ subjectIds: items ? items.map((item) => item._id) : selectedSubjectIds }),
-        method: 'post',
+        method: 'delete',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -351,8 +351,7 @@ export function transformRawSubject(subject: T_RawSubjectFields, index: number =
     index: index + 1,
     key: subject._id,
     _id: subject._id,
-    // @ts-expect-error
-    gradeId: subject.gradeId,
+    gradeId: subject.grade?._id,
     gradeName: subject.grade?.name,
     name: subject.name,
     description: subject.description,

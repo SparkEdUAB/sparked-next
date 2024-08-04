@@ -6,6 +6,8 @@ export type T_CreateResourceFields = {
   courseId?: string;
   unitId?: string;
   topicId?: string;
+  gradeId?: string;
+  subjectId?: string;
   fileUrl?: string;
 };
 export type T_FetchTopic = {

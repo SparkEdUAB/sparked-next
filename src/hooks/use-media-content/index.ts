@@ -208,30 +208,8 @@ const useMediaContent = () => {
         }
 
         if (responseData.mediaContent) {
-          const mediaContent = responseData.mediaContent as T_RawMediaContentFields;
-
-          const _mediaContent = {
-            index: 1,
-            _id: mediaContent._id,
-            key: mediaContent._id,
-            name: mediaContent.name,
-            description: mediaContent.description,
-            schoolId: mediaContent.school?._id,
-            programId: mediaContent.program?._id,
-            courseId: mediaContent.course?._id,
-            unitId: mediaContent.unit?._id,
-            topicId: mediaContent.topic?._id,
-            courseName: mediaContent.course?.name,
-            schoolName: mediaContent.school?.name,
-            programName: mediaContent.program?.name,
-            unitName: mediaContent.unit?.name,
-            topicName: mediaContent.topic?.name,
-            fileUrl: mediaContent.file_url || undefined,
-            file_url: mediaContent.file_url,
-            thumbnailUrl: mediaContent.thumbnailUrl,
-            updated_at: mediaContent.updated_at,
-          };
-
+          const rawMediaContent = responseData.mediaContent as T_RawMediaContentFields;
+          const _mediaContent = transformRawMediaContent(rawMediaContent, 0);
           setTargetMediaContent(_mediaContent);
           return _mediaContent;
         } else {
@@ -398,17 +376,24 @@ export function transformRawMediaContent(i: T_RawMediaContentFields, index: numb
     fileUrl: i.file_url || undefined,
     thumbnailUrl: i.thumbnailUrl,
     description: i.description,
+
     courseId: i.course?._id,
-    school: i.school,
+    gradeId: i.course?._id,
+    subjectId: i.course?._id,
     schoolId: i.school?._id,
     unitId: i.unit?._id,
+    programId: i.program?._id,
+    topicId: i.topic?._id,
+
     schoolName: i.school?.name,
     programName: i.program?.name,
     courseName: i.course?.name,
+    gradeName: i.course?.name,
+    subjectName: i.course?.name,
     unitName: i.unit?.name,
-    programId: i.program?._id,
-    topicId: i.topic?._id,
     topicName: i.topic?.name,
+
+    school: i.school,
     created_by: i.user?.email,
     created_at: new Date(i.created_at as string).toDateString(),
   };

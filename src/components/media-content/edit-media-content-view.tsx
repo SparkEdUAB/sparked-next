@@ -17,9 +17,9 @@ import { API_LINKS } from 'app/links';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
-import { T_TopicFields } from '@hooks/use-topic/types';
+import { T_TopicSearchedByName } from '@hooks/use-topic/types';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-import { T_UnitFields } from '@hooks/useUnit/types';
+// import { T_UnitFields } from '@hooks/useUnit/types';
 import { T_NameAndDescription } from 'types';
 
 const EditMediaContentView = ({
@@ -36,8 +36,8 @@ const EditMediaContentView = ({
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
-  const [topicId, setTopicId] = useState<string | null>(null);
-  const [unitId, setUnitId] = useState<string | null>(null);
+  const [topic, setTopic] = useState<T_TopicSearchedByName | null>(null);
+  // const [unitId, setUnitId] = useState<string | null>(null);
 
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
@@ -55,7 +55,14 @@ const EditMediaContentView = ({
       let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
       await editMediaContent(
-        { ...mediaContent, ...result, topicId: topicId || mediaContent.topicId, unitId: unitId || mediaContent.unitId },
+        {
+          ...mediaContent,
+          ...result,
+          topicId: topic?._id || mediaContent.topicId,
+          unitId: topic?.unit_id || mediaContent.unitId,
+          subjectId: topic?.subject_id || mediaContent.subjectId,
+          gradeId: topic?.grade_id || mediaContent.gradeId,
+        },
         fileUrl || undefined,
         thumbnailUrl || undefined,
         onSuccessfullyDone,
@@ -65,13 +72,13 @@ const EditMediaContentView = ({
     }
   };
 
-  const handleClick = (topic: T_TopicFields) => {
-    setTopicId(topic?._id);
-  };
+  // const handleClick = (topic: T_TopicSearchedByName) => {
+  //   setTopicId(topic?._id);
+  // };
 
-  const handleSelectUnit = (unit: T_UnitFields) => {
-    setUnitId(unit?._id);
-  };
+  // const handleSelectUnit = (unit: T_UnitFields) => {
+  //   setUnitId(unit?._id);
+  // };
 
   return (
     <>
@@ -110,17 +117,19 @@ const EditMediaContentView = ({
             rows={4}
           />
 
-          <Autocomplete
+          {/* <Autocomplete
             url={API_LINKS.FIND_UNITS_BY_NAME}
             handleSelect={handleSelectUnit}
             moduleName="units"
             defaultValue={mediaContent.unitName}
-          />
-          <Autocomplete
+          /> */}
+
+          <Autocomplete<T_TopicSearchedByName>
             url={API_LINKS.FIND_TOPIC_BY_NAME}
-            handleSelect={handleClick}
+            handleSelect={setTopic}
             moduleName="topics"
             defaultValue={mediaContent.topicName}
+            disabled={uploading}
           />
 
           <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />

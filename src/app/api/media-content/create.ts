@@ -5,6 +5,7 @@ import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import RESOURCE_PROCESS_CODES from './processCodes';
+import MEDIA_CONTENT_PROCESS_CODES from './processCodes';
 
 export default async function createMediaContent_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -15,11 +16,14 @@ export default async function createMediaContent_(request: Request, session?: Se
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
+    subjectId: zfd.text().optional(),
+    gradeId: zfd.text().optional(),
     fileUrl: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId, topicId, fileUrl } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId, topicId, fileUrl, gradeId, subjectId } =
+    schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -131,6 +135,46 @@ export default async function createMediaContent_(request: Request, session?: Se
       });
     }
 
+    const grade = gradeId
+      ? await db.collection(dbCollections.grades.name).findOne(
+          {
+            _id: new BSON.ObjectId(gradeId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
+
+    if (!grade && gradeId) {
+      const response = {
+        isError: true,
+        code: MEDIA_CONTENT_PROCESS_CODES.GRADE_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
+    const subject = subjectId
+      ? await db.collection(dbCollections.subjects.name).findOne(
+          {
+            _id: new BSON.ObjectId(subjectId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
+
+    if (!subject && subjectId) {
+      const response = {
+        isError: true,
+        code: MEDIA_CONTENT_PROCESS_CODES.SUBJECT_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
     await db.collection(dbCollections.media_content.name).insertOne({
       name,
       description,
@@ -143,6 +187,8 @@ export default async function createMediaContent_(request: Request, session?: Se
       course_id: new BSON.ObjectId(courseId),
       unit_id: new BSON.ObjectId(unitId),
       topic_id: new BSON.ObjectId(topicId),
+      grade_id: new BSON.ObjectId(gradeId),
+      subject_id: new BSON.ObjectId(subjectId),
       file_url: fileUrl,
     });
 

@@ -171,9 +171,9 @@ const useUnit = () => {
     [message],
   );
 
-  const fetchUnitBySubjectsId = useCallback(
+  const fetchUnitsBySubjectId = useCallback(
     async ({ subjectId, withMetaData = false }: { subjectId: string; withMetaData?: boolean }) => {
-      const url = API_LINKS.FETCH_UNIT_BY_SUBJECT_ID;
+      const url = API_LINKS.FETCH_UNITS_BY_SUBJECT_ID;
       const formData = { subjectId, withMetaData: String(withMetaData) };
 
       try {
@@ -373,7 +373,7 @@ const useUnit = () => {
     triggerDelete,
     triggerEdit,
     fetchUnitById,
-    fetchUnitBySubjectsId,
+    fetchUnitsBySubjectId,
     fetchUnitsByTopicId,
     router,
     unit,
@@ -397,10 +397,13 @@ export function transformRawUnit(i: T_RawUnitFields, index: number): T_UnitField
     schoolId: i.school?._id,
     programId: i.program?._id,
     courseId: i.course?._id,
+    subjectId: i.course?._id,
+    gradeId: i.course?._id,
     schoolName: i.school?.name,
     programName: i.program?.name,
     courseName: i.course?.name,
     subjectName: i.subject?.name,
+    gradeName: i.subject?.name,
     created_by: i.user?.email,
     created_at: new Date(i.created_at).toDateString(),
     school: i.school,

@@ -16,6 +16,8 @@ export default async function fetchMediaContent_(request: any) {
     limit: zfd.text(),
     skip: zfd.text(),
     withMetaData: zfd.text().optional(),
+    grade_id: z.string().optional(),
+    subject_id: z.string().optional(),
     school_id: z.string().optional(),
     program_id: z.string().optional(),
     course_id: z.string().optional(),
@@ -24,7 +26,8 @@ export default async function fetchMediaContent_(request: any) {
   });
   const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
+  const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id, subject_id, grade_id } =
+    schema.parse(params);
 
   const isWithMetaData = Boolean(withMetaData);
   const _limit = parseInt(limit);
@@ -47,11 +50,14 @@ export default async function fetchMediaContent_(request: any) {
 
     let query: { [key: string]: BSON.ObjectId } = {};
 
+    if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
+    if (subject_id) query.subject_id = new BSON.ObjectId(subject_id);
     if (school_id) query.school_id = new BSON.ObjectId(school_id);
     if (program_id) query.program_id = new BSON.ObjectId(program_id);
     if (course_id) query.course_id = new BSON.ObjectId(course_id);
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+
     if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)

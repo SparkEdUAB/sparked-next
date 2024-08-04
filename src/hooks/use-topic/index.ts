@@ -221,6 +221,44 @@ const useTopic = () => {
     [message],
   );
 
+  const fetchTopicsByUnitId = useCallback(
+    async ({ unitId, withMetaData = false }: { unitId: string; withMetaData?: boolean }) => {
+      const url = API_LINKS.FETCH_TOPICS_BY_UNIT_ID;
+      const formData = { unitId, withMetaData: String(withMetaData) };
+
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url + NETWORK_UTILS.formatGetParams(formData));
+        setLoaderStatus(false);
+
+        if (!resp.ok) {
+          message.warning(i18next.t('unknown_error'));
+          return false;
+        }
+
+        const responseData = await resp.json();
+
+        if (responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        if (responseData.topics) {
+          const _topics = (responseData.topics as T_RawTopicFields[])?.map<T_TopicFields>(transformRawTopic);
+          setTopics(_topics);
+          setOriginalTopics(_topics);
+          return _topics;
+        } else {
+          return null;
+        }
+      } catch (err: any) {
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      }
+    },
+    [message],
+  );
+
   const fetchTopicsBySubjectId = useCallback(
     async ({ subjectId, withMetaData = false }: { subjectId: string; withMetaData?: boolean }) => {
       const url = API_LINKS.FETCH_TOPICS_BY_SUBJECT_ID;
@@ -382,12 +420,13 @@ const useTopic = () => {
     setTopics,
     deleteTopics,
     setSelectedTopicIds,
-    selectedTopicIds: selectedTopicIds,
+    selectedTopicIds,
     triggerDelete,
     triggerEdit,
     fetchTopicById,
     fetchTopicsByGradeId,
     fetchTopicsBySubjectId,
+    fetchTopicsByUnitId,
     router,
     topic,
     isLoading,
@@ -408,6 +447,8 @@ export function transformRawTopic(i: T_RawTopicFields, index: number): T_TopicFi
     description: i.description,
     // school: i.school,
     unitId: i.unit?._id,
+    gradeId: i.grade?._id,
+    subjectId: i.subject?._id,
     // schoolId: i.school?._id,
     // courseId: i.course?._id,
     // programId: i.program?._id,
@@ -415,6 +456,8 @@ export function transformRawTopic(i: T_RawTopicFields, index: number): T_TopicFi
     // programName: i.program?.name,
     // courseName: i.course?.name,
     unitName: i.unit?.name,
+    gradeName: i.grade?.name,
+    subjectName: i.subject?.name,
     created_by: i.user?.email,
     created_at: new Date(i.created_at).toDateString(),
   };

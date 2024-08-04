@@ -14,11 +14,12 @@ export default async function editUnit_(request: Request, session?: Session) {
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
     subjectId: zfd.text().optional(),
+    gradeId: zfd.text().optional(),
     unitId: zfd.text(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId, subjectId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId, subjectId, gradeId } = schema.parse(formBody);
   try {
     const db = await dbClient();
 
@@ -130,6 +131,26 @@ export default async function editUnit_(request: Request, session?: Session) {
       });
     }
 
+    const grade = gradeId
+      ? await db.collection(dbCollections.grades.name).findOne(
+          {
+            _id: new BSON.ObjectId(gradeId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
+
+    if (!grade && gradeId) {
+      const response = {
+        isError: true,
+        code: UNIT_PROCESS_CODES.GRADE_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    }
+
     const query = {
       _id: new BSON.ObjectId(unitId),
     };
@@ -142,6 +163,7 @@ export default async function editUnit_(request: Request, session?: Session) {
       course_id: new BSON.ObjectId(courseId),
       program_id: new BSON.ObjectId(programId),
       subject_id: new BSON.ObjectId(subjectId),
+      grade_id: new BSON.ObjectId(gradeId),
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };

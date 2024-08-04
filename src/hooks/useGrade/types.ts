@@ -35,3 +35,12 @@ export type T_GradeFields = {
   created_by?: string;
   created_at: string;
 };
+
+export type T_GradeSearchedByName = {
+  _id: string;
+  name: string;
+  description: string;
+  created_at?: string;
+  updated_at: string;
+  created_by_id?: string;
+};

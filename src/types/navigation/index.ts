@@ -28,8 +28,9 @@ export type T_link = {
   FETCH_UNITS: string;
   DELETE_UNITS: string;
   FETCH_UNIT_BY_ID: string;
-  FETCH_UNIT_BY_SUBJECT_ID: string;
+  FETCH_UNITS_BY_SUBJECT_ID: string;
   FETCH_UNITS_BY_TOPIC_ID: string;
+  FETCH_UNITS_BY_GRADE_ID: string;
   EDIT_UNIT: string;
   FIND_UNITS_BY_NAME: string;
 
@@ -38,6 +39,7 @@ export type T_link = {
   FETCH_TOPICS: string;
   DELETE_TOPICS: string;
   FETCH_TOPIC_BY_ID: string;
+  FETCH_TOPICS_BY_UNIT_ID: string;
   FETCH_TOPICS_BY_GRADE_ID: string;
   FETCH_TOPICS_BY_SUBJECT_ID: string;
   FIND_TOPIC_BY_NAME: string;
