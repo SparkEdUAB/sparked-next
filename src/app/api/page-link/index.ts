@@ -125,7 +125,7 @@ export async function assignPageActionToPageLink_(request: Request, session?: Se
     };
 
     return new Response(JSON.stringify(response), {
-      status: HttpStatusCode.BadRequest,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
