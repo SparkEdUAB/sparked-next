@@ -6,6 +6,7 @@ import createGrade_ from '../create';
 import deleteGrades_ from '../delete';
 import editGrade_ from '../edit';
 import fetchGrades, { fetchGradeById_, findGradeByName_ } from '..';
+import { HttpStatusCode } from 'axios';
 
 export async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
@@ -27,7 +28,7 @@ export async function POST(req: Request, { params }: { params: { slug: string } 
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -52,7 +53,7 @@ export async function PUT(req: Request, { params }: { params: { slug: string } }
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -77,7 +78,7 @@ export async function DELETE(req: Request, { params }: { params: { slug: string 
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -102,7 +103,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }

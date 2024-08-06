@@ -3,6 +3,7 @@ import fs from 'fs';
 import { T_RECORD } from 'types';
 import CONFIG_PROCESS_CODES from './processCodes';
 import { T_CONFIG_DB_VARIABLE, T_CONFIG_VARIABLE, T_CONFIG_VARIABLES } from 'types/config';
+import { HttpStatusCode } from 'axios';
 
 const fsPromises = fs.promises;
 
@@ -17,7 +18,7 @@ export default async function readConfigFile_() {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const response = {
@@ -25,7 +26,7 @@ export default async function readConfigFile_() {
       code: CONFIG_PROCESS_CODES.READING_FILE_FAILED,
     };
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

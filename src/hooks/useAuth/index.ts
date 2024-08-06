@@ -33,14 +33,9 @@ const useAuth = () => {
       try {
         const resp = await fetch(url, formData);
 
-        if (!resp.ok) {
-          message.warning(i18next.t('unknown_error'));
-          return false;
-        }
-
         const responseData = await resp.json();
 
-        if (responseData.isError) {
+        if (!resp.ok || responseData.isError) {
           message.warning(getProcessCodeMeaning(responseData.code));
           return false;
         }
@@ -70,14 +65,9 @@ const useAuth = () => {
       try {
         const resp = await fetch(url, formData);
 
-        if (!resp.ok) {
-          message.warning(i18next.t('unknown_error'));
-          return false;
-        }
-
         const responseData = await resp.json();
 
-        if (responseData.isError) {
+        if (!resp.ok || responseData.isError) {
           message.warning(getProcessCodeMeaning(responseData.code));
           return false;
         }
@@ -114,14 +104,9 @@ const useAuth = () => {
     try {
       const resp = await fetch(url, formData);
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
       const responseData = await resp.json();
 
-      if (responseData.isError) {
+      if (!resp.ok || responseData.isError) {
         message.warning(
           responseData.code === AUTH_PROCESS_CODES.FAILED_TO_LOGOUT_USER
             ? i18next.t('logout_failed')

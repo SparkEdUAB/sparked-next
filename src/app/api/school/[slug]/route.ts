@@ -5,6 +5,7 @@ import createSchool_ from '../create';
 import { Session } from 'next-auth';
 import fetchSchools_, { deleteSchools_, fetchSchool_, findSchoolsByName_ } from '..';
 import editSchool_ from '../edit';
+import { HttpStatusCode } from 'axios';
 
 const schoolApiHandler_ = async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
@@ -31,7 +32,7 @@ const schoolApiHandler_ = async function POST(req: Request, { params }: { params
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 };

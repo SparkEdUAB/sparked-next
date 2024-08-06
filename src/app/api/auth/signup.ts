@@ -4,6 +4,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { realmApp } from '../lib/db/realm';
 import AUTH_PROCESS_CODES from './processCodes';
+import { HttpStatusCode } from 'axios';
 
 export default async function signup_(request: Request) {
   const schema = zfd.formData({
@@ -23,7 +24,7 @@ export default async function signup_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -38,7 +39,7 @@ export default async function signup_(request: Request) {
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.BadRequest,
       });
     }
 
@@ -61,7 +62,7 @@ export default async function signup_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const errorCodeIndex = `${JSON.stringify(error)}`.lastIndexOf('code');
@@ -74,7 +75,7 @@ export default async function signup_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

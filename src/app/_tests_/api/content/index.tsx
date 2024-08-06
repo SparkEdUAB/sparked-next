@@ -16,14 +16,9 @@ export const test_fetchRandomMediaContent = async () => {
   try {
     const resp = await fetch(url, formData);
 
-    if (!resp.ok) {
-      console.error(i18next.t('unknown_error'));
-      return false;
-    }
-
     const responseData = await resp.json();
 
-    if (responseData.isError) {
+    if (!resp.ok || responseData.isError) {
       console.error(responseData.code);
       return false;
     }

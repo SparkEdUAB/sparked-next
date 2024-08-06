@@ -6,6 +6,7 @@ import createPageLink_ from '../create';
 import editPageLink_ from '../edit';
 import deletePageLink_ from '../delete';
 import fetchPageLinks_, { assignPageActionToPageLink_, unAssignPageActionToPageLink_ } from '..';
+import { HttpStatusCode } from 'axios';
 
 export async function POST(request: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
@@ -30,7 +31,7 @@ export async function POST(request: Request, { params }: { params: { slug: strin
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -59,7 +60,7 @@ export async function DELETE(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -86,7 +87,7 @@ export async function GET(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
