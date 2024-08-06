@@ -5,6 +5,7 @@ import { dbCollections } from '../lib/db/collections';
 import { p_fetchProgramWithMetaData, p_fetchProgramsWithCreator } from './pipelines';
 import { BSON } from 'mongodb';
 import { z } from 'zod';
+import { HttpStatusCode } from 'axios';
 
 export default async function fetchPrograms_(request: Request) {
   const schema = zfd.formData({
@@ -24,7 +25,7 @@ export default async function fetchPrograms_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -39,7 +40,7 @@ export default async function fetchPrograms_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -48,7 +49,7 @@ export default async function fetchPrograms_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -71,7 +72,7 @@ export async function fetchProgramById_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -102,7 +103,7 @@ export async function fetchProgramById_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -111,7 +112,7 @@ export async function fetchProgramById_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -133,7 +134,7 @@ export async function deletePrograms_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -149,7 +150,7 @@ export async function deletePrograms_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -158,7 +159,7 @@ export async function deletePrograms_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -183,7 +184,7 @@ export async function findProgramsByName_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(name, 'i');
@@ -221,7 +222,7 @@ export async function findProgramsByName_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -230,7 +231,7 @@ export async function findProgramsByName_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

@@ -1,6 +1,7 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
+import { HttpStatusCode } from 'axios';
 
 export default async function fetchCounts_() {
   try {
@@ -12,7 +13,7 @@ export default async function fetchCounts_() {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -66,7 +67,7 @@ export default async function fetchCounts_() {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -75,7 +76,7 @@ export default async function fetchCounts_() {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 500,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

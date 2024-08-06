@@ -6,6 +6,7 @@ import { dbCollections } from '../lib/db/collections';
 import { p_fetchCoursesWithMetaData } from './pipelines';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { COURSE_FIELD_NAMES_CONFIG } from './constants';
+import { HttpStatusCode } from 'axios';
 
 const dbConfigData = COURSE_FIELD_NAMES_CONFIG;
 
@@ -29,7 +30,7 @@ export default async function fetchCourses_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -61,7 +62,7 @@ export default async function fetchCourses_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -70,7 +71,7 @@ export default async function fetchCourses_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -95,7 +96,7 @@ export async function fetchCourseById_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -127,7 +128,7 @@ export async function fetchCourseById_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -136,7 +137,7 @@ export async function fetchCourseById_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -158,7 +159,7 @@ export async function deleteCourse_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -174,7 +175,7 @@ export async function deleteCourse_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -183,7 +184,7 @@ export async function deleteCourse_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -209,7 +210,7 @@ export async function findCourseByName_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(name, 'i');
@@ -249,7 +250,7 @@ export async function findCourseByName_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -258,7 +259,7 @@ export async function findCourseByName_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

@@ -37,14 +37,9 @@ const useSchool = () => {
         const resp = await fetch(url, formData);
         setLoaderStatus(false);
 
-        if (!resp.ok) {
-          message.warning(i18next.t('unknown_error'));
-          return false;
-        }
-
         const responseData = await resp.json();
 
-        if (responseData.isError) {
+        if (!resp.ok || responseData.isError) {
           message.warning(getProcessCodeMeaning(responseData.code));
           return false;
         }
@@ -76,14 +71,9 @@ const useSchool = () => {
         const resp = await fetch(url, formData);
         setLoaderStatus(false);
 
-        if (!resp.ok) {
-          message.warning(i18next.t('unknown_error'));
-          return false;
-        }
-
         const responseData = await resp.json();
 
-        if (responseData.isError) {
+        if (!resp.ok || responseData.isError) {
           message.warning(getProcessCodeMeaning(responseData.code));
           return false;
         }
@@ -109,14 +99,9 @@ const useSchool = () => {
         const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
         setLoaderStatus(false);
 
-        if (!resp.ok) {
-          message.warning(i18next.t('unknown_error'));
-          return false;
-        }
-
         const responseData = await resp.json();
 
-        if (responseData.isError) {
+        if (!resp.ok || responseData.isError) {
           message.warning(getProcessCodeMeaning(responseData.code));
           return false;
         }
@@ -145,14 +130,9 @@ const useSchool = () => {
         const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
         setLoaderStatus(false);
 
-        if (!resp.ok) {
-          message.warning(i18next.t('unknown_error'));
-          return false;
-        }
-
         const responseData = await resp.json();
 
-        if (responseData.isError) {
+        if (!resp.ok || responseData.isError) {
           message.warning(getProcessCodeMeaning(responseData.code));
           return false;
         }
@@ -197,14 +177,9 @@ const useSchool = () => {
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
       const responseData = await resp.json();
 
-      if (responseData.isError) {
+      if (!resp.ok || responseData.isError) {
         message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
@@ -241,14 +216,9 @@ const useSchool = () => {
       const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
       const responseData = await resp.json();
 
-      if (responseData.isError) {
+      if (!resp.ok || responseData.isError) {
         message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }

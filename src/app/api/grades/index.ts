@@ -3,6 +3,7 @@ import { BSON } from 'mongodb';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
+import { HttpStatusCode } from 'axios';
 
 export default async function fetchGrades_(request: any) {
   const schema = zfd.formData({
@@ -22,7 +23,7 @@ export default async function fetchGrades_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -43,7 +44,7 @@ export default async function fetchGrades_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -52,7 +53,7 @@ export default async function fetchGrades_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -75,7 +76,7 @@ export async function fetchGradeById_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const grade = await db.collection(dbCollections.grades.name).findOne({ _id: new BSON.ObjectId(gradeId) });
@@ -85,7 +86,7 @@ export async function fetchGradeById_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -94,7 +95,7 @@ export async function fetchGradeById_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -116,7 +117,7 @@ export async function deleteGrade_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -132,7 +133,7 @@ export async function deleteGrade_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -141,7 +142,7 @@ export async function deleteGrade_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -166,7 +167,7 @@ export async function findGradeByName_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(name, 'i');
@@ -187,7 +188,7 @@ export async function findGradeByName_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -196,7 +197,7 @@ export async function findGradeByName_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

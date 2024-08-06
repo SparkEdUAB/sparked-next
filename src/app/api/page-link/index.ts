@@ -5,6 +5,7 @@ import { dbCollections } from '../lib/db/collections';
 import { Session } from 'next-auth';
 import { BSON } from 'mongodb';
 import PAGE_LINK_PROCESS_CODES from './processCodes';
+import { HttpStatusCode } from 'axios';
 
 export default async function fetchPageLinks_(request: any) {
   const schema = zfd.formData({
@@ -24,7 +25,7 @@ export default async function fetchPageLinks_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -45,7 +46,7 @@ export default async function fetchPageLinks_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -54,7 +55,7 @@ export default async function fetchPageLinks_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -78,7 +79,7 @@ export async function assignPageActionToPageLink_(request: Request, session?: Se
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -100,7 +101,7 @@ export async function assignPageActionToPageLink_(request: Request, session?: Se
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.BadRequest,
       });
     }
     const query = {
@@ -124,7 +125,7 @@ export async function assignPageActionToPageLink_(request: Request, session?: Se
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.BadRequest,
     });
   } catch (error) {
     const resp = {
@@ -133,7 +134,7 @@ export async function assignPageActionToPageLink_(request: Request, session?: Se
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -157,7 +158,7 @@ export async function unAssignPageActionToPageLink_(request: Request, session?: 
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -172,7 +173,6 @@ export async function unAssignPageActionToPageLink_(request: Request, session?: 
       },
     );
 
-
     if (!pageLinkData) {
       const response = {
         isError: true,
@@ -180,7 +180,7 @@ export async function unAssignPageActionToPageLink_(request: Request, session?: 
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
     const query = {
@@ -204,7 +204,7 @@ export async function unAssignPageActionToPageLink_(request: Request, session?: 
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -213,7 +213,7 @@ export async function unAssignPageActionToPageLink_(request: Request, session?: 
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

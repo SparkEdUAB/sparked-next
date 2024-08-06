@@ -1,5 +1,6 @@
 import s3Upload from './s3';
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { HttpStatusCode } from 'axios';
 import { writeFile } from 'fs/promises';
 import { join, basename } from 'path';
 
@@ -40,7 +41,7 @@ export default async function uploadFile_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const response = {
@@ -48,7 +49,7 @@ export default async function uploadFile_(request: Request) {
       code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
     };
     return new Response(JSON.stringify(response), {
-      status: 500,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

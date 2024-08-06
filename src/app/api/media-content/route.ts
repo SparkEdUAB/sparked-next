@@ -1,9 +1,11 @@
+import { HttpStatusCode } from 'axios';
+
 export function GET() {
   const response = {
     isError: true,
   };
   return new Response(JSON.stringify(response), {
-    status: 200,
+    status: HttpStatusCode.NotFound,
   });
 }
 

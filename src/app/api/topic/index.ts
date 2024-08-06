@@ -6,6 +6,7 @@ import { dbCollections } from '../lib/db/collections';
 import { p_fetchTopicsWithMetaData } from './pipelines';
 import { TOPIC_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
+import { HttpStatusCode } from 'axios';
 
 const dbConfigData = TOPIC_FIELD_NAMES_CONFIG;
 
@@ -29,7 +30,7 @@ export default async function fetchTopics_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -60,7 +61,7 @@ export default async function fetchTopics_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -69,7 +70,7 @@ export default async function fetchTopics_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -93,7 +94,7 @@ export async function fetchTopicById_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -124,7 +125,7 @@ export async function fetchTopicById_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -133,7 +134,7 @@ export async function fetchTopicById_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.BadRequest,
     });
   }
 }
@@ -155,7 +156,7 @@ export async function deleteTopics_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.BadRequest,
       });
     }
 
@@ -171,7 +172,7 @@ export async function deleteTopics_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -180,7 +181,7 @@ export async function deleteTopics_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -206,7 +207,7 @@ export async function findTopicsByName_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(name, 'i');
@@ -243,7 +244,7 @@ export async function findTopicsByName_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -252,7 +253,7 @@ export async function findTopicsByName_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -276,7 +277,7 @@ export async function fetchTopicsByUnitId_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -308,7 +309,7 @@ export async function fetchTopicsByUnitId_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -317,7 +318,7 @@ export async function fetchTopicsByUnitId_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -341,7 +342,7 @@ export async function fetchTopicsBySubjectId_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -373,7 +374,7 @@ export async function fetchTopicsBySubjectId_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -382,7 +383,7 @@ export async function fetchTopicsBySubjectId_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -406,7 +407,7 @@ export async function fetchTopicsByGradeId_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -438,7 +439,7 @@ export async function fetchTopicsByGradeId_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -447,7 +448,7 @@ export async function fetchTopicsByGradeId_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

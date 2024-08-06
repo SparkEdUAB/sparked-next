@@ -22,14 +22,9 @@ const useConfig = () => {
       try {
         const resp = await fetch(url);
 
-        if (!resp.ok) {
-          message.warning(i18next.t('unknown_error'));
-          return false;
-        }
-
         const responseData = await resp.json();
 
-        if (responseData.isError) {
+        if (!resp.ok || responseData.isError) {
           message.warning(getProcessCodeMeaning(responseData.code));
           return false;
         }

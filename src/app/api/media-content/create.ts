@@ -6,6 +6,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import RESOURCE_PROCESS_CODES from './processCodes';
 import MEDIA_CONTENT_PROCESS_CODES from './processCodes';
+import { HttpStatusCode } from 'axios';
 
 export default async function createMediaContent_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -34,7 +35,7 @@ export default async function createMediaContent_(request: Request, session?: Se
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const topic = topicId
@@ -53,7 +54,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -73,7 +74,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -93,7 +94,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -113,7 +114,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -131,7 +132,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -151,7 +152,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -171,7 +172,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -198,7 +199,7 @@ export default async function createMediaContent_(request: Request, session?: Se
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -207,7 +208,7 @@ export default async function createMediaContent_(request: Request, session?: Se
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

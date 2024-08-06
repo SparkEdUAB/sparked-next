@@ -12,6 +12,7 @@ import fetchUnits_, {
 import { authOptions } from '../../auth/constants';
 import createUnit_ from '../create';
 import editUnit_ from '../edit';
+import { HttpStatusCode } from 'axios';
 
 export async function POST(
   req: Request,
@@ -39,7 +40,7 @@ export async function POST(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -71,7 +72,7 @@ export async function GET(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -100,7 +101,7 @@ export async function DELETE(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -129,7 +130,7 @@ export async function PUT(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
