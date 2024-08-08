@@ -5,6 +5,7 @@ import { authOptions } from '../../auth/constants';
 import createContentCategory_ from '../create';
 import { HttpStatusCode } from 'axios';
 import editContentCategory_ from '../edit';
+import { deleteContentCategoriesById_ } from '../delete';
 
 export async function POST(
   req: Request,
@@ -75,7 +76,9 @@ export async function DELETE(
 
   const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
-  } = {};
+  } = {
+    deleteContentCategoriesById: deleteContentCategoriesById_,
+  };
 
   if (contentCategoryFunctions[slug] && session) {
     return contentCategoryFunctions[slug](req, session);

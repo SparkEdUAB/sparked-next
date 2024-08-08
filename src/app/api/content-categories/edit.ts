@@ -1,11 +1,10 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { HttpStatusCode } from 'axios';
 import { BSON } from 'mongodb';
 import { Session } from 'next-auth';
-import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as CATEGORIES_PROCESS_CODES } from './processCodes';
-import { HttpStatusCode } from 'axios';
 import { EDIT_CONTENT_CATEGORY_SCHEMA } from './schema';
 
 export default async function editContentCategory_(request: Request, session?: Session) {
