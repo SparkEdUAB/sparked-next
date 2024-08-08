@@ -4,7 +4,6 @@ import { FaFilePdf } from 'react-icons/fa';
 import { determineFileType } from 'utils/helpers/determineFileType';
 import { truncateText } from 'utils/helpers/truncateText';
 import { IoClose } from 'react-icons/io5';
-import Image from 'next/image';
 
 export function FilePreview({ file, deleteItem }: { file: File | null; deleteItem?: () => void }) {
   const fileType = determineFileType(file?.name || '');
@@ -13,7 +12,8 @@ export function FilePreview({ file, deleteItem }: { file: File | null; deleteIte
   return file ? (
     <div className="inline-block relative w-fit h-fit" onClick={(e) => e.stopPropagation()}>
       {fileType === 'image' ? (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={fileUrl as string}
           alt="Media content file"
           className="inline-block m-4 h-full max-h-48 max-w-48 object-contain object-center"

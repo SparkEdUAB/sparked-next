@@ -48,7 +48,7 @@ const useMediaContent = () => {
         }
 
         onSuccessfullyDone?.();
-        message.success(i18next.t('media_content_created'));
+        message.success(i18next.t('resource_created'));
         return true;
       } catch (err: any) {
         setLoaderStatus(false);
