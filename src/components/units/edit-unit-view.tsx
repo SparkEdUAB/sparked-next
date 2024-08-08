@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
 
-import { Button, Spinner } from 'flowbite-react';
+import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 
 import { FormEventHandler, useState } from 'react';
@@ -19,25 +18,26 @@ import { API_LINKS } from 'app/links';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
-import { T_SubjectFields } from '@hooks/useSubject/types';
+// import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+// import { T_SubjectFields, T_SubjectSearchedByName } from '@hooks/useSubject/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
-import { transformRawSubject } from '@hooks/useSubject';
+// import { transformRawSubject } from '@hooks/useSubject';
 import { T_NameAndDescription } from 'types';
+import { T_SubjectSearchedByName } from '@hooks/useSubject/types';
 
 const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSuccessfullyDone: () => void }) => {
   const { editUnit, deleteUnits } = useUnit();
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
-  const [subjectId, setSubjectId] = useState<string | null>(null);
+  const [subject, setSubject] = useState<T_SubjectSearchedByName | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const { item: subject, isLoading: loadingCourses } = useAdminItemById(
-    API_LINKS.FETCH_SUBJECT_BY_ID,
-    unit.subjectId as string,
-    'subject',
-    transformRawSubject,
-  );
+  // const { item: subject } = useAdminItemById(
+  //   API_LINKS.FETCH_SUBJECT_BY_ID,
+  //   unit.subjectId as string,
+  //   'subject',
+  //   transformRawSubject,
+  // );
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -46,15 +46,18 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
       e.preventDefault();
       const keys = [UNIT_FORM_FIELDS.name.key, UNIT_FORM_FIELDS.description.key];
       let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
-      await editUnit({ ...unit, ...result, subjectId: subjectId as string }, onSuccessfullyDone);
+      await editUnit(
+        { ...unit, ...result, subjectId: subject?._id || unit.subjectId, gradeId: subject?.grade_id || unit.gradeId },
+        onSuccessfullyDone,
+      );
     } finally {
       setUploading(false);
     }
   };
 
-  const handleClick = (subject: T_SubjectFields) => {
-    setSubjectId(subject?._id);
-  };
+  // const handleClick = (subject: T_SubjectFields) => {
+  //   setSubjectId(subject?._id);
+  // };
 
   return (
     <>
@@ -85,11 +88,12 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
               defaultValue={unit.description}
             />
 
-            <Autocomplete
+            <Autocomplete<T_SubjectSearchedByName>
               url={API_LINKS.FIND_SUBJECT_BY_NAME}
-              handleSelect={handleClick}
+              handleSelect={setSubject}
               moduleName="subjects"
-              defaultValue={subject?.name}
+              defaultValue={unit.subjectName}
+              disabled={uploading}
             />
 
             <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />

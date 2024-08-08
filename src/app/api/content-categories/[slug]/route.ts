@@ -3,6 +3,7 @@ import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/constants';
 import createContentCategory_ from '../create';
+import { HttpStatusCode } from 'axios';
 
 export async function POST(
   req: Request,
@@ -28,7 +29,7 @@ export async function POST(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -55,7 +56,7 @@ export async function PUT(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -82,7 +83,7 @@ export async function DELETE(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -107,7 +108,7 @@ export async function GET(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }

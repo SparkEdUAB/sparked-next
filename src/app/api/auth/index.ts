@@ -1,8 +1,9 @@
-import { dbClient } from "../lib/db";
-import { realmApp } from "../lib/db/realm";
-import AUTH_PROCESS_CODES from "./processCodes";
+import { dbClient } from '../lib/db';
+import { realmApp } from '../lib/db/realm';
+import AUTH_PROCESS_CODES from './processCodes';
+import { HttpStatusCode } from 'axios';
 
-export default async function logout_(request: Request) {
+export default async function logout_() {
   try {
     const db = await dbClient();
 
@@ -12,7 +13,7 @@ export default async function logout_(request: Request) {
         code: AUTH_PROCESS_CODES.UNKNOWN_ERROR,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -24,7 +25,7 @@ export default async function logout_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -33,7 +34,7 @@ export default async function logout_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

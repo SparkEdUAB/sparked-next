@@ -6,6 +6,7 @@ import { dbCollections } from '../lib/db/collections';
 import { p_fetchTopicsWithMetaData } from './pipelines';
 import { TOPIC_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
+import { HttpStatusCode } from 'axios';
 
 const dbConfigData = TOPIC_FIELD_NAMES_CONFIG;
 
@@ -29,7 +30,7 @@ export default async function fetchTopics_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -60,7 +61,7 @@ export default async function fetchTopics_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -69,7 +70,7 @@ export default async function fetchTopics_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -93,7 +94,7 @@ export async function fetchTopicById_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -124,7 +125,7 @@ export async function fetchTopicById_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -133,7 +134,7 @@ export async function fetchTopicById_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.BadRequest,
     });
   }
 }
@@ -155,7 +156,7 @@ export async function deleteTopics_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.BadRequest,
       });
     }
 
@@ -171,7 +172,7 @@ export async function deleteTopics_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -180,7 +181,7 @@ export async function deleteTopics_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -206,7 +207,7 @@ export async function findTopicsByName_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(name, 'i');
@@ -223,6 +224,8 @@ export async function findTopicsByName_(request: any) {
             query: {
               name: { $regex: regexPattern },
             },
+            skip,
+            limit,
           }),
         )
         .toArray();
@@ -241,7 +244,7 @@ export async function findTopicsByName_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -250,12 +253,75 @@ export async function findTopicsByName_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
 
+export async function fetchTopicsByUnitId_(request: any) {
+  const schema = zfd.formData({
+    unitId: zfd.text(),
+    withMetaData: zfd.text().optional(),
+  });
+  const params = request.nextUrl.searchParams;
 
+  const { unitId, withMetaData } = schema.parse(params);
+  const isWithMetaData = Boolean(withMetaData);
+
+  try {
+    const db = await dbClient();
+
+    if (!db) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+      };
+      return new Response(JSON.stringify(response), {
+        status: HttpStatusCode.InternalServerError,
+      });
+    }
+    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+
+    let topics: Array<{ [key: string]: string }>;
+
+    if (!isWithMetaData) {
+      topics = await db
+        .collection(dbCollections.topics.name)
+        .aggregate(
+          p_fetchTopicsWithMetaData({
+            project,
+            query: {
+              unit_id: new BSON.ObjectId(unitId),
+            },
+          }),
+        )
+        .toArray();
+    } else {
+      topics = await db
+        .collection(dbCollections.topics.name)
+        .find({ unit_id: new BSON.ObjectId(unitId) })
+        .toArray();
+    }
+
+    const response = {
+      isError: false,
+      topics,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: HttpStatusCode.Ok,
+    });
+  } catch (error) {
+    const resp = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+    };
+
+    return new Response(JSON.stringify(resp), {
+      status: HttpStatusCode.InternalServerError,
+    });
+  }
+}
 
 export async function fetchTopicsBySubjectId_(request: any) {
   const schema = zfd.formData({
@@ -263,7 +329,6 @@ export async function fetchTopicsBySubjectId_(request: any) {
     withMetaData: zfd.text().optional(),
   });
   const params = request.nextUrl.searchParams;
-
 
   const { subjectId, withMetaData } = schema.parse(params);
   const isWithMetaData = Boolean(withMetaData);
@@ -277,40 +342,39 @@ export async function fetchTopicsBySubjectId_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
-    let topic: { [key: string]: string } | null;
+    let topics: Array<{ [key: string]: string }>;
 
     if (!isWithMetaData) {
-      const topics = await db
+      topics = await db
         .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
             project,
             query: {
-
               subject_id: new BSON.ObjectId(subjectId),
             },
           }),
         )
         .toArray();
-
-      topic = topics.length ? topics[0] : {};
     } else {
-
-      topic = await db.collection(dbCollections.topics.name).findOne({ subject_id: new BSON.ObjectId(subjectId) });
+      topics = await db
+        .collection(dbCollections.topics.name)
+        .find({ subject_id: new BSON.ObjectId(subjectId) })
+        .toArray();
     }
 
     const response = {
       isError: false,
-      topic,
+      topic: topics,
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -319,14 +383,12 @@ export async function fetchTopicsBySubjectId_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
 
-
-
-export async function fetchTopicByGradeId_(request: any) {
+export async function fetchTopicsByGradeId_(request: any) {
   const schema = zfd.formData({
     gradeId: zfd.text(),
     withMetaData: zfd.text().optional(),
@@ -345,15 +407,15 @@ export async function fetchTopicByGradeId_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
-    let topic: { [key: string]: string } | null;
+    let topics: Array<{ [key: string]: string }>;
 
     if (isWithMetaData) {
-      const topics = await db
+      topics = await db
         .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
@@ -364,19 +426,20 @@ export async function fetchTopicByGradeId_(request: any) {
           }),
         )
         .toArray();
-
-      topic = topics.length ? topics[0] : {};
     } else {
-      topic = await db.collection(dbCollections.topics.name).findOne({ grade_id: new BSON.ObjectId(gradeId) });
+      topics = await db
+        .collection(dbCollections.topics.name)
+        .find({ grade_id: new BSON.ObjectId(gradeId) })
+        .toArray();
     }
 
     const response = {
       isError: false,
-      topic,
+      topics,
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -385,7 +448,7 @@ export async function fetchTopicByGradeId_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

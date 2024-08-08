@@ -28,8 +28,9 @@ export type T_link = {
   FETCH_UNITS: string;
   DELETE_UNITS: string;
   FETCH_UNIT_BY_ID: string;
-  FETCH_UNIT_BY_SUBJECT_ID: string;
+  FETCH_UNITS_BY_SUBJECT_ID: string;
   FETCH_UNITS_BY_TOPIC_ID: string;
+  FETCH_UNITS_BY_GRADE_ID: string;
   EDIT_UNIT: string;
   FIND_UNITS_BY_NAME: string;
 
@@ -38,6 +39,7 @@ export type T_link = {
   FETCH_TOPICS: string;
   DELETE_TOPICS: string;
   FETCH_TOPIC_BY_ID: string;
+  FETCH_TOPICS_BY_UNIT_ID: string;
   FETCH_TOPICS_BY_GRADE_ID: string;
   FETCH_TOPICS_BY_SUBJECT_ID: string;
   FIND_TOPIC_BY_NAME: string;
@@ -56,10 +58,28 @@ export type T_link = {
   FETCH_RANDOM_MEDIA_CONTENT: string;
   FETCH_MEDIA_TYPES: string;
 
+  // PAGE LINKS
   CREATE_PAGE_LINK: string;
   CREATE_USER: string;
   EDIT_PAGE_LINK: string;
   DELETE_PAGE_LINK: string;
+  FETCH_PAGE_LINKS: string;
+  ASSIGN_PAGE_ACTION_TO_PAGE_LINK: string;
+  UNASSIGN_PAGE_ACTION_TO_PAGE_LINK: string;
+
+  //   SETTINGS > PAGE ACTIONS
+  CREATE_PAGE_ACTION: string;
+  EDIT_PAGE_ACTION: string;
+  DELETE_PAGE_ACTION: string;
+  FETCH_PAGE_ACTION: string;
+
+  // SETTINGS > USER ROLES
+  CREATE_USER_ROLE: string;
+  EDIT_USER_ROLE: string;
+  ASSIGN_USER_ROLE: string;
+  DELETE_USER_ROLES: string;
+  FETCH_USER_ROLES: string;
+  FETCH_USER_ROLE_BY_ID: string;
 
   // GRADE
   CREATE_GRADE: string;

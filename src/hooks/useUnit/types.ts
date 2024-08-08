@@ -3,6 +3,7 @@ export type T_CreateUnitFields = {
   description: string;
   schoolId?: string;
   subjectId: string;
+  gradeId: string;
   courseId: string;
   programId?: string;
 };
@@ -21,10 +22,12 @@ export type T_UnitFields = {
 
   schoolId?: string;
   subjectId?: string;
+  gradeId?: string;
   programId?: string;
   courseId?: string;
 
   subjectName?: string;
+  gradeName?: string;
   schoolName?: string;
   programName?: string;
   courseName?: string;
@@ -52,6 +55,10 @@ export type T_UnitFields = {
     name: string;
     _id: string;
   };
+  grade?: {
+    name: string;
+    _id: string;
+  };
 };
 
 /**
@@ -68,6 +75,8 @@ export type T_RawUnitFields = {
 
   school_id?: string;
   program_id?: string;
+  subject_id?: string;
+  grade_id?: string;
   course_id?: string;
 
   user?: {
@@ -90,4 +99,22 @@ export type T_RawUnitFields = {
     _id: string;
     name: string;
   };
+  grade?: {
+    _id: string;
+    name: string;
+  };
+};
+
+export type T_UnitSearchedByName = {
+  _id: string;
+  name: string;
+  description: string;
+  created_at?: string;
+  updated_at: string;
+  created_by_id?: string;
+  school_id?: string;
+  program_id?: string;
+  course_id?: string;
+  grade_id?: string;
+  subject_id?: string;
 };

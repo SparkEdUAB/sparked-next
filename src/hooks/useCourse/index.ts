@@ -3,13 +3,14 @@
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { T_CreateCourseFields, T_FetchCourses, T_CourseFields, T_RawCourseFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
+import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
 const useCourse = () => {
-  const { getChildLinkByKey, router } = useNavigation();
+  const { router } = useNavigation();
   const message = useToastMessage();
 
   const [isLoading, setLoaderStatus] = useState<boolean>(false);
@@ -19,194 +20,185 @@ const useCourse = () => {
   const [course, setCourse] = useState<T_CourseFields | null>(null);
   const [selectedCourseIds, setSelectedCourseIds] = useState<React.Key[]>([]);
 
-  const createCourse = async (fields: T_CreateCourseFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.CREATE_COURSE;
-    const formData = {
-      body: JSON.stringify({ ...fields }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+  const createCourse = useCallback(
+    async (fields: T_CreateCourseFields, onSuccessfullyDone?: () => void) => {
+      const url = API_LINKS.CREATE_COURSE;
+      const formData = {
+        body: JSON.stringify({ ...fields }),
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url, formData);
-      setLoaderStatus(false);
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        setLoaderStatus(false);
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        onSuccessfullyDone?.();
+        message.success(i18next.t('course_created'));
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
+    },
+    [message],
+  );
 
-      const responseData = await resp.json();
+  const editCourse = useCallback(
+    async (fields: T_CourseFields, onSuccessfullyDone?: () => void) => {
+      const url = API_LINKS.EDIT_COURSE;
+      const formData = {
+        //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
+        body: JSON.stringify({ ...course, ...fields, courseId: (course || fields)?._id }),
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        setLoaderStatus(false);
+
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        onSuccessfullyDone?.();
+        message.success(i18next.t('success'));
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
+    },
+    [course, message],
+  );
 
-      onSuccessfullyDone?.();
-      message.success(i18next.t('course_created'));
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
+  const fetchCourses = useCallback(
+    async ({ limit = 1000, skip = 0 }: T_FetchCourses) => {
+      const url = API_LINKS.FETCH_COURSES;
+      const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
 
-  const editCourse = async (fields: T_CourseFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.EDIT_COURSE;
-    const formData = {
-      //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-      body: JSON.stringify({ ...course, ...fields, courseId: (course || fields)?._id }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+        setLoaderStatus(false);
 
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url, formData);
-      setLoaderStatus(false);
+        const responseData = await resp.json();
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        const _courses = responseData.courses?.map(transformRawCourse);
+
+        setCourses(_courses);
+        setOriginalCourses(_courses);
+        return _courses;
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
+    },
+    [message],
+  );
 
-      const responseData = await resp.json();
+  const fetchCourseById = useCallback(
+    async ({ courseId, withMetaData = false }: { courseId: string; withMetaData: boolean }) => {
+      const url = API_LINKS.FETCH_COURSE_BY_ID;
+      const params = { courseId: courseId.toString(), withMetaData: withMetaData.toString() };
 
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+        setLoaderStatus(false);
+
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        if (responseData.course) {
+          const _course = responseData.course as T_RawCourseFields;
+
+          setCourse(transformRawCourse(_course));
+          return _course;
+        } else {
+          return null;
+        }
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
+    },
+    [message],
+  );
 
-      onSuccessfullyDone?.();
-      message.success(i18next.t('success'));
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const fetchCourses = async ({ limit = 1000, skip = 0 }: T_FetchCourses) => {
-    const url = API_LINKS.FETCH_COURSES;
-    const params = { limit: limit.toString(), skip: skip.toString(), withMetaData: 'true' };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
-        return false;
-      }
-
-      const _courses = responseData.courses?.map(transformRawCourse);
-
-      setCourses(_courses);
-      setOriginalCourses(_courses);
-      return _courses;
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const fetchCourseById = async ({ courseId, withMetaData = false }: { courseId: string; withMetaData: boolean }) => {
-    const url = API_LINKS.FETCH_COURSE_BY_ID;
-    const params = { courseId: courseId.toString(), withMetaData: withMetaData.toString() };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
-        return false;
-      }
-
-      if (responseData.course) {
-        const _course = responseData.course as T_RawCourseFields;
-
-        setCourse(transformRawCourse(_course));
-        return _course;
-      } else {
-        return null;
-      }
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const triggerDelete = async () => {
+  const triggerDelete = useCallback(async () => {
     if (!selectedCourseIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-  };
+  }, [message, selectedCourseIds.length]);
 
-  const deleteCourse = async (items?: T_CourseFields[]) => {
-    const url = API_LINKS.DELETE_COURSES;
-    const formData = {
-      body: JSON.stringify({ courseIds: items ? items.map((item) => item._id) : selectedCourseIds }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+  const deleteCourse = useCallback(
+    async (items?: T_CourseFields[]) => {
+      const url = API_LINKS.DELETE_COURSES;
+      const formData = {
+        body: JSON.stringify({ courseIds: items ? items.map((item) => item._id) : selectedCourseIds }),
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url, formData);
-      setLoaderStatus(false);
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        setLoaderStatus(false);
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        message.success(i18next.t('success'));
+
+        setCourses(courses.filter((i) => selectedCourseIds.indexOf(i._id) == -1));
+
+        return true;
+      } catch (err: any) {
+        setLoaderStatus(false);
+
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
+    },
+    [courses, message, selectedCourseIds],
+  );
 
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
-        return false;
-      }
-
-      message.success(i18next.t('success'));
-
-      setCourses(courses.filter((i) => selectedCourseIds.indexOf(i._id) == -1));
-
-      return true;
-    } catch (err: any) {
-      setLoaderStatus(false);
-
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-  const findCourseByName = async () => {
+  const findCourseByName = useCallback(async () => {
     if (isLoading) {
       return message.warning(i18next.t('wait'));
     } else if (!searchQuery.trim().length) {
@@ -222,15 +214,10 @@ const useCourse = () => {
       const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
       setLoaderStatus(false);
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
       const responseData = await resp.json();
 
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+      if (!resp.ok || responseData.isError) {
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
       message.success(responseData.courses.length + ' ' + i18next.t('courses_found'));
@@ -244,17 +231,20 @@ const useCourse = () => {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
-  };
+  }, [isLoading, message, searchQuery]);
 
-  const onSearchQueryChange = (text: string) => {
-    setSearchQuery(text);
+  const onSearchQueryChange = useCallback(
+    (text: string) => {
+      setSearchQuery(text);
 
-    if (!text.trim().length) {
-      setCourses(originalCourses);
-    }
-  };
+      if (!text.trim().length) {
+        setCourses(originalCourses);
+      }
+    },
+    [originalCourses],
+  );
 
-  const triggerEdit = async () => {
+  const triggerEdit = useCallback(async () => {
     if (!selectedCourseIds.length) {
       return message.warning(i18next.t('select_item'));
     } else if (selectedCourseIds.length > 1) {
@@ -263,7 +253,7 @@ const useCourse = () => {
 
     // TODO: Add the correct link
     // router.push(getChildLinkByKey('edit', '') + `?courseId=${selectedCourseIds[0]}`);
-  };
+  }, [message, selectedCourseIds.length]);
 
   return {
     createCourse,

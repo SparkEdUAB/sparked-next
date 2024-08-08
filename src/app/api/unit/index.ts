@@ -1,6 +1,5 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { BSON } from 'mongodb';
-import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
@@ -8,6 +7,7 @@ import { p_fetchUnitsWithMetaData } from './pipelines';
 import { UNIT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { T_RECORD } from 'types';
+import { HttpStatusCode } from 'axios';
 
 const dbConfigData = UNIT_FIELD_NAMES_CONFIG;
 
@@ -31,7 +31,7 @@ export default async function fetchUnits_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -42,7 +42,7 @@ export default async function fetchUnits_(request: any) {
     if (isWithMetaData) {
       units = await db
         .collection(dbCollections.units.name)
-        .aggregate(p_fetchUnitsWithMetaData({ query: {}, project }))
+        .aggregate(p_fetchUnitsWithMetaData({ query: {}, limit, skip, project }))
         .toArray();
     } else {
       units = await db
@@ -63,7 +63,7 @@ export default async function fetchUnits_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -72,7 +72,7 @@ export default async function fetchUnits_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -96,7 +96,7 @@ export async function fetchUnitById_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -127,7 +127,7 @@ export async function fetchUnitById_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -136,7 +136,7 @@ export async function fetchUnitById_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -158,7 +158,7 @@ export async function deleteUnits_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -174,7 +174,7 @@ export async function deleteUnits_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -183,7 +183,7 @@ export async function deleteUnits_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -209,7 +209,7 @@ export async function findUnitsByName_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(name, 'i');
@@ -238,6 +238,7 @@ export async function findUnitsByName_(request: any) {
           },
           {
             limit,
+            skip,
           },
         )
         .toArray();
@@ -249,7 +250,7 @@ export async function findUnitsByName_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -258,12 +259,12 @@ export async function findUnitsByName_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
 
-export async function fetchUnitBySubjectId_(request: any) {
+export async function fetchUnitsBySubjectId_(request: any) {
   const schema = zfd.formData({
     subjectId: zfd.text(),
     withMetaData: zfd.text().optional(), // this should boolean but changing for now to match the rest and FE
@@ -282,7 +283,7 @@ export async function fetchUnitBySubjectId_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -314,7 +315,7 @@ export async function fetchUnitBySubjectId_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -323,11 +324,11 @@ export async function fetchUnitBySubjectId_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
-export async function fetchUnitByTopicId_(request: any) {
+export async function fetchUnitsByTopicId_(request: any) {
   const schema = zfd.formData({
     topicId: zfd.text(),
     withMetaData: zfd.text().optional(), // this should boolean but changing for now to match the rest and FE
@@ -346,7 +347,7 @@ export async function fetchUnitByTopicId_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -378,7 +379,7 @@ export async function fetchUnitByTopicId_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -387,12 +388,12 @@ export async function fetchUnitByTopicId_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
 
-export async function fetchUnitByGradeId_(request: any) {
+export async function fetchUnitsByGradeId_(request: any) {
   const schema = zfd.formData({
     gradeId: zfd.text(),
     withMetaData: zfd.text().optional(), // this should boolean but changing for now to match the rest and FE
@@ -411,7 +412,7 @@ export async function fetchUnitByGradeId_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
@@ -443,7 +444,7 @@ export async function fetchUnitByGradeId_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -452,7 +453,7 @@ export async function fetchUnitByGradeId_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

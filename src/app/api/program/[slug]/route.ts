@@ -5,12 +5,9 @@ import fetchPrograms_, { deletePrograms_, fetchProgramById_, findProgramsByName_
 import { authOptions } from '../../auth/constants';
 import createProgram_ from '../create';
 import editProgram_ from '../edit';
+import { HttpStatusCode } from 'axios';
 
-const schoolApiHandler_ = async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+const schoolApiHandler_ = async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -35,7 +32,7 @@ const schoolApiHandler_ = async function POST(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 };

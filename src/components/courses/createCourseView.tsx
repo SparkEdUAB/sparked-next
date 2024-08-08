@@ -6,13 +6,13 @@ import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler } from 'react';
 import { COURSE_FORM_FIELDS } from './constants';
-import { transformRawProgram } from '@hooks/useProgram';
+// import { transformRawProgram } from '@hooks/useProgram';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
+// import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateCourseFields } from '@hooks/useCourse/types';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
-import { API_LINKS } from 'app/links';
+// import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+// import { API_LINKS } from 'app/links';
 
 const CreateCourseView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createCourse, isLoading } = useCourse();

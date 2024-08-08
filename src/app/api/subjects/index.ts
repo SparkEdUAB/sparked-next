@@ -6,6 +6,7 @@ import { dbCollections } from '../lib/db/collections';
 import { SUBJECT_FIELD_NAMES_CONFIG } from './constants';
 import { p_fetchSubjectWithGrade } from './pipelines';
 import { BSON } from 'mongodb';
+import { HttpStatusCode } from 'axios';
 
 export default async function fetchSubjects_(request: any) {
   const schema = zfd.formData({
@@ -27,7 +28,7 @@ export default async function fetchSubjects_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -61,7 +62,7 @@ export default async function fetchSubjects_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -70,7 +71,7 @@ export default async function fetchSubjects_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -94,16 +95,19 @@ export async function findSubjectByName_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 500,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(name, 'i');
 
     const subjects = await db
       .collection(dbCollections.subjects.name)
-      .find({
-        name: { $regex: regexPattern },
-      })
+      .find(
+        {
+          name: { $regex: regexPattern },
+        },
+        { skip, limit },
+      )
       .toArray();
 
     const response = {
@@ -112,7 +116,7 @@ export async function findSubjectByName_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -121,10 +125,11 @@ export async function findSubjectByName_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 500,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
+
 export async function fetchSubjectsByGradeId_(request: any) {
   const schema = zfd.formData({
     gradeId: zfd.text(),
@@ -144,15 +149,18 @@ export async function fetchSubjectsByGradeId_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 500,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
     const subjects = await db
       .collection(dbCollections.subjects.name)
-      .find({
-        grade_id: new BSON.ObjectId(gradeId),
-      })
+      .find(
+        {
+          grade_id: new BSON.ObjectId(gradeId),
+        },
+        { skip, limit },
+      )
       .toArray();
 
     const response = {
@@ -161,7 +169,7 @@ export async function fetchSubjectsByGradeId_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -170,7 +178,7 @@ export async function fetchSubjectsByGradeId_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 500,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

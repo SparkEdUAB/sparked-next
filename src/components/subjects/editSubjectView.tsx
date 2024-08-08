@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
@@ -44,7 +43,7 @@ const EditSubjectView = ({
 
       let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
 
-      await editSubject({ ...subject, ...result, gradeId: gradeId as string }, onSuccessfullyDone);
+      await editSubject({ ...subject, ...result, gradeId: gradeId || subject.gradeId }, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }
@@ -84,7 +83,9 @@ const EditSubjectView = ({
               handleSelect={handleClick}
               moduleName="grades"
               defaultValue={subject.gradeName}
+              disabled={uploading}
             />
+
             <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
           </div>
         </form>

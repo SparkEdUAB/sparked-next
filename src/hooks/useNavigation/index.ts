@@ -45,16 +45,19 @@ const useNavigation = () => {
     }
   }, [pathname, fetchAdminMenuItems]);
 
-  const isActiveMenuItem = (menuItem: T_MenuItemLinkParams): boolean => {
-    if (pathname === menuItem.link) {
-      return true;
-    }
+  const isActiveMenuItem = useCallback(
+    (menuItem: T_MenuItemLinkParams): boolean => {
+      if (pathname === menuItem.link) {
+        return true;
+      }
 
-    const childActiveMenus = menuItem.children?.filter((i) => i.link === pathname);
-    return menuItem.children && childActiveMenus?.length !== 0 ? true : false;
-  };
+      const childActiveMenus = menuItem.children?.filter((i) => i.link === pathname);
+      return menuItem.children && childActiveMenus?.length !== 0 ? true : false;
+    },
+    [pathname],
+  );
 
-  const generateBreadcrumbItems = (menuItems: T_MenuItemLink, targetLink: string) => {
+  const generateBreadcrumbItems = useCallback((menuItems: T_MenuItemLink, targetLink: string) => {
     const breadcrumbItems: T_BreadcrumbItems = [];
 
     if (!targetLink) return breadcrumbItems;
@@ -64,21 +67,30 @@ const useNavigation = () => {
       for (const menuItem in menuItems) {
         const targetLinkSegment = linkSegments.slice(0, index + 1).join('/');
 
-        //@ts-ignore
-        if (menuItems[menuItem].link === targetLinkSegment) {
+        if (menuItems[menuItem as keyof T_MenuItemLink]?.link === targetLinkSegment) {
           breadcrumbItems.push({
             link: targetLinkSegment,
-            //@ts-ignore
-            label: menuItems[menuItem].label,
+            label: menuItems[menuItem as keyof T_MenuItemLink]?.label || '',
           });
+
+          for (let child of menuItems[menuItem as keyof T_MenuItemLink]?.children || []) {
+            const targetLinkSegment = linkSegments.slice(0, index + 2).join('/');
+
+            if (child.link === targetLinkSegment) {
+              breadcrumbItems.push({
+                link: targetLinkSegment,
+                label: child.label,
+              });
+            }
+          }
         }
       }
     });
 
     return breadcrumbItems;
-  };
+  }, []);
 
-  const getChildLinkByKey = (key: string, parentLink: T_MenuItemLinkParams) => {
+  const getChildLinkByKey = useCallback((key: string, parentLink: T_MenuItemLinkParams) => {
     const links = parentLink.children?.filter((i) => i.key === key);
 
     if (links?.length) {
@@ -86,7 +98,7 @@ const useNavigation = () => {
     } else {
       return '';
     }
-  };
+  }, []);
 
   const apiNavigator = axios;
 

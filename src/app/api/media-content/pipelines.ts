@@ -8,7 +8,7 @@ export const p_fetchMediaContentWithMetaData = ({
   limit = 1000,
   project = {},
 }: {
-  query?: object;
+  query?: Record<string, any>;
   limit?: number;
   skip?: number;
   project: T_RECORD;
@@ -98,6 +98,34 @@ export const p_fetchMediaContentWithMetaData = ({
       preserveNullAndEmptyArrays: true,
     },
   },
+  {
+    $lookup: {
+      from: dbCollections.grades.name,
+      localField: 'grade_id',
+      foreignField: '_id',
+      as: 'grade',
+    },
+  },
+  {
+    $unwind: {
+      path: '$grade',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  {
+    $lookup: {
+      from: dbCollections.subjects.name,
+      localField: 'subject_id',
+      foreignField: '_id',
+      as: 'subject',
+    },
+  },
+  {
+    $unwind: {
+      path: '$subject',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
 
   {
     $project: {
@@ -115,6 +143,10 @@ export const p_fetchMediaContentWithMetaData = ({
       'unit._id': 1,
       'topic.name': 1,
       'topic._id': 1,
+      'grade.name': 1,
+      'grade._id': 1,
+      'subject.name': 1,
+      'subject._id': 1,
       file_url: 1,
       ...project,
     },
@@ -142,7 +174,6 @@ export const p_fetchRandomMediaContent = ({
   {
     $sample: { size: limit },
   },
-
   {
     $lookup: {
       from: dbCollections.users.name,
@@ -196,6 +227,34 @@ export const p_fetchRandomMediaContent = ({
       preserveNullAndEmptyArrays: true,
     },
   },
+  {
+    $lookup: {
+      from: dbCollections.grades.name,
+      localField: 'grade_id',
+      foreignField: '_id',
+      as: 'grade',
+    },
+  },
+  {
+    $unwind: {
+      path: '$grade',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  {
+    $lookup: {
+      from: dbCollections.subjects.name,
+      localField: 'subject_id',
+      foreignField: '_id',
+      as: 'subject',
+    },
+  },
+  {
+    $unwind: {
+      path: '$subject',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
 
   {
     $project: {
@@ -213,6 +272,10 @@ export const p_fetchRandomMediaContent = ({
       'unit._id': 1,
       'topic.name': 1,
       'topic._id': 1,
+      'grade.name': 1,
+      'grade._id': 1,
+      'subject.name': 1,
+      'subject._id': 1,
       file_url: 1,
     },
   },

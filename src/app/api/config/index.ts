@@ -1,13 +1,13 @@
 import { CONFIG_CORE_PATH } from '@hooks/use-config/constants';
 import fs from 'fs';
-import { Session } from 'next-auth';
 import { T_RECORD } from 'types';
 import CONFIG_PROCESS_CODES from './processCodes';
 import { T_CONFIG_DB_VARIABLE, T_CONFIG_VARIABLE, T_CONFIG_VARIABLES } from 'types/config';
+import { HttpStatusCode } from 'axios';
 
 const fsPromises = fs.promises;
 
-export default async function readConfigFile_(req: Request, session?: Session) {
+export default async function readConfigFile_() {
   const configData = await getConfigFile();
 
   try {
@@ -18,7 +18,7 @@ export default async function readConfigFile_(req: Request, session?: Session) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const response = {
@@ -26,7 +26,7 @@ export default async function readConfigFile_(req: Request, session?: Session) {
       code: CONFIG_PROCESS_CODES.READING_FILE_FAILED,
     };
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -50,7 +50,7 @@ export async function getDbFieldNamesConfigStatus({ dbConfigData }: { dbConfigDa
 
   const configKeys = dbConfigData.map((i) => i.key);
 
-  let arrIndex = 0;
+  // let arrIndex = 0;
 
   for (const key in configData) {
     //@ts-ignore
@@ -63,9 +63,8 @@ export async function getDbFieldNamesConfigStatus({ dbConfigData }: { dbConfigDa
       });
     }
 
-    arrIndex++;
+    // arrIndex++;
   }
 
-  return configItems.map((i) => ({ [i.fieldName]: i.value }) as T_RECORD).reduce((a, c) => ({ ...a, ...c }));
-
+  return configItems.map((i) => ({ [i.fieldName]: i.value } as T_RECORD)).reduce((a, c) => ({ ...a, ...c }));
 }

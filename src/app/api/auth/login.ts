@@ -1,9 +1,10 @@
-import Realm from "realm";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { realmApp } from "../lib/db/realm";
-import AUTH_PROCESS_CODES from "./processCodes";
+import Realm from 'realm';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { realmApp } from '../lib/db/realm';
+import AUTH_PROCESS_CODES from './processCodes';
+import { HttpStatusCode } from 'axios';
 
 export default async function login_(request: Request) {
   const schema = zfd.formData({
@@ -23,7 +24,7 @@ export default async function login_(request: Request) {
         code: AUTH_PROCESS_CODES.UNKNOWN_ERROR,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -36,7 +37,7 @@ export default async function login_(request: Request) {
           email: 1,
           is_verified: 1,
         },
-      }
+      },
     );
 
     if (!user) {
@@ -45,7 +46,7 @@ export default async function login_(request: Request) {
         code: AUTH_PROCESS_CODES.USER_NOT_FOUND,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -56,11 +57,11 @@ export default async function login_(request: Request) {
     const response = {
       isError: false,
       code: AUTH_PROCESS_CODES.USER_LOGGED_IN_OK,
-      user: { ...user ,id:user._id},
+      user: { ...user, id: user._id },
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -69,7 +70,7 @@ export default async function login_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.BadRequest,
     });
   }
 }

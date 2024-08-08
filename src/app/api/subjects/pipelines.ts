@@ -1,5 +1,5 @@
-import { BSON } from 'mongodb';
 import { T_RECORD } from 'types';
+import { dbCollections } from '../lib/db/collections';
 
 export const p_fetchSubjectWithGrade = ({
   limit = 1000,
@@ -12,7 +12,7 @@ export const p_fetchSubjectWithGrade = ({
 }) => [
   {
     $lookup: {
-      from: 'grade',
+      from: dbCollections.grades.name,
       localField: 'grade_id',
       foreignField: '_id',
       as: 'grade',

@@ -3,6 +3,7 @@
 import useNavigation from '@hooks/useNavigation';
 import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 const AdminSidebar = ({
   sidebarIsCollapsed,
@@ -15,11 +16,17 @@ const AdminSidebar = ({
 
   const menuItems = fetchAdminMenuItems();
 
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => event.code === 'Escape' && toggleSidebar();
+    document.addEventListener('keyup', handler);
+    return () => document.removeEventListener('keyup', handler);
+  }, [toggleSidebar]);
+
   return (
     <>
       <div
-        className={`fixed inset-0 z-20 h-full w-64 flex-none md:static md:block md:h-auto md:overflow-y-visible ${
-          sidebarIsCollapsed ? 'hidden' : ''
+        className={`fixed inset-0 transition-all duration-300 z-20 h-full w-64 flex-none md:static md:block md:h-auto md:overflow-y-visible ${
+          sidebarIsCollapsed ? '-left-64' : 'left-0'
         }`}
       >
         <Sidebar aria-label="Sidebar with logo branding">
@@ -36,13 +43,12 @@ const AdminSidebar = ({
           </Sidebar.Items>
         </Sidebar>
       </div>
-      {!sidebarIsCollapsed && (
-        <div
-          onClick={toggleSidebar}
-          onKeyUp={(key) => key.code === 'Escape' && toggleSidebar()}
-          className="fixed inset-0 z-10 cursor-pointer bg-gray-900/50 dark:bg-gray-900/60 lg:hidden"
-        />
-      )}
+      <div
+        onClick={toggleSidebar}
+        className={`fixed inset-0 z-10 transition-all duration-300 rounded-br-full cursor-pointer bg-gray-900/50 dark:bg-gray-900/60 md:hidden backdrop-blur-sm ${
+          sidebarIsCollapsed ? 'w-0 h-0' : 'w-[200vmax] h-[200vmax]'
+        }`}
+      />
     </>
   );
 };

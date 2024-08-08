@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import { T_SubjectFields } from '@hooks/useSubject/types';
 import { LibraryNavbar } from './LibraryNavbar';
 import { LibrarySidebar } from './LibrarySidebar';
@@ -36,7 +36,7 @@ export default function LibraryLayout({
   isMediaTypesLoading: boolean;
 }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
-  const toggleSidebar = () => setSidebarIsCollapsed(!sidebarIsCollapsed);
+  const toggleSidebar = useCallback(() => setSidebarIsCollapsed((value) => !value), [setSidebarIsCollapsed]);
 
   return (
     <div className="h-[calc(100vh_-_62px)]">

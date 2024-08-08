@@ -5,12 +5,9 @@ import fetchCourses_, { deleteCourse_, fetchCourseById_, findCourseByName_ } fro
 import { authOptions } from '../../auth/constants';
 import editCourse_ from '../edit';
 import createCourse_ from '../create';
+import { HttpStatusCode } from 'axios';
 
-export async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -32,16 +29,12 @@ export async function POST(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
 
-export async function GET(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function GET(req: Request, { params }: { params: { slug: string } }) {
   const slug = params.slug;
 
   const CourseFunctions: {
@@ -61,7 +54,7 @@ export async function GET(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }

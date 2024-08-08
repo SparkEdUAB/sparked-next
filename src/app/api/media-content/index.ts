@@ -8,6 +8,7 @@ import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent, p_fetchRela
 import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { NextRequest } from 'next/server';
+import { HttpStatusCode } from 'axios';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
 
@@ -16,6 +17,8 @@ export default async function fetchMediaContent_(request: any) {
     limit: zfd.text(),
     skip: zfd.text(),
     withMetaData: zfd.text().optional(),
+    grade_id: z.string().optional(),
+    subject_id: z.string().optional(),
     school_id: z.string().optional(),
     program_id: z.string().optional(),
     course_id: z.string().optional(),
@@ -24,7 +27,8 @@ export default async function fetchMediaContent_(request: any) {
   });
   const params = request.nextUrl.searchParams;
 
-  const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
+  const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id, subject_id, grade_id } =
+    schema.parse(params);
 
   const isWithMetaData = Boolean(withMetaData);
   const _limit = parseInt(limit);
@@ -38,7 +42,7 @@ export default async function fetchMediaContent_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -47,11 +51,14 @@ export default async function fetchMediaContent_(request: any) {
 
     let query: { [key: string]: BSON.ObjectId } = {};
 
+    if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
+    if (subject_id) query.subject_id = new BSON.ObjectId(subject_id);
     if (school_id) query.school_id = new BSON.ObjectId(school_id);
     if (program_id) query.program_id = new BSON.ObjectId(program_id);
     if (course_id) query.course_id = new BSON.ObjectId(course_id);
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+
     if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
@@ -73,7 +80,7 @@ export default async function fetchMediaContent_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -82,7 +89,7 @@ export default async function fetchMediaContent_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -106,7 +113,7 @@ export async function fetchMediaContentById_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -139,7 +146,7 @@ export async function fetchMediaContentById_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -148,7 +155,7 @@ export async function fetchMediaContentById_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -170,7 +177,7 @@ export async function deleteMediaContentByIds_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -186,7 +193,7 @@ export async function deleteMediaContentByIds_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -195,7 +202,7 @@ export async function deleteMediaContentByIds_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -203,8 +210,8 @@ export async function deleteMediaContentByIds_(request: Request) {
 export async function findMediaContentByName_(request: any) {
   const schema = zfd.formData({
     name: zfd.text(),
-    skip: zfd.text(),
-    limit: zfd.text(),
+    skip: zfd.numeric(),
+    limit: zfd.numeric(),
     // withMetaData: z.boolean(),
     school_id: z.string().optional(),
     program_id: z.string().optional(),
@@ -228,7 +235,7 @@ export async function findMediaContentByName_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(name, 'i');
@@ -254,16 +261,21 @@ export async function findMediaContentByName_(request: any) {
               name: { $regex: regexPattern },
               ...query,
             },
+            limit,
+            skip,
           }),
         )
         .toArray();
     } else {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .find({
-          name: { $regex: regexPattern },
-          ...query,
-        })
+        .find(
+          {
+            name: { $regex: regexPattern },
+            ...query,
+          },
+          { limit, skip },
+        )
         .toArray();
     }
 
@@ -273,7 +285,7 @@ export async function findMediaContentByName_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -282,7 +294,7 @@ export async function findMediaContentByName_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -312,7 +324,7 @@ export async function fetchRandomMediaContent_(request: any) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -342,7 +354,7 @@ export async function fetchRandomMediaContent_(request: any) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -351,7 +363,7 @@ export async function fetchRandomMediaContent_(request: any) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -380,7 +392,7 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -403,7 +415,7 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -412,7 +424,7 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

@@ -8,45 +8,44 @@ import useGrade from '@hooks/useGrade';
 import useTopic from '@hooks/use-topic';
 import useMediaContent from '@hooks/use-media-content';
 
-export default function Layout({ children, params }: { children: ReactNode | ReactNode[]; params: any }) {
-  const { fetchUnitBySubjectsId, fetchUnitsByTopicId, units, isLoading: isUnitsLoading } = useUnit();
-  const { subjects, fetchSubjects, fetchSubjectsByGradeId, isLoading: isSubjectsLoading } = useSubject();
+export default function Layout({ children }: { children: ReactNode | ReactNode[]; params: any }) {
+  const { fetchUnitsBySubjectId, units, setUnits, isLoading: isUnitsLoading } = useUnit();
+  const { subjects, setSubjects, fetchSubjectsByGradeId, isLoading: isSubjectsLoading } = useSubject();
   const { grades, fetchGrades, isLoading: isGradesLoading } = useGrade();
-  const { topics, fetchTopics, fetchTopicsByGradeId, fetchTopicsBySubjectId, isLoading: isTopicsLoading } = useTopic();
-  const { mediaContentTypes, fetchMediaContentTypes, isLoading: isMediaTypesLoading } = useMediaContent();
+  const { topics, setTopics, fetchTopicsByUnitId, isLoading: isTopicsLoading } = useTopic();
+  const { mediaContentTypes, isLoading: isMediaTypesLoading } = useMediaContent();
 
   const filteredGradeId = useSearchParams().get('grade_id');
   const filteredSubjectId = useSearchParams().get('subject_id');
-  const filteredTopicId = useSearchParams().get('topic_id');
+  const filteredUnitId = useSearchParams().get('unit_id');
 
   useEffect(() => {
     fetchGrades({ limit: 20, skip: 0 });
-  }, []);
+  }, [fetchGrades]);
 
   useEffect(() => {
-    if (!filteredGradeId) {
-      fetchSubjects({ limit: 20, skip: 0 });
-    }
-    if (!filteredSubjectId) {
-      fetchTopics({ limit: 20, skip: 0 });
-    }
-
     if (filteredGradeId) {
-      fetchSubjectsByGradeId({ gradeId: filteredGradeId as string });
-      fetchTopicsByGradeId({ gradeId: filteredGradeId as string });
+      fetchSubjectsByGradeId({ gradeId: filteredGradeId, withMetaData: true });
     }
+    return () => setSubjects([]);
+  }, [fetchSubjectsByGradeId, filteredGradeId, setSubjects]);
 
+  useEffect(() => {
     if (filteredSubjectId) {
-      fetchTopicsBySubjectId({ subjectId: filteredSubjectId as string });
-      fetchUnitBySubjectsId({ subjectId: filteredSubjectId as string });
+      fetchUnitsBySubjectId({ subjectId: filteredSubjectId, withMetaData: true });
     }
+    return () => setUnits([]);
+  }, [fetchUnitsBySubjectId, filteredSubjectId, setUnits]);
 
-    if (filteredTopicId) {
-      fetchUnitsByTopicId({ topicId: filteredTopicId as string });
+  useEffect(() => {
+    if (filteredUnitId) {
+      fetchTopicsByUnitId({ unitId: filteredUnitId, withMetaData: true });
     }
+    return () => setTopics([]);
+  }, [fetchTopicsByUnitId, filteredUnitId, setTopics]);
 
-    fetchMediaContentTypes({ limit: 20, skip: 0 });
-  }, [filteredSubjectId, filteredGradeId, filteredTopicId]);
+  // eslint-disable-next-line no-console
+  console.log(topics);
 
   return (
     <LibraryLayout

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
@@ -10,7 +9,7 @@ import { FormEventHandler } from 'react';
 import { PROGRAM_FORM_FIELDS } from './constants';
 import { transformRawSchool } from '@hooks/useSchool';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { T_CreateProgramFields, T_ProgramFields } from '@hooks/useProgram/types';
+import { T_CreateProgramFields } from '@hooks/useProgram/types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { API_LINKS } from 'app/links';

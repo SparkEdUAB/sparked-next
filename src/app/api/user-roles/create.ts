@@ -5,18 +5,19 @@ import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as USER_ROLES_PROCESS_CODES } from './processCodes';
+import { HttpStatusCode } from 'axios';
 
 export default async function createUserRole_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
-    description: zfd.text(),
+    description: zfd.text().optional(),
   });
 
-  const formBody = await request.json();
-
-  const { name, description } = schema.parse(formBody);
-
   try {
+    const formBody = await request.json();
+
+    const { name, description } = schema.parse(formBody);
+
     const db = await dbClient();
 
     if (!db) {
@@ -25,7 +26,7 @@ export default async function createUserRole_(request: Request, session?: Sessio
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
@@ -48,7 +49,7 @@ export default async function createUserRole_(request: Request, session?: Sessio
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.BadRequest,
       });
     }
 
@@ -67,7 +68,7 @@ export default async function createUserRole_(request: Request, session?: Sessio
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -76,7 +77,7 @@ export default async function createUserRole_(request: Request, session?: Sessio
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

@@ -3,10 +3,11 @@
 import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { T_CreateProgramFields, T_FetchPrograms, T_ProgramFields, T_RawProgramFields } from './types';
 import NETWORK_UTILS from 'utils/network';
 import { useToastMessage } from 'providers/ToastMessageContext';
+import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
 const useProgram = () => {
   const { router } = useNavigation();
@@ -19,169 +20,155 @@ const useProgram = () => {
   const [program, setSProgram] = useState<T_ProgramFields | null>(null);
   const [selectedProgramIds, setSelectedProgramIds] = useState<React.Key[]>([]);
 
-  const createProgram = async (fields: T_CreateProgramFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.CREATE_PROGRAM;
-    const formData = {
-      body: JSON.stringify({ ...fields }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+  const createProgram = useCallback(
+    async (fields: T_CreateProgramFields, onSuccessfullyDone?: () => void) => {
+      const url = API_LINKS.CREATE_PROGRAM;
+      const formData = {
+        body: JSON.stringify({ ...fields }),
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url, formData);
-      setLoaderStatus(false);
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        setLoaderStatus(false);
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        onSuccessfullyDone?.();
+
+        message.success(i18next.t('program_created'));
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
+    },
+    [message],
+  );
 
-      const responseData = await resp.json();
+  const editProgram = useCallback(
+    async (fields: T_ProgramFields, onSuccessfullyDone?: () => void) => {
+      const url = API_LINKS.EDIT_PROGRAM;
+      const formData = {
+        body: JSON.stringify({ ...fields, _id: (program || fields)?._id }),
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        setLoaderStatus(false);
+
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        onSuccessfullyDone?.();
+
+        message.success(i18next.t('success'));
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
+    },
+    [message, program],
+  );
 
-      onSuccessfullyDone?.();
+  const fetchPrograms = useCallback(
+    async ({ limit = 1000, skip = 0 }: T_FetchPrograms) => {
+      const url = API_LINKS.FETCH_PROGRAMS;
+      const params = { limit: limit.toString(), skip: skip.toString() };
 
-      message.success(i18next.t('program_created'));
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+        setLoaderStatus(false);
 
-  const editProgram = async (fields: T_ProgramFields, onSuccessfullyDone?: () => void) => {
-    const url = API_LINKS.EDIT_PROGRAM;
-    const formData = {
-      body: JSON.stringify({ ...fields, _id: (program || fields)?._id }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
+        const responseData = await resp.json();
 
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url, formData);
-      setLoaderStatus(false);
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
+        const _programs = (responseData.programs as T_RawProgramFields[])?.map<T_ProgramFields>(transformRawProgram);
+
+        setPrograms(_programs);
+        setTempPrograms(_programs);
+        return _programs;
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
+    },
+    [message],
+  );
 
-      const responseData = await resp.json();
+  const fetchProgramById = useCallback(
+    async ({ programId, withMetaData = false }: { programId: string; withMetaData: boolean }) => {
+      const url = API_LINKS.FETCH_PROGRAM_BY_ID;
+      const params = { programId, withMetaData: withMetaData.toString() };
 
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+        setLoaderStatus(false);
+
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+
+        if (responseData.program) {
+          const { _id, name, description, school } = responseData.program as T_ProgramFields;
+
+          const _program = {
+            _id,
+            name,
+            description,
+            schoolId: school?._id,
+          };
+
+          setSProgram(_program as T_ProgramFields);
+          return _program;
+        } else {
+          return null;
+        }
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
+    },
+    [message],
+  );
 
-      onSuccessfullyDone?.();
-
-      message.success(i18next.t('success'));
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const fetchPrograms = async ({ limit = 1000, skip = 0 }: T_FetchPrograms) => {
-    const url = API_LINKS.FETCH_PROGRAMS;
-    const params = { limit: limit.toString(), skip: skip.toString() };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
-        return false;
-      }
-
-      const _programs = (responseData.programs as T_RawProgramFields[])?.map<T_ProgramFields>(transformRawProgram);
-
-      setPrograms(_programs);
-      setTempPrograms(_programs);
-      return _programs;
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const fetchProgramById = async ({
-    programId,
-    withMetaData = false,
-  }: {
-    programId: string;
-    withMetaData: boolean;
-  }) => {
-    const url = API_LINKS.FETCH_PROGRAM_BY_ID;
-    const params = { programId, withMetaData: withMetaData.toString() };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
-      const responseData = await resp.json();
-
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
-        return false;
-      }
-
-      if (responseData.program) {
-        const { _id, name, description, school } = responseData.program as T_ProgramFields;
-
-        const _program = {
-          _id,
-          name,
-          description,
-          schoolId: school?._id,
-        };
-
-        setSProgram(_program as T_ProgramFields);
-        return _program;
-      } else {
-        return null;
-      }
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const triggerDelete = async () => {
+  const triggerDelete = useCallback(async () => {
     if (!selectedProgramIds.length) {
       return message.warning(i18next.t('select_items'));
     }
-  };
+  }, [message, selectedProgramIds.length]);
 
-  const deletePrograms = async () => {
+  const deletePrograms = useCallback(async () => {
     const url = API_LINKS.DELETE_PROGRAMS;
     const formData = {
       body: JSON.stringify({ programIds: selectedProgramIds }),
@@ -196,15 +183,10 @@ const useProgram = () => {
       const resp = await fetch(url, formData);
       setLoaderStatus(false);
 
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
-      }
-
       const responseData = await resp.json();
 
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+      if (!resp.ok || responseData.isError) {
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
 
@@ -219,58 +201,59 @@ const useProgram = () => {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     }
-  };
+  }, [message, programs, selectedProgramIds]);
 
-  const findProgramsByName = async ({ withMetaData = false }: { withMetaData: boolean }) => {
-    if (isLoading) {
-      return message.warning(i18next.t('wait'));
-    } else if (!searchQuery.trim().length) {
-      return message.warning(i18next.t('search_empty'));
-    }
-
-    const url = API_LINKS.FIND_PROGRAMS_BY_NAME;
-    const params = {
-      name: searchQuery.trim(),
-      limit: '1000',
-      skip: '0',
-      withMetaData: withMetaData.toString(),
-    };
-
-    try {
-      setLoaderStatus(true);
-      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
-      setLoaderStatus(false);
-
-      if (!resp.ok) {
-        message.warning(i18next.t('unknown_error'));
-        return false;
+  const findProgramsByName = useCallback(
+    async ({ withMetaData = false }: { withMetaData: boolean }) => {
+      if (isLoading) {
+        return message.warning(i18next.t('wait'));
+      } else if (!searchQuery.trim().length) {
+        return message.warning(i18next.t('search_empty'));
       }
 
-      const responseData = await resp.json();
+      const url = API_LINKS.FIND_PROGRAMS_BY_NAME;
+      const params = {
+        name: searchQuery.trim(),
+        limit: '1000',
+        skip: '0',
+        withMetaData: withMetaData.toString(),
+      };
 
-      if (responseData.isError) {
-        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url + NETWORK_UTILS.formatGetParams(params));
+        setLoaderStatus(false);
+
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+        message.success(responseData.programs.length + ' ' + i18next.t('programs_found'));
+
+        setPrograms(responseData.programs);
+
+        return responseData.programs;
+      } catch (err: any) {
+        setLoaderStatus(false);
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
       }
-      message.success(responseData.programs.length + ' ' + i18next.t('programs_found'));
+    },
+    [isLoading, message, searchQuery],
+  );
 
-      setPrograms(responseData.programs);
+  const onSearchQueryChange = useCallback(
+    (text: string) => {
+      setSearchQuery(text);
 
-      return responseData.programs;
-    } catch (err: any) {
-      setLoaderStatus(false);
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    }
-  };
-
-  const onSearchQueryChange = (text: string) => {
-    setSearchQuery(text);
-
-    if (!text.trim().length) {
-      setPrograms(tempPrograms);
-    }
-  };
+      if (!text.trim().length) {
+        setPrograms(tempPrograms);
+      }
+    },
+    [tempPrograms],
+  );
 
   // const triggerEdit = async () => {
   //   if (!selectedProgramIds.length) {

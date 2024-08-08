@@ -1,12 +1,9 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import readConfigFile_ from '..';
+import { HttpStatusCode } from 'axios';
 
-export async function GET(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function GET(req: Request, { params }: { params: { slug: string } }) {
   const slug = params.slug;
 
   const configFunctions: {
@@ -24,7 +21,7 @@ export async function GET(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }

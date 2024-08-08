@@ -3,7 +3,7 @@
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { AdminPageTitle } from '@components/layouts';
-import { T_GradeFields } from '@hooks/useGrade/types';
+import { T_GradeSearchedByName } from '@hooks/useGrade/types';
 import useSubject from '@hooks/useSubject';
 import { T_CreateSubjectFields } from '@hooks/useSubject/types';
 import { API_LINKS } from 'app/links';
@@ -16,13 +16,13 @@ import { SUBJECT_FORM_FIELDS } from './constants';
 
 const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createSubject, isLoading } = useSubject();
-  const [gradeId, setGradeId] = useState<string | null>(null);
+  const [grade, setGrade] = useState<T_GradeSearchedByName | null>(null);
   const message = useToastMessage();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    if (!gradeId) {
+    if (!grade) {
       message.error(`You need to provide a grade to create a subject.`);
       return;
     }
@@ -33,15 +33,15 @@ const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => 
     createSubject(
       {
         ...result,
-        gradeId: gradeId as string,
+        gradeId: grade._id as string,
       },
       onSuccessfullyDone,
     );
   };
 
-  const handleClick = (grade: T_GradeFields) => {
-    setGradeId(grade?._id);
-  };
+  // const handleClick = (grade: T_GradeFields) => {
+  //   setGradeId(grade?._id);
+  // };
 
   return (
     <>
@@ -62,7 +62,12 @@ const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => 
           required
         />
 
-        <Autocomplete url={API_LINKS.FIND_GRADE_BY_NAME} handleSelect={handleClick} moduleName="grades" />
+        <Autocomplete<T_GradeSearchedByName>
+          url={API_LINKS.FIND_GRADE_BY_NAME}
+          handleSelect={setGrade}
+          moduleName="grades"
+          disabled={isLoading}
+        />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
           {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}

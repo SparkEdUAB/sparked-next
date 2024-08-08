@@ -2,7 +2,7 @@ type T_AxiosProcessStatus = {
   [key: string]: { code: number; message: string };
 };
 
-export const AXIOS_PROCESS_STATUS: T_AxiosProcessStatus = {
+export const AXIOS_PROCESS_STATUS = {
   OK: {
     code: 200,
     message: 'Request successful',
@@ -27,4 +27,4 @@ export const AXIOS_PROCESS_STATUS: T_AxiosProcessStatus = {
     code: 500,
     message: 'Internal server error',
   },
-};
+} satisfies T_AxiosProcessStatus;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { T_RawMediaContentFields } from 'types/media-content';
 import { MEDIA_CONTENT_LIMIT } from '../../components/library/constants';
 
@@ -23,7 +23,7 @@ export function useLibraryInfiniteScroll(
     setError(false);
   }, [initialMediaContent]);
 
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     try {
       let result = await fetchData(offset);
 
@@ -42,7 +42,7 @@ export function useLibraryInfiniteScroll(
     }
 
     setOffset((offset) => offset + MEDIA_CONTENT_LIMIT);
-  };
+  }, [fetchData, offset]);
 
   return {
     hasMore,

@@ -1,10 +1,18 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchTopics_, { deleteTopics_, fetchTopicByGradeId_, fetchTopicById_, findTopicsByName_ ,fetchTopicsBySubjectId_} from '..';
+import fetchTopics_, {
+  deleteTopics_,
+  fetchTopicsByGradeId_,
+  fetchTopicById_,
+  findTopicsByName_,
+  fetchTopicsBySubjectId_,
+  fetchTopicsByUnitId_,
+} from '..';
 import { authOptions } from '../../auth/constants';
 import createTopic_ from '../create';
 import editTopic_ from '../edit';
+import { HttpStatusCode } from 'axios';
 
 export async function POST(
   req: Request,
@@ -32,7 +40,7 @@ export async function POST(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
@@ -50,7 +58,8 @@ export async function GET(
     fetchTopics: fetchTopics_,
     fetchTopicById: fetchTopicById_,
     findTopicsByName: findTopicsByName_,
-    fetchTopicByGradeId: fetchTopicByGradeId_,
+    fetchTopicsByUnitId: fetchTopicsByUnitId_,
+    fetchTopicsByGradeId: fetchTopicsByGradeId_,
     fetchTopicsBySubjectId: fetchTopicsBySubjectId_,
   };
 
@@ -63,7 +72,7 @@ export async function GET(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }

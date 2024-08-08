@@ -15,7 +15,7 @@ import { T_UnitFields } from '@hooks/useUnit/types';
 
 const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createTopic, isLoading } = useTopic();
-  const [unitId, setUnitId] = useState<string | null>(null);
+  const [unit, setUnit] = useState<T_UnitFields | null>(null);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -26,16 +26,17 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
     createTopic(
       {
         ...result,
-        unitId: unitId as string,
-        // TODO: Add subjectId here
+        unitId: unit?._id,
+        subjectId: unit?.subjectId,
+        gradeId: unit?.gradeId,
       },
       onSuccessfullyDone,
     );
   };
 
-  const handleClick = (unit: T_UnitFields) => {
-    setUnitId(unit?._id);
-  };
+  // const handleClick = (unit: T_UnitFields) => {
+  //   setUnitId(unit?._id);
+  // };
 
   return (
     <>
@@ -55,7 +56,12 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
           label={TOPIC_FORM_FIELDS.description.label}
           required
         />
-        <Autocomplete url={API_LINKS.FIND_UNITS_BY_NAME} handleSelect={handleClick} moduleName="units" />
+        <Autocomplete<T_UnitFields>
+          url={API_LINKS.FIND_UNITS_BY_NAME}
+          handleSelect={setUnit}
+          moduleName="units"
+          disabled={isLoading}
+        />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
           {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}

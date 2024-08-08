@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { ReactNode } from 'react';

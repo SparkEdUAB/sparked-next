@@ -15,8 +15,8 @@ import { FileUploadSection } from './FileUploadSection';
 import { API_LINKS } from 'app/links';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-import { T_TopicFields } from '@hooks/use-topic/types';
-import { T_UnitFields } from '@hooks/useUnit/types';
+import { T_TopicSearchedByName } from '@hooks/use-topic/types';
+// import { T_UnitFields } from '@hooks/useUnit/types';
 
 const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createResource, isLoading: loadingResource } = useMediaContent();
@@ -26,8 +26,8 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   const [file, setFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
-  const [topicId, setTopicId] = useState<string | null>(null);
-  const [unitId, setUnitId] = useState<string | null>(null);
+  const [topic, setTopic] = useState<T_TopicSearchedByName | null>(null);
+  // const [unitId, setUnitId] = useState<string | null>(null);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -42,7 +42,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
       return message.error(i18next.t('no_file'));
     }
 
-    if (!unitId || !topicId) {
+    if (!topic) {
       return message.error(i18next.t('fill_required_fields'));
     }
 
@@ -61,11 +61,13 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
       createResource(
         {
           ...result,
-          topicId: topicId as string,
-          // schoolId: topic?.schoolId,
-          // programId: topic?.programId,
-          // courseId: topic?.courseId,
-          unitId: unitId as string,
+          topicId: topic._id,
+          // schoolId: topic.school_id,
+          // programId: topic.program_id,
+          // courseId: topic.course_id,
+          unitId: topic.unit_id,
+          gradeId: topic.grade_id,
+          subjectId: topic.subject_id,
         },
         fileUrl,
         thumbnailUrl || undefined,
@@ -78,13 +80,14 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
 
   const isLoading = uploadingFile || loadingResource;
 
-  const handleClick = (topic: T_TopicFields) => {
-    setTopicId(topic?._id);
-  };
+  // const handleClick = (topic: T_TopicFields) => {
+  //   setTopicId(topic?._id);
+  // };
 
-  const handleSelectUnit = (unit: T_UnitFields) => {
-    setUnitId(unit?._id);
-  };
+  // const handleSelectUnit = (unit: T_UnitFields) => {
+  //   setUnitId(unit?._id);
+  // };
+
   return (
     <>
       <AdminPageTitle title={i18next.t('create_resource')} />
@@ -113,8 +116,18 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           rows={4}
         />
 
-        <Autocomplete url={API_LINKS.FIND_UNITS_BY_NAME} handleSelect={handleSelectUnit} moduleName="units" />
-        <Autocomplete url={API_LINKS.FIND_TOPIC_BY_NAME} handleSelect={handleClick} moduleName="topics" />
+        {/* <Autocomplete<T_UnitSearchedByName>
+          url={API_LINKS.FIND_UNITS_BY_NAME}
+          handleSelect={handleSelectUnit}
+          moduleName="units"
+          disabled={isLoading}
+        /> */}
+        <Autocomplete<T_TopicSearchedByName>
+          url={API_LINKS.FIND_TOPIC_BY_NAME}
+          handleSelect={setTopic}
+          moduleName="topics"
+          disabled={isLoading}
+        />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
           {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
