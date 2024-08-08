@@ -12,7 +12,7 @@ export default async function createMediaContent_(request: Request, session?: Se
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
-    topicId: zfd.text(),
+    topicId: zfd.text().optional(),
     unitId: zfd.text().optional(),
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
@@ -47,7 +47,7 @@ export default async function createMediaContent_(request: Request, session?: Se
         )
       : null;
 
-    if (!topic) {
+    if (!topic && topicId) {
       const response = {
         isError: true,
         code: RESOURCE_PROCESS_CODES.TOPIC_NOT_FOUND,

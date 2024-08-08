@@ -49,7 +49,11 @@ const MediaContentListView: React.FC = () => {
       <AdminPageTitle title={i18next.t('media_content')} />
 
       <AdminTable<T_MediaContentFields>
-        deleteItems={deleteMediaContent}
+        deleteItems={async () => {
+          const result = await deleteMediaContent();
+          mutate();
+          return result;
+        }}
         rowSelection={rowSelection}
         items={mediaContent}
         isLoading={isLoading}
