@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/constants';
 import createContentCategory_ from '../create';
 import { HttpStatusCode } from 'axios';
+import editContentCategory_ from '../edit';
 
 export async function POST(
   req: Request,
@@ -45,7 +46,9 @@ export async function PUT(
 
   const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
-  } = {};
+  } = {
+    editContentCategory: editContentCategory_,
+  };
 
   if (contentCategoryFunctions[slug] && session) {
     return contentCategoryFunctions[slug](req, session);
