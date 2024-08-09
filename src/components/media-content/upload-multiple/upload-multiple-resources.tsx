@@ -146,7 +146,10 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
     });
   };
 
-  return step === UploadProcessSteps.EditResources && topic && resourceData && resourceData.length > 0 ? (
+  return step === UploadProcessSteps.EditResources &&
+    (topic || subject || unit) &&
+    resourceData &&
+    resourceData.length > 0 ? (
     <EditResourceData
       resourceData={resourceData}
       setResourceData={setResourceData}
@@ -158,7 +161,7 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
       uploadProgress={uploadProgress}
       failedToUpload={failedToUpload}
     />
-  ) : step === UploadProcessSteps.SelectFiles && topic ? (
+  ) : step === UploadProcessSteps.SelectFiles && (topic || subject || unit) ? (
     <FileSelector
       files={files}
       setFiles={setFiles}
