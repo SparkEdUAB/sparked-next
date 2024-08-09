@@ -1,7 +1,7 @@
 'use client';
 import i18next from 'i18next';
 import { AdminPageTitle } from '@components/layouts';
-import { T_TopicFields } from '@hooks/use-topic/types';
+import { T_TopicSearchedByName } from '@hooks/use-topic/types';
 import { Accordion, Button, Spinner, Tooltip } from 'flowbite-react';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
@@ -10,6 +10,8 @@ import PreviewButton from './PreviewButton';
 import { ResourceData, UploadProgress } from './upload-multiple-resources';
 import { RedAsterisk } from '@components/atom';
 import { HiExclamation } from 'react-icons/hi';
+import { T_UnitSearchedByName } from '@hooks/useUnit/types';
+import { T_SubjectSearchedByName } from '@hooks/useSubject/types';
 
 const accordionTheme = {
   root: {
@@ -36,6 +38,8 @@ export function EditResourceData({
   setResourceData,
   uploadData,
   topic,
+  subject,
+  unit,
   isUploading,
   uploadProgress,
   failedToUpload,
@@ -43,7 +47,9 @@ export function EditResourceData({
   resourceData: ResourceData[];
   setResourceData: Dispatch<SetStateAction<ResourceData[] | null>>;
   uploadData: () => void;
-  topic: T_TopicFields;
+  topic: T_TopicSearchedByName | null;
+  unit: T_UnitSearchedByName | null;
+  subject: T_SubjectSearchedByName | null;
   isUploading: boolean;
   uploadProgress: UploadProgress | null;
   failedToUpload: boolean;
@@ -57,7 +63,15 @@ export function EditResourceData({
     <>
       <AdminPageTitle title={i18next.t('step_3_edit_resources')} />
 
-      <h3 className="text-gray-600 dark:text-gray-400 mb-3">Topic: {topic.name}</h3>
+      <h3 className="text-gray-600 dark:text-gray-400 mb-3">
+        {topic ? (
+          <>Topic: {topic.name}</>
+        ) : unit ? (
+          <>Unit: {unit.name}</>
+        ) : subject ? (
+          <>Subject: {subject.name}</>
+        ) : null}
+      </h3>
 
       <div className="flex flex-col gap-2">
         <Accordion

@@ -39,7 +39,11 @@ const UnitListView: React.FC = () => {
       <AdminPageTitle title={i18next.t('units')} />
 
       <AdminTable<T_UnitFields>
-        deleteItems={deleteUnits}
+        deleteItems={async () => {
+          const result = await deleteUnits();
+          mutate();
+          return result;
+        }}
         rowSelection={rowSelection}
         items={units}
         isLoading={isLoading}

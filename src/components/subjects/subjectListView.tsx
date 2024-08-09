@@ -45,7 +45,11 @@ const SubjectListView: React.FC = () => {
       <AdminPageTitle title={i18next.t('subjects')} />
 
       <AdminTable<T_SubjectFields>
-        deleteItems={deleteSubject}
+        deleteItems={async () => {
+          const result = await deleteSubject();
+          mutate();
+          return result;
+        }}
         rowSelection={rowSelection}
         items={subjects}
         isLoading={isLoading}

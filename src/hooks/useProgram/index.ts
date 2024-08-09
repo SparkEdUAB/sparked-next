@@ -194,7 +194,7 @@ const useProgram = () => {
 
       setPrograms(programs.filter((i) => selectedProgramIds.indexOf(i._id) == -1));
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
       setLoaderStatus(false);
 

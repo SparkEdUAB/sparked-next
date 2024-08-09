@@ -188,7 +188,7 @@ const useSchool = () => {
 
       setSchools(schools.filter((i) => selectedSchoolIds.indexOf(i._id) == -1));
 
-      return responseData.results;
+      return true;
     } catch (err: any) {
       setLoaderStatus(false);
 
