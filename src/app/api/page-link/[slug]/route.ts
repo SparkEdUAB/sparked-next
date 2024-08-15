@@ -1,7 +1,7 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
 import createPageLink_ from '../create';
 import editPageLink_ from '../edit';
 import deletePageLink_ from '../delete';

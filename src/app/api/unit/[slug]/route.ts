@@ -2,7 +2,7 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import fetchUnits_, { deleteUnits_, fetchUnitById_, findUnitsByName_ } from '..';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
 import createUnit_ from '../create';
 import editUnit_ from '../edit';
 

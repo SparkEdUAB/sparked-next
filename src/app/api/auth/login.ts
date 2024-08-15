@@ -1,15 +1,22 @@
-import Realm from "realm";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { realmApp } from "../lib/db/realm";
-import AUTH_PROCESS_CODES from "./processCodes";
+import Realm from 'realm';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { realmApp } from '../lib/db/realm';
+import AUTH_PROCESS_CODES from './processCodes';
+import jwt from 'jsonwebtoken';
+import sharedConfig from 'app/shared/config';
+import { p_fetchUserRoleDetails } from './pipelines';
+import { T_RECORD } from 'types';
 
 export default async function login_(request: Request) {
   const schema = zfd.formData({
     email: zfd.text(),
     password: zfd.text(),
   });
+
+  const { JWT_SECRET } = sharedConfig();
+
   const formBody = await request.json();
 
   const { email, password } = schema.parse(formBody);
@@ -34,9 +41,10 @@ export default async function login_(request: Request) {
       {
         projection: {
           email: 1,
+          role: 1,
           is_verified: 1,
         },
-      }
+      },
     );
 
     if (!user) {
@@ -53,10 +61,29 @@ export default async function login_(request: Request) {
 
     await realmApp.logIn(credentials);
 
+    const userRole = await db
+      .collection(dbCollections.user_role_mappings.name)
+      .aggregate(p_fetchUserRoleDetails({ userId: `${user._id}` }))
+      .toArray();
+
+    let role: null | T_RECORD = null;
+
+    if (userRole[0]) {
+      role = {
+        id: userRole[0].role_details._id,
+        name: userRole[0].role_details.name,
+      };
+    }
+
+    const token = jwt.sign({ id: user.id, email: user.email, role }, JWT_SECRET as string, {
+      expiresIn: '48h',
+    });
+
     const response = {
       isError: false,
       code: AUTH_PROCESS_CODES.USER_LOGGED_IN_OK,
-      user: { ...user ,id:user._id},
+      user: { ...user, id: user._id },
+      jwtToken: token,
     };
 
     return new Response(JSON.stringify(response), {

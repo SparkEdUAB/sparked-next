@@ -1,4 +1,4 @@
-import { authOptions } from '@app/api/auth/constants';
+import { authOptions } from '@app/api/auth/authOptions';
 import AppLogo from '@components/logo';
 import { DarkThemeToggle } from 'flowbite-react';
 import { getServerSession } from 'next-auth';

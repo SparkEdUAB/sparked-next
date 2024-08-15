@@ -2,7 +2,7 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import fetchUserRoles_, { assignUserRole_, fetchUserRoleById_ } from '..';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
 import createUserRole_ from '../create';
 import deleteUserRoles_ from '../delete';
 import editUserRole_ from '../edit';

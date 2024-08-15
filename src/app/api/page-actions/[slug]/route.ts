@@ -2,7 +2,7 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import fetchPageActions_ from '..';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
 import createPageAction_ from '../create';
 import deletePageActions_ from '../delete';
 import editPageAction_ from '../edit';

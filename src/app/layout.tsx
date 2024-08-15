@@ -5,7 +5,7 @@ import { Session, getServerSession } from 'next-auth';
 import { ReactNode } from 'react';
 import { ThemeModeScript } from 'flowbite-react';
 import AppProviders from 'providers/AppProviders';
-import { authOptions } from './api/auth/constants';
+import { authOptions } from './api/auth/authOptions';
 
 const inter = Inter({ subsets: ['latin'] });
 

@@ -1,6 +1,6 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
 import { Session } from 'next-auth';
 import uploadFile_ from '..';
 
