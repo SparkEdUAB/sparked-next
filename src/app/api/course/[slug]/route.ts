@@ -2,7 +2,7 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import fetchCourses_, { deleteCourse_, fetchCourseById_, findCourseByName_ } from '..';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
 import editCourse_ from '../edit';
 import createCourse_ from '../create';
 import { HttpStatusCode } from 'axios';

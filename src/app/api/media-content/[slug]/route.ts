@@ -8,7 +8,7 @@ import fetchMediaContent_, {
   fetchRelatedMediaContent_,
   findMediaContentByName_,
 } from '..';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
 import createMediaContent_ from '../create';
 import editMediaContent_ from '../edit';
 import { NextRequest } from 'next/server';

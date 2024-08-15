@@ -2,7 +2,7 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import fetchPrograms_, { deletePrograms_, fetchProgramById_, findProgramsByName_ } from '..';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
 import createProgram_ from '../create';
 import editProgram_ from '../edit';
 import { HttpStatusCode } from 'axios';

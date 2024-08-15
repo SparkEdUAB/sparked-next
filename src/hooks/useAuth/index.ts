@@ -72,11 +72,13 @@ const useAuth = () => {
           return false;
         }
 
-        const { user } = responseData;
+        const { jwtToken, role } = responseData;
 
         await signIn('credentials', {
           redirect: false,
-          user: JSON.stringify(user),
+          jwtToken,
+          email: fields.email,
+          role,
         });
 
         router.replace('/admin');

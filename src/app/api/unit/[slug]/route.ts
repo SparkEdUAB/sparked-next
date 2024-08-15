@@ -9,7 +9,7 @@ import fetchUnits_, {
   fetchUnitsByTopicId_,
   findUnitsByName_,
 } from '..';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
 import createUnit_ from '../create';
 import editUnit_ from '../edit';
 import { HttpStatusCode } from 'axios';

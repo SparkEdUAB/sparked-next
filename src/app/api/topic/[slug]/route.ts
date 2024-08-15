@@ -3,13 +3,14 @@ import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import fetchTopics_, {
   deleteTopics_,
-  fetchTopicsByGradeId_,
   fetchTopicById_,
-  findTopicsByName_,
+  fetchTopicsByGradeId_,
   fetchTopicsBySubjectId_,
   fetchTopicsByUnitId_,
+  findTopicsByName_,
 } from '..';
-import { authOptions } from '../../auth/constants';
+import { authOptions } from '../../auth/authOptions';
+
 import createTopic_ from '../create';
 import editTopic_ from '../edit';
 import { HttpStatusCode } from 'axios';
