@@ -38,3 +38,4 @@ mongodb-realm
 .env.test
 package-lock.json
 yarn.lock
+public/uploads/*

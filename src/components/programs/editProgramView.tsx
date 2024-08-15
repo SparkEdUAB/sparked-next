@@ -10,13 +10,14 @@ import { FormEventHandler } from 'react';
 import { PROGRAM_FORM_FIELDS } from './constants';
 import { transformRawSchool } from '@hooks/useSchool';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { T_ProgramFields } from '@hooks/useProgram/types';
+import { T_CreateProgramFields, T_ProgramFields } from '@hooks/useProgram/types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { API_LINKS } from 'app/links';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
+import { useToastMessage } from 'providers/ToastMessageContext';
 
 const EditProgramView = ({
   programId,
@@ -26,7 +27,7 @@ const EditProgramView = ({
   onSuccessfullyDone?: () => void;
 }) => {
   const { editProgram } = useProgram();
-
+  const message = useToastMessage();
   const searchParams = useSearchParams();
 
   const { item: program, isLoading } = useAdminItemById(
@@ -45,9 +46,13 @@ const EditProgramView = ({
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
+    if (!program || program instanceof Error) {
+      return message.error('Program is empty');
+    }
+
     const keys = [PROGRAM_FORM_FIELDS.name.key, PROGRAM_FORM_FIELDS.description.key, PROGRAM_FORM_FIELDS.school.key];
 
-    let result = extractValuesFromFormEvent<T_ProgramFields>(e, keys);
+    let result = extractValuesFromFormEvent<T_CreateProgramFields>(e, keys);
     editProgram({ ...program, ...result }, onSuccessfullyDone);
   };
 

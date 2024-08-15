@@ -1,6 +1,7 @@
 import { Inter } from 'next/font/google';
 import './custom.css';
 import './globals.css';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { Session, getServerSession } from 'next-auth';
 import { ReactNode } from 'react';
 import { ThemeModeScript } from 'flowbite-react';

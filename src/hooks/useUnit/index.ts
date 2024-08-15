@@ -61,7 +61,7 @@ const useUnit = () => {
     const formData = {
       //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
       body: JSON.stringify({ ...unit, ...fields, unitId: (unit || fields)?._id }),
-      method: 'post',
+      method: 'put',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -149,6 +149,47 @@ const useUnit = () => {
         const _unit = transformRawUnit(responseData.unit, 0);
         setUnit(_unit);
         return _unit;
+      } else {
+        return null;
+      }
+    } catch (err: any) {
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      return false;
+    }
+  };
+
+  const fetchUnitBySubjectsId = async ({
+    subjectId,
+    withMetaData = false,
+  }: {
+    subjectId: string;
+    withMetaData?: boolean;
+  }) => {
+    const url = API_LINKS.FETCH_UNIT_BY_SUBJECT_ID;
+    const formData = { subjectId, withMetaData: String(withMetaData) };
+
+    try {
+      setLoaderStatus(true);
+      const resp = await fetch(url + NETWORK_UTILS.formatGetParams(formData));
+      setLoaderStatus(false);
+
+      if (!resp.ok) {
+        message.warning(i18next.t('unknown_error'));
+        return false;
+      }
+
+      const responseData = await resp.json();
+
+      if (responseData.isError) {
+        message.warning(`${i18next.t('failed_with_error_code')} (${responseData.code})`);
+        return false;
+      }
+
+      if (responseData.units) {
+        const _units = (responseData.units as T_RawUnitFields[])?.map<T_UnitFields>(transformRawUnit);
+        setUnits(_units);
+        setTempUnits(_units);
+        return _units;
       } else {
         return null;
       }
@@ -274,6 +315,7 @@ const useUnit = () => {
     triggerDelete,
     triggerEdit,
     fetchUnitById,
+    fetchUnitBySubjectsId,
     router,
     unit,
     isLoading,

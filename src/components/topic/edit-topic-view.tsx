@@ -15,6 +15,7 @@ import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarni
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { T_UnitFields } from '@hooks/useUnit/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
+import { T_NameAndDescription } from 'types';
 
 const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; onSuccessfullyDone: () => void }) => {
   const { editTopic, deleteTopics } = useTopic();
@@ -30,7 +31,7 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
 
       const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key];
 
-      let result = extractValuesFromFormEvent<T_TopicFields>(e, keys);
+      let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
       await editTopic({ ...topic, ...result, unitId: unitId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);

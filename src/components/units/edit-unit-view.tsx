@@ -23,6 +23,7 @@ import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
 import { T_SubjectFields } from '@hooks/useSubject/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 import { transformRawSubject } from '@hooks/useSubject';
+import { T_NameAndDescription } from 'types';
 
 const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSuccessfullyDone: () => void }) => {
   const { editUnit, deleteUnits } = useUnit();
@@ -44,7 +45,7 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
 
       e.preventDefault();
       const keys = [UNIT_FORM_FIELDS.name.key, UNIT_FORM_FIELDS.description.key];
-      let result = extractValuesFromFormEvent<T_UnitFields>(e, keys);
+      let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
       await editUnit({ ...unit, ...result, subjectId: subjectId as string }, onSuccessfullyDone);
     } finally {
       setUploading(false);

@@ -1,6 +1,6 @@
 'use client';
 
-import { Checkbox, Spinner, Table, TextInput } from 'flowbite-react';
+import { Checkbox, Table, TextInput } from 'flowbite-react';
 import React, { ReactNode, useState } from 'react';
 import { IoFileTrayOutline } from 'react-icons/io5';
 import { T_ColumnData, T_ItemTypeBase } from './types';
@@ -11,6 +11,7 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import i18next from 'i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
+import { LoadingSpinner } from '@components/atom/AdminloadinSpiner';
 
 export function AdminTable<ItemType extends T_ItemTypeBase>({
   rowSelection,
@@ -73,7 +74,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
       />
       <div className="w-full overflow-x-scroll rounded-lg drop-shadow-md custom-scrollbar">
         {isLoading ? (
-          <AdminTableLoadingSpinner />
+          <LoadingSpinner />
         ) : items?.length === 0 ? (
           <NothingToShow />
         ) : (
@@ -114,7 +115,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
               <Table.Body className="divide-y">
                 {items?.map((item) => (
                   <Table.Row
-                    key={item.key}
+                    key={item._id}
                     className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-50 hover:dark:bg-gray-700 active:bg-gray-100 active:dark:bg-gray-600 cursor-pointer"
                     onClick={() => editItem(item)}
                   >
@@ -130,10 +131,12 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                         }
                       />
                     </Table.Cell>
-                    {filteredColumns.map((column) => {
+                    {filteredColumns.map((column, index) => {
                       const text = item[column.dataIndex as keyof ItemType] as string;
                       return (
-                        <Table.Cell key={column.key}>{column.render ? column.render(text, item) : text}</Table.Cell>
+                        <Table.Cell key={`${column.title}-${index}`}>
+                          {column.render ? column.render(text, item) : text}
+                        </Table.Cell>
                       );
                     })}
                   </Table.Row>
@@ -166,14 +169,6 @@ function InfiniteListLoader() {
   return (
     <div className="flex flex-row justify-center items-center my-4">
       <BouncingLoader />
-    </div>
-  );
-}
-
-function AdminTableLoadingSpinner() {
-  return (
-    <div className="flex items-center justify-center h-[200px]">
-      <Spinner size="xl" />
     </div>
   );
 }

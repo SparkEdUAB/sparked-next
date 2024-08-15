@@ -1,37 +1,25 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { BSON } from "mongodb";
-import { Session } from "next-auth";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import RESOURCE_PROCESS_CODES from "./processCodes";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { BSON } from 'mongodb';
+import { Session } from 'next-auth';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import RESOURCE_PROCESS_CODES from './processCodes';
 
-export default async function createMediaContent_(
-  request: Request,
-  session?: Session
-) {
+export default async function createMediaContent_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
-    unitId: zfd.text(),
+    topicId: zfd.text(),
+    unitId: zfd.text().optional(),
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
-    topicId: zfd.text().optional(),
     fileUrl: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const {
-    name,
-    description,
-    schoolId,
-    programId,
-    courseId,
-    unitId,
-    topicId,
-    fileUrl,
-  } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId, topicId, fileUrl } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -50,7 +38,7 @@ export default async function createMediaContent_(
           {
             _id: new BSON.ObjectId(topicId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -70,7 +58,7 @@ export default async function createMediaContent_(
           {
             _id: new BSON.ObjectId(schoolId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -90,7 +78,7 @@ export default async function createMediaContent_(
           {
             _id: new BSON.ObjectId(programId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -110,7 +98,7 @@ export default async function createMediaContent_(
           {
             _id: new BSON.ObjectId(courseId),
           },
-          { projection: { _id: 1 } }
+          { projection: { _id: 1 } },
         )
       : null;
 
@@ -129,10 +117,10 @@ export default async function createMediaContent_(
       {
         _id: new BSON.ObjectId(unitId),
       },
-      { projection: { _id: 1 } }
+      { projection: { _id: 1 } },
     );
 
-    if (!unit) {
+    if (!unit && unitId) {
       const response = {
         isError: true,
         code: RESOURCE_PROCESS_CODES.UNIT_NOT_FOUND,

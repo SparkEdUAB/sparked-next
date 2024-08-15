@@ -53,4 +53,16 @@ export const dbCollections: T_dbCollection = {
     name: 'user-role-mappings',
     label: 'User role mappings',
   },
+  page_views: {
+    name: 'page-views',
+    label: 'Page Views',
+  },
+  searches: {
+    name: 'searches',
+    label: 'Searches',
+  },
+  content_categories: {
+    name: 'content-categories',
+    label: 'content categories',
+  },
 };
