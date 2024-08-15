@@ -23,7 +23,6 @@ export const p_fetchProgramsWithCreator = (limit?: number, skip?: number) => [
   {
     $unwind: '$school',
   },
-
   {
     $project: {
       updated_at: 1,
@@ -37,6 +36,12 @@ export const p_fetchProgramsWithCreator = (limit?: number, skip?: number) => [
       'school.name': 1,
       'school._id': 1,
     },
+  },
+  {
+    $skip: skip,
+  },
+  {
+    $limit: limit,
   },
 ];
 

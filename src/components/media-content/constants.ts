@@ -22,6 +22,14 @@ export const MEDIA_CONTENT_FORM_FIELDS: T_MediaContentFormFields = {
     label: i18next.t('course'),
     key: 'courseId',
   },
+  ['grade']: {
+    label: i18next.t('grades'),
+    key: 'gradeId',
+  },
+  ['subject']: {
+    label: i18next.t('subject'),
+    key: 'subjectId',
+  },
   ['unit']: {
     label: i18next.t('units'),
     key: 'unitId',

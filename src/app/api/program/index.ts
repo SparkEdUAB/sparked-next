@@ -1,13 +1,11 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import {
-  p_fetchProgramWithMetaData,
-  p_fetchProgramsWithCreator,
-} from "./pipelines";
-import { BSON } from "mongodb";
-import { z } from "zod";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { p_fetchProgramWithMetaData, p_fetchProgramsWithCreator } from './pipelines';
+import { BSON } from 'mongodb';
+import { z } from 'zod';
+import { HttpStatusCode } from 'axios';
 
 export default async function fetchPrograms_(request: Request) {
   const schema = zfd.formData({
@@ -27,13 +25,13 @@ export default async function fetchPrograms_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
     const programs = await db
       .collection(dbCollections.programs.name)
-      .aggregate(p_fetchProgramsWithCreator())
+      .aggregate(p_fetchProgramsWithCreator(limit, skip))
       .toArray();
 
     const response = {
@@ -42,7 +40,7 @@ export default async function fetchPrograms_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -51,7 +49,7 @@ export default async function fetchPrograms_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -74,7 +72,7 @@ export async function fetchProgramById_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -88,15 +86,15 @@ export async function fetchProgramById_(request: Request) {
             query: {
               _id: new BSON.ObjectId(programId),
             },
-          })
+            limit: 1,
+            skip: 0,
+          }),
         )
         .toArray();
 
       program = program.length ? program[0] : null;
     } else {
-      program = await db
-        .collection(dbCollections.programs.name)
-        .findOne({ _id: new BSON.ObjectId(programId) });
+      program = await db.collection(dbCollections.programs.name).findOne({ _id: new BSON.ObjectId(programId) });
     }
 
     const response = {
@@ -105,7 +103,7 @@ export async function fetchProgramById_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -114,7 +112,7 @@ export async function fetchProgramById_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -136,17 +134,15 @@ export async function deletePrograms_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
-    const results = await db
-      .collection(dbCollections.programs.name)
-      .deleteMany({
-        _id: {
-          $in: programIds.map((i) => new BSON.ObjectId(i)),
-        },
-      });
+    const results = await db.collection(dbCollections.programs.name).deleteMany({
+      _id: {
+        $in: programIds.map((i) => new BSON.ObjectId(i)),
+      },
+    });
 
     const response = {
       isError: false,
@@ -154,7 +150,7 @@ export async function deletePrograms_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -163,7 +159,7 @@ export async function deletePrograms_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -188,10 +184,10 @@ export async function findProgramsByName_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(name, 'i');
 
     let programs = null;
 
@@ -203,15 +199,20 @@ export async function findProgramsByName_(request: Request) {
             query: {
               name: { $regex: regexPattern },
             },
-          })
+            skip: skip || 0,
+            limit: limit || 20,
+          }),
         )
         .toArray();
     } else {
       programs = await db
         .collection(dbCollections.programs.name)
-        .find({
-          name: { $regex: regexPattern },
-        })
+        .find(
+          {
+            name: { $regex: regexPattern },
+          },
+          { skip, limit },
+        )
         .toArray();
     }
 
@@ -221,7 +222,7 @@ export async function findProgramsByName_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -230,7 +231,7 @@ export async function findProgramsByName_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

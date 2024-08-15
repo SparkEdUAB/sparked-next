@@ -45,7 +45,11 @@ const GradeListView: React.FC = () => {
       <AdminPageTitle title={i18next.t('grades')} />
 
       <AdminTable<T_GradeFields>
-        deleteItems={deleteGrade}
+        deleteItems={async () => {
+          const result = await deleteGrade();
+          mutate();
+          return result;
+        }}
         rowSelection={rowSelection}
         items={grades}
         isLoading={isLoading}

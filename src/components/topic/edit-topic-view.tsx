@@ -13,7 +13,7 @@ import { API_LINKS } from 'app/links';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-import { T_UnitFields } from '@hooks/useUnit/types';
+import { T_UnitSearchedByName } from '@hooks/useUnit/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 import { T_NameAndDescription } from 'types';
 
@@ -21,7 +21,7 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
   const { editTopic, deleteTopics } = useTopic();
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
-  const [unitId, setUnitId] = useState<string | null>(null);
+  const [unit, setUnit] = useState<T_UnitSearchedByName | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -32,15 +32,24 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
       const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key];
 
       let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
-      await editTopic({ ...topic, ...result, unitId: unitId as string }, onSuccessfullyDone);
+      await editTopic(
+        {
+          ...topic,
+          ...result,
+          unitId: unit?._id || topic.unitId,
+          subjectId: unit?.subject_id || topic.subjectId,
+          gradeId: unit?.grade_id || topic.gradeId,
+        },
+        onSuccessfullyDone,
+      );
     } finally {
       setUploading(false);
     }
   };
 
-  const handleClick = (unit: T_UnitFields) => {
-    setUnitId(unit?._id);
-  };
+  // const handleClick = (unit: T_UnitFields) => {
+  //   setUnitId(unit?._id);
+  // };
 
   return (
     <>
@@ -70,11 +79,12 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
             required
           />
 
-          <Autocomplete
+          <Autocomplete<T_UnitSearchedByName>
             url={API_LINKS.FIND_UNITS_BY_NAME}
-            handleSelect={handleClick}
+            handleSelect={setUnit}
             defaultValue={topic.unitName}
             moduleName="units"
+            disabled={uploading}
           />
 
           <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />

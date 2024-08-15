@@ -8,10 +8,10 @@ export type ToastMessageData = {
 };
 
 type ToastMessageContextProps = {
-  warning: (_content: string) => string;
-  info: (_content: string) => string;
-  success: (_content: string) => string;
-  error: (_content: string) => string;
+  warning: (content: string) => string;
+  info: (content: string) => string;
+  success: (content: string) => string;
+  error: (content: string) => string;
 };
 
 const ToastMessageContext = createContext<ToastMessageContextProps | undefined>(undefined);

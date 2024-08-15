@@ -1,4 +1,5 @@
 'use client';
+
 import { RedAsterisk } from '@components/atom';
 import { FileInput, Label } from 'flowbite-react';
 import { useCallback } from 'react';
@@ -6,7 +7,7 @@ import { VscCloudUpload } from 'react-icons/vsc';
 import { AcceptableFileTypes } from 'utils/helpers/determineFileType';
 import { convertListToText } from 'utils/helpers/convertListToText';
 import { getFileFromInput, getMultipleFilesFromInput } from 'utils/helpers/getFileFromInput';
-import { DropEvent, FileRejection, useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import { FilePreview } from './FilePreview';
 import { getDropzoneAcceptValue } from './getDropzoneAcceptValue';
 
@@ -35,14 +36,14 @@ export function DragAndDropFileInput({
 }: Props) {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: useCallback(
-      (acceptedFiles: Array<File>, fileRejections: FileRejection[], event: DropEvent) => {
+      (acceptedFiles: Array<File>) => {
         if (multiple) {
           onChange([...(files || []), ...acceptedFiles]);
         } else {
           onChange(acceptedFiles[0] || null);
         }
       },
-      [files],
+      [files, multiple, onChange],
     ),
     multiple,
     accept: getDropzoneAcceptValue(fileTypes),

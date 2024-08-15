@@ -4,7 +4,7 @@ import ProgramsListView from '@components/programs/programListView';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
 import React from 'react';
 
-const ProgramsList: React.FC = (props) => {
+const ProgramsList: React.FC = () => {
   useDocumentTitle('Programs');
 
   return <ProgramsListView />;

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
@@ -9,7 +8,6 @@ import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useEffect } from 'react';
 import { SCHOOL_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { T_SchoolFields } from './types';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { T_CreateSchoolFields } from '@hooks/useSchool/types';
 import { useToastMessage } from 'providers/ToastMessageContext';
@@ -19,9 +17,10 @@ const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; o
 
   const searchParams = useSearchParams();
   const message = useToastMessage();
+
   useEffect(() => {
     fetchSchool(schoolId || (searchParams.get('schoolId') as string));
-  }, []);
+  }, [fetchSchool, schoolId, searchParams]);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();

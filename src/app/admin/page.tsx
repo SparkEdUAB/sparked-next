@@ -10,7 +10,7 @@ import { transformRawStats, useAdminStatsData } from '@hooks/useAdmin/useAdminSt
 
 const Home: React.FC = () => {
   useDocumentTitle('Admin Dashboard');
-  const { items: stats, isLoading, error } = useAdminStatsData(API_LINKS.FETCH_ALL_STATS, 'stats', transformRawStats);
+  const { items: stats, isLoading } = useAdminStatsData(API_LINKS.FETCH_ALL_STATS, 'stats', transformRawStats);
 
   return (
     <div>

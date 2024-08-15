@@ -1,21 +1,18 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { HttpStatusCode } from 'axios';
 import { BSON } from 'mongodb';
 import { Session } from 'next-auth';
-import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as USER_ROLES_PROCESS_CODES } from './processCodes';
+import { default as CATEGORIES_PROCESS_CODES } from './processCodes';
+import { EDIT_CONTENT_CATEGORY_SCHEMA } from './schema';
 
-export default async function editUserRole_(request: Request, session?: Session) {
-  const schema = zfd.formData({
-    name: zfd.text(),
-    userRoleId: zfd.text(),
-    description: zfd.text(),
-  });
+export default async function editContentCategory_(request: Request, session?: Session) {
+  const schema = EDIT_CONTENT_CATEGORY_SCHEMA;
 
   const formBody = await request.json();
 
-  const { name, description, userRoleId } = schema.parse(formBody);
+  const { name, description, contentCategoryId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -26,15 +23,16 @@ export default async function editUserRole_(request: Request, session?: Session)
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
+
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
 
-    const gradeData = await db.collection(dbCollections.user_roles.name).findOne(
+    const duplicateCategory = await db.collection(dbCollections.content_categories.name).findOne(
       {
         name: { $regex: regexPattern },
-        _id: { $ne: new BSON.ObjectId(userRoleId) },
+        _id: { $ne: new BSON.ObjectId(contentCategoryId) },
       },
       {
         projection: {
@@ -43,19 +41,19 @@ export default async function editUserRole_(request: Request, session?: Session)
       },
     );
 
-    if (gradeData) {
+    if (duplicateCategory) {
       const response = {
         isError: true,
-        code: USER_ROLES_PROCESS_CODES.USER_ROLE_EXIST,
+        code: CATEGORIES_PROCESS_CODES.CATEGORY_EXIST,
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.BadRequest,
       });
     }
 
     const query = {
-      _id: new BSON.ObjectId(userRoleId),
+      _id: new BSON.ObjectId(contentCategoryId),
     };
 
     const updateQuery = {
@@ -66,17 +64,17 @@ export default async function editUserRole_(request: Request, session?: Session)
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };
 
-    await db.collection(dbCollections.user_roles.name).updateOne(query, {
+    await db.collection(dbCollections.content_categories.name).updateOne(query, {
       $set: updateQuery,
     });
 
     const response = {
       isError: false,
-      code: USER_ROLES_PROCESS_CODES.USER_ROLE_EDITED,
+      code: CATEGORIES_PROCESS_CODES.CATEGORY_EDITED,
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -85,8 +83,7 @@ export default async function editUserRole_(request: Request, session?: Session)
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
-

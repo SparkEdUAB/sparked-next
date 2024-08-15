@@ -1,12 +1,12 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { BSON } from 'mongodb';
-import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import PAGE_ACTIONS_PROCESS_CODES from './processCodes';
+import { HttpStatusCode } from 'axios';
 
-export default async function deletePageActions_(request: Request, session?: Session) {
+export default async function deletePageActions_(request: Request) {
   const schema = zfd.formData({
     pageActionIds: zfd.repeatableOfType(zfd.text()),
   });
@@ -24,7 +24,7 @@ export default async function deletePageActions_(request: Request, session?: Ses
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -41,7 +41,7 @@ export default async function deletePageActions_(request: Request, session?: Ses
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -50,7 +50,7 @@ export default async function deletePageActions_(request: Request, session?: Ses
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

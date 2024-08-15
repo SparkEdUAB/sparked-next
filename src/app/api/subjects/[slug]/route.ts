@@ -6,12 +6,9 @@ import createSubject_ from '../create';
 import editSubject_ from '../edit';
 import deleteSubjects_ from '../delete';
 import fetchSubjects_, { fetchSubjectsByGradeId_, findSubjectByName_ } from '..';
+import { HttpStatusCode } from 'axios';
 
-export async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -31,16 +28,12 @@ export async function POST(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
 
-export async function PUT(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function PUT(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -60,16 +53,12 @@ export async function PUT(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
 
-export async function DELETE(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+export async function DELETE(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -89,15 +78,12 @@ export async function DELETE(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
-export async function GET(
-  req: Request,
 
-  { params }: { params: { slug: string } },
-) {
+export async function GET(req: Request, { params }: { params: { slug: string } }) {
   const slug = params.slug;
 
   const subjectApiFunctions: {
@@ -118,7 +104,7 @@ export async function GET(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }

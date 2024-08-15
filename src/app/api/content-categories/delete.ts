@@ -1,19 +1,15 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { HttpStatusCode } from 'axios';
 import { BSON } from 'mongodb';
-import { Session } from 'next-auth';
-import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { default as PAGE_PROCESS_CODES } from './processCodes';
+import { DELETE_CONTENT_CATEGORIES_BY_ID_SCHEMA } from './schema';
 
-export default async function deleteUserRoles_(request: Request, session?: Session) {
-  const schema = zfd.formData({
-    userRoleIds: zfd.repeatableOfType(zfd.text()),
-  });
-
+export async function deleteContentCategoriesById_(request: Request) {
+  const schema = DELETE_CONTENT_CATEGORIES_BY_ID_SCHEMA;
   const formBody = await request.json();
 
-  const { userRoleIds } = schema.parse(formBody);
+  const { contentCategoryIds } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -24,24 +20,23 @@ export default async function deleteUserRoles_(request: Request, session?: Sessi
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
-    const results = await db.collection(dbCollections.user_roles.name).deleteMany({
+    const results = await db.collection(dbCollections.content_categories.name).deleteMany({
       _id: {
-        $in: userRoleIds.map((i) => new BSON.ObjectId(i)),
+        $in: contentCategoryIds.map((i) => new BSON.ObjectId(i)),
       },
     });
 
     const response = {
       isError: false,
-      code: PAGE_PROCESS_CODES.USER_ROLES_DELETED,
       results,
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -50,7 +45,7 @@ export default async function deleteUserRoles_(request: Request, session?: Sessi
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

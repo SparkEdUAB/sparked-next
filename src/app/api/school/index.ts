@@ -1,9 +1,10 @@
-import SPARKED_PROCESS_CODES from "app/shared/processCodes";
-import { zfd } from "zod-form-data";
-import { dbClient } from "../lib/db";
-import { dbCollections } from "../lib/db/collections";
-import { p_fetchSchoolsWithCreator } from "./pipelines";
-import { BSON } from "mongodb";
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { zfd } from 'zod-form-data';
+import { dbClient } from '../lib/db';
+import { dbCollections } from '../lib/db/collections';
+import { p_fetchSchoolsWithCreator } from './pipelines';
+import { BSON } from 'mongodb';
+import { HttpStatusCode } from 'axios';
 
 export default async function fetchSchools_(request: Request) {
   const schema = zfd.formData({
@@ -23,13 +24,13 @@ export default async function fetchSchools_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
     const schools = await db
       .collection(dbCollections.schools.name)
-      .aggregate(p_fetchSchoolsWithCreator())
+      .aggregate(p_fetchSchoolsWithCreator(limit, skip))
       .toArray();
 
     const response = {
@@ -38,7 +39,7 @@ export default async function fetchSchools_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -47,7 +48,7 @@ export default async function fetchSchools_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -69,13 +70,11 @@ export async function fetchSchool_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
-    const school = await db
-      .collection(dbCollections.schools.name)
-      .findOne({ _id: new BSON.ObjectId(schoolId) });
+    const school = await db.collection(dbCollections.schools.name).findOne({ _id: new BSON.ObjectId(schoolId) });
 
     const response = {
       isError: false,
@@ -83,7 +82,7 @@ export async function fetchSchool_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -92,7 +91,7 @@ export async function fetchSchool_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -114,7 +113,7 @@ export async function deleteSchools_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -130,7 +129,7 @@ export async function deleteSchools_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -139,7 +138,7 @@ export async function deleteSchools_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }
@@ -152,7 +151,7 @@ export async function findSchoolsByName_(request: Request) {
   });
   const formBody = await request.json();
 
-  const { name,limit,skip } = schema.parse(formBody);
+  const { name, limit, skip } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -163,10 +162,10 @@ export async function findSchoolsByName_(request: Request) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
-    const regexPattern = new RegExp(name, "i");
+    const regexPattern = new RegExp(name, 'i');
 
     const schools = await db
       .collection(dbCollections.schools.name)
@@ -174,7 +173,7 @@ export async function findSchoolsByName_(request: Request) {
         {
           name: { $regex: regexPattern },
         },
-        { limit, skip }
+        { limit, skip },
       )
       .toArray();
 
@@ -184,7 +183,7 @@ export async function findSchoolsByName_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -193,7 +192,7 @@ export async function findSchoolsByName_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

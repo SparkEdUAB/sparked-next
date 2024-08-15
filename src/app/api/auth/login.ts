@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken';
 import sharedConfig from 'app/shared/config';
 import { p_fetchUserRoleDetails } from './pipelines';
 import { T_RECORD } from 'types';
+import { HttpStatusCode } from 'axios';
 
 export default async function login_(request: Request) {
   const schema = zfd.formData({
@@ -30,7 +31,7 @@ export default async function login_(request: Request) {
         code: AUTH_PROCESS_CODES.UNKNOWN_ERROR,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -53,7 +54,7 @@ export default async function login_(request: Request) {
         code: AUTH_PROCESS_CODES.USER_NOT_FOUND,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -87,7 +88,7 @@ export default async function login_(request: Request) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -96,7 +97,7 @@ export default async function login_(request: Request) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.BadRequest,
     });
   }
 }

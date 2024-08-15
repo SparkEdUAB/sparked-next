@@ -12,8 +12,9 @@ export function FilePreview({ file, deleteItem }: { file: File | null; deleteIte
   return file ? (
     <div className="inline-block relative w-fit h-fit" onClick={(e) => e.stopPropagation()}>
       {fileType === 'image' ? (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
-          src={fileUrl}
+          src={fileUrl as string}
           alt="Media content file"
           className="inline-block m-4 h-full max-h-48 max-w-48 object-contain object-center"
         />

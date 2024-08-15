@@ -3,12 +3,9 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/authOptions';
 import { Session } from 'next-auth';
 import uploadFile_ from '..';
+import { HttpStatusCode } from 'axios';
 
-const fileUploadApiHandler_ = async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
-) {
+const fileUploadApiHandler_ = async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
 
   const slug = params.slug;
@@ -28,7 +25,7 @@ const fileUploadApiHandler_ = async function POST(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 };

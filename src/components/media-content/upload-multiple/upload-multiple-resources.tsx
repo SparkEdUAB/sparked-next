@@ -1,6 +1,8 @@
 'use client';
 import i18next from 'i18next';
-import { T_TopicFields } from '@hooks/use-topic/types';
+import { T_TopicSearchedByName } from '@hooks/use-topic/types';
+import { T_UnitSearchedByName } from '@hooks/useUnit/types';
+import { T_SubjectSearchedByName } from '@hooks/useSubject/types';
 import { useState } from 'react';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import { removeFileExtension } from '../../../utils/helpers/removeFileExtension';
@@ -8,12 +10,12 @@ import useMediaContent from '@hooks/use-media-content';
 import useFileUpload from '@hooks/use-file-upload';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { FileSelector } from './FileSelector';
-import { TopicSelector } from './TopicSelector';
+import { DependencySelector } from './DependencySelector';
 import { EditResourceData } from './EditResourceData';
 import { truncateText } from 'utils/helpers/truncateText';
 
 enum UploadProcessSteps {
-  SelectTopic,
+  SelectDependencies,
   SelectFiles,
   EditResources,
 }
@@ -34,21 +36,24 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
   const { uploadFile } = useFileUpload();
   const toast = useToastMessage();
 
-  const [step, setStep] = useState(UploadProcessSteps.SelectTopic);
-  const [topic, setTopic] = useState<T_TopicFields | null>(null);
+  const [step, setStep] = useState(UploadProcessSteps.SelectDependencies);
   const [files, setFiles] = useState<File[] | null>(null);
   const [resourceData, setResourceData] = useState<ResourceData[] | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
   const [failedToUpload, setFailedToUpload] = useState(false);
 
-  const handleTopicSelect = (topic: T_TopicFields) => {
-    setTopic(topic);
-  };
+  const [topic, setTopic] = useState<T_TopicSearchedByName | null>(null);
+  const [unit, setUnit] = useState<T_UnitSearchedByName | null>(null);
+  const [subject, setSubject] = useState<T_SubjectSearchedByName | null>(null);
 
-  const chosenTopic = () => {
-    if (!topic) {
-      return toast.warning('Please select a topic');
+  const handleTopicSelect = (topic: T_TopicSearchedByName) => setTopic(topic);
+  const handleUnitSelect = (unit: T_UnitSearchedByName) => setUnit(unit);
+  const handleSubjectSelect = (subject: T_SubjectSearchedByName) => setSubject(subject);
+
+  const chosenDependencies = () => {
+    if (!topic && !unit && !subject) {
+      return toast.warning('Please select a topic or subject or unit');
     }
     setStep(UploadProcessSteps.SelectFiles);
   };
@@ -67,8 +72,8 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
       return;
     }
 
-    if (!topic) {
-      toast.error('No valid topic selected');
+    if (!topic && !unit && !subject) {
+      toast.error('No topic or unit or subject selected');
       return;
     }
 
@@ -87,10 +92,29 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
 
         let successful = await createResource(
           {
+            ...(subject
+              ? {
+                  gradeId: subject.grade_id,
+                  subjectId: subject._id,
+                }
+              : {}),
+            ...(unit
+              ? {
+                  unitId: unit._id,
+                  gradeId: unit.grade_id,
+                  subjectId: unit.subject_id,
+                }
+              : {}),
+            ...(topic
+              ? {
+                  unitId: topic.unit_id,
+                  topicId: topic._id,
+                  gradeId: topic.grade_id,
+                  subjectId: topic.subject_id,
+                }
+              : {}),
             name: resource.name,
             description: resource.description,
-            topicId: topic._id,
-            unitId: topic.unitId,
           },
           fileUrl,
         );
@@ -122,23 +146,43 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
     });
   };
 
-  return step === UploadProcessSteps.EditResources && topic && resourceData && resourceData.length > 0 ? (
+  return step === UploadProcessSteps.EditResources &&
+    (topic || subject || unit) &&
+    resourceData &&
+    resourceData.length > 0 ? (
     <EditResourceData
       resourceData={resourceData}
       setResourceData={setResourceData}
       uploadData={uploadData}
       topic={topic}
+      subject={subject}
+      unit={unit}
       isUploading={isUploading}
       uploadProgress={uploadProgress}
       failedToUpload={failedToUpload}
     />
-  ) : step === UploadProcessSteps.SelectFiles && topic ? (
-    <FileSelector files={files} setFiles={setFiles} chosenFiles={chosenFiles} topic={topic} />
-  ) : step === UploadProcessSteps.SelectTopic ? (
-    <TopicSelector handleTopicSelect={handleTopicSelect} chosenTopic={chosenTopic} topic={topic} />
+  ) : step === UploadProcessSteps.SelectFiles && (topic || subject || unit) ? (
+    <FileSelector
+      files={files}
+      setFiles={setFiles}
+      chosenFiles={chosenFiles}
+      topic={topic}
+      subject={subject}
+      unit={unit}
+    />
+  ) : step === UploadProcessSteps.SelectDependencies ? (
+    <DependencySelector
+      handleTopicSelect={handleTopicSelect}
+      handleSubjectSelect={handleSubjectSelect}
+      handleUnitSelect={handleUnitSelect}
+      topic={topic}
+      subject={subject}
+      unit={unit}
+      submit={chosenDependencies}
+    />
   ) : (
     <LibraryErrorMessage>
-      An error occured (Step: {step}, Topic: {topic?.name})
+      An error occured (Step: {step}, Topic: {topic?.name}, Unit: {unit?.name}, Subject: {subject?.name})
     </LibraryErrorMessage>
   );
 }

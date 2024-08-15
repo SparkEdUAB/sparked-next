@@ -5,6 +5,7 @@ import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as TOPIC_PROCESS_CODES } from './processCodes';
+import { HttpStatusCode } from 'axios';
 
 export default async function createTopic_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -14,13 +15,12 @@ export default async function createTopic_(request: Request, session?: Session) 
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
-     subjectId: zfd.text().optional(),
+    subjectId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
   const { name, description, schoolId, programId, courseId, unitId, gradeId, subjectId } = schema.parse(formBody);
-
 
   try {
     const db = await dbClient();
@@ -31,7 +31,7 @@ export default async function createTopic_(request: Request, session?: Session) 
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
@@ -47,7 +47,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.BadRequest,
       });
     }
 
@@ -67,7 +67,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -87,7 +87,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -107,9 +107,10 @@ export default async function createTopic_(request: Request, session?: Session) 
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
+
     const grade = gradeId
       ? await db.collection(dbCollections.grades.name).findOne(
           {
@@ -126,29 +127,29 @@ export default async function createTopic_(request: Request, session?: Session) 
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
-    
-         const subject = subjectId
-          ? await db.collection(dbCollections.subjects.name).findOne(
-              {
-                _id: new BSON.ObjectId(subjectId),
-              },
-              { projection: { _id: 1 } },
-            )
-          : null;
 
-        if (!subject && subjectId) {
-          const response = {
-            isError: true,
-            code: TOPIC_PROCESS_CODES.SUBJECT_NOT_FOUND,
-          };
+    const subject = subjectId
+      ? await db.collection(dbCollections.subjects.name).findOne(
+          {
+            _id: new BSON.ObjectId(subjectId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
 
-          return new Response(JSON.stringify(response), {
-            status: 200,
-          });
-        }
+    if (!subject && subjectId) {
+      const response = {
+        isError: true,
+        code: TOPIC_PROCESS_CODES.SUBJECT_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: HttpStatusCode.NotFound,
+      });
+    }
 
     const unit = await db.collection(dbCollections.units.name).findOne(
       {
@@ -164,7 +165,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -183,14 +184,13 @@ export default async function createTopic_(request: Request, session?: Session) 
       subject_id: new BSON.ObjectId(subjectId),
     });
 
-
     const response = {
       isError: false,
       code: TOPIC_PROCESS_CODES.TOPIC_CREATED,
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -199,7 +199,7 @@ export default async function createTopic_(request: Request, session?: Session) 
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

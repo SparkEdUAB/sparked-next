@@ -20,7 +20,7 @@ export async function generateMetadata(props: {}, parent: ResolvingMetadata): Pr
   return getMetadata('Library Content', 'View the list of media content on the site');
 }
 
-const LibraryPage = async ({ params, searchParams }: T_LibraryPageProps) => {
+const LibraryPage = async ({ searchParams }: T_LibraryPageProps) => {
   const mediaResult = await fetchMedia(0, searchParams);
 
   const categoriesResult = await fetcher<{ categories: T_RawTopicFields[] }>(

@@ -32,9 +32,17 @@ interface Props<T extends ItemType> {
    */
   moduleName: string;
   required?: boolean;
+  disabled?: boolean;
 }
 
-const Autocomplete = <T extends ItemType>({ url, handleSelect, moduleName, defaultValue, required }: Props<T>) => {
+const Autocomplete = <T extends ItemType>({
+  url,
+  handleSelect,
+  moduleName,
+  defaultValue,
+  required,
+  disabled,
+}: Props<T>) => {
   const [query, setQuery] = useState('' || defaultValue);
   const [autoCompleted, setAutoCompleted] = useState<boolean>(false);
   const debouncedValue: string = useDebounceValue<string>(query as string, 500);
@@ -75,8 +83,9 @@ const Autocomplete = <T extends ItemType>({ url, handleSelect, moduleName, defau
         className="block w-full"
         autoComplete="off"
         required={required}
+        disabled={disabled}
       />
-      {autoCompleted && query && (
+      {autoCompleted && query && !disabled && (
         <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-600">
           {data?.[moduleName]?.length ? (
             data?.[moduleName]?.map((subject: any) => (

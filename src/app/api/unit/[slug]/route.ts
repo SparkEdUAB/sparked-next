@@ -1,11 +1,18 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import fetchUnits_, { deleteUnits_, fetchUnitByGradeId_, fetchUnitById_, fetchUnitBySubjectId_, fetchUnitByTopicId_, findUnitsByName_ } from '..';
+import fetchUnits_, {
+  deleteUnits_,
+  fetchUnitsByGradeId_,
+  fetchUnitById_,
+  fetchUnitsBySubjectId_,
+  fetchUnitsByTopicId_,
+  findUnitsByName_,
+} from '..';
 import { authOptions } from '../../auth/authOptions';
-
 import createUnit_ from '../create';
 import editUnit_ from '../edit';
+import { HttpStatusCode } from 'axios';
 
 export async function POST(
   req: Request,
@@ -33,10 +40,11 @@ export async function POST(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
     });
   }
 }
+
 export async function GET(
   req: Request,
 
@@ -50,9 +58,9 @@ export async function GET(
     fetchUnits: fetchUnits_,
     fetchUnitById: fetchUnitById_,
     findUnitsByName: findUnitsByName_,
-    fetchUnitBySubjectId: fetchUnitBySubjectId_,
-    fetchUnitByTopicId: fetchUnitByTopicId_,
-    fetchUnitByGradeId: fetchUnitByGradeId_,
+    fetchUnitsBySubjectId: fetchUnitsBySubjectId_,
+    fetchUnitsByTopicId: fetchUnitsByTopicId_,
+    fetchUnitsByGradeId: fetchUnitsByGradeId_,
   };
 
   if (unitFunctions[slug]) {
@@ -64,7 +72,65 @@ export async function GET(
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.NotFound,
+    });
+  }
+}
+
+export async function DELETE(
+  req: Request,
+
+  { params }: { params: { slug: string } },
+) {
+  const session = await getServerSession(authOptions);
+
+  const slug = params.slug;
+
+  const unitFunctions: {
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
+  } = {
+    deleteUnits: deleteUnits_,
+  };
+
+  if (unitFunctions[slug] && session) {
+    return unitFunctions[slug](req, session);
+  } else {
+    const response = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: HttpStatusCode.NotFound,
+    });
+  }
+}
+
+export async function PUT(
+  req: Request,
+
+  { params }: { params: { slug: string } },
+) {
+  const session = await getServerSession(authOptions);
+
+  const slug = params.slug;
+
+  const unitFunctions: {
+    [key: string]: (request: Request, session?: Session) => Promise<Response>;
+  } = {
+    editUnit: editUnit_,
+  };
+
+  if (unitFunctions[slug] && session) {
+    return unitFunctions[slug](req, session);
+  } else {
+    const response = {
+      isError: true,
+      code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: HttpStatusCode.NotFound,
     });
   }
 }

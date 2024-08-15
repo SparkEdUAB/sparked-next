@@ -5,6 +5,7 @@ import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import UNIT_PROCESS_CODES from './processCodes';
+import { HttpStatusCode } from 'axios';
 
 export default async function editUnit_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -14,11 +15,12 @@ export default async function editUnit_(request: Request, session?: Session) {
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
     subjectId: zfd.text().optional(),
+    gradeId: zfd.text().optional(),
     unitId: zfd.text(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId, subjectId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId, subjectId, gradeId } = schema.parse(formBody);
   try {
     const db = await dbClient();
 
@@ -28,7 +30,7 @@ export default async function editUnit_(request: Request, session?: Session) {
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
       };
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.InternalServerError,
       });
     }
 
@@ -48,7 +50,7 @@ export default async function editUnit_(request: Request, session?: Session) {
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -68,7 +70,7 @@ export default async function editUnit_(request: Request, session?: Session) {
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -88,7 +90,7 @@ export default async function editUnit_(request: Request, session?: Session) {
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -108,7 +110,7 @@ export default async function editUnit_(request: Request, session?: Session) {
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -126,7 +128,27 @@ export default async function editUnit_(request: Request, session?: Session) {
       };
 
       return new Response(JSON.stringify(response), {
-        status: 200,
+        status: HttpStatusCode.BadRequest,
+      });
+    }
+
+    const grade = gradeId
+      ? await db.collection(dbCollections.grades.name).findOne(
+          {
+            _id: new BSON.ObjectId(gradeId),
+          },
+          { projection: { _id: 1 } },
+        )
+      : null;
+
+    if (!grade && gradeId) {
+      const response = {
+        isError: true,
+        code: UNIT_PROCESS_CODES.GRADE_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: HttpStatusCode.NotFound,
       });
     }
 
@@ -142,6 +164,7 @@ export default async function editUnit_(request: Request, session?: Session) {
       course_id: new BSON.ObjectId(courseId),
       program_id: new BSON.ObjectId(programId),
       subject_id: new BSON.ObjectId(subjectId),
+      grade_id: new BSON.ObjectId(gradeId),
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };
@@ -156,7 +179,7 @@ export default async function editUnit_(request: Request, session?: Session) {
     };
 
     return new Response(JSON.stringify(response), {
-      status: 200,
+      status: HttpStatusCode.Ok,
     });
   } catch (error) {
     const resp = {
@@ -165,7 +188,7 @@ export default async function editUnit_(request: Request, session?: Session) {
     };
 
     return new Response(JSON.stringify(resp), {
-      status: 200,
+      status: HttpStatusCode.InternalServerError,
     });
   }
 }

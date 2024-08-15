@@ -45,7 +45,11 @@ const CourseListView: React.FC = () => {
       <AdminPageTitle title={i18next.t('courses')} />
 
       <AdminTable<T_CourseFields>
-        deleteItems={deleteCourse}
+        deleteItems={async () => {
+          const result = await deleteCourse();
+          mutate();
+          return result;
+        }}
         rowSelection={rowSelection}
         items={courses}
         isLoading={isLoading}

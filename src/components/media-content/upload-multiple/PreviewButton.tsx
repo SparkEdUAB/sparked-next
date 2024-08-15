@@ -36,6 +36,7 @@ function FilePreview({ file }: { file: File }) {
   return (
     <div>
       {fileType === 'image' ? (
+        // eslint-disable-next-line @next/next/no-img-element
         <img
           src={fileUrl}
           alt="Media content file"
