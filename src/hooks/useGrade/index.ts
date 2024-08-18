@@ -166,7 +166,7 @@ const useGrade = () => {
       const url = API_LINKS.DELETE_GRADES;
       const formData = {
         body: JSON.stringify({ gradeIds: items ? items.map((item) => item._id) : selectedGradeIds }),
-        method: 'post',
+        method: 'delete',
         headers: {
           'Content-Type': 'application/json',
         },
