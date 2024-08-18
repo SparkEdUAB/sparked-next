@@ -87,6 +87,8 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
         thumbnailUrl || undefined,
         onSuccessfullyDone,
       );
+    } catch (error) {
+      message.error(i18next.t('failed_to_upload'));
     } finally {
       setUploadingFile(false);
     }

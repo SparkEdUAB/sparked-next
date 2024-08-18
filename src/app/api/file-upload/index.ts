@@ -19,7 +19,8 @@ export default async function uploadFile_(request: Request) {
 
     // check if this is running on serverless or full server
     let url = '';
-    const isOnRender = request.url?.includes(RENDER_URL); // If true then this is serverless and we won't have access to disk
+    const isOnRender = true; //request.url?.includes(RENDER_URL); // Temporarily disable to always upload to S3
+
     if (!isOnRender) {
       const sanitizedFilename = basename(file.name).replace(/[^a-zA-Z0-9.-]/g, '_');
 
