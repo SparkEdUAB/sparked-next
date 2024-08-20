@@ -13,7 +13,7 @@ import { API_LINKS } from 'app/links';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-import { T_UnitSearchedByName } from '@hooks/useUnit/types';
+import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 import { T_NameAndDescription } from 'types';
 
@@ -21,7 +21,7 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
   const { editTopic, deleteTopics } = useTopic();
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
-  const [unit, setUnit] = useState<T_UnitSearchedByName | null>(null);
+  const [unit, setUnit] = useState<T_UnitWithoutMetadata | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -79,7 +79,7 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
             required
           />
 
-          <Autocomplete<T_UnitSearchedByName>
+          <Autocomplete<T_UnitWithoutMetadata>
             url={API_LINKS.FIND_UNITS_BY_NAME}
             handleSelect={setUnit}
             defaultValue={topic.unitName}

@@ -28,7 +28,7 @@ const useMediaContent = () => {
     async (fields: T_CreateResourceFields, fileUrl: string, thumbnailUrl?: string, onSuccessfullyDone?: () => void) => {
       const url = API_LINKS.CREATE_MEDIA_CONTENT;
       const formData = {
-        body: JSON.stringify({ ...fields, fileUrl: fileUrl, file_url: fileUrl, thumbnailUrl }),
+        body: JSON.stringify({ ...fields, fileUrl: fileUrl, thumbnailUrl }),
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,6 @@ const useMediaContent = () => {
           ...fields,
           mediaContentId: fields?._id,
           fileUrl: fileUrl ? fileUrl : fields?.fileUrl,
-          file_url: fileUrl ? fileUrl : fields?.fileUrl,
           thumbnailUrl: thumbnailUrl ? thumbnailUrl : fields?.thumbnailUrl,
         }),
         method: 'post',
@@ -339,12 +338,12 @@ export function transformRawMediaContent(i: T_RawMediaContentFields, index: numb
     _id: i._id,
     name: i.name,
     fileUrl: i.file_url || undefined,
-    thumbnailUrl: i.thumbnailUrl,
+    thumbnailUrl: i.thumbnail_url,
     description: i.description,
 
     courseId: i.course?._id,
-    gradeId: i.course?._id,
-    subjectId: i.course?._id,
+    gradeId: i.grade?._id,
+    subjectId: i.subject?._id,
     schoolId: i.school?._id,
     unitId: i.unit?._id,
     programId: i.program?._id,
@@ -353,12 +352,11 @@ export function transformRawMediaContent(i: T_RawMediaContentFields, index: numb
     schoolName: i.school?.name,
     programName: i.program?.name,
     courseName: i.course?.name,
-    gradeName: i.course?.name,
-    subjectName: i.course?.name,
+    gradeName: i.grade?.name,
+    subjectName: i.subject?.name,
     unitName: i.unit?.name,
     topicName: i.topic?.name,
 
-    school: i.school,
     created_by: i.user?.email,
     created_at: new Date(i.created_at as string).toDateString(),
   };

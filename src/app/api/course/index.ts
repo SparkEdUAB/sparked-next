@@ -19,7 +19,7 @@ export default async function fetchCourses_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { limit, skip, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const isWithMetaData = withMetaData == 'true';
 
   try {
     const db = await dbClient();
@@ -85,7 +85,7 @@ export async function fetchCourseById_(request: any) {
 
   const { courseId, withMetaData } = schema.parse(params);
 
-  const isWithMetaData = Boolean(withMetaData);
+  const isWithMetaData = withMetaData == 'true';
 
   try {
     const db = await dbClient();
@@ -199,7 +199,7 @@ export async function findCourseByName_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { name, limit, skip, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const isWithMetaData = withMetaData == 'true';
 
   try {
     const db = await dbClient();

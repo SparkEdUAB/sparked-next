@@ -27,50 +27,17 @@ export type T_MediaContentFields = {
 
   created_by?: string;
   created_at?: string;
-
-  user?: {
-    name: string;
-    email: string;
-  };
-  school?: {
-    name: string;
-    _id: string;
-  };
-  program?: {
-    name: string;
-    _id: string;
-  };
-  course?: {
-    name: string;
-    _id: string;
-  };
-  unit?: {
-    name: string;
-    _id: string;
-  };
-  topic?: {
-    name: string;
-    _id: string;
-  };
-  grade?: {
-    name: string;
-    _id: string;
-  };
-  subject?: {
-    name: string;
-    _id: string;
-  };
 };
 
 /**
- * Corresponds to the type returned directly by the API
+ * Corresponds to the type returned directly by the API with metadata
  */
 export type T_RawMediaContentFields = {
   _id: string;
   name: string;
   description: string;
   file_url: string | null;
-  thumbnailUrl?: string;
+  thumbnail_url?: string;
 
   created_at: string;
   updated_at: string;

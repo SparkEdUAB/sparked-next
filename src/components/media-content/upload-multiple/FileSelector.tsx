@@ -2,9 +2,9 @@
 
 import i18next from 'i18next';
 import { AdminPageTitle } from '@components/layouts';
-import { T_TopicSearchedByName } from '@hooks/use-topic/types';
-import { T_UnitSearchedByName } from '@hooks/useUnit/types';
-import { T_SubjectSearchedByName } from '@hooks/useSubject/types';
+import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
+import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
+import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 import { Button } from 'flowbite-react';
 import { Dispatch, SetStateAction } from 'react';
 import { DragAndDropFileInput } from '../../molecules/DragAndDropFileInput/DragAndDropFileInput';
@@ -20,9 +20,9 @@ export function FileSelector({
   files: File[] | null;
   setFiles: Dispatch<SetStateAction<File[] | null>>;
   chosenFiles: () => string | undefined;
-  topic: T_TopicSearchedByName | null;
-  unit: T_UnitSearchedByName | null;
-  subject: T_SubjectSearchedByName | null;
+  topic: T_TopicWithoutMetadata | null;
+  unit: T_UnitWithoutMetadata | null;
+  subject: T_SubjectWithoutMetadata | null;
 }) {
   return (
     <>

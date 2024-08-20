@@ -11,7 +11,7 @@ export type T_FetchCourses = {
 };
 
 /**
- * Corresponds to the type returned directly by the API
+ * Corresponds to the type returned directly by the API with metadata
  */
 export type T_RawCourseFields = {
   key: string;

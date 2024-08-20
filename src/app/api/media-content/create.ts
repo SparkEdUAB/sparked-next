@@ -20,11 +20,23 @@ export default async function createMediaContent_(request: Request, session?: Se
     subjectId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
     fileUrl: zfd.text().optional(),
+    thumbnailUrl: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId, topicId, fileUrl, gradeId, subjectId } =
-    schema.parse(formBody);
+  const {
+    name,
+    description,
+    schoolId,
+    programId,
+    courseId,
+    unitId,
+    topicId,
+    fileUrl,
+    gradeId,
+    subjectId,
+    thumbnailUrl,
+  } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -191,6 +203,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       grade_id: new BSON.ObjectId(gradeId),
       subject_id: new BSON.ObjectId(subjectId),
       file_url: fileUrl,
+      thumbnail_url: thumbnailUrl,
     });
 
     const response = {

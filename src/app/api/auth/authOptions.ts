@@ -11,13 +11,12 @@ export const authOptions: NextAuthOptions = {
       credentials: {},
       //@ts-ignore
       async authorize(credentials, req) {
-        const { JWT_SECRET } = sharedConfig();
+        // const { JWT_SECRET } = sharedConfig();
         //@ts-ignore
         const { jwtToken } = credentials;
 
         try {
-          //@ts-ignore
-          const jwtData = jwt.verify(jwtToken as string, JWT_SECRET as string);
+          // const jwtData = jwt.verify(jwtToken as string, JWT_SECRET as string);
 
           //token is valid. Login user
           return { token: jwtToken, user: { ...credentials } };
@@ -33,7 +32,6 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token, user }) {
       if (!session || !token) return session;
-
 
       //@ts-ignore
       session.token = token;

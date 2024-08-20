@@ -11,7 +11,7 @@ export type T_FetchGrades = {
 };
 
 /**
- * Corresponds to the type returned directly by the API
+ * Corresponds to the type returned directly by the API with metadata
  */
 export type T_RawGradeFields = {
   key: string;
@@ -36,7 +36,7 @@ export type T_GradeFields = {
   created_at: string;
 };
 
-export type T_GradeSearchedByName = {
+export type T_GradeWithoutMetadata = {
   _id: string;
   name: string;
   description: string;

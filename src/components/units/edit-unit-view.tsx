@@ -19,17 +19,16 @@ import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/Lib
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 // import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
-// import { T_SubjectFields, T_SubjectSearchedByName } from '@hooks/useSubject/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 // import { transformRawSubject } from '@hooks/useSubject';
 import { T_NameAndDescription } from 'types';
-import { T_SubjectSearchedByName } from '@hooks/useSubject/types';
+import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 
 const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSuccessfullyDone: () => void }) => {
   const { editUnit, deleteUnits } = useUnit();
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
-  const [subject, setSubject] = useState<T_SubjectSearchedByName | null>(null);
+  const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
   // const { item: subject } = useAdminItemById(
@@ -54,10 +53,6 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
       setUploading(false);
     }
   };
-
-  // const handleClick = (subject: T_SubjectFields) => {
-  //   setSubjectId(subject?._id);
-  // };
 
   return (
     <>
@@ -88,7 +83,7 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
               defaultValue={unit.description}
             />
 
-            <Autocomplete<T_SubjectSearchedByName>
+            <Autocomplete<T_SubjectWithoutMetadata>
               url={API_LINKS.FIND_SUBJECT_BY_NAME}
               handleSelect={setSubject}
               moduleName="subjects"

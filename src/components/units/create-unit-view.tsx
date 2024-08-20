@@ -13,11 +13,11 @@ import { AdminFormInput } from '../admin/AdminForm/AdminFormInput';
 // import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-import { T_SubjectSearchedByName } from '@hooks/useSubject/types';
+import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 
 const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createUnit, isLoading } = useUnit();
-  const [subject, setSubject] = useState<T_SubjectSearchedByName | null>(null);
+  const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
 
   // const { items: courses } = useAdminListViewData(API_LINKS.FETCH_COURSES, 'courses', transformRawCourse);
 
@@ -57,7 +57,7 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
           required
         />
 
-        <Autocomplete<T_SubjectSearchedByName>
+        <Autocomplete<T_SubjectWithoutMetadata>
           url={API_LINKS.FIND_SUBJECT_BY_NAME}
           handleSelect={setSubject}
           moduleName="subjects"

@@ -3,7 +3,7 @@
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { AdminPageTitle } from '@components/layouts';
-import { T_GradeSearchedByName } from '@hooks/useGrade/types';
+import { T_GradeWithoutMetadata } from '@hooks/useGrade/types';
 import useSubject from '@hooks/useSubject';
 import { T_CreateSubjectFields } from '@hooks/useSubject/types';
 import { API_LINKS } from 'app/links';
@@ -16,7 +16,7 @@ import { SUBJECT_FORM_FIELDS } from './constants';
 
 const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createSubject, isLoading } = useSubject();
-  const [grade, setGrade] = useState<T_GradeSearchedByName | null>(null);
+  const [grade, setGrade] = useState<T_GradeWithoutMetadata | null>(null);
   const message = useToastMessage();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
@@ -62,7 +62,7 @@ const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => 
           required
         />
 
-        <Autocomplete<T_GradeSearchedByName>
+        <Autocomplete<T_GradeWithoutMetadata>
           url={API_LINKS.FIND_GRADE_BY_NAME}
           handleSelect={setGrade}
           moduleName="grades"

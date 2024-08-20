@@ -12,7 +12,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
     mediaContentId: zfd.text(),
     name: zfd.text(),
     description: zfd.text(),
-    unitId: zfd.text(),
+    unitId: zfd.text().optional(),
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
@@ -20,6 +20,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
     subjectId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
     fileUrl: zfd.text().optional(),
+    thumbnailUrl: zfd.text().optional(),
   });
   const formBody = await request.json();
 
@@ -32,6 +33,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
     unitId,
     topicId,
     fileUrl,
+    thumbnailUrl,
     mediaContentId,
     gradeId,
     subjectId,
@@ -79,7 +81,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
         )
       : null;
 
-    if (!topic) {
+    if (!topic && topicId) {
       const response = {
         isError: true,
         code: MEDIA_CONTENT_PROCESS_CODES.TOPIC_NOT_FOUND,
@@ -157,7 +159,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
       { projection: { _id: 1 } },
     );
 
-    if (!unit) {
+    if (!unit && unitId) {
       const response = {
         isError: true,
         code: MEDIA_CONTENT_PROCESS_CODES.UNIT_NOT_FOUND,
@@ -226,6 +228,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
       grade_id: new BSON.ObjectId(gradeId),
       subject_id: new BSON.ObjectId(subjectId),
       file_url: fileUrl,
+      thumbnail_url: thumbnailUrl,
     };
 
     await db.collection(dbCollections.media_content.name).updateOne(query, {

@@ -22,8 +22,8 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
     BASE_URL +
       API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-      NETWORK_UTILS.formatGetParams({ mediaContentId: props.params.id, withMetaData: 'false' }),
-    { next: { revalidate: 3600 } },
+      NETWORK_UTILS.formatGetParams({ mediaContentId: props.params.id, withMetaData: 'true' }),
+    { next: { revalidate: 60 } },
   );
 
   if (result instanceof Error) {
@@ -31,7 +31,7 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
   } else {
     const mediaContent = result.mediaContent;
     const thumbnail =
-      mediaContent.thumbnailUrl ||
+      mediaContent.thumbnail_url ||
       (mediaContent.file_url && determineFileType(mediaContent.file_url) === 'image'
         ? mediaContent.file_url
         : undefined);
@@ -44,8 +44,8 @@ export default async function MediaContentPage({ params }: T_MediaContentPagePro
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
     BASE_URL +
       API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-      NETWORK_UTILS.formatGetParams({ mediaContentId: params.id, withMetaData: 'false' }),
-    { next: { revalidate: 3600 } },
+      NETWORK_UTILS.formatGetParams({ mediaContentId: params.id, withMetaData: 'true' }),
+    { next: { revalidate: 60 } },
   );
 
   const relatedMediaContent = result instanceof Error ? null : await fetchRelatedMedia(result.mediaContent);
