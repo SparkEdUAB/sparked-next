@@ -18,7 +18,7 @@ export function RelatedMediaContentList({
               <List.Item key={item._id}>
                 <Link href={`/library/media/${item._id}`} className="flex flex-row gap-2 mb-2">
                   <Image
-                    src={item.thumbnailUrl || '/assets/images/no picture yet.svg'}
+                    src={item.thumbnail_url || '/assets/images/no picture yet.svg'}
                     alt={item.name}
                     width={120}
                     height={90}
