@@ -62,7 +62,7 @@ export type T_UnitFields = {
 };
 
 /**
- * Corresponds to the type returned directly by the API
+ * Corresponds to the type returned directly by the API with metadata
  */
 export type T_RawUnitFields = {
   _id: string;
@@ -105,7 +105,7 @@ export type T_RawUnitFields = {
   };
 };
 
-export type T_UnitSearchedByName = {
+export type T_UnitWithoutMetadata = {
   _id: string;
   name: string;
   description: string;

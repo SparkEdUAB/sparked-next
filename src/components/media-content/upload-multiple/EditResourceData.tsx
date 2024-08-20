@@ -1,7 +1,7 @@
 'use client';
 import i18next from 'i18next';
 import { AdminPageTitle } from '@components/layouts';
-import { T_TopicSearchedByName } from '@hooks/use-topic/types';
+import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
 import { Accordion, Button, Spinner, Tooltip } from 'flowbite-react';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
@@ -10,8 +10,8 @@ import PreviewButton from './PreviewButton';
 import { ResourceData, UploadProgress } from './upload-multiple-resources';
 import { RedAsterisk } from '@components/atom';
 import { HiExclamation } from 'react-icons/hi';
-import { T_UnitSearchedByName } from '@hooks/useUnit/types';
-import { T_SubjectSearchedByName } from '@hooks/useSubject/types';
+import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
+import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 
 const accordionTheme = {
   root: {
@@ -47,9 +47,9 @@ export function EditResourceData({
   resourceData: ResourceData[];
   setResourceData: Dispatch<SetStateAction<ResourceData[] | null>>;
   uploadData: () => void;
-  topic: T_TopicSearchedByName | null;
-  unit: T_UnitSearchedByName | null;
-  subject: T_SubjectSearchedByName | null;
+  topic: T_TopicWithoutMetadata | null;
+  unit: T_UnitWithoutMetadata | null;
+  subject: T_SubjectWithoutMetadata | null;
   isUploading: boolean;
   uploadProgress: UploadProgress | null;
   failedToUpload: boolean;

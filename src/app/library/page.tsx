@@ -27,7 +27,7 @@ const LibraryPage = async ({ searchParams }: T_LibraryPageProps) => {
     BASE_URL +
       API_LINKS.FETCH_CATEGORIES +
       NETWORK_UTILS.formatGetParams({ limit: MEDIA_CONTENT_LIMIT.toString(), skip: '0' }),
-    { next: { revalidate: 3600 } },
+    { next: { revalidate: 60 } },
   );
 
   return (

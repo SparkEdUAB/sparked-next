@@ -1,8 +1,8 @@
 'use client';
 import i18next from 'i18next';
-import { T_TopicSearchedByName } from '@hooks/use-topic/types';
-import { T_UnitSearchedByName } from '@hooks/useUnit/types';
-import { T_SubjectSearchedByName } from '@hooks/useSubject/types';
+import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
+import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
+import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 import { useState } from 'react';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import { removeFileExtension } from '../../../utils/helpers/removeFileExtension';
@@ -43,13 +43,13 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
   const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
   const [failedToUpload, setFailedToUpload] = useState(false);
 
-  const [topic, setTopic] = useState<T_TopicSearchedByName | null>(null);
-  const [unit, setUnit] = useState<T_UnitSearchedByName | null>(null);
-  const [subject, setSubject] = useState<T_SubjectSearchedByName | null>(null);
+  const [topic, setTopic] = useState<T_TopicWithoutMetadata | null>(null);
+  const [unit, setUnit] = useState<T_UnitWithoutMetadata | null>(null);
+  const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
 
-  const handleTopicSelect = (topic: T_TopicSearchedByName) => setTopic(topic);
-  const handleUnitSelect = (unit: T_UnitSearchedByName) => setUnit(unit);
-  const handleSubjectSelect = (subject: T_SubjectSearchedByName) => setSubject(subject);
+  const handleTopicSelect = (topic: T_TopicWithoutMetadata) => setTopic(topic);
+  const handleUnitSelect = (unit: T_UnitWithoutMetadata) => setUnit(unit);
+  const handleSubjectSelect = (subject: T_SubjectWithoutMetadata) => setSubject(subject);
 
   const chosenDependencies = () => {
     if (!topic && !unit && !subject) {
@@ -62,7 +62,9 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
     if (!files || files.length < 1) {
       return toast.warning('Please select some files');
     }
-    setResourceData(files.map((file) => ({ file, name: removeFileExtension(file.name), description: '' })));
+    setResourceData(
+      files.map((file) => ({ file, name: removeFileExtension(file.name).replaceAll('_', ' '), description: '' })),
+    );
     setStep(UploadProcessSteps.EditResources);
   };
 

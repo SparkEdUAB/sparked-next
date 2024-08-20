@@ -17,10 +17,11 @@ import { API_LINKS } from 'app/links';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
-import { T_TopicSearchedByName } from '@hooks/use-topic/types';
+import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-// import { T_UnitFields } from '@hooks/useUnit/types';
 import { T_NameAndDescription } from 'types';
+import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
+import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
 
 const EditMediaContentView = ({
   mediaContent,
@@ -36,8 +37,9 @@ const EditMediaContentView = ({
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
-  const [topic, setTopic] = useState<T_TopicSearchedByName | null>(null);
-  // const [unitId, setUnitId] = useState<string | null>(null);
+  const [topic, setTopic] = useState<T_TopicWithoutMetadata | null>(null);
+  const [unit, setUnit] = useState<T_UnitWithoutMetadata | null>(null);
+  const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
 
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
@@ -59,9 +61,9 @@ const EditMediaContentView = ({
           ...mediaContent,
           ...result,
           topicId: topic?._id || mediaContent.topicId,
-          unitId: topic?.unit_id || mediaContent.unitId,
-          subjectId: topic?.subject_id || mediaContent.subjectId,
-          gradeId: topic?.grade_id || mediaContent.gradeId,
+          unitId: topic?.unit_id || unit?._id || mediaContent.unitId,
+          subjectId: topic?.subject_id || unit?.subject_id || subject?._id || mediaContent.subjectId,
+          gradeId: topic?.grade_id || unit?.grade_id || subject?.grade_id || mediaContent.gradeId,
         },
         fileUrl || undefined,
         thumbnailUrl || undefined,
@@ -71,14 +73,6 @@ const EditMediaContentView = ({
       setUploading(false);
     }
   };
-
-  // const handleClick = (topic: T_TopicSearchedByName) => {
-  //   setTopicId(topic?._id);
-  // };
-
-  // const handleSelectUnit = (unit: T_UnitFields) => {
-  //   setUnitId(unit?._id);
-  // };
 
   return (
     <>
@@ -117,14 +111,21 @@ const EditMediaContentView = ({
             rows={4}
           />
 
-          {/* <Autocomplete
-            url={API_LINKS.FIND_UNITS_BY_NAME}
-            handleSelect={handleSelectUnit}
-            moduleName="units"
-            defaultValue={mediaContent.unitName}
-          /> */}
+          <Autocomplete<T_SubjectWithoutMetadata>
+            url={API_LINKS.FIND_SUBJECT_BY_NAME}
+            handleSelect={setSubject}
+            moduleName="subjects"
+            disabled={uploading}
+          />
 
-          <Autocomplete<T_TopicSearchedByName>
+          <Autocomplete<T_UnitWithoutMetadata>
+            url={API_LINKS.FIND_UNITS_BY_NAME}
+            handleSelect={setUnit}
+            moduleName="units"
+            disabled={uploading}
+          />
+
+          <Autocomplete<T_TopicWithoutMetadata>
             url={API_LINKS.FIND_TOPIC_BY_NAME}
             handleSelect={setTopic}
             moduleName="topics"

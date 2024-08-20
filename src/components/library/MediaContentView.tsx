@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FaBook, FaBookmark } from 'react-icons/fa';
+import { PiStepsFill } from 'react-icons/pi';
+import { MdTopic } from 'react-icons/md';
 import { ImBooks } from 'react-icons/im';
 import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers/determineFileType';
@@ -41,11 +43,7 @@ export function MediaContentView({
               height={600}
             />
           ) : fileType === 'video' ? (
-            <video
-              src={fileUrl}
-              className="max-h-[500px] max-w-full border-2 border-none rounded-xl "
-              controls
-            ></video>
+            <video src={fileUrl} className="max-h-[500px] max-w-full border-2 border-none rounded-xl " controls></video>
           ) : fileType === 'pdf' ? (
             <PdfViewer file={fileUrl} />
           ) : (
@@ -56,6 +54,24 @@ export function MediaContentView({
           <h1 className="my-6 font-bold text-3xl">{mediaContent.name}</h1>
           <p className="text-lg whitespace-pre-wrap">{mediaContent.description}</p>
           <div className="my-6 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
+            {mediaContent.grade ? (
+              <Link href={`/library?grade_id=${mediaContent.grade._id}`}>
+                <IconWithLabel
+                  title="Grade"
+                  icon={<PiStepsFill className="text-2xl" />}
+                  label={mediaContent.grade.name}
+                />
+              </Link>
+            ) : null}
+            {mediaContent.subject ? (
+              <Link href={`/library?subject_id=${mediaContent.subject._id}`}>
+                <IconWithLabel
+                  title="Subject"
+                  icon={<MdTopic className="text-2xl" />}
+                  label={mediaContent.subject.name}
+                />
+              </Link>
+            ) : null}
             {mediaContent.course ? (
               <Link href={`/library?course_id=${mediaContent.course._id}`}>
                 <IconWithLabel

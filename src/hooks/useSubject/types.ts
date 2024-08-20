@@ -10,7 +10,7 @@ export type T_FetchSubjects = {
 };
 
 /**
- * Corresponds to the type returned directly by the API
+ * Corresponds to the type returned directly by the API with metadata
  */
 export type T_RawSubjectFields = {
   key: string;
@@ -41,7 +41,7 @@ export type T_SubjectFields = {
   created_at: string;
 };
 
-export type T_SubjectSearchedByName = {
+export type T_SubjectWithoutMetadata = {
   _id: string;
   name: string;
   description: string;

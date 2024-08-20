@@ -36,6 +36,7 @@ i18next.init({
         no_cancel: 'No, cancel',
         deletion_confirmation_singular: 'Are you sure you want to delete this item?',
         deletion_confirmation_plural: 'Are you sure you want to delete these items?',
+        not_linked: 'Not linked',
 
         create_unit: 'Create a New Unit',
         create_user: 'Create a New User',

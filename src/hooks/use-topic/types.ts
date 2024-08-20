@@ -15,7 +15,7 @@ export type T_FetchTopic = {
 };
 
 /**
- * Corresponds to the type returned directly by the API
+ * Corresponds to the type returned directly by the API with metadata
  */
 export type T_RawTopicFields = {
   key: string;
@@ -90,7 +90,7 @@ export type T_TopicFields = {
   created_at: string;
 };
 
-export type T_TopicSearchedByName = {
+export type T_TopicWithoutMetadata = {
   _id: string;
   name: string;
   description: string;

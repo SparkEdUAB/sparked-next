@@ -20,7 +20,7 @@ export default async function fetchUnits_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { limit, skip, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const isWithMetaData = withMetaData == 'true';
 
   try {
     const db = await dbClient();
@@ -85,7 +85,7 @@ export async function fetchUnitById_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { unitId, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const isWithMetaData = withMetaData == 'true';
 
   try {
     const db = await dbClient();
@@ -198,7 +198,7 @@ export async function findUnitsByName_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { name, limit, skip, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const isWithMetaData = withMetaData == 'true';
 
   try {
     const db = await dbClient();
@@ -272,7 +272,7 @@ export async function fetchUnitsBySubjectId_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { subjectId, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const isWithMetaData = withMetaData == 'true';
 
   try {
     const db = await dbClient();
@@ -336,7 +336,7 @@ export async function fetchUnitsByTopicId_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { topicId, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const isWithMetaData = withMetaData == 'true';
 
   try {
     const db = await dbClient();
@@ -401,7 +401,7 @@ export async function fetchUnitsByGradeId_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { gradeId, withMetaData } = schema.parse(params);
-  const isWithMetaData = Boolean(withMetaData);
+  const isWithMetaData = withMetaData == 'true';
 
   try {
     const db = await dbClient();

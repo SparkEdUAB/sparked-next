@@ -18,6 +18,6 @@ export async function searchMedia(skip: number, searchText: string, sort_by: SOR
         withMetaData: 'false',
         sort_by: sort_by,
       }),
-    { next: { revalidate: 3600 } },
+    { next: { revalidate: 60 } },
   );
 }

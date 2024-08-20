@@ -17,17 +17,17 @@ export const p_fetchMediaContentWithMetaData = ({
     $match: query,
   },
 
-  {
-    $lookup: {
-      from: dbCollections.users.name,
-      localField: 'created_by_id',
-      foreignField: '_id',
-      as: 'user',
-    },
-  },
-  {
-    $unwind: '$user',
-  },
+  // {
+  //   $lookup: {
+  //     from: dbCollections.users.name,
+  //     localField: 'created_by_id',
+  //     foreignField: '_id',
+  //     as: 'user',
+  //   },
+  // },
+  // {
+  //   $unwind: '$user',
+  // },
   {
     $lookup: {
       from: dbCollections.schools.name,
@@ -134,9 +134,9 @@ export const p_fetchMediaContentWithMetaData = ({
       description: 1,
       created_at: 1,
       _id: 1,
-      'user._id': 1,
-      'user.name': 1,
-      'user.email': 1,
+      // 'user._id': 1,
+      // 'user.name': 1,
+      // 'user.email': 1,
       'course._id': 1,
       'course.name': 1,
       'unit.name': 1,

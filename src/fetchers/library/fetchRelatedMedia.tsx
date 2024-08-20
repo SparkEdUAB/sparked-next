@@ -23,6 +23,6 @@ export async function fetchRelatedMedia(mediaContent: T_RawMediaContentFields) {
 
   return fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
     BASE_URL + API_LINKS.FETCH_RELATED_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams(params),
-    { next: { revalidate: 3600 } },
+    { next: { revalidate: 60 } },
   );
 }

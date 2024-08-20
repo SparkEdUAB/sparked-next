@@ -15,6 +15,6 @@ export async function fetchMedia(skip: number, filters: T_Filters) {
         skip: skip.toString(),
         limit: MEDIA_CONTENT_LIMIT.toString(),
       }),
-    { next: { revalidate: 3600 } },
+    { next: { revalidate: 60 } },
   );
 }

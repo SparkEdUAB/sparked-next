@@ -14,9 +14,9 @@ import { FileUploadSection } from './FileUploadSection';
 import { API_LINKS } from 'app/links';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-import { T_TopicSearchedByName } from '@hooks/use-topic/types';
-import { T_UnitSearchedByName } from '@hooks/useUnit/types';
-import { T_SubjectSearchedByName } from '@hooks/useSubject/types';
+import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
+import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
+import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 import { T_NameAndDescription } from 'types';
 
 const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
@@ -27,9 +27,9 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   const [file, setFile] = useState<File | null>(null);
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
-  const [subject, setSubject] = useState<T_SubjectSearchedByName | null>(null);
-  const [unit, setUnit] = useState<T_UnitSearchedByName | null>(null);
-  const [topic, setTopic] = useState<T_TopicSearchedByName | null>(null);
+  const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
+  const [unit, setUnit] = useState<T_UnitWithoutMetadata | null>(null);
+  const [topic, setTopic] = useState<T_TopicWithoutMetadata | null>(null);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -124,21 +124,21 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           rows={4}
         />
 
-        <Autocomplete<T_SubjectSearchedByName>
+        <Autocomplete<T_SubjectWithoutMetadata>
           url={API_LINKS.FIND_SUBJECT_BY_NAME}
           handleSelect={setSubject}
           moduleName="subjects"
           disabled={isLoading}
         />
 
-        <Autocomplete<T_UnitSearchedByName>
+        <Autocomplete<T_UnitWithoutMetadata>
           url={API_LINKS.FIND_UNITS_BY_NAME}
           handleSelect={setUnit}
           moduleName="units"
           disabled={isLoading}
         />
 
-        <Autocomplete<T_TopicSearchedByName>
+        <Autocomplete<T_TopicWithoutMetadata>
           url={API_LINKS.FIND_TOPIC_BY_NAME}
           handleSelect={setTopic}
           moduleName="topics"

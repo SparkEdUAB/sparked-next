@@ -32,7 +32,7 @@ export type T_ProgramFields = {
 };
 
 /**
- * Corresponds to the type returned directly by the API
+ * Corresponds to the type returned directly by the API with metadata
  */
 export type T_RawProgramFields = {
   _id: string;

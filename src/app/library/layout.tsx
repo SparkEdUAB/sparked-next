@@ -44,9 +44,6 @@ export default function Layout({ children }: { children: ReactNode | ReactNode[]
     return () => setTopics([]);
   }, [fetchTopicsByUnitId, filteredUnitId, setTopics]);
 
-  // eslint-disable-next-line no-console
-  console.log(topics);
-
   return (
     <LibraryLayout
       subjects={subjects instanceof Error ? [] : subjects}
