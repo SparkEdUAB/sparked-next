@@ -16,7 +16,7 @@
     "@highlight-run/next": "^7.5.4",
     "@intelllex/react-pdf": "github:YewoMhango/react-pdf-viewer#0.0.1",
     "@openpanel/nextjs": "^0.0.8-beta",
-    "@types/node": "22.5.5",
+    "@types/node": "22.7.5",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
     "axios": "^1.5.0",
