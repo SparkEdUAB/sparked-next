@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pm2": "pm2 start npm --name \"sparked-next\" -- start"
+    "pm2": "pm2 start npm --name \"sparked-next\" -- start",
+    "minio-deploy": "cd src/scripts/minio && ./deploy.sh"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.0.0",
