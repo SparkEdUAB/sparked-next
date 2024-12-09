@@ -18,7 +18,7 @@
     "@openpanel/nextjs": "^0.0.8-beta",
     "@types/node": "22.8.6",
     "@types/react": "18.3.12",
-    "@types/react-dom": "18.3.1",
+    "@types/react-dom": "19.0.1",
     "axios": "^1.5.0",
     "bcryptjs": "^2.4.3",
     "eslint": "8.57.0",
