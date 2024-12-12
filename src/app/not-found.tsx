@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
-import { IBM_Plex_Sans } from 'next/font/google';
+// import { IBM_Plex_Sans } from 'next/font/google';
 import Link from 'next/link';
 import { DEFAULT_OPEN_GRAPH_PREVIEW } from './shared/constants';
 
-const ibmPlexSans = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
+// const ibmPlexSans = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
 
 export const metadata: Metadata = {
   title: '404 - Not Found',
@@ -148,7 +148,7 @@ export default function NotFound() {
           fill="#cacaca"
         />
       </svg>
-      <h1 className={`${ibmPlexSans.className} mt-6 mb-2 text-2xl font-bold text-[#3f3d56] dark:text-gray-400`}>
+      <h1 className={`mt-6 mb-2 text-2xl font-bold text-[#3f3d56] dark:text-gray-400`}>
         Nothing was found here
       </h1>
       <p className="opacity-70">

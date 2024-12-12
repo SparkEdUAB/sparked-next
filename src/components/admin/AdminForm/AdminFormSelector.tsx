@@ -43,7 +43,6 @@ export function AdminFormSelector({
           icon={loadingItems ? () => <Spinner size="sm" /> : undefined}
           id={name}
           name={name}
-          placeholder={label}
           disabled={disabled}
           required={required}
           defaultValue={defaultValue}
