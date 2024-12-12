@@ -43,16 +43,19 @@ export function AdminFormSelector({
           icon={loadingItems ? () => <Spinner size="sm" /> : undefined}
           id={name}
           name={name}
-          placeholder={label}
           disabled={disabled}
           required={required}
           defaultValue={defaultValue}
           onChange={(e) => setSelected(e.target.value)}
         >
+          <option value="" disabled>
+              {label}
+           </option>
           {options.map((item) => (
-            <option key={item._id} value={item._id} selected={selected === item._id}>
+            <option key={item._id} value={item._id} selected={selected === item._id} >
               {item.name}
             </option>
+
           ))}
         </Select>
       }
