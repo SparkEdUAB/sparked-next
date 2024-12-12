@@ -2,15 +2,15 @@ import React from 'react';
 import FooterSection from './FooterSection';
 import HeroSection from './HeroSection';
 import HeaderSection from './HeaderSection';
-import { IBM_Plex_Sans } from 'next/font/google';
 
-const ibmPlexSans = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
+//import { IBM_Plex_Sans } from 'next/font/google';
+//const ibmPlexSans = IBM_Plex_Sans({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
 
 // We should only show this if not logged in
 const WelcomePage: React.FC = () => {
   return (
     <>
-      <div className={`${ibmPlexSans.className} text-[#36799d] dark:text-[#98bdd2]`}>
+      <div>
         <HeaderSection />
         <HeroSection />
         <FooterSection />
