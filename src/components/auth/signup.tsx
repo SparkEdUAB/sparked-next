@@ -8,7 +8,7 @@ import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormE
 import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { AiOutlineLock } from 'react-icons/ai';
-import { LuUser2 } from 'react-icons/lu';
+import { LuCircleUser } from 'react-icons/lu';
 
 const Signup = () => {
   const { handleSignup, loading } = useAuth();
@@ -37,7 +37,7 @@ const Signup = () => {
                   <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email" />
                 </div>
                 <TextInput
-                  icon={LuUser2}
+                  icon={LuCircleUser}
                   disabled={loading}
                   id={SIGNUP_FORM_FIELDS.email.key}
                   name={SIGNUP_FORM_FIELDS.email.key}
