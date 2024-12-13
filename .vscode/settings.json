@@ -4,8 +4,5 @@
   "editor.formatOnSave": true,
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
   }
 }
