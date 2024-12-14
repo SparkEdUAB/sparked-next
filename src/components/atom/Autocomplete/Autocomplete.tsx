@@ -43,7 +43,7 @@ const Autocomplete = <T extends ItemType>({
   required,
   disabled,
 }: Props<T>) => {
-  const [query, setQuery] = useState('' || defaultValue);
+  const [query, setQuery] = useState(defaultValue || " ");
   const [autoCompleted, setAutoCompleted] = useState<boolean>(false);
   const debouncedValue: string = useDebounceValue<string>(query as string, 500);
   const { data, isLoading, isValidating } = useFetch(
