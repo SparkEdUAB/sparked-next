@@ -3,7 +3,7 @@ import useAuth from '@hooks/useAuth';
 import Link from 'next/link';
 import AppLogo from '@components/logo';
 import { Label, TextInput, Button, Spinner } from 'flowbite-react';
-import { LuUser2 } from 'react-icons/lu';
+import { LuUser } from 'react-icons/lu';
 import { AiOutlineLock } from 'react-icons/ai';
 import i18next from 'i18next';
 import { FormEventHandler } from 'react';
@@ -37,7 +37,7 @@ const Login: React.FC = () => {
                   <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email" />
                 </div>
                 <TextInput
-                  icon={LuUser2}
+                  icon={LuUser}
                   disabled={loading}
                   id={SIGNUP_FORM_FIELDS.email.key}
                   name={SIGNUP_FORM_FIELDS.email.key}
