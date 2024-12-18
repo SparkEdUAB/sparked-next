@@ -1,7 +1,5 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import jwt from 'jsonwebtoken';
-import sharedConfig from 'app/shared/config';
 
 export const authOptions: NextAuthOptions = {
   providers: [
