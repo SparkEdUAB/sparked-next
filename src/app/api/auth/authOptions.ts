@@ -9,7 +9,7 @@ export const authOptions: NextAuthOptions = {
       credentials: {},
       //@ts-ignore
       async authorize(credentials, req) {
-        // const { JWT_SECRET } = sharedConfig();
+        // const { JWT_SECRET } = sharedConfig();origin
         //@ts-ignore
         const { jwtToken } = credentials;
 
