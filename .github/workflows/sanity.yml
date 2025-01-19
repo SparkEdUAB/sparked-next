@@ -13,59 +13,35 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: Checkout repository
+      - name: Build Next.js app
         uses: actions/checkout@v4
-
+      - name: Set MongoDB URI
+        run: echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+      - name: Set MongoDB DB
+        run: echo "MONGODB_DB=sparked-next" >> .env
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Install Yarn v4 (Berry)
-        run: corepack enable && corepack prepare yarn@4.6.0 --activate
-
-      - name: Cache Yarn v4
-        uses: actions/cache@v4
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v4
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
-          path: |
-            .yarn/cache
-            .yarn/build-state.yml
-            .yarn/install-state.gz
-            .pnp.*
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-
-      - name: Check for existing lockfile
-        id: check-lockfile
-        run: |
-          if [ -f yarn.lock ]; then
-            echo "lockfile-exists=true" >> $GITHUB_ENV
-          else
-            echo "lockfile-exists=false" >> $GITHUB_ENV
-          fi
-
-      - name: Install dependencies
-        run: |
-          if [ "$lockfile_exists" == "true" ]; then
-            yarn install --immutable --immutable-cache --check-cache
-          else
-            yarn install
-          fi
-        env:
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false # Allows compatibility with public PRs
-
-      - name: Set environment variables
-        run: |
-          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
-          echo "MONGODB_DB=sparked-next" >> .env
-
-      - name: Run linter
-        run: yarn lint
-
-      - name: Build Next.js app
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+      - name: Create Local Build
+        if: steps.tests.exit_code == 0
+        id: build
         run: yarn build
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
