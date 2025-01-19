@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {},
+  swcMinify: false,
   webpack: (config) => {
     config.externals = [...config.externals, { realm: 'realm' }]; // required to make realm
     config.resolve.alias.canvas = false;

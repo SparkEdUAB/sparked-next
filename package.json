@@ -14,11 +14,11 @@
     "@aws-sdk/client-s3": "^3.598.0",
     "@headlessui/react": "^2.0.0",
     "@highlight-run/next": "^7.5.4",
-    "@intelllex/react-pdf": "github:YewoMhango/react-pdf-viewer#0.0.1",
     "@openpanel/nextjs": "^0.0.8-beta",
     "@types/node": "22.8.6",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
+    "@wojtekmaj/react-hooks": "^1.22.0",
     "axios": "^1.5.0",
     "bcryptjs": "^2.4.3",
     "eslint": "8.57.0",
@@ -58,5 +58,5 @@
     "postcss": "^8.4.28",
     "tailwindcss": "^3.3.3"
   },
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@4.6.0"
 }
