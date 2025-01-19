@@ -16,6 +16,11 @@ const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/Pd
   ssr: false,
 });
 
+const VideoViewer = dynamic(() => import('next-video/player'), {
+  ssr: false,
+});
+
+
 export function MediaContentView({
   mediaContent,
   relatedMediaContent,
@@ -43,7 +48,7 @@ export function MediaContentView({
               height={600}
             />
           ) : fileType === 'video' ? (
-            <video src={fileUrl} className="max-h-[500px] max-w-full border-2 border-none rounded-xl " controls></video>
+            <VideoViewer src={fileUrl} />
           ) : fileType === 'pdf' ? (
             <PdfViewer file={fileUrl} />
           ) : (

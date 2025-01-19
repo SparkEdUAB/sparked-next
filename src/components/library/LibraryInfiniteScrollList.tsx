@@ -45,6 +45,7 @@ export function LibraryInfiniteScrollList({
               image={getImageSrc(item)}
               title={item.name}
               description={item.description}
+              fileUrl={item.file_url as string}
             />
           </div>
         ))}

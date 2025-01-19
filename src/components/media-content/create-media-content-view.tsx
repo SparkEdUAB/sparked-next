@@ -62,24 +62,24 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
         {
           ...(subject
             ? {
-                gradeId: subject.grade_id,
-                subjectId: subject._id,
-              }
+              gradeId: subject.grade_id,
+              subjectId: subject._id,
+            }
             : {}),
           ...(unit
             ? {
-                unitId: unit._id,
-                gradeId: unit.grade_id,
-                subjectId: unit.subject_id,
-              }
+              unitId: unit._id,
+              gradeId: unit.grade_id,
+              subjectId: unit.subject_id,
+            }
             : {}),
           ...(topic
             ? {
-                unitId: topic.unit_id,
-                topicId: topic._id,
-                gradeId: topic.grade_id,
-                subjectId: topic.subject_id,
-              }
+              unitId: topic.unit_id,
+              topicId: topic._id,
+              gradeId: topic.grade_id,
+              subjectId: topic.subject_id,
+            }
             : {}),
           ...result,
         },
@@ -87,7 +87,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
         thumbnailUrl || undefined,
         onSuccessfullyDone,
       );
-    } catch (error) {
+    } catch {
       message.error(i18next.t('failed_to_upload'));
     } finally {
       setUploadingFile(false);
