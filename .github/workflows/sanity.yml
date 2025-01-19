@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - name: Checkout repository
@@ -23,12 +22,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Set MongoDB URI
-        run: echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
-
-      - name: Set MongoDB DB
-        run: echo "MONGODB_DB=sparked-next" >> .env
 
       - name: Install Yarn v4 (Berry)
         run: corepack enable && corepack prepare yarn@4.6.0 --activate
@@ -45,8 +38,29 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-yarn-
 
+      - name: Check for existing lockfile
+        id: check-lockfile
+        run: |
+          if [ -f yarn.lock ]; then
+            echo "lockfile-exists=true" >> $GITHUB_ENV
+          else
+            echo "lockfile-exists=false" >> $GITHUB_ENV
+          fi
+
       - name: Install dependencies
-        run: yarn install
+        run: |
+          if [ "$lockfile_exists" == "true" ]; then
+            yarn install --immutable --immutable-cache --check-cache
+          else
+            yarn install
+          fi
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false # Allows compatibility with public PRs
+
+      - name: Set environment variables
+        run: |
+          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
+          echo "MONGODB_DB=sparked-next" >> .env
 
       - name: Run linter
         run: yarn lint
