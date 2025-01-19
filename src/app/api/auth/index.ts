@@ -27,7 +27,7 @@ export default async function logout_() {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: AUTH_PROCESS_CODES.FAILED_TO_LOGOUT_USER,

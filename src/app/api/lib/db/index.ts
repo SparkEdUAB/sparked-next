@@ -29,7 +29,7 @@ export const dbClient = async () => {
     const mongoClient = new MongoClient(uri, options);
     const dbConnection = await mongoClient.connect();
     return dbConnection.db(process.env.MONGODB_DB);
-  } catch (error) {
+  } catch {
     return null;
   }
 };

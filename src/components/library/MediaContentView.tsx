@@ -16,7 +16,7 @@ const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/Pd
   ssr: false,
 });
 
-const VideoViewer = dynamic(() => import('@components/atom/Video/Video'), {
+const VideoViewer = dynamic(() => import('next-video/player'), {
   ssr: false,
 });
 
@@ -30,16 +30,6 @@ export function MediaContentView({
 }) {
   const fileType = determineFileType(mediaContent?.file_url || '');
   const fileUrl = mediaContent.file_url ? getFileUrl(mediaContent.file_url) : '';
-
-  const videoJsOptions = {
-    controls: true,
-    responsive: true,
-    fluid: true,
-    sources: [{
-      src: fileUrl,
-      type: 'video/mp4'
-    }]
-  };
 
   return (
     <div className="xl:grid xl:grid-cols-[calc(100%_-_300px)_300px] 2xl:grid-cols-[calc(100%_-_400px)_400px] px-4 md:px-8 w-full ">
@@ -58,7 +48,7 @@ export function MediaContentView({
               height={600}
             />
           ) : fileType === 'video' ? (
-            <VideoViewer options={videoJsOptions} />
+            <VideoViewer src={fileUrl} />
           ) : fileType === 'pdf' ? (
             <PdfViewer file={fileUrl} />
           ) : (

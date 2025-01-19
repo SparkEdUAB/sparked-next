@@ -1,7 +1,5 @@
 import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import jwt from 'jsonwebtoken';
-import sharedConfig from 'app/shared/config';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -10,7 +8,7 @@ export const authOptions: NextAuthOptions = {
 
       credentials: {},
       //@ts-ignore
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         // const { JWT_SECRET } = sharedConfig();
         //@ts-ignore
         const { jwtToken } = credentials;
@@ -20,7 +18,7 @@ export const authOptions: NextAuthOptions = {
 
           //token is valid. Login user
           return { token: jwtToken, user: { ...credentials } };
-        } catch (error) {
+        } catch {
           return null;
         }
       },
@@ -30,7 +28,7 @@ export const authOptions: NextAuthOptions = {
     colorScheme: 'light',
   },
   callbacks: {
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (!session || !token) return session;
 
       //@ts-ignore

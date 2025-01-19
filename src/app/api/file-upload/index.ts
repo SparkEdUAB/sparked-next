@@ -44,7 +44,7 @@ export default async function uploadFile_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const response = {
       isError: true,
       code: SPARKED_PROCESS_CODES.METHOD_NOT_FOUND,

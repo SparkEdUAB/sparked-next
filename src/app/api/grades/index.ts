@@ -46,7 +46,7 @@ export default async function fetchGrades_(request: any) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -88,7 +88,7 @@ export async function fetchGradeById_(request: any) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -135,7 +135,7 @@ export async function deleteGrade_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -190,7 +190,7 @@ export async function findGradeByName_(request: any) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

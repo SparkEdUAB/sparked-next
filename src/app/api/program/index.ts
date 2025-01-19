@@ -42,7 +42,7 @@ export default async function fetchPrograms_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -105,7 +105,7 @@ export async function fetchProgramById_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -152,7 +152,7 @@ export async function deletePrograms_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -224,7 +224,7 @@ export async function findProgramsByName_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

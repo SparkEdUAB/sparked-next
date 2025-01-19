@@ -90,7 +90,7 @@ export default async function login_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const resp = {
       isError: true,
       code: AUTH_PROCESS_CODES.INVALID_CREDENTIALS,

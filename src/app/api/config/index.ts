@@ -20,7 +20,7 @@ export default async function readConfigFile_() {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch (error) {
+  } catch {
     const response = {
       isError: true,
       code: CONFIG_PROCESS_CODES.READING_FILE_FAILED,

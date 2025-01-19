@@ -1,14 +1,11 @@
 import { BSON } from 'mongodb';
-import { T_RECORD } from 'types';
 
 export const p_fetchUserRoleDetails = ({
   userId,
-  project = {},
 }: {
   userId: string;
   limit?: number;
   skip?: number;
-  project?: T_RECORD;
 }) => [
   {
     $match: {
