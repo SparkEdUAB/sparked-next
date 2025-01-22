@@ -1,25 +1,11 @@
 import AppLogo from '@components/logo';
+
+
 import Link from 'next/link';
 
 const FooterSection = () => {
   return (
     <>
-      <section className="bg-sky-50 dark:bg-gray-900">
-        <div className="py-8 px-4 mx-auto max-w-screen-lg lg:py-16 lg:px-6 flex justify-center">
-          <div className="max-w-screen-lg  sm:text-lg">
-            <h2 className="mb-4 text-4xl font-semibold text-sky-900 dark:text-white text-center">
-              Powering future school digital libraries
-            </h2>
-            <p className="mb-4 font-light text-center">
-              Manage and track educational content across your institution through our open, collaborative platform.
-              Link issues across different departments and ingest data from various educational tools, so your
-              administrative and academic teams have richer contextual information to rapidly respond to requests,
-              changes, and incidents. This digital approach ensures a seamless management of school content.
-            </p>
-          </div>
-        </div>
-      </section>
-
       <footer className="bg-sky-50 dark:bg-gray-800">
         <div className="mx-auto max-w-screen-lg p-6">
           <div className="md:flex md:justify-between">
@@ -56,7 +42,7 @@ const FooterSection = () => {
           <hr className="my-6 border-sky-200 md:mx-auto dark:border-gray-700 lg:my-8" />
           <div className="md:flex md:items-center md:justify-center">
             <span className="text-sm text-sky-700 md:text-center dark:text-sky-300">
-              © 2024{' '}
+              © 2025{' '}
               <a href="" className="hover:underline">
                 SparkEd™
               </a>
