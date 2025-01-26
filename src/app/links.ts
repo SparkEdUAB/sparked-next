@@ -121,5 +121,5 @@ export const API_LINKS = {
   EDIT_USER: '/api/users/editUser',
   DELETE_USERS: '/api/users/deleteUsers',
   FIND_USERS_BY_NAME: '/api/users/findUserByName',
-  FIND_USERS_BY_ID: '/api/users/fetchUserById',
+  FIND_USER_BY_ID: '/api/users/fetchUserById',
 } satisfies T_link;

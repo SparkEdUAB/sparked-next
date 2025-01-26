@@ -99,7 +99,7 @@ const useUsers = () => {
 
   const fetchUsers = useCallback(
     async ({ limit = 1000, skip = 0 }: T_FetchUsers) => {
-      const url = API_LINKS.FETCH_UNITS;
+      const url = API_LINKS.FETCH_USERS;
       const formData = {
         body: JSON.stringify({ limit, skip, withMetaData: true }),
         method: 'post',
@@ -124,6 +124,7 @@ const useUsers = () => {
           (i: T_UserFields, index: number) =>
             ({
               index: index + 1,
+              // @ts-expect-error
               key: i._id,
               _id: i._id,
               name: i.name,
@@ -152,7 +153,7 @@ const useUsers = () => {
 
   const fetchUserById = useCallback(
     async ({ userId, withMetaData = false }: { userId: string; withMetaData: boolean }) => {
-      const url = API_LINKS.FETCH_UNIT_BY_ID;
+      const url = API_LINKS.FIND_USER_BY_ID;
       const formData = {
         body: JSON.stringify({ userId, withMetaData }),
         method: 'post',
@@ -180,6 +181,7 @@ const useUsers = () => {
             schoolId: school?._id,
             programId: program?._id,
             index: 1,
+            //   @ts-expect-error
             key: _id,
             created_at,
           };
@@ -247,7 +249,7 @@ const useUsers = () => {
         return message.warning(i18next.t('search_empty'));
       }
 
-      const url = API_LINKS.FIND_UNITS_BY_NAME;
+      const url = API_LINKS.FIND_USERS_BY_NAME;
       const formData = {
         body: JSON.stringify({
           name: searchQuery.trim(),
