@@ -15,7 +15,12 @@ const Signup = () => {
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    const keys = [SIGNUP_FORM_FIELDS.email.key, SIGNUP_FORM_FIELDS.password.key];
+    const keys = [
+      SIGNUP_FORM_FIELDS.email.key,
+      SIGNUP_FORM_FIELDS.password.key,
+      SIGNUP_FORM_FIELDS.firstName.key,
+      SIGNUP_FORM_FIELDS.lastName.key,
+    ];
     let result = extractValuesFromFormEvent<T_SignupFields>(e, keys);
     handleSignup(result);
   };
@@ -32,6 +37,34 @@ const Signup = () => {
               Create your account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <div className="mb-2 block">
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.firstName.key} value="First Name" />
+                </div>
+                <TextInput
+                  icon={LuCircleUser}
+                  disabled={loading}
+                  id={SIGNUP_FORM_FIELDS.firstName.key}
+                  name={SIGNUP_FORM_FIELDS.firstName.key}
+                  type="text"
+                  placeholder="John"
+                  required
+                />
+              </div>
+              <div>
+                <div className="mb-2 block">
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.lastName.key} value="Last Name" />
+                </div>
+                <TextInput
+                  icon={LuCircleUser}
+                  disabled={loading}
+                  id={SIGNUP_FORM_FIELDS.lastName.key}
+                  name={SIGNUP_FORM_FIELDS.lastName.key}
+                  type="text"
+                  placeholder="Doe"
+                  required
+                />
+              </div>
               <div>
                 <div className="mb-2 block">
                   <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email" />

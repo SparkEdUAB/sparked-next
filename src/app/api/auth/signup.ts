@@ -10,10 +10,12 @@ export default async function signup_(request: Request) {
   const schema = zfd.formData({
     email: zfd.text(),
     password: zfd.text(),
+    firstName: zfd.text(),
+    lastName: zfd.text(),
   });
   const formBody = await request.json();
 
-  const { email, password } = schema.parse(formBody);
+  const { email, password, firstName, lastName } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -48,11 +50,13 @@ export default async function signup_(request: Request) {
       password,
     });
 
-    //TODO: verify schema
     await db.collection(dbCollections.users.name).insertOne({
       email,
+      firstName,
+      lastName,
       is_verified: false,
       created_at: new Date(),
+      role: 'user', // default role
     });
 
     const response = {

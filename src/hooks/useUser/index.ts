@@ -5,9 +5,21 @@ import useNavigation from '@hooks/useNavigation';
 import { API_LINKS } from 'app/links';
 import i18next from 'i18next';
 import { useCallback, useState } from 'react';
-import { T_CreateUserFields, T_FetchUsers, T_UserFields } from './types';
+import { T_CreateUserFields, T_FetchUsers, T_RawUserFields, T_UserFields } from './types';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
+
+export function transformRawUser(user: T_RawUserFields) {
+  return {
+    _id: user._id,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    role: user.role,
+    created_at: user.created_at,
+    // updated_at: user.updatedAt,
+  };
+}
 
 const useUsers = () => {
   const { getChildLinkByKey, router } = useNavigation();
@@ -43,7 +55,7 @@ const useUsers = () => {
 
         onSuccessfullyDone?.();
 
-        message.success(i18next.t('unit_created'));
+        message.success(i18next.t('user_created'));
       } catch (err: any) {
         message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
@@ -52,12 +64,12 @@ const useUsers = () => {
     [message],
   );
 
-  const editUnit = useCallback(
+  const editUser = useCallback(
     async (fields: T_UserFields, onSuccessfullyDone: () => void) => {
-      const url = API_LINKS.EDIT_UNIT;
+      const url = API_LINKS.EDIT_USER;
       const formData = {
         //spread course in an event that it is not passed by the form due to the fact that the first 1000 records didn't contain it. See limit on fetch schools and programs
-        body: JSON.stringify({ ...user, ...fields, unitId: user?._id }),
+        body: JSON.stringify({ ...user, ...fields, userId: user?._id }),
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -85,7 +97,7 @@ const useUsers = () => {
     [message, user],
   );
 
-  const fetchUnits = useCallback(
+  const fetchUsers = useCallback(
     async ({ limit = 1000, skip = 0 }: T_FetchUsers) => {
       const url = API_LINKS.FETCH_UNITS;
       const formData = {
@@ -108,7 +120,7 @@ const useUsers = () => {
           return false;
         }
 
-        const _units = responseData.units?.map(
+        const _users = responseData.users?.map(
           (i: T_UserFields, index: number) =>
             ({
               index: index + 1,
@@ -126,9 +138,9 @@ const useUsers = () => {
             } satisfies T_UserFields),
         );
 
-        setUsers(_units);
-        setTempUsers(_units);
-        return _units;
+        setUsers(_users);
+        setTempUsers(_users);
+        return _users;
       } catch (err: any) {
         setLoaderStatus(false);
         message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
@@ -138,11 +150,11 @@ const useUsers = () => {
     [message],
   );
 
-  const fetchUnitById = useCallback(
-    async ({ unitId, withMetaData = false }: { unitId: string; withMetaData: boolean }) => {
+  const fetchUserById = useCallback(
+    async ({ userId, withMetaData = false }: { userId: string; withMetaData: boolean }) => {
       const url = API_LINKS.FETCH_UNIT_BY_ID;
       const formData = {
-        body: JSON.stringify({ unitId, withMetaData }),
+        body: JSON.stringify({ userId, withMetaData }),
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -159,8 +171,8 @@ const useUsers = () => {
           return false;
         }
 
-        if (responseData.unit) {
-          const { _id, name, school, program, created_at } = responseData.unit as T_UserFields;
+        if (responseData.user) {
+          const { _id, name, school, program, created_at } = responseData.user as T_UserFields;
 
           const _user: T_UserFields = {
             _id,
@@ -192,9 +204,9 @@ const useUsers = () => {
   }, [message, selectedUserIds.length]);
 
   const deleteUsers = useCallback(async () => {
-    const url = API_LINKS.DELETE_UNITS;
+    const url = API_LINKS.DELETE_USERS;
     const formData = {
-      body: JSON.stringify({ unitIds: selectedUserIds }),
+      body: JSON.stringify({ userIds: selectedUserIds }),
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -215,6 +227,7 @@ const useUsers = () => {
 
       message.success(i18next.t('success'));
 
+      //   @ts-expect-error
       setUsers(users.filter((i) => selectedUserIds.indexOf(i._id) == -1));
 
       return responseData.results;
@@ -291,23 +304,23 @@ const useUsers = () => {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${selectedUserIds[0]}`);
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.users) + `?userId=${selectedUserIds[0]}`);
   }, [getChildLinkByKey, message, router, selectedUserIds]);
 
   return {
     createUser,
-    fetchUnits,
+    fetchUsers,
     users,
     setUsers,
     setSelectedUserIds,
     selectedUserIds,
     triggerDelete,
     triggerEdit,
-    fetchUnitById,
+    fetchUserById,
     router,
     user,
     isLoading,
-    editUnit,
+    editUser,
     findUsersByName,
     onSearchQueryChange,
     searchQuery,
