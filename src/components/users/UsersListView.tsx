@@ -1,63 +1,89 @@
 'use client';
 
-import ContentPlaceholder from '@components/atom/ContentPlaceholder/ContentPlaceholder';
+import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import { AdminPageTitle } from '@components/layouts';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
+import { Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
+import React, { useState } from 'react';
+import CreateUserView from './create-user-view';
+import EditUserView from './edit-user-view';
+import useUser, { transformRawUser } from '@hooks/useUser';
+import { T_UserFields } from '@hooks/useUser/types';
+import { userTableColumns } from '.';
 
 const UsersListView = () => {
+  const { selectedUserIds, setSelectedUserIds, deleteUsers } = useUser();
+  const [creatingUser, setCreatingUser] = useState(false);
+  const [edittingUser, setEdittingUser] = useState<T_UserFields | null>(null);
+
+  const {
+    items: users,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(API_LINKS.FETCH_USERS, 'users', transformRawUser, API_LINKS.FIND_USERS_BY_NAME);
+
+  const rowSelection = {
+    selectedRowKeys: selectedUserIds,
+    onChange: (selectedRowKeys: React.Key[]) => {
+      setSelectedUserIds(selectedRowKeys);
+    },
+  };
+
   return (
     <>
       <AdminPageTitle title={i18next.t('users')} />
 
-      <ContentPlaceholder message="User management has not been implemented yet" />
-
-      {/* <TextInput
-        onChange={(e) => onSearchQueryChange(e.target.value)}
-        icon={HiMagnifyingGlass}
-        className="table-search-box"
-        placeholder={i18next.t('search_users')}
-        required
-        type="text"
-        onKeyDown={(e) => {
-          e.keyCode === 13 ? findUsersByName({ withMetaData: true }) : null;
+      <AdminTable<any>
+        deleteItems={async () => {
+          const result = await deleteUsers();
+          mutate();
+          return result;
         }}
-      />
-      <AdminTable<T_UserFields>
-        deleteItems={deleteUsers}
         rowSelection={rowSelection}
-        items={users || []}
+        items={users}
         isLoading={isLoading}
-        //createNewUrl={getChildLinkByKey('create', ADMIN_LINKS.users)}
-        //getEditUrl={(id: string) => getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${id}`}
         createNew={() => setCreatingUser(true)}
-        editItem={(id) => setEdittingUserWithId(id)}
+        editItem={(id) => setEdittingUser(id)}
         columns={userTableColumns}
-      /> */}
-      {/*<Modal dismissible show={creatingUser} onClose={() => setCreatingUser(false)} popup>
+        loadMore={loadMore}
+        hasMore={hasMore}
+        error={error}
+      />
+      <Modal dismissible show={creatingUser} onClose={() => setCreatingUser(false)} popup>
         <Modal.Header />
         <Modal.Body>
           <CreateUserView
             onSuccessfullyDone={() => {
-              fetchUsers({});
+              mutate();
               setCreatingUser(false);
             }}
           />
         </Modal.Body>
       </Modal>
-      <Modal dismissible show={!!edittingUserWithId} onClose={() => setEdittingUserWithId(null)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          {edittingUserWithId ? (
+      <Drawer
+        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+        open={!!edittingUser}
+        onClose={() => setEdittingUser(null)}
+        position="right"
+      >
+        <Drawer.Header titleIcon={() => <></>} />
+        <Drawer.Items>
+          {edittingUser ? (
             <EditUserView
-              courseId={edittingUserWithId}
+              user={edittingUser}
               onSuccessfullyDone={() => {
-                fetchUsers({});
-                setEdittingUserWithId(null);
+                mutate();
+                setEdittingUser(null);
               }}
             />
           ) : null}
-        </Modal.Body>
-      </Modal>*/}
+        </Drawer.Items>
+      </Drawer>
     </>
   );
 };

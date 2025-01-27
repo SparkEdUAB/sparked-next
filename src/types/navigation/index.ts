@@ -108,6 +108,15 @@ export type T_link = {
   FETCH_ALL_STATS: string;
   //config
   READ_CONFIG_FILE: string;
+
+  // users
+  FETCH_USERS: string;
+  FIND_USERS_BY_NAME: string;
+  FIND_USER_BY_ID: string;
+  EDIT_USER: string;
+  DELETE_USERS: string;
+  FIND_ROLES_BY_NAME?: string;
+  FETCH_AVAILABLE_ROLES: string;
 };
 
 export type TProcessCode = {

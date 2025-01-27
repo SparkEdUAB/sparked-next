@@ -4,6 +4,7 @@ export type T_CreateUserFields = {
   email: string;
   password: string;
   gender: string;
+  role: string;
 };
 export type T_FetchUsers = {
   limit?: number;
@@ -14,7 +15,11 @@ export type T_UserFields = {
   index: number;
   key: string;
   name: string;
-  _id: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  role?: string;
+  _id?: string;
 
   schoolId?: string;
   programId?: string;
@@ -41,4 +46,21 @@ export type T_UserFields = {
     name: string;
     _id: string;
   };
+};
+
+export type T_RawUserFields = {
+  _id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  is_verified: boolean;
+  created_at: string;
+};
+
+export type T_SignupFields = {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
 };

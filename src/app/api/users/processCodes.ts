@@ -1,12 +1,13 @@
 import { TProcessCode } from 'types/navigation';
 
 //6500 - 6999
-const USERS_PROCESS_CODES = {
+const USER_PROCESS_CODES = {
   USER_EXIST: 6500,
   USER_NOT_FOUND: 6501,
   USER_EDITED: 6502,
   USER_CREATED: 6503,
-  USERS_DELETED: 6504,
+  USER_DELETED: 6504,
+  INVALID_ROLE: 7005,
 } satisfies TProcessCode;
 
-export default USERS_PROCESS_CODES;
+export default USER_PROCESS_CODES;

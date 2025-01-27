@@ -115,4 +115,12 @@ export const API_LINKS = {
   //   resources
   FILE_UPLOAD: '/api/file-upload/uploadFile',
   READ_CONFIG_FILE: '/api/config/readConfigFile',
+
+  // users
+  FETCH_USERS: '/api/users/fetchUsers',
+  EDIT_USER: '/api/users/editUser',
+  DELETE_USERS: '/api/users/deleteUsers',
+  FIND_USERS_BY_NAME: '/api/users/findUserByName',
+  FIND_USER_BY_ID: '/api/users/fetchUserById',
+  FETCH_AVAILABLE_ROLES: '/api/user-roles/fetchUserRoles',
 } satisfies T_link;

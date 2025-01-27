@@ -1,44 +1,32 @@
-import i18next from 'i18next';
 import { T_ColumnData } from '@components/admin/AdminTable/types';
-import { T_UserFields } from '@hooks/useUser/types';
+import { Button } from 'flowbite-react';
+import i18next from 'i18next';
+import { HiUserGroup } from 'react-icons/hi';
 
-export const userTableColumns: T_ColumnData<T_UserFields>[] = [
+export const userTableColumns: T_ColumnData<any>[] = [
   {
-    title: '#',
-    dataIndex: 'index',
-    key: 'index',
+    title: i18next.t('First Name'),
+    dataIndex: 'firstName',
+    key: 'firstName',
   },
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
+    title: i18next.t('Last Name'),
+    dataIndex: 'lastName',
+    key: 'lastName',
   },
   {
-    title: 'School',
-    dataIndex: 'schoolName',
-    key: 'school',
-    render: (text) => <a>{text || i18next.t('not_linked')}</a>,
+    title: i18next.t('email'),
+    dataIndex: 'email',
+    key: 'email',
   },
   {
-    title: 'Program',
-    dataIndex: 'programName',
-    key: 'school',
-    render: (text) => <a>{text || i18next.t('not_linked')}</a>,
-  },
-  {
-    title: 'Course',
-    dataIndex: 'courseName',
-    key: 'school',
-    render: (text) => <a>{text || i18next.t('not_linked')}</a>,
-  },
-  {
-    title: 'Create By',
-    dataIndex: 'created_by',
-    key: 'created_by',
-  },
-  {
-    title: 'Create At',
-    dataIndex: 'created_at',
-    key: 'created_by',
+    title: i18next.t('role'),
+    dataIndex: 'role',
+    key: 'role',
+    render: (role: string) => (
+      <div className="flex items-center gap-2">
+        <span>{role || 'Student'}</span>
+      </div>
+    ),
   },
 ];

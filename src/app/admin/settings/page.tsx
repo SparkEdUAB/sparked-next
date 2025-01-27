@@ -11,8 +11,8 @@ import { SelectDropdown } from '../../../components/atom/SelectDropdown/SelectDr
 export default function SettingsPage() {
   useDocumentTitle('Settings');
 
-  let [uploadLocation, setUploadLocation] = useState<'aws' | 'local'>('local');
-  let [setup, setSetup] = useState<'High school' | 'Tertiary' | 'Organizations'>('High school');
+  const [uploadLocation, setUploadLocation] = useState<'aws' | 'local'>('local');
+  const [setup, setSetup] = useState<'High school' | 'Tertiary' | 'Organizations'>('High school');
 
   return (
     <>

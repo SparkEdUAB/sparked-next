@@ -263,6 +263,10 @@ i18next.init({
         process_code_8503: 'User role created successfully',
         process_code_8504: 'User roles deleted successfully',
         process_code_8505: 'User role assigned successfully',
+
+        // Permissions
+
+        process_code_401: 'Permission denied',
       },
     },
   },

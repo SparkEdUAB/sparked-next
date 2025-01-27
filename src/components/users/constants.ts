@@ -3,12 +3,12 @@ import { I_FormFields } from 'types/form';
 
 export const USER_FORM_FIELDS = {
   ['first_name']: {
-    label: i18next.t('fname'),
-    key: 'fname',
+    label: i18next.t('firstName'),
+    key: 'firstName',
   },
   ['last_name']: {
-    label: i18next.t('lname'),
-    key: 'lname',
+    label: i18next.t('lastName'),
+    key: 'lastName',
   },
   ['email']: {
     label: i18next.t('email'),
@@ -29,5 +29,9 @@ export const USER_FORM_FIELDS = {
   ['email_password']: {
     label: i18next.t('email_password'),
     key: 'email_password',
+  },
+  ['role']: {
+    label: i18next.t('role'),
+    key: 'role',
   },
 } satisfies I_FormFields;
