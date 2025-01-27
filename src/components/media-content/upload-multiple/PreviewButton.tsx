@@ -45,7 +45,7 @@ function FilePreview({ file }: { file: File }) {
       ) : fileType === 'video' ? (
         <video src={fileUrl} className="max-h-[calc(100vh_-_200px)] inline-block my-2" controls></video>
       ) : (
-        fileType === 'pdf' && <PdfViewer file={fileUrl} className="max-h-[calc(100vh_-_200px)]" />
+        fileType === 'pdf' && <PdfViewer file={fileUrl} />
       )}
     </div>
   );

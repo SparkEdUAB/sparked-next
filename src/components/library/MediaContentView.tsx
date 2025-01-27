@@ -11,6 +11,8 @@ import Image from 'next/image';
 import { RelatedMediaContentList } from './RelatedMediaContentList';
 import dynamic from 'next/dynamic';
 import { getFileUrl } from 'utils/helpers/getFileUrl';
+import { FaDownload } from 'react-icons/fa'; // Import the download icon
+import { Button } from 'flowbite-react'; // Import the Button component
 
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
@@ -50,15 +52,17 @@ export function MediaContentView({
           ) : fileType === 'video' ? (
             <VideoViewer src={fileUrl} />
           ) : fileType === 'pdf' ? (
-            <PdfViewer file={fileUrl} />
+            <div>
+              <PdfViewer file={fileUrl} />
+            </div>
           ) : (
             <LibraryErrorMessage>Could not recognize the file type</LibraryErrorMessage>
           )}
         </div>
         <div>
-          <h1 className="my-6 font-bold text-3xl">{mediaContent.name}</h1>
+          <h1 className="my-2 font-bold text-3xl">{mediaContent.name}</h1>
           <p className="text-lg whitespace-pre-wrap">{mediaContent.description}</p>
-          <div className="my-6 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
+          <div className="my-2 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
             {mediaContent.grade ? (
               <Link href={`/library?grade_id=${mediaContent.grade._id}`}>
                 <IconWithLabel
@@ -97,6 +101,15 @@ export function MediaContentView({
               </Link>
             ) : null}
           </div>
+          <Button
+            href={fileUrl}
+            // @ts-expect-error
+            download
+            className="inline-block mt-4 px-4 text-white rounded "
+          >
+            <FaDownload className="inline-block mr-2" />
+            Download
+          </Button>
         </div>
       </section>
       <RelatedMediaContentList relatedMediaContent={relatedMediaContent} />

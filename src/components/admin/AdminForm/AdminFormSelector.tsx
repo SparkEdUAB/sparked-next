@@ -29,7 +29,7 @@ export function AdminFormSelector({
    * disregarded by the `Select` component. So making it controlled allows the
    * `defaultValue` to be respected. However, the actual value is retrieved via the form
    */
-  let [selected, setSelected] = useState(defaultValue);
+  const [selected, setSelected] = useState(defaultValue);
 
   return (
     <div>

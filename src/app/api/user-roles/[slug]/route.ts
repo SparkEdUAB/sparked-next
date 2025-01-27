@@ -17,14 +17,14 @@ export async function POST(
 
   const slug = params.slug;
 
-  const gradeApiFunctions: {
+  const roleApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     createUserRole: createUserRole_,
   };
 
-  if (gradeApiFunctions[slug] && session) {
-    return gradeApiFunctions[slug](req, session);
+  if (roleApiFunctions[slug] && session) {
+    return roleApiFunctions[slug](req, session);
   } else {
     const response = {
       isError: true,
@@ -46,15 +46,15 @@ export async function PUT(
 
   const slug = params.slug;
 
-  const gradeApiFunctions: {
+  const roleApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     editUserRole: editUserRole_,
     assignUserRole: assignUserRole_,
   };
 
-  if (gradeApiFunctions[slug] && session) {
-    return gradeApiFunctions[slug](req, session);
+  if (roleApiFunctions[slug] && session) {
+    return roleApiFunctions[slug](req, session);
   } else {
     const response = {
       isError: true,
@@ -76,14 +76,14 @@ export async function DELETE(
 
   const slug = params.slug;
 
-  const gradeApiFunctions: {
+  const roleApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     deleteUserRoles: deleteUserRoles_,
   };
 
-  if (gradeApiFunctions[slug] && session) {
-    return gradeApiFunctions[slug](req, session);
+  if (roleApiFunctions[slug] && session) {
+    return roleApiFunctions[slug](req, session);
   } else {
     const response = {
       isError: true,
@@ -103,15 +103,15 @@ export async function GET(
 ) {
   const slug = params.slug;
 
-  const GradeFunctions: {
+  const roleFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     fetchUserRoles: fetchUserRoles_,
     fetchUserRoleById: fetchUserRoleById_,
   };
 
-  if (GradeFunctions[slug]) {
-    return GradeFunctions[slug](req);
+  if (roleFunctions[slug]) {
+    return roleFunctions[slug](req);
   } else {
     const response = {
       isError: true,

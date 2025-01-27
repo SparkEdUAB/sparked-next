@@ -9,14 +9,6 @@ import USERS_PROCESS_CODES from '../users/processCodes';
 import { HttpStatusCode } from 'axios';
 
 export default async function fetchUserRoles_(request: any) {
-  const schema = zfd.formData({
-    limit: zfd.numeric(),
-    skip: zfd.numeric(),
-  });
-  const params = request.nextUrl.searchParams;
-
-  const { limit, skip } = schema.parse(params);
-
   try {
     const db = await dbClient();
 
@@ -30,16 +22,7 @@ export default async function fetchUserRoles_(request: any) {
       });
     }
 
-    const userRoles = await db
-      .collection(dbCollections.user_roles.name)
-      .find(
-        {},
-        {
-          limit,
-          skip,
-        },
-      )
-      .toArray();
+    const userRoles = await db.collection(dbCollections.user_roles.name).find({}).toArray();
 
     const response = {
       isError: false,
