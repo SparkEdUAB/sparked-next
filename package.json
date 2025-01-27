@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pm2": "pm2 start npm --name \"sparked-next\" -- start"
+    "pm2": "pm2 start npm --name \"sparked-next\" -- start",
+    "postinstall": "ts-node scripts/setup.ts"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.0.0",
@@ -25,6 +26,7 @@
     "i18next": "^24.0.5",
     "i18next-resources-to-backend": "^1.2.1",
     "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "mongodb": "^6.1.0",
     "next": "^14.2.3",
     "next-auth": "^4.23.1",
