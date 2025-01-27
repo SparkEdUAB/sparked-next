@@ -21,7 +21,7 @@ export function transformRawUser(user: T_RawUserFields) {
   };
 }
 
-const useUsers = () => {
+export default function useUser() {
   const { getChildLinkByKey, router } = useNavigation();
   const message = useToastMessage();
 
@@ -309,6 +309,26 @@ const useUsers = () => {
     router.push(getChildLinkByKey('edit', ADMIN_LINKS.users) + `?userId=${selectedUserIds[0]}`);
   }, [getChildLinkByKey, message, router, selectedUserIds]);
 
+  const assignRole = async (userId: string, roleId: string) => {
+    try {
+      const response = await fetch(API_LINKS.ASSIGN_USER_ROLE, {
+        method: 'PUT',
+        body: JSON.stringify({ userId, roleId }),
+      });
+
+      const data = await response.json();
+
+      if (data.isError) {
+        throw new Error(data.message);
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Failed to assign role:', error);
+      throw error;
+    }
+  };
+
   return {
     createUser,
     fetchUsers,
@@ -328,7 +348,8 @@ const useUsers = () => {
     searchQuery,
     tempUsers,
     deleteUsers,
+    assignRole,
   };
-};
+}
 
-export default useUsers;
+// export default useUsers;

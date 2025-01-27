@@ -18,45 +18,72 @@ export default async function fetchUsers_(request: any) {
 
   try {
     const db = await dbClient();
-
     if (!db) {
-      const response = {
+      return new Response(JSON.stringify({
         isError: true,
         code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
-      };
-      return new Response(JSON.stringify(response), {
-        status: HttpStatusCode.InternalServerError,
-      });
+      }), { status: HttpStatusCode.InternalServerError });
     }
 
-    const users = await db
-      .collection(dbCollections.users.name)
-      .find(
-        {},
+    const users = await db.collection(dbCollections.users.name)
+      .aggregate([
         {
-          limit,
-          skip,
+          $lookup: {
+            from: dbCollections.user_role_mappings.name,
+            localField: '_id',
+            foreignField: 'user_id',
+            as: 'role_mapping'
+          }
         },
-      )
-      .toArray();
+        {
+          $unwind: {
+            path: '$role_mapping',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $lookup: {
+            from: dbCollections.user_roles.name,
+            localField: 'role_mapping.role_id',
+            foreignField: '_id',
+            as: 'role_details'
+          }
+        },
+        {
+          $unwind: {
+            path: '$role_details',
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            email: 1,
+            firstName: 1,
+            lastName: 1,
+            role: '$role_details.name',
+            createdAt: 1,
+            updatedAt: 1
+          }
+        },
+        {
+          $skip: skip || 0
+        },
+        {
+          $limit: limit || 10
+        }
+      ]).toArray();
 
-    const response = {
+    return new Response(JSON.stringify({
       isError: false,
       users,
-    };
+    }), { status: HttpStatusCode.Ok });
 
-    return new Response(JSON.stringify(response), {
-      status: HttpStatusCode.Ok,
-    });
-  } catch {
-    const resp = {
+  } catch (error) {
+    return new Response(JSON.stringify({
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
-    };
-
-    return new Response(JSON.stringify(resp), {
-      status: HttpStatusCode.InternalServerError,
-    });
+    }), { status: HttpStatusCode.InternalServerError });
   }
 }
 

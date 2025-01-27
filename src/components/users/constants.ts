@@ -30,4 +30,8 @@ export const USER_FORM_FIELDS = {
     label: i18next.t('email_password'),
     key: 'email_password',
   },
+  ['role']: {
+    label: i18next.t('role'),
+    key: 'role',
+  },
 } satisfies I_FormFields;

@@ -13,42 +13,54 @@ export default async function editUser_(request: Request, session?: Session) {
     email: zfd.text(),
     firstName: zfd.text(),
     lastName: zfd.text(),
-    role: zfd.text().nullable().optional(),
+    role: zfd.text(),
   });
-  const formBody = await request.json();
 
+  const formBody = await request.json();
   const { _id, email, firstName, lastName, role } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
-
     if (!db) {
-      const response = {
-        isError: true,
-        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
-      };
-      return new Response(JSON.stringify(response), {
-        status: HttpStatusCode.InternalServerError,
-      });
+      return new Response(
+        JSON.stringify({
+          isError: true,
+          code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+        }),
+        { status: HttpStatusCode.InternalServerError },
+      );
     }
 
+    // Check if email exists for other users
     const regexPattern = new RegExp(`^\\s*${email}\\s*$`, 'i');
-
     const existingUser = await db.collection(dbCollections.users.name).findOne({
       email: { $regex: regexPattern },
       _id: { $ne: new BSON.ObjectId(_id) },
     });
 
     if (existingUser) {
-      const response = {
-        isError: true,
-        code: USER_PROCESS_CODES.USER_EXIST,
-      };
-      return new Response(JSON.stringify(response), {
-        status: HttpStatusCode.BadRequest,
-      });
+      return new Response(
+        JSON.stringify({
+          isError: true,
+          code: USER_PROCESS_CODES.USER_EXIST,
+        }),
+        { status: HttpStatusCode.BadRequest },
+      );
     }
 
+    // Verify role exists
+    const roleExists = await db.collection(dbCollections.user_roles.name).findOne({ name: role });
+    if (!roleExists) {
+      return new Response(
+        JSON.stringify({
+          isError: true,
+          code: USER_PROCESS_CODES.INVALID_ROLE,
+        }),
+        { status: HttpStatusCode.BadRequest },
+      );
+    }
+
+    // Update user
     await db.collection(dbCollections.users.name).updateOne(
       { _id: new BSON.ObjectId(_id) },
       {
@@ -56,7 +68,6 @@ export default async function editUser_(request: Request, session?: Session) {
           email,
           firstName,
           lastName,
-          role,
           updatedAt: new Date(),
           //   @ts-expect-error
           updatedById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
@@ -64,22 +75,34 @@ export default async function editUser_(request: Request, session?: Session) {
       },
     );
 
-    const response = {
-      isError: false,
-      code: USER_PROCESS_CODES.USER_EDITED,
-    };
+    // Update role mapping
+    await db.collection(dbCollections.user_role_mappings.name).updateOne(
+      { user_id: new BSON.ObjectId(_id) },
+      {
+        $set: {
+          role_id: roleExists._id,
+          updated_at: new Date(),
+          //   @ts-expect-error
+          updated_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+        },
+      },
+      { upsert: true }, // Create if doesn't exist
+    );
 
-    return new Response(JSON.stringify(response), {
-      status: HttpStatusCode.Ok,
-    });
-  } catch {
-    const resp = {
-      isError: true,
-      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
-    };
-
-    return new Response(JSON.stringify(resp), {
-      status: HttpStatusCode.InternalServerError,
-    });
+    return new Response(
+      JSON.stringify({
+        isError: false,
+        code: USER_PROCESS_CODES.USER_EDITED,
+      }),
+      { status: HttpStatusCode.Ok },
+    );
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        isError: true,
+        code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+      }),
+      { status: HttpStatusCode.InternalServerError },
+    );
   }
 }

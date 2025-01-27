@@ -115,6 +115,8 @@ export type T_link = {
   FIND_USER_BY_ID: string;
   EDIT_USER: string;
   DELETE_USERS: string;
+  FIND_ROLES_BY_NAME?: string;
+  FETCH_AVAILABLE_ROLES: string;
 };
 
 export type TProcessCode = {

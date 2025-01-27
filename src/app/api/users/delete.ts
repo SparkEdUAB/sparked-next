@@ -12,44 +12,49 @@ export default async function deleteUsers_(request: Request) {
   });
 
   const formBody = await request.json();
-
   const { userIds } = schema.parse(formBody);
+  const objectIds = userIds.map((id) => new BSON.ObjectId(id));
 
   try {
     const db = await dbClient();
 
     if (!db) {
-      const response = {
-        isError: true,
-        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
-      };
-      return new Response(JSON.stringify(response), {
-        status: HttpStatusCode.InternalServerError,
-      });
+      return new Response(
+        JSON.stringify({
+          isError: true,
+          code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+        }),
+        { status: HttpStatusCode.InternalServerError },
+      );
     }
 
-    await db.collection(dbCollections.users.name).deleteMany({
-      _id: {
-        $in: userIds.map((i) => new BSON.ObjectId(i)),
-      },
-    });
+    // Delete both users and their role mappings
+    await Promise.all([
+      // Delete users
+      db.collection(dbCollections.users.name).deleteMany({
+        _id: { $in: objectIds },
+      }),
 
-    const response = {
-      isError: false,
-      code: USER_PROCESS_CODES.USER_DELETED,
-    };
+      // Delete role mappings
+      db.collection(dbCollections.user_role_mappings.name).deleteMany({
+        user_id: { $in: objectIds },
+      }),
+    ]);
 
-    return new Response(JSON.stringify(response), {
-      status: HttpStatusCode.Ok,
-    });
+    return new Response(
+      JSON.stringify({
+        isError: false,
+        code: USER_PROCESS_CODES.USER_DELETED,
+      }),
+      { status: HttpStatusCode.Ok },
+    );
   } catch {
-    const resp = {
-      isError: true,
-      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
-    };
-
-    return new Response(JSON.stringify(resp), {
-      status: HttpStatusCode.InternalServerError,
-    });
+    return new Response(
+      JSON.stringify({
+        isError: true,
+        code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+      }),
+      { status: HttpStatusCode.InternalServerError },
+    );
   }
 }

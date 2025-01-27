@@ -1,104 +1,75 @@
 'use client';
 
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
-import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 import { AdminPageTitle } from '@components/layouts';
-import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
-import { T_RoleFields } from '@hooks/useRoles/types';
 import useUser from '@hooks/useUser';
 import { T_UserFields } from '@hooks/useUser/types';
-import { Spinner } from 'flowbite-react';
+import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { USER_FORM_FIELDS } from './constants';
+import { SIGNUP_FORM_FIELDS } from '@components/auth/constants';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { T_RoleFields } from '@hooks/useRoles/types';
+import { API_LINKS } from 'app/links';
 
 const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSuccessfullyDone: () => void }) => {
-  const { editUser, deleteUsers } = useUser();
-  const [uploading, setUploading] = useState(false);
-  const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const { editUser, isLoading } = useUser();
   const [role, setRole] = useState<T_RoleFields | null>(null);
-  const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
-    try {
-      setUploading(true);
-      e.preventDefault();
-
-      const keys = [USER_FORM_FIELDS.first_name.key, USER_FORM_FIELDS.last_name.key];
-      let result = extractValuesFromFormEvent<Omit<T_UserFields, '_id' | 'role'>>(e, keys);
-
-      await editUser(
-        {
-          ...user,
-          ...result,
-          role: role?.name || user.role,
-        },
-        onSuccessfullyDone,
-      );
-    } finally {
-      setUploading(false);
-    }
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    const keys = [
+      SIGNUP_FORM_FIELDS.firstName.key,
+      SIGNUP_FORM_FIELDS.lastName.key,
+      SIGNUP_FORM_FIELDS.email.key,
+    ];
+    let result = extractValuesFromFormEvent<T_UserFields>(e, keys);
+    editUser({ ...result, _id: user._id, role: role?.name || user.role }, onSuccessfullyDone);
   };
 
   return (
     <>
       <AdminPageTitle title={i18next.t('edit_user')} />
 
-      {user === null ? (
-        <div className="flex items-center justify-center h-[400px]">
-          <Spinner size="xl" />
-        </div>
-      ) : user instanceof Error ? (
-        <LibraryErrorMessage>{user.message}</LibraryErrorMessage>
-      ) : (
-        <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-          <AdminFormInput
-            disabled={uploading}
-            name={USER_FORM_FIELDS.first_name.key}
-            label={USER_FORM_FIELDS.first_name.label}
-            defaultValue={user.firstName}
-            required
-          />
+      <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
+        <AdminFormInput
+          disabled={isLoading}
+          name={SIGNUP_FORM_FIELDS.firstName.key}
+          label={SIGNUP_FORM_FIELDS.firstName.label}
+          defaultValue={user.firstName}
+          required
+        />
 
-          <AdminFormInput
-            disabled={uploading}
-            name={USER_FORM_FIELDS.last_name.key}
-            label={USER_FORM_FIELDS.last_name.label}
-            defaultValue={user.lastName}
-            required
-          />
+        <AdminFormInput
+          disabled={isLoading}
+          name={SIGNUP_FORM_FIELDS.lastName.key}
+          label={SIGNUP_FORM_FIELDS.lastName.label}
+          defaultValue={user.lastName}
+          required
+        />
 
-          {/* <Autocomplete<T_RoleFields>
-            url={API_LINKS.FIND_ROLES_BY_NAME}
-            handleSelect={setRole}
-            defaultValue={user.role}
-            moduleName="roles"
-            disabled={uploading}
-          /> */}
+        <AdminFormInput
+          disabled={isLoading}
+          name={SIGNUP_FORM_FIELDS.email.key}
+          label={SIGNUP_FORM_FIELDS.email.label}
+          defaultValue={user.email}
+          required
+        />
 
-          <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
-        </form>
-      )}
+        <Autocomplete<T_RoleFields>
+          url={API_LINKS.FETCH_AVAILABLE_ROLES}
+          handleSelect={setRole}
+          moduleName="userRoles"
+          defaultValue={user.role}
+          disabled={isLoading}
+        />
 
-      <DeletionWarningModal
-        showDeletionWarning={showDeletionWarning}
-        toggleDeletionWarning={toggleDeletionWarning}
-        deleteItems={async () => {
-          try {
-            setUploading(true);
-            //   @ts-expect-error
-            const successful = await deleteUsers([user._id]);
-            if (successful) {
-              onSuccessfullyDone();
-            }
-          } finally {
-            setUploading(false);
-          }
-        }}
-        numberOfElements={1}
-      />
+        <Button type="submit" className="mt-2" disabled={isLoading}>
+          {isLoading ? <Spinner size="sm" className="mr-3" /> : null}
+          {i18next.t('submit')}
+        </Button>
+      </form>
     </>
   );
 };

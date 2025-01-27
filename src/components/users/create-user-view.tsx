@@ -1,42 +1,32 @@
 'use client';
 
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import { SIGNUP_FORM_FIELDS } from '@components/auth/constants';
 import { AdminPageTitle } from '@components/layouts';
+import { T_RoleFields } from '@hooks/useRoles/types';
 import useUser from '@hooks/useUser';
 import { T_CreateUserFields } from '@hooks/useUser/types';
+import { API_LINKS } from 'app/links';
 import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { USER_FORM_FIELDS } from './constants';
-import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-import { API_LINKS } from 'app/links';
-import { T_RoleFields } from '@hooks/useRoles/types';
-import { useToastMessage } from 'providers/ToastMessageContext';
 
-const CreateUserView = ({ onSuccessfullyDone }: { onSuccessfullyDone: () => void }) => {
+const CreateUserView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createUser, isLoading } = useUser();
   const [role, setRole] = useState<T_RoleFields | null>(null);
-  const message = useToastMessage();
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-
-    if (!role) {
-      message.error(`You need to provide a role to create a user.`);
-      return;
-    }
-
-    const keys = [USER_FORM_FIELDS.first_name.key, USER_FORM_FIELDS.last_name.key];
+    const keys = [
+      SIGNUP_FORM_FIELDS.firstName.key,
+      SIGNUP_FORM_FIELDS.lastName.key,
+      SIGNUP_FORM_FIELDS.email.key,
+      SIGNUP_FORM_FIELDS.password.key,
+    ];
     let result = extractValuesFromFormEvent<T_CreateUserFields>(e, keys);
-
-    createUser(
-      {
-        ...result,
-        role: role.name,
-      },
-      onSuccessfullyDone,
-    );
+    createUser({ ...result, role: role?.name as string }, onSuccessfullyDone as () => void);
   };
 
   return (
@@ -46,27 +36,39 @@ const CreateUserView = ({ onSuccessfullyDone }: { onSuccessfullyDone: () => void
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
         <AdminFormInput
           disabled={isLoading}
-          name={USER_FORM_FIELDS.first_name.key}
-          label={USER_FORM_FIELDS.first_name.label}
+          name={SIGNUP_FORM_FIELDS.firstName.key}
+          label={SIGNUP_FORM_FIELDS.firstName.label}
           required
         />
 
         <AdminFormInput
           disabled={isLoading}
-          name={USER_FORM_FIELDS.last_name.key}
-          label={USER_FORM_FIELDS.last_name.label}
+          name={SIGNUP_FORM_FIELDS.lastName.key}
+          label={SIGNUP_FORM_FIELDS.lastName.label}
+          required
+        />
+        <AdminFormInput
+          disabled={isLoading}
+          name={SIGNUP_FORM_FIELDS.email.key}
+          label={SIGNUP_FORM_FIELDS.email.label}
+          required
+        />
+        <AdminFormInput
+          disabled={isLoading}
+          name={SIGNUP_FORM_FIELDS.password.key}
+          label={SIGNUP_FORM_FIELDS.password.label}
           required
         />
 
-        {/* <Autocomplete<T_RoleFields>
-          url={API_LINKS.FIND_ROLES_BY_NAME}
+        <Autocomplete<T_RoleFields>
+          url={API_LINKS.FETCH_AVAILABLE_ROLES}
           handleSelect={setRole}
-          moduleName="roles"
+          moduleName="userRoles"
           disabled={isLoading}
-        /> */}
+        />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
-          {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {isLoading ? <Spinner size="sm" className="mr-3" /> : null}
           {i18next.t('submit')}
         </Button>
       </form>
