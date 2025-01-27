@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pm2": "pm2 start npm --name \"sparked-next\" -- start",
-    "postinstall": "ts-node scripts/setup.ts"
+    "pm2": "pm2 start npm --name \"sparked-next\" -- start"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.0.0",
@@ -39,6 +38,7 @@
     "react-icons": "^5.0.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-loading-skeleton": "^3.4.0",
+    "react-pdf": "^9.2.1",
     "realm": "^12.1.0",
     "sharp": "^0.33.4",
     "swr": "^2.2.5",

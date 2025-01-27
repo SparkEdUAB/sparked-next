@@ -1,32 +1,38 @@
-'use client';
+"use client"
 
-export default function PdfViewer({ file, className }: { file: string; className?: string }) {
+import "react-pdf/dist/Page/TextLayer.css";
+import "react-pdf/dist/Page/AnnotationLayer.css";
+import { useState } from "react";
+import { Document, Page } from "react-pdf";
+import { pdfjs } from "react-pdf";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+export default function PdfReactPdf({ file }: { file: string }) {
+  const [numPages, setNumPages] = useState<number>();
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
+    setNumPages(numPages);
+  }
   return (
-    <div className={`relative w-full h-[85vh] ${className || ''}`}>
-      <object
-        data={file}
-        type="application/pdf"
-        className="w-full h-full"
-        style={{
-          border: 'none',
-          background: 'white',
-        }}
+    <div style={{ width: "100%", height: "90vh", overflowY: "auto", padding: "1rem" }}>
+      <Document
+        file={file}
+        onLoadSuccess={onDocumentLoadSuccess}
+        className="my-react-pdf"
+        loading={<div>Loading document...</div>} // Add loading indicator for document
       >
-        <div className="flex items-center justify-center h-full bg-gray-100">
-          <p className="text-gray-500">
-            Unable to display PDF. Please{' '}
-            <a
-              href={file}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
-            >
-              download
-            </a>{' '}
-            instead.
-          </p>
-        </div>
-      </object>
+        {Array.from(new Array(numPages), (el, index) => (
+          <Page
+            key={`page_${index + 1}`}
+            pageNumber={index + 1}
+            width={window.innerWidth * 0.6} // Adjust width for better zoom level
+            className="mb-4"
+            renderMode="canvas"
+            loading={<div>Loading page...</div>}
+          />
+        ))}
+      </Document>
     </div>
   );
 }
