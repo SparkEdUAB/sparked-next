@@ -1,5 +1,7 @@
+"use client"
+
 import Link from 'next/link';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { FaBook, FaBookmark } from 'react-icons/fa';
 import { PiStepsFill } from 'react-icons/pi';
 import { MdTopic } from 'react-icons/md';
@@ -12,7 +14,8 @@ import { RelatedMediaContentList } from './RelatedMediaContentList';
 import dynamic from 'next/dynamic';
 import { getFileUrl } from 'utils/helpers/getFileUrl';
 import { FaDownload } from 'react-icons/fa'; // Import the download icon
-import { Button } from 'flowbite-react'; // Import the Button component
+import { Button, Spinner } from 'flowbite-react'; // Import the Button component
+import { API_LINKS } from 'app/links';
 
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
@@ -30,6 +33,34 @@ export function MediaContentView({
   mediaContent: T_RawMediaContentFields;
   relatedMediaContent: T_RawMediaContentFields[] | null;
 }) {
+  const [summary, setSummary] = useState<string | null>(null);
+  const [isSummarizing, setIsSummarizing] = useState(false);
+
+  const handleSummarize = async () => {
+    setIsSummarizing(true);
+    try {
+      const response = await fetch("/api/ai/summarize", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          content: mediaContent.description,
+          fileUrl: mediaContent.file_url,
+          contentId: mediaContent._id,
+          model: 'gemini-1.5',
+        }),
+      });
+
+      const data = await response.json();
+      setSummary(data.summary);
+    } catch (error) {
+      console.error('Failed to generate summary:', error);
+    } finally {
+      setIsSummarizing(false);
+    }
+  };
+
   const fileType = determineFileType(mediaContent?.file_url || '');
   const fileUrl = mediaContent.file_url ? getFileUrl(mediaContent.file_url) : '';
 
@@ -62,6 +93,33 @@ export function MediaContentView({
         <div>
           <h1 className="my-2 font-bold text-3xl">{mediaContent.name}</h1>
           <p className="text-lg whitespace-pre-wrap">{mediaContent.description}</p>
+
+          {/* Add Summarize Button and Summary Display */}
+          <div className="mt-4">
+            <Button
+              onClick={handleSummarize}
+              disabled={isSummarizing}
+              color="light"
+              className="mb-4"
+            >
+              {isSummarizing ? (
+                <>
+                  <Spinner size="sm" className="mr-2" />
+                  Summarizing...
+                </>
+              ) : (
+                'Summarize Content'
+              )}
+            </Button>
+
+            {summary && (
+              <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">AI Summary</h3>
+                <p className="text-gray-600 dark:text-gray-300">{summary}</p>
+              </div>
+            )}
+          </div>
+
           <div className="my-2 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
             {mediaContent.grade ? (
               <Link href={`/library?grade_id=${mediaContent.grade._id}`}>

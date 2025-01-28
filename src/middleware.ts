@@ -1,37 +1,12 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getToken } from 'next-auth/jwt';
 
-const ADMIN_ROLES = ['Admin', 'Content Manager'];
-const PUBLIC_PATHS = ['/api/authentication/login', '/api/authentication/signup', '/api/auth/callback/credentials'];
-export async function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-  const method = request.method;
-
-  if (PUBLIC_PATHS.includes(pathname)) {
-    return NextResponse.next();
+export function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith('/about')) {
+    return NextResponse.rewrite(new URL('/about-2', request.url));
   }
 
-  // Check for POST requests to API routes
-  if (pathname.startsWith('/api') && method === 'POST') {
-    // Get session token using NextAuth.js helper
-    const session = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
-
-    // @ts-expect-error
-    if (!session || !session.role || !ADMIN_ROLES.includes(session.role)) {
-      return new NextResponse(JSON.stringify({ success: false, message: 'Permission Denied', code: 401 }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
+  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    return NextResponse.rewrite(new URL('/dashboard/user', request.url));
   }
-
-  return NextResponse.next();
 }
-
-export const config = {
-  matcher: '/api/:path*',
-};

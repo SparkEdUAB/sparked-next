@@ -87,6 +87,7 @@ export const API_LINKS = {
   DELETE_MEDIA_CONTENT: '/api/media-content/deleteMediaContentByIds',
   FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
   FETCH_MEDIA_TYPES: '/api/media-content/fetchMediaTypes',
+  SUMMARIZE_MEDIA_CONTENT: '/api/media-content/summarize',
 
   FETCH_ALL_STATS: '/api/stats/fetchCounts',
 

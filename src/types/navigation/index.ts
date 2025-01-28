@@ -57,6 +57,7 @@ export type T_link = {
   DELETE_MEDIA_CONTENT: string;
   FETCH_RANDOM_MEDIA_CONTENT: string;
   FETCH_MEDIA_TYPES: string;
+  SUMMARIZE_MEDIA_CONTENT: string;
 
   // PAGE LINKS
   CREATE_PAGE_LINK: string;

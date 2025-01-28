@@ -7,8 +7,8 @@ import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers/determineFileType';
 import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
 import NETWORK_UTILS from 'utils/network';
-import { MediaContentView } from '../../../../components/library/MediaContentView';
-import { fetchRelatedMedia } from '../../../../fetchers/library/fetchRelatedMedia';
+import { MediaContentView } from '@components/library/MediaContentView';
+import { fetchRelatedMedia } from 'fetchers/library/fetchRelatedMedia';
 
 type T_MediaContentPageProps = {
   params: {
@@ -21,8 +21,8 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
 
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
     BASE_URL +
-      API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-      NETWORK_UTILS.formatGetParams({ mediaContentId: props.params.id, withMetaData: 'true' }),
+    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+    NETWORK_UTILS.formatGetParams({ mediaContentId: props.params.id, withMetaData: 'true' }),
     { next: { revalidate: 60 } },
   );
 
@@ -43,8 +43,8 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
 export default async function MediaContentPage({ params }: T_MediaContentPageProps) {
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
     BASE_URL +
-      API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-      NETWORK_UTILS.formatGetParams({ mediaContentId: params.id, withMetaData: 'true' }),
+    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+    NETWORK_UTILS.formatGetParams({ mediaContentId: params.id, withMetaData: 'true' }),
     { next: { revalidate: 60 } },
   );
 

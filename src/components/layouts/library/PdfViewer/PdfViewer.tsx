@@ -2,7 +2,7 @@
 
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Document, Page } from "react-pdf";
 import { pdfjs } from "react-pdf";
 
@@ -24,6 +24,19 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/b
 
 export default function PdfReactPdf({ file }: { file: string }) {
   const [numPages, setNumPages] = useState<number>();
+  const [pageWidth, setPageWidth] = useState<number>(window.innerWidth * 0.6);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const newWidth = window.innerWidth * 0.6;
+      setPageWidth(newWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Set initial width
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }): void {
     setNumPages(numPages);
@@ -41,10 +54,10 @@ export default function PdfReactPdf({ file }: { file: string }) {
           <Page
             key={`page_${index + 1}`}
             pageNumber={index + 1}
-            width={window.innerWidth * 0.6} // Adjust width for better zoom level
+            width={pageWidth} // Use responsive width
             className="mb-4"
             renderMode="canvas"
-            loading={<CustomSkeleton height={700} />} // Use Custom Skeleton for page loading
+            loading={<CustomSkeleton height={700} />}
           />
         ))}
       </Document>
