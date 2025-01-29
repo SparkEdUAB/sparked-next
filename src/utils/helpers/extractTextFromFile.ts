@@ -1,31 +1,18 @@
-import { TextLoader } from 'langchain/document_loaders/fs/text';
-import { determineFileType } from './determineFileType';
+import axios from 'axios';
 import pdf from 'pdf-parse';
 
-export async function extractTextFromFile(fileUrl: string): Promise<string> {
-  const fileType = determineFileType(fileUrl);
-  let text = '';
-
+export async function extractTextFromPdf(url: string) {
   try {
-    switch (fileType) {
-      case 'pdf':
-        const response = await fetch(fileUrl);
-        const arrayBuffer = await response.arrayBuffer();
-        const buffer = Buffer.from(arrayBuffer);
-        const pdfData = await pdf(buffer);
-        text = pdfData.text;
-        break;
-      case 'text':
-        const textLoader = new TextLoader(fileUrl);
-        const textDocs = await textLoader.load();
-        text = textDocs.map((doc) => doc.pageContent).join(' ');
-        break;
-      default:
-        throw new Error('Unsupported file type');
-    }
-    return text;
+    // Fetch the PDF file from the URL
+    const response = await axios.get(url, {
+      responseType: 'arraybuffer', // Important for binary data like PDFs
+    });
+
+    // Extract text from the PDF buffer
+    const data = await pdf(response.data);
+    return data.text;
   } catch (error) {
-    console.error('Error extracting text:', error);
+    console.error('Error extracting text from PDF:', error);
     throw error;
   }
 }

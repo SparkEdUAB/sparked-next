@@ -17,6 +17,59 @@ import { FaDownload } from 'react-icons/fa'; // Import the download icon
 import { Button, Spinner } from 'flowbite-react'; // Import the Button component
 import { API_LINKS } from 'app/links';
 
+/**
+ * Extracts text content from a PDF file at the given URL.
+ * @param {string} fileUrl - The URL of the PDF file.
+ * @returns {Promise<string>} - The extracted text content.
+ */
+// Remove pdf-parse import as it's not browser-compatible
+import * as pdfjs from 'pdfjs-dist';
+
+// Set worker for PDF.js
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
+export async function extractTextFromFile(fileUrl: string): Promise<string> {
+  try {
+    const pdf = await pdfjs.getDocument(fileUrl).promise;
+    const numPages = pdf.numPages;
+
+    // Process pages in parallel
+    const pagePromises = Array.from({ length: numPages }, (_, i) =>
+      pdf.getPage(i + 1)
+        .then(page => page.getTextContent())
+        .then(content => {
+          // Pre-allocate array size for better performance
+          const textParts = new Array(content.items.length);
+
+          // Direct array manipulation instead of map
+          for (let i = 0; i < content.items.length; i++) {
+            // @ts-ignore
+            textParts[i] = content.items[i].str;
+          }
+
+          // Single pass text cleaning
+          return textParts.join(' ')
+            .replace(/\s+|[\x00-\x1F\x7F-\x9F]|(?<=\s)[^a-zA-Z0-9\s]+(?=\s)|(.)\1{2,}/g,
+              (match, p1) => {
+                if (p1) return p1 + p1; // Repetitive characters
+                if (match.trim() === '') return ' '; // Whitespace
+                return ''; // Other matches to remove
+              })
+            .trim();
+        })
+    );
+
+    // Wait for all pages to be processed
+    const pages = await Promise.all(pagePromises);
+
+    // Join all pages with newlines and remove empty lines in one pass
+    return pages.filter(Boolean).join('\n');
+  } catch (error) {
+    console.error('Error extracting text from file:', error);
+    throw new Error('Failed to extract text from the PDF file.');
+  }
+}
+
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
 });
@@ -39,14 +92,16 @@ export function MediaContentView({
   const handleSummarize = async () => {
     setIsSummarizing(true);
     try {
-      const response = await fetch("/api/ai/summarize", {
+      const textContent = await extractTextFromFile(mediaContent.file_url as string);
+      // console.log(textContent)
+      const response = await fetch("/api/ai/summary", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           content: mediaContent.description,
-          fileUrl: mediaContent.file_url,
+          fileContent: textContent,
           contentId: mediaContent._id,
           model: 'gemini-1.5',
         }),

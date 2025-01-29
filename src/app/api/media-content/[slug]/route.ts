@@ -18,10 +18,6 @@ export async function POST(req: Request, { params }: { params: { slug: string } 
   const session = await getServerSession(authOptions);
   const slug = params.slug;
 
-  // console.log('POST request received');
-  // console.log('Slug:', slug);
-  // console.log('Session:', session ? 'exists' : 'null');
-
   const schoolFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
@@ -29,22 +25,6 @@ export async function POST(req: Request, { params }: { params: { slug: string } 
     editMediaContent: editMediaContent_,
     deleteMediaContentByIds: deleteMediaContentByIds_,
   };
-
-  // console.log('Available functions:', Object.keys(schoolFunctions));
-  // Special case for summarize endpoint
-  if (slug === 'summarize') {
-    // console.log('Attempting to summarize');
-    try {
-      const result = await schoolFunctions[slug](req);
-      // console.log('Summarize completed');
-      return result;
-    } catch (error) {
-      console.error('Summarize error:', error);
-      return new Response(JSON.stringify({ error: 'Summarization failed' }), {
-        status: HttpStatusCode.InternalServerError,
-      });
-    }
-  }
 
   if (schoolFunctions[slug] && session) {
     return schoolFunctions[slug](req, session);
