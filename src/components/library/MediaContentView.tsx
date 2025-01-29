@@ -1,3 +1,5 @@
+"use client"
+
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FaBook, FaBookmark } from 'react-icons/fa';
@@ -13,6 +15,11 @@ import dynamic from 'next/dynamic';
 import { getFileUrl } from 'utils/helpers/getFileUrl';
 import { FaDownload } from 'react-icons/fa'; // Import the download icon
 import { Button } from 'flowbite-react'; // Import the Button component
+import { useState } from 'react';
+import { useSession } from 'next-auth/react';
+import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
+import { useEffect } from 'react';
+import { FaEye } from 'react-icons/fa'; // Add eye icon for view count
 
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
@@ -23,6 +30,9 @@ const VideoViewer = dynamic(() => import('next-video/player'), {
 });
 
 
+// Add this import at the top with other imports
+import useSWR from 'swr';
+
 export function MediaContentView({
   mediaContent,
   relatedMediaContent,
@@ -30,8 +40,83 @@ export function MediaContentView({
   mediaContent: T_RawMediaContentFields;
   relatedMediaContent: T_RawMediaContentFields[] | null;
 }) {
+  const { data: session } = useSession();
+  const [hasRecordedView, setHasRecordedView] = useState(false);
+  const [userReaction, setUserReaction] = useState<'like' | 'dislike' | null>(null);
   const fileType = determineFileType(mediaContent?.file_url || '');
   const fileUrl = mediaContent.file_url ? getFileUrl(mediaContent.file_url) : '';
+
+  // Add SWR hook for view count
+  const { data: viewCountData } = useSWR(
+    `/api/media-actions/getViewCount?mediaId=${mediaContent._id}`,
+    async (url) => {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed to fetch view count');
+      const data = await res.json();
+      return data.viewCount;
+    },
+    {
+      refreshInterval: 30000, // Refresh every 30 seconds
+      fallbackData: mediaContent.viewCount || 0,
+    }
+  );
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const recordView = async () => {
+      if (hasRecordedView) return;
+
+      try {
+        await fetch('/api/media-actions/createMediaView', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            mediaId: mediaContent._id,
+            timestamp: Date.now(),
+          }),
+        });
+
+        setHasRecordedView(true);
+      } catch (error) {
+        console.error('Error recording view:', error);
+      }
+    };
+
+    timeoutId = setTimeout(recordView, 45000);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [mediaContent._id, hasRecordedView]);
+
+  const handleReaction = async (type: 'like' | 'dislike') => {
+    if (!session) {
+      // Show login prompt or handle unauthorized state
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/media/${mediaContent._id}/reaction`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ type }),
+      });
+
+      if (!response.ok) throw new Error('Failed to process reaction');
+
+      const data = await response.json();
+      // setLikes(data.likes);
+      // setDislikes(data.dislikes);
+      setUserReaction(data.userReaction);
+    } catch (error) {
+      console.error('Error processing reaction:', error);
+    }
+  };
 
   return (
     <div className="xl:grid xl:grid-cols-[calc(100%_-_300px)_300px] 2xl:grid-cols-[calc(100%_-_400px)_400px] px-4 md:px-8 w-full ">
@@ -60,8 +145,42 @@ export function MediaContentView({
           )}
         </div>
         <div>
-          <h1 className="my-2 font-bold text-3xl">{mediaContent.name}</h1>
-          <p className="text-lg whitespace-pre-wrap">{mediaContent.description}</p>
+          <div className="flex justify-between items-center">
+            <h1 className="my-2 font-bold text-3xl">{mediaContent.name}</h1>
+            <div className="flex items-center gap-2 text-gray-600">
+              <FaEye className="text-xl" />
+              <span>{viewCountData} views</span>
+            </div>
+          </div>
+
+          {/* Add reaction buttons */}
+          <div className="flex items-center space-x-4 mt-4">
+            <Button
+              color={userReaction === 'like' ? 'success' : 'gray'}
+              onClick={() => handleReaction('like')}
+              disabled={!session}
+              className="flex items-center space-x-2"
+            >
+              <FaThumbsUp />
+              {/* <span>{likes}</span> */}
+            </Button>
+
+            <Button
+              color={userReaction === 'dislike' ? 'failure' : 'gray'}
+              onClick={() => handleReaction('dislike')}
+              disabled={!session}
+              className="flex items-center space-x-2"
+            >
+              <FaThumbsDown />
+              {/* <span>{dislikes}</span> */}
+            </Button>
+
+            {!session && (
+              <span className="text-sm text-gray-500">
+                Please login to react to this content
+              </span>
+            )}
+          </div>
           <div className="my-2 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
             {mediaContent.grade ? (
               <Link href={`/library?grade_id=${mediaContent.grade._id}`}>
