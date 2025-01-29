@@ -371,15 +371,14 @@ export async function fetchRandomMediaContent_(request: any) {
 export async function fetchRelatedMediaContent_(request: NextRequest) {
   const schema = zfd.formData({
     media_content_id: zfd.text(),
-    topic_id: zfd.text().optional(),
-    unit_id: zfd.text().optional(),
-    course_id: zfd.text().optional(),
+    subject_id: zfd.text().optional(),
+    grade_id: zfd.text().optional(),
     limit: zfd.text().optional(),
     skip: zfd.text().optional(),
   });
 
   const params = request.nextUrl.searchParams;
-  const { media_content_id, topic_id, unit_id, course_id, limit, skip } = schema.parse(params);
+  const { media_content_id, limit, skip, subject_id, grade_id } = schema.parse(params);
   const _limit = parseInt(limit || '10');
   const _skip = parseInt(skip || '0');
 
@@ -397,9 +396,8 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
     }
 
     const query = {
-      ...(topic_id && { topic_id: new BSON.ObjectId(topic_id) }),
-      ...(unit_id && { unit_id: new BSON.ObjectId(unit_id) }),
-      ...(course_id && { course_id: new BSON.ObjectId(course_id) }),
+      ...(subject_id && { subject_id: new BSON.ObjectId(subject_id) }),
+      ...(grade_id && { grade_id: new BSON.ObjectId(grade_id) }),
     };
 
     const mediaContentId = new BSON.ObjectId(media_content_id);

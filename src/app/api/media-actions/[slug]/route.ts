@@ -2,31 +2,26 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/authOptions';
-import createPageLink_ from '../create';
 import editPageLink_ from '../edit';
 import deletePageLink_ from '../delete';
 import fetchPageLinks_, { assignPageActionToPageLink_, unAssignPageActionToPageLink_ } from '..';
 import { HttpStatusCode } from 'axios';
-import createMediaView from '../create';
+import createMediaView_ from '../create';
 
 export async function POST(request: Request, { params }: { params: { slug: string } }) {
-  const session = await getServerSession(authOptions);
-
   const slug = params.slug;
 
   const pageLinksFunctions: {
-    [key: string]: (request: Request, session?: Session) => Promise<Response>;
+    [key: string]: (request: any) => Promise<Response>;
   } = {
-    createMediaView: createMediaView,
+    createMediaView: createMediaView_,
     editPageLink: editPageLink_,
     assignPageActionToPageLink: assignPageActionToPageLink_,
     unAssignPageActionToPageLink: unAssignPageActionToPageLink_,
   };
 
-  console.log(slug);
-
-  if (pageLinksFunctions[slug] && session) {
-    return pageLinksFunctions[slug](request, session);
+  if (pageLinksFunctions[slug]) {
+    return pageLinksFunctions[slug](request);
   } else {
     const response = {
       isError: true,

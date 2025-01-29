@@ -29,18 +29,18 @@ export async function GET(request: Request) {
       );
     }
 
-    const viewCount = await db
+    const mediaContent = await db
       .collection(dbCollections.page_views.name)
-      .countDocuments({ mediaId: new BSON.ObjectId(mediaId) });
+      .findOne({ mediaId: new BSON.ObjectId(mediaId) });
 
     return new Response(
       JSON.stringify({
         isError: false,
-        viewCount,
+        viewCount: mediaContent?.viewCount,
       }),
       { status: HttpStatusCode.Ok },
     );
-  } catch (error) {
+  } catch {
     return new Response(
       JSON.stringify({
         isError: true,

@@ -21,8 +21,8 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
 
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
     BASE_URL +
-      API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-      NETWORK_UTILS.formatGetParams({ mediaContentId: props.params.id, withMetaData: 'true' }),
+    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+    NETWORK_UTILS.formatGetParams({ mediaContentId: props.params.id, withMetaData: 'true' }),
     { next: { revalidate: 60 } },
   );
 
@@ -43,13 +43,14 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
 export default async function MediaContentPage({ params }: T_MediaContentPageProps) {
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
     BASE_URL +
-      API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-      NETWORK_UTILS.formatGetParams({ mediaContentId: params.id, withMetaData: 'true' }),
+    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+    NETWORK_UTILS.formatGetParams({ mediaContentId: params.id, withMetaData: 'true' }),
     { next: { revalidate: 60 } },
   );
 
   const relatedMediaContent = result instanceof Error ? null : await fetchRelatedMedia(result.mediaContent);
 
+  // console.log({ relatedMediaContent })
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] py-6 ">
       {result instanceof Error ? (
