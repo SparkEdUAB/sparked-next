@@ -2,11 +2,14 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../../auth/authOptions';
-import editPageLink_ from '../edit';
 import deletePageLink_ from '../delete';
-import fetchPageLinks_, { assignPageActionToPageLink_, unAssignPageActionToPageLink_ } from '..';
+import fetchPageLinks_, {
+  assignPageActionToPageLink_,
+  getMediaReactionCounts_,
+  unAssignPageActionToPageLink_,
+} from '..';
 import { HttpStatusCode } from 'axios';
-import createMediaView_ from '../create';
+import createMediaView_, { createMediaReaction_ } from '../create';
 
 export async function POST(request: Request, { params }: { params: { slug: string } }) {
   const slug = params.slug;
@@ -15,7 +18,7 @@ export async function POST(request: Request, { params }: { params: { slug: strin
     [key: string]: (request: any) => Promise<Response>;
   } = {
     createMediaView: createMediaView_,
-    editPageLink: editPageLink_,
+    createMediaReaction: createMediaReaction_,
     assignPageActionToPageLink: assignPageActionToPageLink_,
     unAssignPageActionToPageLink: unAssignPageActionToPageLink_,
   };
@@ -74,6 +77,7 @@ export async function GET(
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     fetchPageLinks: fetchPageLinks_,
+    getMediaReactionCounts: getMediaReactionCounts_,
   };
 
   if (pageLinksFunctions[slug]) {

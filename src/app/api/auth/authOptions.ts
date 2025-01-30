@@ -9,32 +9,56 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {},
+      // @ts-expect-error
       async authorize(credentials) {
-        const { jwtToken, _id } = credentials as any;
+        // @ts-expect-error
+        const { jwtToken } = credentials;
+
         try {
-          const user = {
-            id: _id, // Use MongoDB's _id
-            token: jwtToken,
-          };
-          return user;
+          const user = { ...credentials }; // Extract user details from credentials
+          return { ...user, token: jwtToken };
         } catch {
           return null;
         }
       },
     }),
   ],
+  theme: {
+    colorScheme: 'light',
+  },
   callbacks: {
     async session({ session, token }) {
-      if (session.user) {
-        // @ts-ignore
-        session.user.id = token.sub as string;
+      if (token.sub && session.user) {
+        // @ts-expect-error
+        session.user.id = token.sub;
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        token.sub = user.id;
+        // @ts-expect-error
+        token.role = user.role;
       }
+
+      if (token.sub) {
+        const db = await dbClient();
+        if (db) {
+          const roleMapping = await db.collection(dbCollections.user_role_mappings.name).findOne({
+            user_id: new BSON.ObjectId(token.sub),
+          });
+
+          if (roleMapping) {
+            const role = await db.collection(dbCollections.user_roles.name).findOne({
+              _id: roleMapping.role_id,
+            });
+
+            if (role) {
+              token.role = role.name;
+            }
+          }
+        }
+      }
+
       return token;
     },
   },

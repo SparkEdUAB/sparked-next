@@ -21,6 +21,9 @@ import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 import { useEffect } from 'react';
 import { FaEye } from 'react-icons/fa'; // Add eye icon for view count
 import useSWR from 'swr';
+import { ReactionButtons } from '@components/atom/ReactionButtons';
+import { useMediaInteractions } from '@hooks/useMediaInteractions';
+
 
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
@@ -39,82 +42,24 @@ export function MediaContentView({
   relatedMediaContent: T_RawMediaContentFields[] | null;
 }) {
   const { data: session } = useSession();
-  const [hasRecordedView, setHasRecordedView] = useState(false);
-  const [userReaction, setUserReaction] = useState<'like' | 'dislike' | null>(null);
+
   const fileType = determineFileType(mediaContent?.file_url || '');
   const fileUrl = mediaContent.file_url ? getFileUrl(mediaContent.file_url) : '';
 
-  const { data: viewCountData } = useSWR(
-    `/api/media-actions/getViewCount?mediaId=${mediaContent._id}`,
-    async (url) => {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error('Failed to fetch view count');
-      const data = await res.json();
-      return data.viewCount;
-    },
-    {
-      refreshInterval: 90000, // Refresh every 90 seconds
-      fallbackData: mediaContent.viewCount || 0,
-    }
-  );
+  const {
+    viewCount,
+    reactionData,
+    isLoadingReactions,
+    recordView,
+    handleReaction,
+    hasRecordedView
+  } = useMediaInteractions(mediaContent._id, mediaContent.viewCount);
+
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-
-    const recordView = async () => {
-      if (hasRecordedView) return;
-
-      try {
-        await fetch('/api/media-actions/createMediaView', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            mediaId: mediaContent._id,
-            timestamp: Date.now(),
-          }),
-        });
-
-        setHasRecordedView(true);
-      } catch (error) {
-        console.error('Error recording view:', error);
-      }
-    };
-
-    timeoutId = setTimeout(recordView, 45000);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [hasRecordedView]);
-
-  const handleReaction = async (type: 'like' | 'dislike') => {
-    if (!session) {
-      // Show login prompt or handle unauthorized state
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/media/${mediaContent._id}/reaction`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ type }),
-      });
-
-      if (!response.ok) throw new Error('Failed to process reaction');
-
-      const data = await response.json();
-      // setLikes(data.likes);
-      // setDislikes(data.dislikes);
-      setUserReaction(data.userReaction);
-    } catch (error) {
-      console.error('Error processing reaction:', error);
-    }
-  };
-
+    const timeoutId = setTimeout(recordView, 45000);
+    return () => clearTimeout(timeoutId);
+  }, [hasRecordedView, recordView]);
 
   return (
     <div className="xl:grid xl:grid-cols-[calc(100%_-_300px)_300px] 2xl:grid-cols-[calc(100%_-_400px)_400px] px-4 md:px-8 w-full ">
@@ -149,29 +94,16 @@ export function MediaContentView({
           </div>
 
           <div className="flex flex-wrap items-center gap-6">
-            <div className="flex items-center space-x-4">
-              <Button
-                color={userReaction === 'like' ? 'success' : 'gray'}
-                onClick={() => handleReaction('like')}
-                disabled={!session}
-                className="flex items-center space-x-2"
-              >
-                <FaThumbsUp />
-              </Button>
-
-              <Button
-                color={userReaction === 'dislike' ? 'failure' : 'gray'}
-                onClick={() => handleReaction('dislike')}
-                disabled={!session}
-                className="flex items-center space-x-2"
-              >
-                <FaThumbsDown />
-              </Button>
-            </div>
+            <ReactionButtons
+              session={session}
+              isLoadingReactions={isLoadingReactions}
+              reactionData={reactionData}
+              handleReaction={(type: any) => handleReaction(type, session)}
+            />
 
             <div className="flex items-center gap-2 text-gray-600">
               <FaEye className="text-xl" />
-              <span>{viewCountData} views</span>
+              <span>{viewCount} views</span>
             </div>
 
             {!session && (
