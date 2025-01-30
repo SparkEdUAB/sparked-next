@@ -49,7 +49,6 @@ export default async function login_(request: Request) {
       },
     );
 
-    console.log(user);
     if (!user) {
       const response = {
         isError: true,
@@ -85,10 +84,10 @@ export default async function login_(request: Request) {
     const response = {
       isError: false,
       code: AUTH_PROCESS_CODES.USER_LOGGED_IN_OK,
-      user: { 
-        id: user._id.toString(), // Ensure ID is passed as string
+      user: {
+        id: user._id.toString(),
         email: user.email,
-        role: role?.name 
+        role: role?.name,
       },
       jwtToken: token,
     };

@@ -7,7 +7,7 @@ import { dbCollections } from '../lib/db/collections';
 import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent, p_fetchRelatedMediaContent } from './pipelines';
 import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { HttpStatusCode } from 'axios';
 import { revalidateTag } from 'next/cache';
 
@@ -15,7 +15,9 @@ const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
 
 // Add cache configuration
 const CACHE_TAG_MEDIA = 'media-content';
-const CACHE_REVALIDATE_SECONDS = 60; // 1 minute
+
+const cache: Record<string, { data: any; timestamp: number }> = {};
+const CACHE_TTL = 300000; // Cache expiry time in milliseconds (5 min)
 
 export default async function fetchMediaContent_(request: any) {
   const schema = zfd.formData({
@@ -30,7 +32,20 @@ export default async function fetchMediaContent_(request: any) {
     unit_id: z.string().optional(),
     topic_id: z.string().optional(),
   });
+
   const params = request.nextUrl.searchParams;
+  const queryKey = params.toString(); // Generate a unique cache key
+
+  // Check if data is cached and still valid
+  if (cache[queryKey] && Date.now() - cache[queryKey].timestamp < CACHE_TTL) {
+    return new NextResponse(JSON.stringify({ isError: false, mediaContent: cache[queryKey].data }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+      },
+    });
+  }
 
   const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id, subject_id, grade_id } =
     schema.parse(params);
@@ -38,16 +53,13 @@ export default async function fetchMediaContent_(request: any) {
   const isWithMetaData = withMetaData == 'true';
   const _limit = parseInt(limit);
   const _skip = parseInt(skip);
+
   try {
     const db = await dbClient();
 
     if (!db) {
-      const response = {
-        isError: true,
-        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
-      };
-      return new Response(JSON.stringify(response), {
-        status: HttpStatusCode.InternalServerError,
+      return new NextResponse(JSON.stringify({ isError: true, code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED }), {
+        status: 500,
       });
     }
 
@@ -72,29 +84,23 @@ export default async function fetchMediaContent_(request: any) {
     } else {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .find(query, {
-          limit: _limit,
-          skip: _skip,
-        })
+        .find(query, { limit: _limit, skip: _skip })
         .toArray();
     }
 
-    const response = {
-      isError: false,
-      mediaContent,
-    };
+    // Store in cache
+    cache[queryKey] = { data: mediaContent, timestamp: Date.now() };
 
-    return new Response(JSON.stringify(response), {
-      status: HttpStatusCode.Ok,
+    return new NextResponse(JSON.stringify({ isError: false, mediaContent }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+      },
     });
   } catch {
-    const resp = {
-      isError: true,
-      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
-    };
-
-    return new Response(JSON.stringify(resp), {
-      status: HttpStatusCode.InternalServerError,
+    return new NextResponse(JSON.stringify({ isError: true, code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR }), {
+      status: 500,
     });
   }
 }

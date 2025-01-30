@@ -1,9 +1,3 @@
-// Add these fields to your existing type
-// export type T_RawMediaContentFields = {
-//   // ... existing fields ...
-
-// };
-
 import { I_FORM } from 'types/form';
 
 export type T_MediaContentFields = {

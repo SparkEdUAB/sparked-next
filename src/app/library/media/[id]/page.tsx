@@ -28,7 +28,7 @@ const getMediaContent = unstable_cache(
     return result;
   },
   ['media-content'],
-  { revalidate: 60 }
+  { revalidate: 360 }
 );
 
 // Cache the related media fetch
@@ -37,7 +37,7 @@ const getRelatedMedia = unstable_cache(
     return await fetchRelatedMedia(mediaContent);
   },
   ['related-media'],
-  { revalidate: 60 }
+  { revalidate: 360 }
 );
 
 export async function generateMetadata(props: T_MediaContentPageProps, parent: ResolvingMetadata): Promise<Metadata> {
@@ -49,12 +49,12 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
   } else {
     const mediaContent = result.mediaContent;
     const thumbnail =
-      mediaContent.thumbnail_url ||
-      (mediaContent.file_url && determineFileType(mediaContent.file_url) === 'image'
-        ? mediaContent.file_url
+      mediaContent?.thumbnail_url ||
+      (mediaContent?.file_url && determineFileType(mediaContent?.file_url) === 'image'
+        ? mediaContent?.file_url
         : undefined);
 
-    return getMetadata(mediaContent.name, mediaContent.description, thumbnail);
+    return getMetadata(mediaContent?.name, mediaContent?.description, thumbnail);
   }
 }
 
