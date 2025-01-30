@@ -38,3 +38,25 @@ body {
   padding: 20px;
   color: white;
 }
+
+.Example.fixed {
+  overflow-y: auto;
+}
+
+.Example.fixed .pdfviewer__container {
+  padding: 0 24px;
+}
+
+.Example.fixed .pdfviewer__container__document {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Example.fixed .react-pdf__Document {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

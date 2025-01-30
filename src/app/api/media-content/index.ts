@@ -376,12 +376,13 @@ export async function fetchRandomMediaContent_(request: any) {
 export async function fetchRelatedMediaContent_(request: NextRequest) {
   const schema = zfd.formData({
     grade_id: zfd.text().optional(),
+    media_content_id: zfd.text(), // Add media_content_id to exclude current content
     limit: zfd.text().optional(),
     skip: zfd.text().optional(),
   });
 
   const params = request.nextUrl.searchParams;
-  const { limit, skip, grade_id } = schema.parse(params);
+  const { limit, skip, grade_id, media_content_id } = schema.parse(params);
   const _limit = parseInt(limit || '10');
   const _skip = parseInt(skip || '0');
 
@@ -400,7 +401,16 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
 
     const relatedMediaContent = await db
       .collection(dbCollections.media_content.name)
-      .find({ grade_id: new BSON.ObjectId(grade_id) }, { limit: _limit, skip: _skip })
+      .find(
+        {
+          grade_id: new BSON.ObjectId(grade_id),
+          _id: { $ne: new BSON.ObjectId(media_content_id) }, // Exclude current media
+        },
+        {
+          limit: _limit,
+          skip: _skip,
+        },
+      )
       .toArray();
 
     const response = {

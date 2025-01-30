@@ -1,6 +1,7 @@
 "use client"
 
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
+import { useWindowSize } from "@uidotdev/usehooks";
 import { Button } from 'flowbite-react';
 import { useCallback, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa'; // Import icons
@@ -24,9 +25,9 @@ export default function PdfReactPdf({ file }: { file: string }) {
   const [numPages, setNumPages] = useState<number>();
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [preloadedPages, setPreloadedPages] = useState<Set<number>>(new Set());
-
   const [containerRef, setContainerRef] = useState<HTMLElement | null>(null);
   const [containerWidth, setContainerWidth] = useState<number>();
+  const size = useWindowSize();
 
   const onResize = useCallback<ResizeObserverCallback>((entries) => {
     const [entry] = entries;
@@ -67,7 +68,17 @@ export default function PdfReactPdf({ file }: { file: string }) {
     });
   };
 
-
+  if (Number(size.width) < 768) {
+    return (
+      <div className="w-full h-[80vh]">
+        <iframe
+          src={`${file}#toolbar=0`}
+          className="w-full h-full rounded-lg"
+          title="PDF Document"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="Example" style={{ textAlign: 'center' }}>

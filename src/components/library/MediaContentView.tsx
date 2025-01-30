@@ -89,8 +89,6 @@ export function MediaContentView({
     };
   }, [hasRecordedView]);
 
-  console.log(session)
-
   const handleReaction = async (type: 'like' | 'dislike') => {
     if (!session) {
       // Show login prompt or handle unauthorized state
