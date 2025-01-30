@@ -9,8 +9,13 @@ import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { NextRequest } from 'next/server';
 import { HttpStatusCode } from 'axios';
+import { revalidateTag } from 'next/cache';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
+
+// Add cache configuration
+const CACHE_TAG_MEDIA = 'media-content';
+const CACHE_REVALIDATE_SECONDS = 60; // 1 minute
 
 export default async function fetchMediaContent_(request: any) {
   const schema = zfd.formData({
@@ -370,15 +375,13 @@ export async function fetchRandomMediaContent_(request: any) {
 
 export async function fetchRelatedMediaContent_(request: NextRequest) {
   const schema = zfd.formData({
-    media_content_id: zfd.text(),
-    subject_id: zfd.text().optional(),
     grade_id: zfd.text().optional(),
     limit: zfd.text().optional(),
     skip: zfd.text().optional(),
   });
 
   const params = request.nextUrl.searchParams;
-  const { media_content_id, limit, skip, subject_id, grade_id } = schema.parse(params);
+  const { limit, skip, grade_id } = schema.parse(params);
   const _limit = parseInt(limit || '10');
   const _skip = parseInt(skip || '0');
 
@@ -395,16 +398,9 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
       });
     }
 
-    const query = {
-      ...(subject_id && { subject_id: new BSON.ObjectId(subject_id) }),
-      ...(grade_id && { grade_id: new BSON.ObjectId(grade_id) }),
-    };
-
-    const mediaContentId = new BSON.ObjectId(media_content_id);
-
     const relatedMediaContent = await db
       .collection(dbCollections.media_content.name)
-      .aggregate(p_fetchRelatedMediaContent({ query, mediaContentId, limit: _limit, skip: _skip }))
+      .find({ grade_id: new BSON.ObjectId(grade_id) }, { limit: _limit, skip: _skip })
       .toArray();
 
     const response = {
@@ -425,4 +421,9 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
       status: HttpStatusCode.InternalServerError,
     });
   }
+}
+
+// Add a function to invalidate cache when needed
+export async function invalidateMediaCache() {
+  revalidateTag(CACHE_TAG_MEDIA);
 }

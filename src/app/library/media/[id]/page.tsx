@@ -9,6 +9,7 @@ import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
 import NETWORK_UTILS from 'utils/network';
 import { MediaContentView } from '../../../../components/library/MediaContentView';
 import { fetchRelatedMedia } from '../../../../fetchers/library/fetchRelatedMedia';
+import { unstable_cache } from 'next/cache';
 
 type T_MediaContentPageProps = {
   params: {
@@ -16,15 +17,32 @@ type T_MediaContentPageProps = {
   };
 };
 
+// Cache the media content fetch
+const getMediaContent = unstable_cache(
+  async (id: string) => {
+    const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
+      BASE_URL +
+      API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+      NETWORK_UTILS.formatGetParams({ mediaContentId: id, withMetaData: 'true' }),
+    );
+    return result;
+  },
+  ['media-content'],
+  { revalidate: 60 }
+);
+
+// Cache the related media fetch
+const getRelatedMedia = unstable_cache(
+  async (mediaContent: T_RawMediaContentFields) => {
+    return await fetchRelatedMedia(mediaContent);
+  },
+  ['related-media'],
+  { revalidate: 60 }
+);
+
 export async function generateMetadata(props: T_MediaContentPageProps, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
-
-  const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
-    BASE_URL +
-    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-    NETWORK_UTILS.formatGetParams({ mediaContentId: props.params.id, withMetaData: 'true' }),
-    { next: { revalidate: 60 } },
-  );
+  const result = await getMediaContent(props.params.id);
 
   if (result instanceof Error) {
     return getMetadata('Media Content View', 'Shows details about the selected media content file');
@@ -41,16 +59,9 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
 }
 
 export default async function MediaContentPage({ params }: T_MediaContentPageProps) {
-  const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
-    BASE_URL +
-    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-    NETWORK_UTILS.formatGetParams({ mediaContentId: params.id, withMetaData: 'true' }),
-    { next: { revalidate: 60 } },
-  );
+  const result = await getMediaContent(params.id);
+  const relatedMediaContent = result instanceof Error ? null : await getRelatedMedia(result.mediaContent);
 
-  const relatedMediaContent = result instanceof Error ? null : await fetchRelatedMedia(result.mediaContent);
-
-  // console.log({ relatedMediaContent })
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] py-6 ">
       {result instanceof Error ? (

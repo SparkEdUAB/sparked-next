@@ -5,13 +5,9 @@ import { T_RawMediaContentFields } from 'types/media-content';
 import NETWORK_UTILS from 'utils/network';
 
 export async function fetchRelatedMedia(mediaContent: T_RawMediaContentFields) {
-  const { _id, grade, subject } = mediaContent;
+  const { _id, grade } = mediaContent;
 
   const optionalParams = {
-    // ...(topic?._id && { topic_id: topic?._id }),
-    // ...(unit?._id && { unit_id: unit?._id }),
-    // ...(course?._id && { course_id: course?._id }),
-    ...(subject?._id && { subject_id: subject?._id }),
     ...(grade?._id && { grade_id: grade?._id }),
   };
 

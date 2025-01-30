@@ -20,6 +20,7 @@ import { useSession } from 'next-auth/react';
 import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 import { useEffect } from 'react';
 import { FaEye } from 'react-icons/fa'; // Add eye icon for view count
+import useSWR from 'swr';
 
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
@@ -29,9 +30,6 @@ const VideoViewer = dynamic(() => import('next-video/player'), {
   ssr: false,
 });
 
-
-// Add this import at the top with other imports
-import useSWR from 'swr';
 
 export function MediaContentView({
   mediaContent,
@@ -46,7 +44,6 @@ export function MediaContentView({
   const fileType = determineFileType(mediaContent?.file_url || '');
   const fileUrl = mediaContent.file_url ? getFileUrl(mediaContent.file_url) : '';
 
-  // Add SWR hook for view count
   const { data: viewCountData } = useSWR(
     `/api/media-actions/getViewCount?mediaId=${mediaContent._id}`,
     async (url) => {
@@ -56,7 +53,7 @@ export function MediaContentView({
       return data.viewCount;
     },
     {
-      refreshInterval: 90000, // Refresh every 30 seconds
+      refreshInterval: 90000, // Refresh every 90 seconds
       fallbackData: mediaContent.viewCount || 0,
     }
   );
@@ -91,6 +88,8 @@ export function MediaContentView({
       clearTimeout(timeoutId);
     };
   }, [hasRecordedView]);
+
+  console.log(session)
 
   const handleReaction = async (type: 'like' | 'dislike') => {
     if (!session) {
@@ -145,36 +144,37 @@ export function MediaContentView({
             <LibraryErrorMessage>Could not recognize the file type</LibraryErrorMessage>
           )}
         </div>
+
         <div>
-          <div className="flex justify-between items-center">
-            <h1 className="my-2 font-bold text-3xl">{mediaContent.name}</h1>
+          <div>
+            <h1 className="font-bold text-3xl mb-4">{mediaContent.name}</h1>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-6">
+            <div className="flex items-center space-x-4">
+              <Button
+                color={userReaction === 'like' ? 'success' : 'gray'}
+                onClick={() => handleReaction('like')}
+                disabled={!session}
+                className="flex items-center space-x-2"
+              >
+                <FaThumbsUp />
+              </Button>
+
+              <Button
+                color={userReaction === 'dislike' ? 'failure' : 'gray'}
+                onClick={() => handleReaction('dislike')}
+                disabled={!session}
+                className="flex items-center space-x-2"
+              >
+                <FaThumbsDown />
+              </Button>
+            </div>
+
             <div className="flex items-center gap-2 text-gray-600">
               <FaEye className="text-xl" />
               <span>{viewCountData} views</span>
             </div>
-          </div>
-
-          {/* Add reaction buttons */}
-          <div className="flex items-center space-x-4 mt-4">
-            <Button
-              color={userReaction === 'like' ? 'success' : 'gray'}
-              onClick={() => handleReaction('like')}
-              disabled={!session}
-              className="flex items-center space-x-2"
-            >
-              <FaThumbsUp />
-              {/* <span>{likes}</span> */}
-            </Button>
-
-            <Button
-              color={userReaction === 'dislike' ? 'failure' : 'gray'}
-              onClick={() => handleReaction('dislike')}
-              disabled={!session}
-              className="flex items-center space-x-2"
-            >
-              <FaThumbsDown />
-              {/* <span>{dislikes}</span> */}
-            </Button>
 
             {!session && (
               <span className="text-sm text-gray-500">
@@ -182,6 +182,10 @@ export function MediaContentView({
               </span>
             )}
           </div>
+
+        </div>
+        <div className="flex justify-between items-center">
+
           <div className="my-2 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
             {mediaContent.grade ? (
               <Link href={`/library?grade_id=${mediaContent.grade._id}`}>
@@ -221,16 +225,16 @@ export function MediaContentView({
               </Link>
             ) : null}
           </div>
-          <Button
-            href={fileUrl}
-            // @ts-expect-error
-            download
-            className="inline-block mt-4 px-4 text-white rounded "
-          >
-            <FaDownload className="inline-block mr-2" />
-            Download
-          </Button>
         </div>
+        <Button
+          href={fileUrl}
+          // @ts-expect-error
+          download
+          className="inline-block mt-4 px-4 text-white rounded "
+        >
+          <FaDownload className="inline-block mr-2" />
+          Download
+        </Button>
       </section>
       <RelatedMediaContentList relatedMediaContent={relatedMediaContent} />
     </div>
