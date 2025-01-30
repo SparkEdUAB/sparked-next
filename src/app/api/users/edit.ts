@@ -96,7 +96,7 @@ export default async function editUser_(request: Request, session?: Session) {
       }),
       { status: HttpStatusCode.Ok },
     );
-  } catch (error) {
+  } catch {
     return new Response(
       JSON.stringify({
         isError: true,

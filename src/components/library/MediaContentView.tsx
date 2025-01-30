@@ -13,14 +13,11 @@ import Image from 'next/image';
 import { RelatedMediaContentList } from './RelatedMediaContentList';
 import dynamic from 'next/dynamic';
 import { getFileUrl } from 'utils/helpers/getFileUrl';
-import { FaDownload } from 'react-icons/fa'; // Import the download icon
-import { Button } from 'flowbite-react'; // Import the Button component
-import { useState } from 'react';
+import { FaDownload } from 'react-icons/fa';
+import { Button } from 'flowbite-react';
 import { useSession } from 'next-auth/react';
-import { FaThumbsUp, FaThumbsDown } from 'react-icons/fa';
 import { useEffect } from 'react';
-import { FaEye } from 'react-icons/fa'; // Add eye icon for view count
-import useSWR from 'swr';
+import { FaEye } from 'react-icons/fa';
 import { ReactionButtons } from '@components/atom/ReactionButtons';
 import { useMediaInteractions } from '@hooks/useMediaInteractions';
 
@@ -53,7 +50,7 @@ export function MediaContentView({
     recordView,
     handleReaction,
     hasRecordedView
-  } = useMediaInteractions(mediaContent._id, mediaContent.viewCount);
+  } = useMediaInteractions(mediaContent._id);
 
 
   useEffect(() => {

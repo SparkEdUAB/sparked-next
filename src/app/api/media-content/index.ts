@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent, p_fetchRelatedMediaContent } from './pipelines';
+import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent } from './pipelines';
 import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { NextRequest, NextResponse } from 'next/server';

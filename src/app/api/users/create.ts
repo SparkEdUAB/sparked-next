@@ -89,7 +89,7 @@ export default async function createUser_(request: Request, session?: Session) {
       }),
       { status: HttpStatusCode.Created },
     );
-  } catch (error) {
+  } catch {
     return new Response(
       JSON.stringify({
         isError: true,

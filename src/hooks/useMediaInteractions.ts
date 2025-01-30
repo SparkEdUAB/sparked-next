@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import useSWR from 'swr';
 import { Session } from 'next-auth';
 import { useFetch } from './use-swr';
 
-export function useMediaInteractions(mediaId: string, initialViewCount: number = 0) {
+export function useMediaInteractions(mediaId: string) {
   const [hasRecordedView, setHasRecordedView] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 

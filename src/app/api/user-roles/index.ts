@@ -8,7 +8,7 @@ import USER_ROLES_PROCESS_CODES from './processCodes';
 import USERS_PROCESS_CODES from '../users/processCodes';
 import { HttpStatusCode } from 'axios';
 
-export default async function fetchUserRoles_(request: any) {
+export default async function fetchUserRoles_() {
   try {
     const db = await dbClient();
 

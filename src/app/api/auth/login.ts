@@ -78,7 +78,7 @@ export default async function login_(request: Request) {
     }
 
     const token = jwt.sign({ id: user._id, email: user.email, role }, JWT_SECRET as string, {
-      expiresIn: '48h',
+      expiresIn: '72h',
     });
 
     const response = {
