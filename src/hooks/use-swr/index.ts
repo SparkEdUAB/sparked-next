@@ -7,6 +7,6 @@ export const useFetch = <Data = any>(key?: string) => {
   return useSWR<Data | Error>(key, fetcher as any, {
     revalidateOnFocus: false,
     revalidateOnReconnect: true,
-    revalidateOnMount: false,
+    revalidateOnMount: true,
   });
 };

@@ -35,7 +35,7 @@ export function LibraryNavbar({
       </div>
       <div className={`flex flex-row gap-4 ${searching ? 'w-full md:w-fit' : ''}`}>
         <form
-          className="w-full"
+          className="w-full md:w-64 md:focus-within:w-96 transition-all duration-300"
           action="/library/search"
           method="get"
           onSubmit={(e) => {

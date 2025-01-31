@@ -1,5 +1,3 @@
-import { TProcessCode } from 'types/navigation';
-
 //100 - 499
 const SPARKED_PROCESS_CODES = {
   UNKNOWN_ERROR: 100,

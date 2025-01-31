@@ -25,16 +25,16 @@ const LibraryPage = async ({ searchParams }: T_LibraryPageProps) => {
 
   const categoriesResult = await fetcher<{ categories: T_RawTopicFields[] }>(
     BASE_URL +
-      API_LINKS.FETCH_CATEGORIES +
-      NETWORK_UTILS.formatGetParams({ limit: MEDIA_CONTENT_LIMIT.toString(), skip: '0' }),
-    { next: { revalidate: 60 } },
+    API_LINKS.FETCH_CATEGORIES +
+    NETWORK_UTILS.formatGetParams({ limit: MEDIA_CONTENT_LIMIT.toString(), skip: '0' }),
+    { next: { revalidate: 360 } },
   );
 
   return (
     <main id="scrollableDiv" className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] min-w-full">
       <div className="overflow-x-scroll custom-scrollbar flex flex-row gap-2 sticky top-0 bg-white dark:bg-gray-800 p-2">
         {categoriesResult instanceof Error ||
-        (categoriesResult.categories.length === 0 && !searchParams.category_id) ? null : (
+          (categoriesResult.categories.length === 0 && !searchParams.category_id) ? null : (
           <>
             <LibraryBadge
               key={'Any topic'}
