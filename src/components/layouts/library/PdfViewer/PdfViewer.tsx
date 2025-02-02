@@ -3,7 +3,7 @@
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
 import { Button } from 'flowbite-react';
 import { useCallback, useState } from "react";
-import { FaArrowLeft, FaArrowRight, FaSearchPlus, FaSearchMinus } from 'react-icons/fa'; // Import zoom icons
+import { FaArrowLeft, FaArrowRight, FaSearchPlus, FaSearchMinus } from 'react-icons/fa';
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
