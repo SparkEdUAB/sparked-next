@@ -21,7 +21,6 @@ import { FaEye } from 'react-icons/fa';
 import { ReactionButtons } from '@components/atom/ReactionButtons';
 import { useMediaInteractions } from '@hooks/useMediaInteractions';
 
-
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
 });
@@ -86,8 +85,8 @@ export function MediaContentView({
         </div>
 
         <div>
-          <div>
-            <h1 className="font-bold text-3xl mb-4">{mediaContent.name}</h1>
+          <div className='mb-4 mt-2'>
+            <h1 className="font-bold text-3xl ">{mediaContent.name}</h1>
           </div>
 
           <div className="flex flex-wrap items-center gap-6">

@@ -1,15 +1,6 @@
 body {
   margin: 0;
-  /* background-color: #525659; */
   font-family: Segoe UI, Tahoma, sans-serif;
-}
-
-.pdfviewer__container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px 0;
-  padding: 10px;
 }
 
 .pdfviewer__container__load {
@@ -17,21 +8,37 @@ body {
   color: white;
 }
 
-.pdfviewer__container__document {
+.pdfviewer__container {
+  display: flex;
+  justify-content: center;
   width: 100%;
-  max-width: calc(100% - 2em);
-  margin: 1em 0;
+  padding: 0;
+  position: relative;
 }
 
-.pdfviewer__container__document .react-pdf__Document {
+.pdfviewer__buttons {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  z-index: 10;
+  padding: 5px 10px;
+  border-radius: 3px;
+  width: 90%;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.pdfviewer__container__document {
+  width: 100%;
+  margin: 0;
 }
 
 .pdfviewer__container__document .react-pdf__Page {
-  margin: 1em 0;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+  margin: 0;
+  box-shadow: none;
 }
 
 .pdfviewer__container__document .react-pdf__message {
@@ -45,18 +52,4 @@ body {
 
 .Example.fixed .pdfviewer__container {
   padding: 0 24px;
-}
-
-.Example.fixed .pdfviewer__container__document {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.Example.fixed .react-pdf__Document {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }

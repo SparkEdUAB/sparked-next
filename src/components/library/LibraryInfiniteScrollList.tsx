@@ -23,33 +23,27 @@ export function LibraryInfiniteScrollList({
       dataLength={mediaContent.length}
       next={loadMore}
       hasMore={hasMore}
-      loader={
-        <div className="flex flex-row justify-center items-center my-4">
-          <BouncingLoader />
-        </div>
-      }
+      loader={<div className="flex justify-center my-4"><BouncingLoader /></div>}
       endMessage={
-        error && (
-          <p className="text-center my-4">
-            <b className="text-red-500">Failed to load additional elements</b>
-          </p>
-        )
+        error && <p className="text-center my-4 text-red-500 font-semibold">Failed to load additional elements</p>
       }
       scrollableTarget="scrollableDiv"
     >
-      <article className="grid pb-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-        {mediaContent.map((item) => (
-          <div key={item._id} className="gutter-row px-0 py-2 h-full">
-            <ContentCardView
-              url={`/library/media/${item._id}`}
-              image={getImageSrc(item)}
-              title={item.name}
-              description={item.description}
-              fileUrl={item.file_url as string}
-            />
-          </div>
-        ))}
-      </article>
+      <div className="px-4 sm:px-6 md:px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+          {mediaContent.map((item) => (
+            <div key={item._id} className="h-full">
+              <ContentCardView
+                url={`/library/media/${item._id}`}
+                image={getImageSrc(item)}
+                title={item.name}
+                description={item.description}
+                fileUrl={item.file_url as string}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
     </InfiniteScroll>
   );
 }
