@@ -4,13 +4,20 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent, p_fetchRelatedMediaContent } from './pipelines';
+import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent } from './pipelines';
 import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { HttpStatusCode } from 'axios';
+import { revalidateTag } from 'next/cache';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
+
+// Add cache configuration
+const CACHE_TAG_MEDIA = 'media-content';
+
+const cache: Record<string, { data: any; timestamp: number }> = {};
+const CACHE_TTL = 300000; // Cache expiry time in milliseconds (5 min)
 
 export default async function fetchMediaContent_(request: any) {
   const schema = zfd.formData({
@@ -25,7 +32,20 @@ export default async function fetchMediaContent_(request: any) {
     unit_id: z.string().optional(),
     topic_id: z.string().optional(),
   });
+
   const params = request.nextUrl.searchParams;
+  const queryKey = params.toString(); // Generate a unique cache key
+
+  // Check if data is cached and still valid
+  if (cache[queryKey] && Date.now() - cache[queryKey].timestamp < CACHE_TTL) {
+    return new NextResponse(JSON.stringify({ isError: false, mediaContent: cache[queryKey].data }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+      },
+    });
+  }
 
   const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id, subject_id, grade_id } =
     schema.parse(params);
@@ -33,16 +53,13 @@ export default async function fetchMediaContent_(request: any) {
   const isWithMetaData = withMetaData == 'true';
   const _limit = parseInt(limit);
   const _skip = parseInt(skip);
+
   try {
     const db = await dbClient();
 
     if (!db) {
-      const response = {
-        isError: true,
-        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
-      };
-      return new Response(JSON.stringify(response), {
-        status: HttpStatusCode.InternalServerError,
+      return new NextResponse(JSON.stringify({ isError: true, code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED }), {
+        status: 500,
       });
     }
 
@@ -67,29 +84,23 @@ export default async function fetchMediaContent_(request: any) {
     } else {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .find(query, {
-          limit: _limit,
-          skip: _skip,
-        })
+        .find(query, { limit: _limit, skip: _skip })
         .toArray();
     }
 
-    const response = {
-      isError: false,
-      mediaContent,
-    };
+    // Store in cache
+    cache[queryKey] = { data: mediaContent, timestamp: Date.now() };
 
-    return new Response(JSON.stringify(response), {
-      status: HttpStatusCode.Ok,
+    return new NextResponse(JSON.stringify({ isError: false, mediaContent }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+      },
     });
   } catch {
-    const resp = {
-      isError: true,
-      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
-    };
-
-    return new Response(JSON.stringify(resp), {
-      status: HttpStatusCode.InternalServerError,
+    return new NextResponse(JSON.stringify({ isError: true, code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR }), {
+      status: 500,
     });
   }
 }
@@ -370,16 +381,14 @@ export async function fetchRandomMediaContent_(request: any) {
 
 export async function fetchRelatedMediaContent_(request: NextRequest) {
   const schema = zfd.formData({
-    media_content_id: zfd.text(),
-    topic_id: zfd.text().optional(),
-    unit_id: zfd.text().optional(),
-    course_id: zfd.text().optional(),
+    grade_id: zfd.text().optional(),
+    media_content_id: zfd.text(), // Add media_content_id to exclude current content
     limit: zfd.text().optional(),
     skip: zfd.text().optional(),
   });
 
   const params = request.nextUrl.searchParams;
-  const { media_content_id, topic_id, unit_id, course_id, limit, skip } = schema.parse(params);
+  const { limit, skip, grade_id, media_content_id } = schema.parse(params);
   const _limit = parseInt(limit || '10');
   const _skip = parseInt(skip || '0');
 
@@ -396,17 +405,18 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
       });
     }
 
-    const query = {
-      ...(topic_id && { topic_id: new BSON.ObjectId(topic_id) }),
-      ...(unit_id && { unit_id: new BSON.ObjectId(unit_id) }),
-      ...(course_id && { course_id: new BSON.ObjectId(course_id) }),
-    };
-
-    const mediaContentId = new BSON.ObjectId(media_content_id);
-
     const relatedMediaContent = await db
       .collection(dbCollections.media_content.name)
-      .aggregate(p_fetchRelatedMediaContent({ query, mediaContentId, limit: _limit, skip: _skip }))
+      .find(
+        {
+          grade_id: new BSON.ObjectId(grade_id),
+          _id: { $ne: new BSON.ObjectId(media_content_id) }, // Exclude current media
+        },
+        {
+          limit: _limit,
+          skip: _skip,
+        },
+      )
       .toArray();
 
     const response = {
@@ -427,4 +437,9 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
       status: HttpStatusCode.InternalServerError,
     });
   }
+}
+
+// Add a function to invalidate cache when needed
+export async function invalidateMediaCache() {
+  revalidateTag(CACHE_TAG_MEDIA);
 }

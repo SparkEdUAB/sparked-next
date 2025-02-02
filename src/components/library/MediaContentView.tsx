@@ -1,3 +1,5 @@
+"use client"
+
 import Link from 'next/link';
 import { ReactNode } from 'react';
 import { FaBook, FaBookmark } from 'react-icons/fa';
@@ -11,8 +13,13 @@ import Image from 'next/image';
 import { RelatedMediaContentList } from './RelatedMediaContentList';
 import dynamic from 'next/dynamic';
 import { getFileUrl } from 'utils/helpers/getFileUrl';
-import { FaDownload } from 'react-icons/fa'; // Import the download icon
-import { Button } from 'flowbite-react'; // Import the Button component
+import { FaDownload } from 'react-icons/fa';
+import { Button } from 'flowbite-react';
+import { useSession } from 'next-auth/react';
+import { useEffect } from 'react';
+import { FaEye } from 'react-icons/fa';
+import { ReactionButtons } from '@components/atom/ReactionButtons';
+import { useMediaInteractions } from '@hooks/useMediaInteractions';
 
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
@@ -30,8 +37,25 @@ export function MediaContentView({
   mediaContent: T_RawMediaContentFields;
   relatedMediaContent: T_RawMediaContentFields[] | null;
 }) {
+  const { data: session } = useSession();
+
   const fileType = determineFileType(mediaContent?.file_url || '');
   const fileUrl = mediaContent.file_url ? getFileUrl(mediaContent.file_url) : '';
+
+  const {
+    viewCount,
+    reactionData,
+    isLoadingReactions,
+    recordView,
+    handleReaction,
+    hasRecordedView
+  } = useMediaInteractions(mediaContent._id);
+
+
+  useEffect(() => {
+    const timeoutId = setTimeout(recordView, 45000);
+    return () => clearTimeout(timeoutId);
+  }, [hasRecordedView, recordView]);
 
   return (
     <div className="xl:grid xl:grid-cols-[calc(100%_-_300px)_300px] 2xl:grid-cols-[calc(100%_-_400px)_400px] px-4 md:px-8 w-full ">
@@ -59,9 +83,35 @@ export function MediaContentView({
             <LibraryErrorMessage>Could not recognize the file type</LibraryErrorMessage>
           )}
         </div>
+
         <div>
-          <h1 className="my-2 font-bold text-3xl">{mediaContent.name}</h1>
-          <p className="text-lg whitespace-pre-wrap">{mediaContent.description}</p>
+          <div className='mb-4 mt-2'>
+            <h1 className="font-bold text-3xl ">{mediaContent.name}</h1>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-6">
+            <ReactionButtons
+              session={session}
+              isLoadingReactions={isLoadingReactions}
+              reactionData={reactionData}
+              handleReaction={(type: any) => handleReaction(type, session)}
+            />
+
+            <div className="flex items-center gap-2 text-gray-600">
+              <FaEye className="text-xl" />
+              <span>{viewCount} views</span>
+            </div>
+
+            {!session && (
+              <span className="text-sm text-gray-500">
+                Please login to react to this content
+              </span>
+            )}
+          </div>
+
+        </div>
+        <div className="flex justify-between items-center">
+
           <div className="my-2 flex flex-row flex-wrap text-gray-500 gap-x-8 gap-y-2">
             {mediaContent.grade ? (
               <Link href={`/library?grade_id=${mediaContent.grade._id}`}>
@@ -101,16 +151,16 @@ export function MediaContentView({
               </Link>
             ) : null}
           </div>
-          <Button
-            href={fileUrl}
-            // @ts-expect-error
-            download
-            className="inline-block mt-4 px-4 text-white rounded "
-          >
-            <FaDownload className="inline-block mr-2" />
-            Download
-          </Button>
         </div>
+        <Button
+          href={fileUrl}
+          // @ts-expect-error
+          download
+          className="inline-block mt-4 px-4 text-white rounded "
+        >
+          <FaDownload className="inline-block mr-2" />
+          Download
+        </Button>
       </section>
       <RelatedMediaContentList relatedMediaContent={relatedMediaContent} />
     </div>

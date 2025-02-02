@@ -42,6 +42,7 @@ export default async function login_(request: Request) {
       {
         projection: {
           email: 1,
+          _id: 1,
           role: 1,
           is_verified: 1,
         },
@@ -76,14 +77,18 @@ export default async function login_(request: Request) {
       };
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email, role }, JWT_SECRET as string, {
-      expiresIn: '48h',
+    const token = jwt.sign({ id: user._id, email: user.email, role }, JWT_SECRET as string, {
+      expiresIn: '72h',
     });
 
     const response = {
       isError: false,
       code: AUTH_PROCESS_CODES.USER_LOGGED_IN_OK,
-      user: { ...user, id: user._id },
+      user: {
+        id: user._id.toString(),
+        email: user.email,
+        role: role?.name,
+      },
       jwtToken: token,
     };
 

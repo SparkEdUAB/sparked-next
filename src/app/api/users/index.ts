@@ -19,41 +19,45 @@ export default async function fetchUsers_(request: any) {
   try {
     const db = await dbClient();
     if (!db) {
-      return new Response(JSON.stringify({
-        isError: true,
-        code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
-      }), { status: HttpStatusCode.InternalServerError });
+      return new Response(
+        JSON.stringify({
+          isError: true,
+          code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED,
+        }),
+        { status: HttpStatusCode.InternalServerError },
+      );
     }
 
-    const users = await db.collection(dbCollections.users.name)
+    const users = await db
+      .collection(dbCollections.users.name)
       .aggregate([
         {
           $lookup: {
             from: dbCollections.user_role_mappings.name,
             localField: '_id',
             foreignField: 'user_id',
-            as: 'role_mapping'
-          }
+            as: 'role_mapping',
+          },
         },
         {
           $unwind: {
             path: '$role_mapping',
-            preserveNullAndEmptyArrays: true
-          }
+            preserveNullAndEmptyArrays: true,
+          },
         },
         {
           $lookup: {
             from: dbCollections.user_roles.name,
             localField: 'role_mapping.role_id',
             foreignField: '_id',
-            as: 'role_details'
-          }
+            as: 'role_details',
+          },
         },
         {
           $unwind: {
             path: '$role_details',
-            preserveNullAndEmptyArrays: true
-          }
+            preserveNullAndEmptyArrays: true,
+          },
         },
         {
           $project: {
@@ -63,27 +67,33 @@ export default async function fetchUsers_(request: any) {
             lastName: 1,
             role: '$role_details.name',
             createdAt: 1,
-            updatedAt: 1
-          }
+            updatedAt: 1,
+          },
         },
         {
-          $skip: skip || 0
+          $skip: skip || 0,
         },
         {
-          $limit: limit || 10
-        }
-      ]).toArray();
+          $limit: limit || 10,
+        },
+      ])
+      .toArray();
 
-    return new Response(JSON.stringify({
-      isError: false,
-      users,
-    }), { status: HttpStatusCode.Ok });
-
-  } catch (error) {
-    return new Response(JSON.stringify({
-      isError: true,
-      code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
-    }), { status: HttpStatusCode.InternalServerError });
+    return new Response(
+      JSON.stringify({
+        isError: false,
+        users,
+      }),
+      { status: HttpStatusCode.Ok },
+    );
+  } catch {
+    return new Response(
+      JSON.stringify({
+        isError: true,
+        code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+      }),
+      { status: HttpStatusCode.InternalServerError },
+    );
   }
 }
 

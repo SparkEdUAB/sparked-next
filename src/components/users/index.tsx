@@ -1,7 +1,5 @@
 import { T_ColumnData } from '@components/admin/AdminTable/types';
-import { Button } from 'flowbite-react';
 import i18next from 'i18next';
-import { HiUserGroup } from 'react-icons/hi';
 
 export const userTableColumns: T_ColumnData<any>[] = [
   {

@@ -1,39 +1,20 @@
 #!/bin/bash
-# This scripts runs on the server to deploy the application, this is saved here for
-#tracking and reference purposes If updated here make sure it reflects on the
-# server our deployment directory is ~/htdocs/sparked-next Move the current
-# sparked-next directory to sparked-next-old if it exists
 
-echo $(pwd);
+# Navigate to your project directory
+cd /var/www/sparked-next || exit
 
-if [ -d "htdocs/sparked-next" ]; then
-    mv htdocs/sparked-next htdocs/sparked-next-old || echo "Failed to move htdocs/sparked-next directory";
-fi
+# Pull the latest changes from the main branch
+git pull origin main
 
-cd htdocs
-mkdir -p sparked-next
-cd sparked-next
+# Install updated dependencies
+yarn install
 
-# unarchize the file
-if [ -f "../archive.tar.gz" ]; then
-    tar -xvf ../archive.tar.gz
-else
-    echo "archive.tar.gz file does not exist";
-fi
-# Check if the sparked-next directory exists
-# Create the releases directory if it doesn't exist
-mkdir -p ../releases;
+# Build the Next.js app
+yarn build
 
-# Copy .env from sparked-next-old to the new sparked-next
-if [ -f "../sparked-next-old/.env" ]; then
-    cp ../sparked-next-old/.env  ./;
-fi
-# Run yarn and build the project
+# Restart the app with PM2
+pm2 stop sparked-next
+pm2 start sparked-next
 
-cp ../.next ./
-# Run the application
-forever start -c "yarn start" ./;
-
-# Move sparked-next-old to the releases directory
-DATE=$(date +%Y%m%d%H%M);
-mv "../sparked-next-old" "../releases/sparked-next-old-$DATE";
+# Optional: Save the PM2 process list
+pm2 save
