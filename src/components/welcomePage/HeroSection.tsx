@@ -24,7 +24,7 @@ const HeroSection = () => {
       setCurrentImageIndex((prevIndex) =>
         prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
       );
-    }, 10000); // Change image every 10 seconds
+    }, 10000);
 
     return () => clearInterval(interval);
 
@@ -34,8 +34,7 @@ const HeroSection = () => {
   return (
     <>
       <section className="bg-sky-50 dark:bg-gray-900">
-        <div className="relative min-h-[600px] flex items-center"> {/* Added flex and items-center */}
-          {/* Background image container with fade transition */}
+        <div className="relative min-h-[600px] flex items-center">
           {backgroundImages.map((image, index) => (
             <div
               key={image}
@@ -73,7 +72,7 @@ const HeroSection = () => {
         </div>
       </section>
 
-      <section className="bg-sky-100 dark:bg-gray-900">
+      <section className="bg-gradient-to-b from-sky-50 to-white dark:from-gray-900 dark:to-gray-800">
         <div className="mx-auto max-w-screen-lg sm:py-16 lg:px-6">
           <div className="mb-8 max-w-screen-md lg:mb-16 mx-auto text-center">
             <h2 className="mb-4 text-4xl font-bold text-sky-900 dark:text-white lg:text-4xl">
@@ -84,10 +83,8 @@ const HeroSection = () => {
             </p>
           </div>
         </div>
-      </section>
-      <section className="bg-gradient-to-b from-sky-50 to-white dark:from-gray-900 dark:to-gray-800">
         {/* Hero Title Area */}
-        <div className="pt-2 pb-8 px-4 mx-auto max-w-screen-xl text-center">
+        <div className="pt-2 pb-8 px-4 mx-auto max-w-screen-xl text-center pt-1">
           <h2 className="mb-4 text-4xl font-bold tracking-tight text-sky-900 dark:text-white lg:text-4xl">
             Your School&apos;s Digital Future
           </h2>
