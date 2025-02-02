@@ -9,10 +9,10 @@ const FileTypeIcon = ({ fileType }: { fileType: string }) => {
   const iconClass = "inline-block mr-2";
 
   const fileTypeMap: Record<string, { icon: React.ElementType; color: string; text: string }> = {
-    pdf: { icon: FaFilePdf, color: "text-red-500", text: "PDF" },
-    video: { icon: FaFileVideo, color: "text-blue-500", text: "Video" },
-    audio: { icon: FaFileAudio, color: "text-green-500", text: "Audio" },
-    image: { icon: FaFileImage, color: "text-purple-500", text: "Image" },
+    pdf: { icon: FaFilePdf, color: "text-gray-500", text: "PDF" },
+    video: { icon: FaFileVideo, color: "text-gray-500", text: "Video" },
+    audio: { icon: FaFileAudio, color: "text-gray-500", text: "Audio" },
+    image: { icon: FaFileImage, color: "text-gray-500", text: "Image" },
     default: { icon: FaFile, color: "text-gray-500", text: "File" },
   };
 
@@ -20,9 +20,9 @@ const FileTypeIcon = ({ fileType }: { fileType: string }) => {
     fileTypeMap[fileType?.toLowerCase()] || fileTypeMap.default;
 
   return (
-    <div className={`flex items-center ${textColor}`}>
+    <div className={`flex items-center ${textColor} mt-1`}>
       <IconComponent className={iconClass} />
-      <span>{fileTypeText}</span>
+      <span className='text-sm'>{fileTypeText}</span>
     </div>
   );
 };
