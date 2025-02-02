@@ -1,0 +1,52 @@
+# Deploy workflow for Sparked Next Application
+# This workflow automatically deploys the application to production when changes are pushed to main branch
+#
+# Workflow steps:
+# 1. Checks out the code
+# 2. Sets up Node.js environment
+# 3. Installs dependencies
+# 4. Builds the application
+# 5. Deploys to production server using PM2
+
+name: Deploy App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+
+      - name: Install Dependencies
+        run: yarn install
+
+      - name: Build App
+        run: yarn build
+
+      - name: Deploy with PM2
+        env:
+          SERVER_PASSWORD: ${{ secrets.SERVER_PASSWORD }}
+        run: |
+          sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no root@95.111.229.11 << 'EOF'
+            cd /var/www/sparked-next
+            git pull origin main
+            yarn install
+            yarn build
+            if pm2 list | grep -q sparked-next; then
+              pm2 restart sparked-next
+            else
+              pm2 start yarn --name sparked-next -- start
+            fi
+            pm2 save
+          EOF
