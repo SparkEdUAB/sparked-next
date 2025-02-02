@@ -1,16 +1,7 @@
 body {
   margin: 0;
-  /* background-color: #525659; */
   font-family: Segoe UI, Tahoma, sans-serif;
 }
-
-/* .pdfviewer__container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px 0;
-  padding: 10px;
-} */
 
 .pdfviewer__container__load {
   margin-top: 1em;
@@ -22,12 +13,12 @@ body {
   justify-content: center;
   width: 100%;
   padding: 0;
-  position: relative; /* Ensure relative positioning for absolute children */
+  position: relative;
 }
 
 .pdfviewer__buttons {
   position: absolute;
-  bottom: 20px; /* Adjust as needed */
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -36,8 +27,8 @@ body {
   z-index: 10;
   padding: 5px 10px;
   border-radius: 3px;
-  width: 80%;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 .pdfviewer__container__document {
