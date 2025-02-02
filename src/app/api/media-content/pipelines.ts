@@ -293,7 +293,8 @@ export const p_fetchRelatedMediaContent = ({
   query: {
     topic_id?: BSON.ObjectId;
     unit_id?: BSON.ObjectId;
-    course_id?: BSON.ObjectId;
+    subject_id?: BSON.ObjectId;
+    grade_id?: BSON.ObjectId;
   };
   mediaContentId: BSON.ObjectId;
   limit: number;
@@ -301,54 +302,45 @@ export const p_fetchRelatedMediaContent = ({
 }) => [
   {
     $facet: {
-      sameTopic: [
-        {
-          $match: {
-            ...query,
-            topic_id: query.topic_id,
-            _id: { $ne: mediaContentId },
-          },
-        },
-        { $skip: skip },
-        { $limit: limit },
-      ],
-      sameUnit: [
-        {
-          $match: {
-            ...query,
-            unit_id: query.unit_id,
-            topic_id: { $ne: query.topic_id },
-            _id: { $ne: mediaContentId },
-          },
-        },
-        { $skip: skip },
-        { $limit: limit },
-      ],
       sameCourse: [
         {
           $match: {
             ...query,
-            course_id: query.course_id,
-            unit_id: { $ne: query.unit_id },
+            subject_id: query.subject_id,
             _id: { $ne: mediaContentId },
           },
         },
-        { $skip: skip },
+        { $limit: limit },
+      ],
+      sameGrade: [
+        {
+          $match: {
+            ...query,
+            grade_id: query.grade_id,
+            _id: { $ne: mediaContentId },
+          },
+        },
         { $limit: limit },
       ],
     },
   },
   {
     $project: {
-      relatedMediaContent: {
-        $concatArrays: ['$sameTopic', '$sameUnit', '$sameCourse'],
-      },
+      combined: { $setUnion: ['$sameCourse', '$sameGrade'] },
     },
   },
   {
-    $unwind: '$relatedMediaContent',
+    $unwind: '$combined',
   },
   {
-    $replaceRoot: { newRoot: '$relatedMediaContent' },
+    $group: {
+      _id: '$combined._id',
+      doc: { $first: '$combined' },
+    },
   },
+  {
+    $replaceRoot: { newRoot: '$doc' },
+  },
+  { $skip: skip },
+  { $limit: limit },
 ];

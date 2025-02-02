@@ -64,4 +64,8 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
+  media_reactions: {
+    name: string;
+    label: string;
+  };
 };

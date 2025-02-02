@@ -3,7 +3,12 @@ import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
 const ADMIN_ROLES = ['Admin', 'Content Manager'];
-const PUBLIC_PATHS = ['/api/authentication/login', '/api/authentication/signup', '/api/auth/callback/credentials'];
+const PUBLIC_PATHS = [
+  '/api/authentication/login',
+  '/api/authentication/signup',
+  '/api/auth/callback/credentials',
+  '/api/media-actions/createMediaView',
+];
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const method = request.method;

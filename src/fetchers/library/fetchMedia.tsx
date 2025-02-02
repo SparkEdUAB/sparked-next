@@ -9,12 +9,12 @@ import { T_Filters } from '@hooks/useLibrary/useSearchFilters';
 export async function fetchMedia(skip: number, filters: T_Filters) {
   return await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
     (BASE_URL || '') +
-      API_LINKS.FETCH_MEDIA_CONTENT +
-      NETWORK_UTILS.formatGetParams({
-        ...filters,
-        skip: skip.toString(),
-        limit: MEDIA_CONTENT_LIMIT.toString(),
-      }),
-    { next: { revalidate: 60 } },
+    API_LINKS.FETCH_MEDIA_CONTENT +
+    NETWORK_UTILS.formatGetParams({
+      ...filters,
+      skip: skip.toString(),
+      limit: MEDIA_CONTENT_LIMIT.toString(),
+    }),
+    { next: { revalidate: 360 } },
   );
 }
