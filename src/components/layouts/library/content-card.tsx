@@ -6,20 +6,25 @@ import { determineFileType } from 'utils/helpers/determineFileType';
 import { truncateText } from 'utils/helpers/truncateText';
 
 const FileTypeIcon = ({ fileType }: { fileType: string }) => {
-  const iconClass = "w-5 h-5 absolute top-2 right-2 drop-shadow-lg";
+  const iconClass = "inline-block mr-2";
 
-  switch (fileType?.toLowerCase()) {
-    case 'pdf':
-      return <FaFilePdf className={`${iconClass} text-red-500`} />;
-    case 'video':
-      return <FaFileVideo className={`${iconClass} text-blue-500`} />;
-    case 'audio':
-      return <FaFileAudio className={`${iconClass} text-green-500`} />;
-    case 'image':
-      return <FaFileImage className={`${iconClass} text-purple-500`} />;
-    default:
-      return <FaFile className={`${iconClass} text-gray-500`} />;
-  }
+  const fileTypeMap: Record<string, { icon: React.ElementType; color: string; text: string }> = {
+    pdf: { icon: FaFilePdf, color: "text-red-500", text: "PDF" },
+    video: { icon: FaFileVideo, color: "text-blue-500", text: "Video" },
+    audio: { icon: FaFileAudio, color: "text-green-500", text: "Audio" },
+    image: { icon: FaFileImage, color: "text-purple-500", text: "Image" },
+    default: { icon: FaFile, color: "text-gray-500", text: "File" },
+  };
+
+  const { icon: IconComponent, color: textColor, text: fileTypeText } =
+    fileTypeMap[fileType?.toLowerCase()] || fileTypeMap.default;
+
+  return (
+    <div className={`flex items-center ${textColor}`}>
+      <IconComponent className={iconClass} />
+      <span>{fileTypeText}</span>
+    </div>
+  );
 };
 
 const ContentDetailsCardView = ({
@@ -45,14 +50,14 @@ const ContentDetailsCardView = ({
             className="rounded-t-md aspect-[4/3] object-cover object-center"
             alt={title}
             src={image}
-            width={400}
-            height={300}
+            width={450}
+            height={340}
           />
-          <FileTypeIcon fileType={fileType} />
         </div>
-        <div className="p-2">
-          <h5 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{title}</h5>
-          <p className="text-xs text-gray-600 dark:text-gray-400 line-clamp-2">{truncateText(description, 60)}</p>
+        <div className="p-3">
+          <h5 className="text-base font-semibold text-gray-900 dark:text-white truncate">{title}</h5>
+          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{truncateText(description, 60)}</p>
+          <FileTypeIcon fileType={fileType} />
         </div>
       </div>
     </Link>

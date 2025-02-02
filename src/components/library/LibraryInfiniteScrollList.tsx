@@ -29,8 +29,8 @@ export function LibraryInfiniteScrollList({
       }
       scrollableTarget="scrollableDiv"
     >
-      <div className="px-4 sm:px-6 md:px-8"> {/* Added padding for left and right sides */}
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(160px,1fr))] gap-2 sm:gap-2 md:gap-3 lg:gap-4">
+      <div className="px-4 sm:px-6 md:px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {mediaContent.map((item) => (
             <div key={item._id} className="h-full">
               <ContentCardView
