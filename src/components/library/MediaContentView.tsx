@@ -21,7 +21,6 @@ import { FaEye } from 'react-icons/fa';
 import { ReactionButtons } from '@components/atom/ReactionButtons';
 import { useMediaInteractions } from '@hooks/useMediaInteractions';
 
-
 const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
 });
