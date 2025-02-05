@@ -6,14 +6,13 @@
 # 2. Sets up Node.js environment
 # 3. Installs dependencies
 # 4. Builds the application
-# 5. Deploys to production server using PM2
+# 5. Deploys to production server using PM2 when we create a release
 
 name: Deploy App
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 
 jobs:
   deploy:
