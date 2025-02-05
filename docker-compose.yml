@@ -6,7 +6,8 @@ services:
     container_name: sparked-next-dev
     environment:
       - WATCHPACK_POLLING=true
-      - MONGODB_URI=mongodb://mongodb:27017/sparked-dev
+      - MONGODB_URI=mongodb://mongodb:27017/sparked-next
+      - NODE_ENV=development
     volumes:
       - .:/app
       - /app/node_modules
@@ -23,10 +24,13 @@ services:
       context: .
       dockerfile: docker/Dockerfile.prod
     container_name: sparked-next
+    environment:
+      - NODE_ENV=production
     ports:
       - '3000:3000'
     env_file:
       - .env
+    restart: unless-stopped
 
   mongodb:
     image: mongo:latest
@@ -37,5 +41,4 @@ services:
       - mongo-data:/data/db
 
 volumes:
-  node_modules:
   mongo-data:
