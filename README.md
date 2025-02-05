@@ -2,7 +2,12 @@
 
 # Sparked-next
 
-This is an actively maintained new version of SparkEd, Your feedback & contributions are greatly appreciated.
+This is an actively maintained new version of SparkEd, Your feedback & contributions are greatly appreciated. 
+
+You can check out the deployed version below using one the following links.    
+
+Production: [sparkednext.app](https://sparkednext.app )  
+Staging: [sparked-app.onrender.com](https://sparked-app.onrender.com/)
 
 **Note**: We only support Node^18
 
@@ -44,7 +49,7 @@ Fork this repo
 
 Clone your forked repo
 
-`git clone https://github.com/your-github-username/SparkEd.git`
+`git clone https://github.com/your-github-username/sparked-next.git`
 
 Add this repo to your remotes as upstream.
 
@@ -52,7 +57,7 @@ Add this repo to your remotes as upstream.
 
 Before pushing anything to your fork, always
 
-`git pull upstream master`
+`git pull upstream main`
 
 > Make sure your commit messages should be clear not vague e.g "Changes and Updates made"
 > Work from a branch other than main whenever possible and branch name should be clear
