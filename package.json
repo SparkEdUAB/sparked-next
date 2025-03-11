@@ -7,10 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "pm2": "pm2 start npm --name \"sparked-next\" -- start",
-    "user:create": "ts-node scripts/user-management.ts create-user",
-    "user:role": "ts-node scripts/user-management.ts update-role",
-    "db:add-default-roles": "node scripts/add-default-roles.js"
+    "pm2": "pm2 start npm --name \"sparked-next\" -- start"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.0.0",
