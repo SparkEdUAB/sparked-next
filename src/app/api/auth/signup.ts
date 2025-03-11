@@ -1,5 +1,6 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { zfd } from 'zod-form-data';
+import { z } from 'zod';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { realmApp } from '../lib/db/realm';
@@ -12,10 +13,15 @@ export default async function signup_(request: Request) {
     password: zfd.text(),
     firstName: zfd.text(),
     lastName: zfd.text(),
+    phoneNumber: zfd.text(),
+    isStudent: z.boolean(),
+    institutionType: zfd.text().optional(),
+    schoolName: zfd.text().optional(),
+    grade: zfd.numeric().optional(),
   });
+  
   const formBody = await request.json();
-
-  const { email, password, firstName, lastName } = schema.parse(formBody);
+  const { email, password, firstName, lastName, phoneNumber, isStudent, institutionType, schoolName, grade } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -54,6 +60,11 @@ export default async function signup_(request: Request) {
       email,
       firstName,
       lastName,
+      phoneNumber,
+      isStudent,
+      institutionType,
+      schoolName,
+      grade,
       is_verified: false,
       created_at: new Date(),
       role: 'user', // default role

@@ -17,6 +17,11 @@ export function transformRawUser(user: T_RawUserFields) {
     lastName: user.lastName,
     role: user.role,
     created_at: user.created_at,
+    phoneNumber: user.phoneNumber,
+    institutionType: user.institutionType,
+    schoolName: user.schoolName,
+    isStudent: user.isStudent,
+    grade: user.grade,
     // updated_at: user.updatedAt,
   };
 }

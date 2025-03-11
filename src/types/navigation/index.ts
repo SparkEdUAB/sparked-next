@@ -112,6 +112,7 @@ export type T_link = {
   // users
   FETCH_USERS: string;
   FIND_USERS_BY_NAME: string;
+  FIND_USER_BY_EMAIL: string;
   FIND_USER_BY_ID: string;
   EDIT_USER: string;
   DELETE_USERS: string;
