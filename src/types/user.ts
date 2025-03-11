@@ -1,17 +1,13 @@
-export type T_SignupFields = {
+export type T_UserFields = {
+  _id: string;
   email: string;
-  password: string;
-  confirmPassword: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
+  username: string;
   isStudent: boolean;
   institutionType?: 'general' | 'college' | 'university';
   schoolName?: string;
-  grade?: number | string;
-};
-
-export type T_LoginFields = {
-  email: string;
-  password: string;
+  grade?: number;
+  created_at: string;
 };

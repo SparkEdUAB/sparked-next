@@ -21,20 +21,23 @@ const Login: React.FC = () => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-        <Link href="/" className="flex items-center mb-7">
+    <section className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center overflow-auto py-12">
+      <div className="flex flex-col items-center justify-center px-6 w-full max-w-xl mx-auto">
+        <Link href="/" className="flex items-center mb-6 transform hover:scale-105 transition-transform">
           <AppLogo />
         </Link>
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your account
+        <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+          <div className="p-8 space-y-4">
+            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">
+              Welcome Back
             </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
+              Sign in to your account to continue
+            </p>
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
-                <div className="mb-2 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email" />
+                <div className="mb-1.5 block">
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email" className="text-gray-700 dark:text-gray-300" />
                 </div>
                 <TextInput
                   icon={LuCircleUser}
@@ -44,11 +47,12 @@ const Login: React.FC = () => {
                   type="email"
                   placeholder="name@example.com"
                   required
+                  className="rounded-lg"
                 />
               </div>
               <div>
-                <div className="mb-2 block">
-                  <Label htmlFor="password" value="Password" />
+                <div className="mb-1.5 block">
+                  <Label htmlFor="password" value="Password" className="text-gray-700 dark:text-gray-300" />
                 </div>
                 <TextInput
                   icon={AiOutlineLock}
@@ -58,17 +62,28 @@ const Login: React.FC = () => {
                   type="password"
                   placeholder="••••••••"
                   required
+                  className="rounded-lg"
                 />
               </div>
-              <Button disabled={loading} type="submit" className="w-full">
-                {loading ? <Spinner size="sm" className="mr-3" /> : undefined}
-                {i18next.t('signin')}
+              <Button
+                disabled={loading}
+                type="submit"
+                className="w-full mt-4 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 py-2.5 rounded-lg text-base font-large"
+              >
+                {loading ? (
+                  <>
+                    <Spinner size="sm" className="mr-3" />
+                    {i18next.t('loading')}
+                  </>
+                ) : (
+                  i18next.t('signin')
+                )}
               </Button>
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
-                Don’t have an account yet?{' '}
+              <p className="text-md font-light text-center text-gray-600 dark:text-gray-400 mt-4">
+                Don&apos;t have an account yet?{' '}
                 <Link
                   href="/auth/signup"
-                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                  className="font-medium  hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"
                 >
                   Sign up
                 </Link>

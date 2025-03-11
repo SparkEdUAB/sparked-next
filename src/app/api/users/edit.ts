@@ -13,11 +13,12 @@ export default async function editUser_(request: Request, session?: Session) {
     email: zfd.text(),
     firstName: zfd.text(),
     lastName: zfd.text(),
-    role: zfd.text(),
+    phoneNumber: zfd.text(),
+    role: zfd.text().optional(),
   });
 
   const formBody = await request.json();
-  const { _id, email, firstName, lastName, role } = schema.parse(formBody);
+  const { _id, email, firstName, lastName, role, phoneNumber } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -48,15 +49,32 @@ export default async function editUser_(request: Request, session?: Session) {
       );
     }
 
-    // Verify role exists
-    const roleExists = await db.collection(dbCollections.user_roles.name).findOne({ name: role });
-    if (!roleExists) {
-      return new Response(
-        JSON.stringify({
-          isError: true,
-          code: USER_PROCESS_CODES.INVALID_ROLE,
-        }),
-        { status: HttpStatusCode.BadRequest },
+    // Only verify and update role if one is provided
+    if (role) {
+      // Verify role exists
+      const roleExists = await db.collection(dbCollections.user_roles.name).findOne({ name: role });
+      if (!roleExists) {
+        return new Response(
+          JSON.stringify({
+            isError: true,
+            code: USER_PROCESS_CODES.INVALID_ROLE,
+          }),
+          { status: HttpStatusCode.BadRequest },
+        );
+      }
+
+      // Update role mapping
+      await db.collection(dbCollections.user_role_mappings.name).updateOne(
+        { user_id: new BSON.ObjectId(_id) },
+        {
+          $set: {
+            role_id: roleExists._id,
+            updatedAt: new Date(),
+            //   @ts-expect-error
+            updatedById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+          },
+        },
+        { upsert: true }, // Create if doesn't exist
       );
     }
 
@@ -68,25 +86,12 @@ export default async function editUser_(request: Request, session?: Session) {
           email,
           firstName,
           lastName,
+          phoneNumber,
           updatedAt: new Date(),
           //   @ts-expect-error
           updatedById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
         },
       },
-    );
-
-    // Update role mapping
-    await db.collection(dbCollections.user_role_mappings.name).updateOne(
-      { user_id: new BSON.ObjectId(_id) },
-      {
-        $set: {
-          role_id: roleExists._id,
-          updated_at: new Date(),
-          //   @ts-expect-error
-          updated_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
-        },
-      },
-      { upsert: true }, // Create if doesn't exist
     );
 
     return new Response(

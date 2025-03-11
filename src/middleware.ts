@@ -6,6 +6,8 @@ const ADMIN_ROLES = ['Admin', 'Content Manager'];
 const PUBLIC_PATHS = [
   '/api/authentication/login',
   '/api/authentication/signup',
+  '/api/authentication/logout',
+  '/api/auth/signout',
   '/api/auth/callback/credentials',
   '/api/media-actions/createMediaView',
 ];
