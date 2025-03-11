@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { SIGNUP_FORM_FIELDS } from './constants';
 import AppLogo from '@components/logo';
 import { T_SignupFields } from '@hooks/useAuth/types';
-import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { Button, Label, Spinner, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import { AiOutlineLock } from 'react-icons/ai';
@@ -136,59 +135,64 @@ const Signup = () => {
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center overflow-auto py-8">
-      <div className="flex flex-col items-center justify-center px-6 w-full max-w-lg mx-auto">
-        <Link href="/" className="flex items-center mb-4">
+    <section className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center overflow-auto py-12">
+      <div className="flex flex-col items-center justify-center px-6 w-full max-w-2xl mx-auto">
+        <Link href="/" className="flex items-center mb-6 transform hover:scale-105 transition-transform">
           <AppLogo />
         </Link>
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-lg xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-          <div className="p-6 space-y-3 md:space-y-4">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Create your account
+        <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
+          <div className="p-8 space-y-4">
+            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">
+              Join Our Community
             </h1>
-            <form className="space-y-3 md:space-y-4" onSubmit={handleSubmit}>
-              {/* First name field */}
-              <div>
-                <div className="mb-1 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.firstName.key} value="First Name *" />
+            <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
+              Create an account and start your learning journey
+            </p>
+
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <div className="mb-1.5 block">
+                    <Label htmlFor={SIGNUP_FORM_FIELDS.firstName.key} value="First Name *" className="text-gray-700 dark:text-gray-300" />
+                  </div>
+                  <TextInput
+                    icon={LuCircleUser}
+                    disabled={loading}
+                    id={SIGNUP_FORM_FIELDS.firstName.key}
+                    name={SIGNUP_FORM_FIELDS.firstName.key}
+                    type="text"
+                    placeholder="John"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    color={errors.firstName ? "failure" : undefined}
+                    helperText={errors.firstName}
+                    className="rounded-lg"
+                  />
                 </div>
-                <TextInput
-                  icon={LuCircleUser}
-                  disabled={loading}
-                  id={SIGNUP_FORM_FIELDS.firstName.key}
-                  name={SIGNUP_FORM_FIELDS.firstName.key}
-                  type="text"
-                  placeholder="John"
-                  value={formData.firstName}
-                  onChange={handleInputChange}
-                  color={errors.firstName ? "failure" : undefined}
-                  helperText={errors.firstName}
-                />
+
+                <div>
+                  <div className="mb-1.5 block">
+                    <Label htmlFor={SIGNUP_FORM_FIELDS.lastName.key} value="Last Name *" className="text-gray-700 dark:text-gray-300" />
+                  </div>
+                  <TextInput
+                    icon={LuCircleUser}
+                    disabled={loading}
+                    id={SIGNUP_FORM_FIELDS.lastName.key}
+                    name={SIGNUP_FORM_FIELDS.lastName.key}
+                    type="text"
+                    placeholder="Doe"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    color={errors.lastName ? "failure" : undefined}
+                    helperText={errors.lastName}
+                    className="rounded-lg"
+                  />
+                </div>
               </div>
 
-              {/* Last name field */}
               <div>
-                <div className="mb-1 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.lastName.key} value="Last Name *" />
-                </div>
-                <TextInput
-                  icon={LuCircleUser}
-                  disabled={loading}
-                  id={SIGNUP_FORM_FIELDS.lastName.key}
-                  name={SIGNUP_FORM_FIELDS.lastName.key}
-                  type="text"
-                  placeholder="Doe"
-                  value={formData.lastName}
-                  onChange={handleInputChange}
-                  color={errors.lastName ? "failure" : undefined}
-                  helperText={errors.lastName}
-                />
-              </div>
-
-              {/* Email field */}
-              <div>
-                <div className="mb-1 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email *" />
+                <div className="mb-1.5 block">
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email *" className="text-gray-700 dark:text-gray-300" />
                 </div>
                 <TextInput
                   icon={LuCircleUser}
@@ -201,13 +205,13 @@ const Signup = () => {
                   onChange={handleInputChange}
                   color={errors.email ? "failure" : undefined}
                   helperText={errors.email}
+                  className="rounded-lg"
                 />
               </div>
 
-              {/* Phone number field */}
               <div>
-                <div className="mb-1 block">
-                  <Label htmlFor="phoneNumber" value="Phone Number *" />
+                <div className="mb-1.5 block">
+                  <Label htmlFor="phoneNumber" value="Phone Number *" className="text-gray-700 dark:text-gray-300" />
                 </div>
                 <TextInput
                   id="phoneNumber"
@@ -219,15 +223,15 @@ const Signup = () => {
                   onChange={handleInputChange}
                   color={errors.phoneNumber ? "failure" : undefined}
                   helperText={errors.phoneNumber}
+                  className="rounded-lg"
                 />
               </div>
 
-              {/* Student status field */}
-              <div>
-                <div className="mb-1 block">
-                  <Label value="Are you a student? *" />
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <div className="mb-2 block">
+                  <Label value="Are you a student? *" className="text-gray-700 dark:text-gray-300" />
                 </div>
-                <div className="flex gap-4">
+                <div className="flex gap-6">
                   <div className="flex items-center">
                     <input
                       type="radio"
@@ -235,9 +239,9 @@ const Signup = () => {
                       value="yes"
                       onChange={() => handleStudentChange(true)}
                       checked={isStudent}
-                      className="mr-2"
+                      className="mr-2 h-4 w-4 text-blue-600"
                     />
-                    <Label>Yes</Label>
+                    <Label className="text-gray-700 dark:text-gray-300">Yes</Label>
                   </div>
                   <div className="flex items-center">
                     <input
@@ -246,19 +250,18 @@ const Signup = () => {
                       value="no"
                       onChange={() => handleStudentChange(false)}
                       checked={!isStudent}
-                      className="mr-2"
+                      className="mr-2 h-4 w-4 text-blue-600"
                     />
-                    <Label>No</Label>
+                    <Label className="text-gray-700 dark:text-gray-300">No</Label>
                   </div>
                 </div>
               </div>
 
-              {/* Institution type - update onChange */}
               {isStudent && (
-                <>
+                <div className="animate-fadeIn space-y-4 bg-blue-50 dark:bg-gray-700/50 p-4 rounded-lg   dark:border-blue-400">
                   <div>
-                    <div className="mb-1 block">
-                      <Label htmlFor="institutionType" value="Institution Type *" />
+                    <div className="mb-1.5 block">
+                      <Label htmlFor="institutionType" value="Institution Type *" className="text-gray-700 dark:text-gray-300" />
                     </div>
                     <Select
                       id="institutionType"
@@ -266,6 +269,7 @@ const Signup = () => {
                       onChange={(e) => setInstitutionType(e.target.value)}
                       color={errors.institutionType ? "failure" : undefined}
                       helperText={errors.institutionType}
+                      className="rounded-lg"
                     >
                       <option value="">Select Institution Type</option>
                       <option value="general">General School</option>
@@ -275,10 +279,10 @@ const Signup = () => {
                   </div>
 
                   {institutionType === 'general' && (
-                    <>
+                    <div className="animate-fadeIn space-y-4">
                       <div>
-                        <div className="mb-1 block">
-                          <Label htmlFor="schoolName" value="School Name *" />
+                        <div className="mb-1.5 block">
+                          <Label htmlFor="schoolName" value="School Name *" className="text-gray-700 dark:text-gray-300" />
                         </div>
                         <TextInput
                           id="schoolName"
@@ -289,12 +293,13 @@ const Signup = () => {
                           color={errors.schoolName ? "failure" : undefined}
                           helperText={errors.schoolName}
                           disabled={loading}
+                          className="rounded-lg"
                         />
                       </div>
 
                       <div>
-                        <div className="mb-1 block">
-                          <Label htmlFor="grade" value="Grade *" />
+                        <div className="mb-1.5 block">
+                          <Label htmlFor="grade" value="Grade *" className="text-gray-700 dark:text-gray-300" />
                         </div>
                         <Select
                           id="grade"
@@ -303,6 +308,7 @@ const Signup = () => {
                           onChange={handleInputChange}
                           color={errors.grade ? "failure" : undefined}
                           helperText={errors.grade}
+                          className="rounded-lg"
                         >
                           <option value="">Select Grade</option>
                           {Array.from({ length: 12 }, (_, i) => (
@@ -312,50 +318,53 @@ const Signup = () => {
                           ))}
                         </Select>
                       </div>
-                    </>
+                    </div>
                   )}
-                </>
+                </div>
               )}
 
-              {/* Password fields */}
-              <div>
-                <div className="mb-1 block">
-                  <Label htmlFor="password" value="Password *" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <div className="mb-1.5 block">
+                    <Label htmlFor="password" value="Password *" className="text-gray-700 dark:text-gray-300" />
+                  </div>
+                  <TextInput
+                    icon={AiOutlineLock}
+                    disabled={loading}
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    helperText={errors.password}
+                    color={errors.password ? "failure" : undefined}
+                    className="rounded-lg"
+                  />
                 </div>
-                <TextInput
-                  icon={AiOutlineLock}
-                  disabled={loading}
-                  id="password"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  helperText={errors.password}
-                  color={errors.password ? "failure" : undefined}
-                />
-              </div>
 
-              <div>
-                <div className="mb-1 block">
-                  <Label htmlFor="confirmPassword" value="Confirm Password *" />
+                <div>
+                  <div className="mb-1.5 block">
+                    <Label htmlFor="confirmPassword" value="Confirm Password *" className="text-gray-700 dark:text-gray-300" />
+                  </div>
+                  <TextInput
+                    icon={AiOutlineLock}
+                    disabled={loading}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    color={errors.confirmPassword ? "failure" : undefined}
+                    helperText={errors.confirmPassword}
+                    className="rounded-lg"
+                  />
                 </div>
-                <TextInput
-                  icon={AiOutlineLock}
-                  disabled={loading}
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  color={errors.confirmPassword ? "failure" : undefined}
-                  helperText={errors.confirmPassword}
-                />
               </div>
 
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full mt-2"
+                className="w-full mt-4  hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 py-2.5 rounded-lg"
               >
                 {loading ? (
                   <>
@@ -367,11 +376,11 @@ const Signup = () => {
                 )}
               </Button>
 
-              <p className="text-sm font-light text-gray-500 dark:text-gray-400 mt-2">
+              <p className="text-md font-light text-center text-gray-600 dark:text-gray-400 mt-4">
                 Already have an account?{" "}
                 <Link
                   href="/auth/login"
-                  className="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                  className="font-medium  hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"
                 >
                   Login
                 </Link>

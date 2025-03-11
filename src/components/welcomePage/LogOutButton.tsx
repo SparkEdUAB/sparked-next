@@ -7,22 +7,18 @@ import { useSession } from "next-auth/react";
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { LoginSignupLinks } from './LoginSignupLinks';
-import { revalidateEvents } from 'swr/_internal';
 
 export function LogOutButton() {
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
   const { handleLogout, loading, isAuthenticated } = useAuth();
 
-  // Only fetch if user is authenticated and has an email
   const userEmail = session?.user?.email as string;
   const shouldFetch = isAuthenticated && userEmail;
   const { data, mutate } = useFetch(
     shouldFetch ? `${API_LINKS.FIND_USER_BY_EMAIL}?email=${encodeURIComponent(userEmail)}` : null,
-
   );
 
-
-  const isAdmin = useMemo(() => data?.users?.[0]?.role === "Admin", [data])
+  const isAdmin = useMemo(() => data?.user?.role === "Admin", [data])
   const handleUserLogout = () => {
     handleLogout();
     mutate();
