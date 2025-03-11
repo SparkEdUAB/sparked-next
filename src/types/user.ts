@@ -10,5 +10,4 @@ export type T_UserFields = {
   schoolName?: string;
   grade?: number;
   created_at: string;
-  // ... any existing fields
 };

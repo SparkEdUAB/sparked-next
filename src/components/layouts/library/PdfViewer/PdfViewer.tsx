@@ -9,13 +9,11 @@ import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
 import "./viewer.css";
 
-// Worker configuration - moved outside component to avoid re-initialization
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const options = {
   cMapUrl: '/cmaps/',
   standardFontDataUrl: '/standard_fonts/',
-  // Add rendering options for better performance
   disableAutoFetch: false,
   disableStream: false,
   disableRange: false,
@@ -25,7 +23,6 @@ const resizeObserverOptions = {};
 
 const maxWidth = 800;
 
-// Memoized skeleton component
 const PdfSkeleton = memo(() => {
   return (
     <div className="animate-pulse">
@@ -35,7 +32,6 @@ const PdfSkeleton = memo(() => {
 });
 PdfSkeleton.displayName = 'PdfSkeleton';
 
-// Memoized Page component for better performance
 const MemoizedPage = memo(({ pageNumber, scale, width, className }: {
   pageNumber: number,
   scale?: number,
@@ -48,10 +44,10 @@ const MemoizedPage = memo(({ pageNumber, scale, width, className }: {
       scale={scale}
       width={width}
       className={className}
-      renderTextLayer={false} // Disable text layer for better performance
-      renderAnnotationLayer={false} // Disable annotation layer for better performance
-      loading={null} // Use null to avoid nested loading indicators
-      error={null} // Use null to avoid error indicators
+      renderTextLayer={false}
+      renderAnnotationLayer={false}
+      loading={null}
+      error={null}
     />
   );
 });
@@ -65,7 +61,6 @@ export default function PdfReactPdf({ file }: { file: string }) {
   const [containerWidth, setContainerWidth] = useState<number>();
   const [scale, setScale] = useState<number>(1.0);
 
-  // Use ref for document to avoid re-renders
   const documentRef = useRef<any>(null);
 
   const onResize = useCallback<ResizeObserverCallback>((entries) => {
@@ -113,7 +108,6 @@ export default function PdfReactPdf({ file }: { file: string }) {
     setScale((prevScale) => Math.max(prevScale - 0.1, 0.5));
   }, []);
 
-  // Memoize the width calculation
   const pageWidth = useMemo(() =>
     containerWidth ? containerWidth : maxWidth,
     [containerWidth]
