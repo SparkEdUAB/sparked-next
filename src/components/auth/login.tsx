@@ -80,7 +80,7 @@ const Login: React.FC = () => {
                 )}
               </Button>
               <p className="text-md font-light text-center text-gray-600 dark:text-gray-400 mt-4">
-                Don't have an account yet?{' '}
+                Don&apos;t have an account yet?{' '}
                 <Link
                   href="/auth/signup"
                   className="font-medium  hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"
