@@ -18,7 +18,7 @@ const HeaderSection = async () => {
           <div className="flex items-center lg:order-2">
             <div className="flex flex-row gap-2 flex-wrap items-center">
               {!session ? <LoginSignupLinks /> : <LogOutButton />}
-              <DarkThemeToggle color="" className="text-sky-600 dark:text-sky-400" />
+              <DarkThemeToggle color="" className="text-sky-600 dark:text-sky-400 theme-toggle" />
             </div>
           </div>
         </div>

@@ -22,7 +22,7 @@ export function SearchMediaContentList({ initialMediaContent }: { initialMediaCo
   );
 
   return (
-    <div className="mt-6">
+    <div className="mt-6 search-results" >
       <div className="flex justify-between items-center mx-3 flex-wrap gap-3">
         <p>
           Showing {Number(mediaContent?.length)} results for <b>{searchTerm}</b>
