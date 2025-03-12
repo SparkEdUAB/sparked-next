@@ -47,7 +47,7 @@ const useAuth = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [message]);
 
   const handleLogin = useCallback(
     async (fields: T_LoginFields) => {

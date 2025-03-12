@@ -5,7 +5,7 @@ import { authOptions } from '../../auth/authOptions';
 import createUser_ from '../create';
 import editUser_ from '../edit';
 import deleteUsers_ from '../delete';
-import fetchUsers_, { findUserByName_ } from '..';
+import fetchUsers_, { findUserByEmail_, findUserByName_ } from '..';
 import { HttpStatusCode } from 'axios';
 
 export async function POST(req: Request, { params }: { params: { slug: string } }) {
@@ -81,6 +81,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
   } = {
     fetchUsers: fetchUsers_,
     findUserByName: findUserByName_,
+    findUserByEmail: findUserByEmail_,
   };
 
   if (userApiFunctions[slug]) {

@@ -3,19 +3,25 @@ import i18next from 'i18next';
 
 export const userTableColumns: T_ColumnData<any>[] = [
   {
-    title: i18next.t('First Name'),
+    title: i18next.t('Name'),
     dataIndex: 'firstName',
-    key: 'firstName',
-  },
-  {
-    title: i18next.t('Last Name'),
-    dataIndex: 'lastName',
-    key: 'lastName',
+    key: 'name',
+    render: (_, record) => (
+      <div>
+        {record.firstName} {record.lastName}
+      </div>
+    ),
   },
   {
     title: i18next.t('email'),
     dataIndex: 'email',
     key: 'email',
+  },
+  {
+    title: i18next.t('Phone'),
+    dataIndex: 'phoneNumber',
+    key: 'phoneNumber',
+    render: (phoneNumber: string) => phoneNumber || '-',
   },
   {
     title: i18next.t('role'),

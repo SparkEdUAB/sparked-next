@@ -29,7 +29,7 @@ const LibrarySearchPage = async ({ searchParams }: T_LibrarySearchPageProps) => 
           <code>{JSON.stringify(result, null, 4)}</code>
         </LibraryErrorMessage>
       ) : result.mediaContent.length === 0 ? (
-        <EmptyContentIndicator>There is nothing here yet</EmptyContentIndicator>
+        <EmptyContentIndicator>There is no content here yet</EmptyContentIndicator>
       ) : (
         <SearchMediaContentList initialMediaContent={result.mediaContent} />
       )}
