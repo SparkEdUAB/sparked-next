@@ -13,7 +13,6 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - name: Build Next.js app
@@ -31,7 +30,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - uses: actions/cache@v4
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
@@ -39,8 +38,18 @@ jobs:
             ${{ runner.os }}-yarn-
       - run: yarn install --frozen-lockfile
       - run: yarn lint
+      - name: Run Playwright Tests
+        run: yarn playwright test
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
+          MONGODB_DB: ${{ secrets.MONGODB_DB }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+          REALM_APP_ID: ${{ secrets.REALM_APP_ID }}
       - name: Create Local Build
-        if: steps.tests.exit_code == 0
+        if: steps.tests.outcome == 'success'
         id: build
         run: yarn build
         env:
