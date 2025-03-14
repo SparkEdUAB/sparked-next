@@ -43,7 +43,7 @@ const ContentDetailsCardView = ({
   const fileType = determineFileType(fileUrl || "") as string;
 
   return (
-    <Link href={url} className="block h-full">
+    <Link href={url} className="block h-full content-card">
       <div className="h-full relative shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg bg-white dark:bg-gray-800">
         <div className="relative">
           <Image

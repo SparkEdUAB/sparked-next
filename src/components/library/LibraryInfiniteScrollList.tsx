@@ -33,7 +33,6 @@ export function LibraryInfiniteScrollList({
   hasMore: boolean;
   error: boolean;
 }) {
-  // Calculate initial items to render based on viewport
   const initialItemsToRender = Math.min(mediaContent.length, MEDIA_CONTENT_LIMIT);
 
   const handleLoadMore = useCallback(async () => {
@@ -56,7 +55,7 @@ export function LibraryInfiniteScrollList({
       scrollThreshold={0.8}
     >
       <div className="px-4 sm:px-6 md:px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 media-content-list">
           {mediaContent.slice(0, initialItemsToRender).map((item) => (
             <ContentCard key={item._id} item={item} />
           ))}

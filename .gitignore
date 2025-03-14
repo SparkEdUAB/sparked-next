@@ -7,6 +7,7 @@
 
 # testing
 /coverage
+/playwright-report
 
 # next.js
 /.next/
@@ -26,6 +27,8 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
+.env.test
 
 # vercel
 .vercel
@@ -34,8 +37,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 mongodb-realm
-.env
-.env.test
+
+# lock files
 package-lock.json
 yarn.lock
+
+# uploads
 public/uploads/*
+test-results
