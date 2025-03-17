@@ -20,26 +20,12 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '22'
-
-      - name: Install Dependencies
-        run: yarn install
-
-      - name: Build App
-        run: yarn build
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-          EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
-          MONGODB_DB: ${{ secrets.MONGODB_DB }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-          REALM_APP_ID: ${{ secrets.REALM_APP_ID }}
 
       - name: Deploy with PM2
         env:
@@ -48,7 +34,7 @@ jobs:
           sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no root@95.111.229.11 << 'EOF'
             cd /var/www/sparked-next
             git pull origin main
-            yarn install
+            yarn install --frozen-lockfile
             yarn build
             if pm2 list | grep -q sparked-next; then
               pm2 restart sparked-next
@@ -56,4 +42,6 @@ jobs:
               pm2 start yarn --name sparked-next -- start
             fi
             pm2 save
+
+            echo "Deployment completed successfully!"
           EOF
