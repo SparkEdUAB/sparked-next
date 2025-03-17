@@ -35,7 +35,7 @@ export default function LibraryLayout({
   isGradesLoading: boolean;
   isMediaTypesLoading: boolean;
 }) {
-  const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(false);
+  const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
   const toggleSidebar = useCallback(() => setSidebarIsCollapsed((value) => !value), [setSidebarIsCollapsed]);
 
   return (
