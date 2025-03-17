@@ -14,14 +14,15 @@ export default async function signup_(request: Request) {
     firstName: zfd.text(),
     lastName: zfd.text(),
     phoneNumber: zfd.text(),
-    isStudent: z.boolean(),
+    isStudent: z.boolean().default(true),
     institutionType: zfd.text().optional(),
-    schoolName: zfd.text().optional(),
-    grade: zfd.numeric().optional(),
+    schoolName: z.string().optional().default(''),
+    grade: z.any().optional().default(0),
   });
-  
+
   const formBody = await request.json();
-  const { email, password, firstName, lastName, phoneNumber, isStudent, institutionType, schoolName, grade } = schema.parse(formBody);
+  const { email, password, firstName, lastName, phoneNumber, isStudent, institutionType, schoolName, grade } =
+    schema.parse(formBody);
 
   try {
     const db = await dbClient();
