@@ -9,7 +9,6 @@ import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
 import { T_TopicFields } from '@hooks/use-topic/types';
 
 import { T_UnitFields } from '@hooks/useUnit/types';
-import { useScreenDetector } from '@hooks/useScreenDetactor';
 
 export default function LibraryLayout({
   children,
@@ -36,8 +35,7 @@ export default function LibraryLayout({
   isGradesLoading: boolean;
   isMediaTypesLoading: boolean;
 }) {
-  const { isMobile } = useScreenDetector();
-  const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(!!isMobile);
+  const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(false);
   const toggleSidebar = useCallback(() => setSidebarIsCollapsed((value) => !value), [setSidebarIsCollapsed]);
 
   return (
