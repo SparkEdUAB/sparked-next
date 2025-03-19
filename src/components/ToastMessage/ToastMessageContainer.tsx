@@ -1,5 +1,5 @@
 import React from 'react';
-import { ToastMessageData } from 'providers/ToastMessageContext';
+import { ToastMessageData } from 'providers/types';
 import ToastMessage from './ToastMessage';
 
 export default function ToastMessageContainer({ messages }: { messages: ToastMessageData[] }) {

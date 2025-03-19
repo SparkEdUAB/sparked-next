@@ -46,8 +46,8 @@ export function LibrarySidebar({
   const { pathname } = useNavigation();
   const sliptPathname = pathname.split('/');
 
-  const isMediaPage = sliptPathname[2] == 'media';
-  const isLibrary = sliptPathname[1] == 'library';
+  const isMediaPage = sliptPathname[2] === 'media';
+  const isLibrary = sliptPathname[1] === 'library';
 
   useLayoutEffect(() => {
     // if is media Page and SideNav is not collapsed on navigate set to true
@@ -112,7 +112,7 @@ export function LibrarySidebar({
                   !isGradesLoading &&
                   grades.map((grade) => (
                     <Sidebar.Item
-                      active={filteredGradeId == grade._id}
+                      active={filteredGradeId === grade._id}
                       className={styles.item}
                       as={Link}
                       href={`/library?grade_id=${grade._id}`}
@@ -144,7 +144,7 @@ export function LibrarySidebar({
                     !isSubjectsLoading &&
                     subjects.map((subject) => (
                       <Sidebar.Item
-                        active={filteredSubjectId == subject._id}
+                        active={filteredSubjectId === subject._id}
                         className={styles.item}
                         as={Link}
                         href={
@@ -190,7 +190,7 @@ export function LibrarySidebar({
                     units.map((unit) => (
                       <Sidebar.Item
                         key={unit._id}
-                        active={filteredUnitId == unit._id}
+                        active={filteredUnitId === unit._id}
                         className={styles.item}
                         as={Link}
                         href={
@@ -236,7 +236,7 @@ export function LibrarySidebar({
                     !isTopicsLoading &&
                     topics.map((topic) => (
                       <Sidebar.Item
-                        active={filteredTopicId == topic._id}
+                        active={filteredTopicId === topic._id}
                         className={styles.item}
                         as={Link}
                         href={
@@ -277,7 +277,7 @@ export function LibrarySidebar({
                   mediaTypes.map((mediaType) => (
                     <Sidebar.Item
                       key={mediaType._id}
-                      active={filteredMediaType == mediaType.name}
+                      active={filteredMediaType === mediaType.name}
                       className={styles.item}
                       as={Link}
                       href={`/library?${createQueryString('mediaType', mediaType.name)}`}

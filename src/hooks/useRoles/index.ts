@@ -174,7 +174,7 @@ export function useRoles() {
 
         message.success(i18next.t('success'));
 
-        setRoles(roles.filter((i) => selectedRoleIds.indexOf(i._id) == -1));
+        setRoles(roles.filter((i) => selectedRoleIds.indexOf(i._id) === -1));
 
         return responseData.results;
       } catch (err: any) {

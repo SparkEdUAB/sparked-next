@@ -14,7 +14,7 @@ export default async function fetchUsers_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { limit, skip } = schema.parse(params);
-  //   const isWithMetaData = withMetaData == 'true';
+  //   const isWithMetaData = withMetaData === 'true';
 
   try {
     const db = await dbClient();

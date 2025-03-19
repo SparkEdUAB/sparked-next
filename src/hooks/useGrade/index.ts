@@ -186,7 +186,7 @@ const useGrade = () => {
 
         message.success(i18next.t('success'));
 
-        setGrades(grades.filter((i) => selectedGradeIds.indexOf(i._id) == -1));
+        setGrades(grades.filter((i) => selectedGradeIds.indexOf(i._id) === -1));
 
         return true;
       } catch (err: any) {

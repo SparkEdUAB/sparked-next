@@ -235,7 +235,7 @@ export default function useUser() {
       message.success(i18next.t('success'));
 
       //   @ts-expect-error
-      setUsers(users.filter((i) => selectedUserIds.indexOf(i._id) == -1));
+      setUsers(users.filter((i) => selectedUserIds.indexOf(i._id) === -1));
 
       return responseData.results;
     } catch (err: any) {

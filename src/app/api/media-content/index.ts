@@ -50,7 +50,7 @@ export default async function fetchMediaContent_(request: any) {
   const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id, subject_id, grade_id } =
     schema.parse(params);
 
-  const isWithMetaData = withMetaData == 'true';
+  const isWithMetaData = withMetaData === 'true';
   const _limit = parseInt(limit);
   const _skip = parseInt(skip);
 
@@ -113,7 +113,7 @@ export async function fetchMediaContentById_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { mediaContentId, withMetaData } = schema.parse(params);
-  const isWithMetaData = withMetaData == 'true';
+  const isWithMetaData = withMetaData === 'true';
 
   try {
     const db = await dbClient();
@@ -235,7 +235,7 @@ export async function findMediaContentByName_(request: any) {
 
   const { name, limit, skip, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
 
-  const isWithMetaData = params.withMetaData == 'true' ? true : false;
+  const isWithMetaData = params.withMetaData === 'true' ? true : false;
 
   try {
     const db = await dbClient();

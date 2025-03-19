@@ -185,7 +185,7 @@ const useSubject = () => {
 
         message.success(i18next.t('success'));
 
-        setSubjects(subjects.filter((i) => selectedSubjectIds.indexOf(i._id) == -1));
+        setSubjects(subjects.filter((i) => selectedSubjectIds.indexOf(i._id) === -1));
 
         return true;
       } catch (err: any) {

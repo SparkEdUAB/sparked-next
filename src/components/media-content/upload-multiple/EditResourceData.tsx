@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, useMemo } from 'react';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
 import PreviewButton from './PreviewButton';
-import { ResourceData, UploadProgress } from './upload-multiple-resources';
+import { ResourceData, UploadProgress } from './types';
 import { RedAsterisk } from '@components/atom';
 import { HiExclamation } from 'react-icons/hi';
 import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
@@ -102,7 +102,7 @@ export function EditResourceData({
                     setResourceData(
                       (data) =>
                         data &&
-                        data.map((item) => (item.file == resource.file ? { ...item, name: e.target.value } : item)),
+                        data.map((item) => (item.file === resource.file ? { ...item, name: e.target.value } : item)),
                     )
                   }
                 />
@@ -119,7 +119,7 @@ export function EditResourceData({
                       (data) =>
                         data &&
                         data.map((item) =>
-                          item.file == resource.file ? { ...item, description: e.target.value } : item,
+                          item.file === resource.file ? { ...item, description: e.target.value } : item,
                         ),
                     )
                   }

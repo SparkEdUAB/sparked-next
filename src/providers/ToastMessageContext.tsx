@@ -1,11 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode, useMemo } from 'react';
 import ToastMessageContainer from '@components/ToastMessage/ToastMessageContainer';
-
-export type ToastMessageData = {
-  id: number;
-  content: string;
-  type: 'success' | 'error' | 'info' | 'warning';
-};
+import { ToastMessageData } from './types';
 
 type ToastMessageContextProps = {
   warning: (content: string) => string;

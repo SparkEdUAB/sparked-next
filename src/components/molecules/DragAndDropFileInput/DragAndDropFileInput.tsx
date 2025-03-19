@@ -19,9 +19,9 @@ type Props = {
   fileTypes: AcceptableFileTypes[];
   classNames?: { wrapper?: string; label?: string; main?: string };
 } & (
-  | { multiple: true; files: File[] | null; onChange: (files: File[] | null) => void }
-  | { multiple?: false; files: File | null; onChange: (file: File | null) => void }
-);
+    | { multiple: true; files: File[] | null; onChange: (files: File[] | null) => void }
+    | { multiple?: false; files: File | null; onChange: (file: File | null) => void }
+  );
 
 export function DragAndDropFileInput({
   id,
@@ -82,7 +82,7 @@ export function DragAndDropFileInput({
                   <FilePreview
                     key={file.name}
                     file={file}
-                    deleteItem={() => multiple && onChange(files.filter((f) => f != file))}
+                    deleteItem={() => multiple && onChange(files.filter((f) => f !== file))}
                   />
                 ))}
               </div>

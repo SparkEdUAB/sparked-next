@@ -9,7 +9,7 @@
     },
     "settings": {},
     "rules": {
-      "eqeqeq": "warn",
+      "eqeqeq": "error",
       "import/no-cycle": "error",
       "react/self-closing-comp": [
         "error",

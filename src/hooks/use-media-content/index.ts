@@ -230,7 +230,7 @@ const useMediaContent = () => {
 
         message.success(i18next.t('success'));
 
-        const newMediaContentIds = mediaContent.filter((i) => selectedMediaContentIds.indexOf(i._id) == -1);
+        const newMediaContentIds = mediaContent.filter((i) => selectedMediaContentIds.indexOf(i._id) === -1);
 
         setMediaContent(newMediaContentIds);
 

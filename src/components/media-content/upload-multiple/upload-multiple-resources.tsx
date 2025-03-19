@@ -13,23 +13,7 @@ import { FileSelector } from './FileSelector';
 import { DependencySelector } from './DependencySelector';
 import { EditResourceData } from './EditResourceData';
 import { truncateText } from 'utils/helpers/truncateText';
-
-enum UploadProcessSteps {
-  SelectDependencies,
-  SelectFiles,
-  EditResources,
-}
-
-export type ResourceData = {
-  file: File;
-  name: string;
-  description: string;
-};
-
-export type UploadProgress = {
-  successful: number;
-  outOf: number;
-};
+import { UploadProcessSteps, ResourceData, UploadProgress } from './types';
 
 export default function UploadMultipleResources({ onSuccessfullyDone }: { onSuccessfullyDone: () => void }) {
   const { createResource } = useMediaContent();
@@ -96,24 +80,24 @@ export default function UploadMultipleResources({ onSuccessfullyDone }: { onSucc
           {
             ...(subject
               ? {
-                  gradeId: subject.grade_id,
-                  subjectId: subject._id,
-                }
+                gradeId: subject.grade_id,
+                subjectId: subject._id,
+              }
               : {}),
             ...(unit
               ? {
-                  unitId: unit._id,
-                  gradeId: unit.grade_id,
-                  subjectId: unit.subject_id,
-                }
+                unitId: unit._id,
+                gradeId: unit.grade_id,
+                subjectId: unit.subject_id,
+              }
               : {}),
             ...(topic
               ? {
-                  unitId: topic.unit_id,
-                  topicId: topic._id,
-                  gradeId: topic.grade_id,
-                  subjectId: topic.subject_id,
-                }
+                unitId: topic.unit_id,
+                topicId: topic._id,
+                gradeId: topic.grade_id,
+                subjectId: topic.subject_id,
+              }
               : {}),
             name: resource.name,
             description: resource.description,

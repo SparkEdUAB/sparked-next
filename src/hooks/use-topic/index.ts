@@ -293,7 +293,7 @@ const useTopic = () => {
 
         message.success(i18next.t('success'));
 
-        setTopics(topics.filter((i) => selectedTopicIds.indexOf(i._id) == -1));
+        setTopics(topics.filter((i) => selectedTopicIds.indexOf(i._id) === -1));
 
         return true;
       } catch (err: any) {

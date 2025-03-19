@@ -192,7 +192,7 @@ const useProgram = () => {
 
       message.success(i18next.t('success'));
 
-      setPrograms(programs.filter((i) => selectedProgramIds.indexOf(i._id) == -1));
+      setPrograms(programs.filter((i) => selectedProgramIds.indexOf(i._id) === -1));
 
       return true;
     } catch (err: any) {

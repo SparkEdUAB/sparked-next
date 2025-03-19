@@ -141,7 +141,7 @@ export function usePageLinks() {
 
         message.success(i18next.t('success'));
 
-        setPageLinks(pageLinks.filter((i) => selectedPageLinkIds.indexOf(i._id) == -1));
+        setPageLinks(pageLinks.filter((i) => selectedPageLinkIds.indexOf(i._id) === -1));
 
         return responseData.results;
       } catch (err: any) {
