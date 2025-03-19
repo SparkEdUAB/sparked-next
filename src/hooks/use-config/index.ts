@@ -16,7 +16,7 @@ const useConfig = () => {
   const [configs, setConfigs] = useState<T_CONFIG_VARIABLES | null>(null);
 
   const loadConfigFile = useCallback(
-    async ({}) => {
+    async () => {
       const url = API_LINKS.READ_CONFIG_FILE;
 
       try {

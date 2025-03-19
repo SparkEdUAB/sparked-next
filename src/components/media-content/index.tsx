@@ -27,7 +27,7 @@ export const mediaContentTableColumns: T_ColumnData<T_MediaContentFields>[] = [
     dataIndex: 'fileUrl',
     key: 'Topic',
     render: (url) => (
-      <a target={'_blank'} className="text-3xl" href={url}>
+      <a target={'_blank'} rel="noreferrer" className="text-3xl" href={url}>
         <AiOutlineFileImage />
       </a>
     ),

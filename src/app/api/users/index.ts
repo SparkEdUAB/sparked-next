@@ -235,7 +235,7 @@ export async function findUserByEmail_(request: any) {
     }
     
     // Create case-insensitive regex pattern for email
-    const regexPattern = new RegExp(`^${email.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i');
+    const regexPattern = new RegExp(`^${email.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i');
 
     const user = await db
       .collection(dbCollections.users.name)

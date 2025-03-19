@@ -45,7 +45,7 @@ jobs:
           echo "MONGODB_DB=sparked-next" >> .env
 
       - name: Run linting
-        run: yarn lint
+        run: npx --yes oxlint@0.0.0 --deny-warnings
 
       - name: Build
         id: build

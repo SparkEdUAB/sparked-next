@@ -4,7 +4,7 @@ import GradeListView from '@components/grades/gradeListView';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
 import React from 'react';
 
-const AdminGrades = ({}: { params: { lng: string } }) => {
+const AdminGrades = () => {
   useDocumentTitle('Grades');
 
   return <GradeListView />;

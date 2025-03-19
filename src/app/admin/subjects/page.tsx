@@ -4,7 +4,7 @@ import SubjectListView from '@components/subjects/subjectListView';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
 import React from 'react';
 
-const AdminSubjects = ({}: { params: { lng: string } }) => {
+const AdminSubjects = () => {
   useDocumentTitle('Subjects');
 
   return <SubjectListView />;
