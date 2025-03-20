@@ -186,7 +186,7 @@ const useCategory = () => {
 
         message.success(i18next.t('success'));
 
-        setCategories(cartegories.filter((i) => selectedCategoryIds.indexOf(i._id) == -1));
+        setCategories(cartegories.filter((i) => selectedCategoryIds.indexOf(i._id) === -1));
 
         return true;
       } catch (err: any) {

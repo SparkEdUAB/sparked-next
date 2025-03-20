@@ -15,7 +15,7 @@ import { API_LINKS } from 'app/links';
 
 const TopicsListView: React.FC = () => {
   const {
-    selectedTopicIds: selectedTopicIds,
+    selectedTopicIds,
     setSelectedTopicIds,
     onSearchQueryChange,
     deleteTopics,

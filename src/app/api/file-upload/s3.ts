@@ -29,8 +29,8 @@ async function uploadFile({ file, fileName, ext }: T_s3Upload) {
     const uploadCommand = new PutObjectCommand(uploadParams);
     await s3Client.send(uploadCommand);
     return `${process.env.S3_BUCKET_NAME_URL}/${imageUrl}`;
-  } catch (error) {
-    throw error;
+  } catch(error) {
+    console.error(error);
   }
 }
 

@@ -17,7 +17,7 @@ export default async function fetchSubjects_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { limit, skip, withMetaData } = schema.parse(params);
-  const isWithMetaData = withMetaData == 'true';
+  const isWithMetaData = withMetaData === 'true';
 
   try {
     const db = await dbClient();

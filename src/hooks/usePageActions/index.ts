@@ -139,7 +139,7 @@ export function usePageActions() {
 
       message.success(i18next.t('success'));
 
-      setPageActions(pageActions.filter((i) => selectedPageActionIds.indexOf(i._id) == -1));
+      setPageActions(pageActions.filter((i) => selectedPageActionIds.indexOf(i._id) === -1));
 
       return responseData.results;
     } catch (err: any) {

@@ -248,7 +248,7 @@ const useUnit = () => {
 
         message.success(i18next.t('success'));
 
-        setUnits(units.filter((i) => selectedUnitIds.indexOf(i._id) == -1));
+        setUnits(units.filter((i) => selectedUnitIds.indexOf(i._id) === -1));
 
         return true;
       } catch (err: any) {

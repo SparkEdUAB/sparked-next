@@ -1,5 +1,5 @@
 export type T_CONFIG = {
-  isAutoLoadCoreConfig?: Boolean;
+  isAutoLoadCoreConfig?: boolean;
 };
 
 export type T_CONFIG_DB_VARIABLE = {
@@ -10,7 +10,7 @@ export type T_CONFIG_DB_VARIABLE = {
 
 export type T_CONFIG_VARIABLE = {
   key: string;
-  value: string | number | Boolean;
+  value: string | number | boolean;
   label: string;
   stateLocation: T_CONFIG_STORE_STATE;
 };

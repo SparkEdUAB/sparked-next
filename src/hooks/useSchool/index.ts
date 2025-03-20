@@ -186,7 +186,7 @@ const useSchool = () => {
 
       message.success(i18next.t('success'));
 
-      setSchools(schools.filter((i) => selectedSchoolIds.indexOf(i._id) == -1));
+      setSchools(schools.filter((i) => selectedSchoolIds.indexOf(i._id) === -1));
 
       return true;
     } catch (err: any) {

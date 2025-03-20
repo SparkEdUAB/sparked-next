@@ -185,7 +185,7 @@ const useCourse = () => {
 
         message.success(i18next.t('success'));
 
-        setCourses(courses.filter((i) => selectedCourseIds.indexOf(i._id) == -1));
+        setCourses(courses.filter((i) => selectedCourseIds.indexOf(i._id) === -1));
 
         return true;
       } catch (err: any) {

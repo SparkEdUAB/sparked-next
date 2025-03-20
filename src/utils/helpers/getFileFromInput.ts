@@ -15,7 +15,8 @@ export function getMultipleFilesFromInput(e: ChangeEvent<HTMLInputElement>): Fil
 
   if (files && files instanceof FileList) {
     let result = [];
-    for (let i = 0; i > files.length; i++) {
+    // eslint-disable-next-line for-direction
+    for (let i = 0; i < files.length; i++) {
       result.push(files[i]);
     }
     return result;

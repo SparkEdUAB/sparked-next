@@ -32,7 +32,7 @@ export default async function uploadFile_(request: Request) {
         file: buffer,
         fileName: file.name.substring(0, file.name.lastIndexOf('.')),
         ext,
-      });
+      }) as string;
     }
 
     const response = {

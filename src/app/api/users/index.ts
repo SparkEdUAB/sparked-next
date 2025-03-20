@@ -14,7 +14,7 @@ export default async function fetchUsers_(request: any) {
   const params = request.nextUrl.searchParams;
 
   const { limit, skip } = schema.parse(params);
-  //   const isWithMetaData = withMetaData == 'true';
+  //   const isWithMetaData = withMetaData === 'true';
 
   try {
     const db = await dbClient();
@@ -235,7 +235,7 @@ export async function findUserByEmail_(request: any) {
     }
     
     // Create case-insensitive regex pattern for email
-    const regexPattern = new RegExp(`^${email.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i');
+    const regexPattern = new RegExp(`^${email.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i');
 
     const user = await db
       .collection(dbCollections.users.name)

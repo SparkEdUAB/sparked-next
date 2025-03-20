@@ -30,7 +30,7 @@ export type T_MenuItemLinkParams = {
   index: number;
   hasDivider?: string;
   hasBadge?: boolean;
-  badgeLabel?: String;
+  badgeLabel?: string;
   children?: Array<T_ChildMenuItemLinkParams>;
 };
 
