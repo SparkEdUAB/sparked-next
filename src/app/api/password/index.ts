@@ -1,8 +1,8 @@
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { HttpStatusCode } from 'axios';
-import nodemailer from 'nodemailer';
 
+// TODO: Complete forgot password logic
 export default async function forgotPassword_(request: Request) {
   const { email } = await request.json();
 
@@ -23,23 +23,12 @@ export default async function forgotPassword_(request: Request) {
       });
     }
 
-    // Generate a reset token (for simplicity, using a random string)
     const resetToken = Math.random().toString(36).substring(2);
 
-    // Save the reset token in the database
     await db.collection(dbCollections.users.name).updateOne(
       { email },
       { $set: { resetToken, resetTokenExpiry: Date.now() + 3600000 } }, // 1 hour expiry
     );
-
-    // Send email with reset link
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -48,9 +37,7 @@ export default async function forgotPassword_(request: Request) {
       text: `You requested a password reset. Click the link to reset your password: ${process.env.BASE_URL}/reset-password?token=${resetToken}`,
     };
 
-    await transporter.sendMail(mailOptions);
-
-    return new Response(JSON.stringify({ isError: false, code: 'EMAIL_SENT' }), {
+    return new Response(JSON.stringify({ isError: false, code: 'EMAIL_SENT', mailOptions }), {
       status: HttpStatusCode.Ok,
     });
   } catch (error) {

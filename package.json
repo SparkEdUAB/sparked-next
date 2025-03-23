@@ -6,7 +6,7 @@
     "dev": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "npx oxlint --fix",
     "pm2": "pm2 start npm --name \"sparked-next\" -- start"
   },
   "dependencies": {

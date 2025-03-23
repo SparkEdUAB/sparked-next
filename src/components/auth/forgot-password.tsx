@@ -12,7 +12,7 @@ import { LuCircleUser } from 'react-icons/lu';
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const { handleLogin, loading } = useAuth();
+  const { loading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +52,7 @@ const ForgotPassword = () => {
                   disabled={loading}
                   id={SIGNUP_FORM_FIELDS.email.key}
                   name={SIGNUP_FORM_FIELDS.email.key}
+                  onChange={(e) => setEmail(e.target.value)}
                   type="email"
                   placeholder="name@example.com"
                   required
@@ -82,7 +83,7 @@ const ForgotPassword = () => {
                   Login
                 </Link>
               </p>
-
+              {message && <p className="text-red-500 text-center">{message}</p>}
             </form>
           </div>
         </div>
