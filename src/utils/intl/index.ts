@@ -147,8 +147,8 @@ i18next.init({
         process_code_504: 'Invalid credentials',
         process_code_505: 'User logged out successfully',
         process_code_506: 'Failed to logout user',
-        process_code_507: 'User was successfully created',
-        process_code_508: 'Password reset email sent successfully',
+        process_code_507: 'User with the same email already exists',
+        process_code_508: 'User created successfully',
         process_code_509: 'Invalid or expired reset token',
         process_code_511: 'Failed to send password reset email, please try again',
 
