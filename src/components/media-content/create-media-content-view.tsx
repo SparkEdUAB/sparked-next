@@ -18,6 +18,7 @@ import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
 import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
 import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 import { T_NameAndDescription } from 'types';
+import { Label, TextInput } from 'flowbite-react';
 
 const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createResource, isLoading: loadingResource } = useMediaContent();
@@ -30,16 +31,44 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
   const [unit, setUnit] = useState<T_UnitWithoutMetadata | null>(null);
   const [topic, setTopic] = useState<T_TopicWithoutMetadata | null>(null);
+  const [isExternalResource, setIsExternalResource] = useState(true);
+  const [externalUrl, setExternalUrl] = useState('');
+
+  const validateExternalUrl = (url: string) => {
+    try {
+      const parsedUrl = new URL(url);
+      const trustedDomains = [
+        'youtube.com',
+        'www.youtube.com',
+        'm.youtube.com',
+        'youtu.be',
+        'vimeo.com',
+        'www.vimeo.com',
+        'player.vimeo.com'
+      ];
+      return trustedDomains.includes(parsedUrl.hostname);
+    } catch {
+      return false;
+    }
+  };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
 
     const keys = [MEDIA_CONTENT_FORM_FIELDS.name.key, MEDIA_CONTENT_FORM_FIELDS.description.key];
+    const result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
 
-    let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
-
-    if (!file) {
+    if (!isExternalResource && !file) {
       return message.error(i18next.t('no_file'));
+    }
+
+    if (isExternalResource) {
+      if (!externalUrl) {
+        return message.error(i18next.t('no_external_url'));
+      }
+      if (!validateExternalUrl(externalUrl)) {
+        return message.error(i18next.t('invalid_external_url'));
+      }
     }
 
     if (!topic && !subject && !unit) {
@@ -49,43 +78,22 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
     try {
       setUploadingFile(true);
 
-      let fileUrl = await uploadFile(file);
-
-      if (!fileUrl) {
-        setUploadingFile(false);
-        return message.error(i18next.t('failed_to_upload'));
-      }
-
-      let thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
+      // @ts-expect-error
+      const fileUrl = isExternalResource ? null : await uploadFile(file);
+      const thumbnailUrl = thumbnail ? await uploadFile(thumbnail) : undefined;
 
       createResource(
         {
-          ...(subject
-            ? {
-              gradeId: subject.grade_id,
-              subjectId: subject._id,
-            }
-            : {}),
-          ...(unit
-            ? {
-              unitId: unit._id,
-              gradeId: unit.grade_id,
-              subjectId: unit.subject_id,
-            }
-            : {}),
-          ...(topic
-            ? {
-              unitId: topic.unit_id,
-              topicId: topic._id,
-              gradeId: topic.grade_id,
-              subjectId: topic.subject_id,
-            }
-            : {}),
+          ...(subject ? { gradeId: subject.grade_id, subjectId: subject._id } : {}),
+          ...(unit ? { unitId: unit._id, gradeId: unit.grade_id, subjectId: unit.subject_id } : {}),
+          ...(topic ? { unitId: topic.unit_id, topicId: topic._id, gradeId: topic.grade_id, subjectId: topic.subject_id } : {}),
           ...result,
+          externalUrl: isExternalResource ? externalUrl : null,
         },
+        // @ts-expect-error
         fileUrl,
-        thumbnailUrl || undefined,
-        onSuccessfullyDone,
+        thumbnailUrl,
+        onSuccessfullyDone
       );
     } catch {
       message.error(i18next.t('failed_to_upload'));
@@ -95,19 +103,57 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   };
 
   const isLoading = uploadingFile || loadingResource;
-
   return (
     <>
       <AdminPageTitle title={i18next.t('create_resource')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <FileUploadSection
-          isLoading={isLoading}
-          file={file}
-          setFile={setFile}
-          thumbnail={thumbnail}
-          setThumbnail={setThumbnail}
-        />
+        <div className="flex items-center gap-2 mb-4">
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={isExternalResource}
+              onChange={() => setIsExternalResource(!isExternalResource)}
+              className="sr-only peer"
+            />
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            <span className="ml-3 text-sm text-gray-600 dark:text-gray-300">External Resource</span>
+          </label>
+        </div>
+
+        {isExternalResource ? (
+          <div>
+            <div className="mb-1.5 block">
+              <Label htmlFor="externalUrl" value="External URL" className="text-gray-700 dark:text-gray-300" />
+            </div>
+            <TextInput
+              disabled={isLoading}
+              id="externalUrl"
+              name="externalUrl"
+              type="url"
+              value={externalUrl}
+              onChange={(e) => setExternalUrl(e.target.value)}
+              placeholder="https://youtube.com/resource"
+              required
+              className="rounded-lg"
+            />
+            {externalUrl && (
+              <div className="mt-4 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
+                <p className="text-sm text-gray-600 dark:text-gray-300">
+                  External resource link will be saved. Preview may not be available for all URLs.
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          <FileUploadSection
+            isLoading={isLoading}
+            file={file}
+            setFile={setFile}
+            thumbnail={thumbnail}
+            setThumbnail={setThumbnail}
+          />
+        )}
 
         <AdminFormInput
           disabled={isLoading}

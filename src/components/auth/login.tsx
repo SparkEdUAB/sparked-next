@@ -9,9 +9,12 @@ import i18next from 'i18next';
 import { FormEventHandler } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_LoginFields } from '@hooks/useAuth/types';
+import { useState } from 'react';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const Login: React.FC = () => {
   const { handleLogin, loading } = useAuth();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
@@ -59,10 +62,23 @@ const Login: React.FC = () => {
                   disabled={loading}
                   id="password"
                   name="password"
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="••••••••"
                   required
                   className="rounded-lg"
+                  rightIcon={() => (
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
+                    >
+                      {showPassword ? (
+                        <AiOutlineEyeInvisible className="h-5 w-5" />
+                      ) : (
+                        <AiOutlineEye className="h-5 w-5" />
+                      )}
+                    </button>
+                  )}
                 />
               </div>
               <Button

@@ -37,6 +37,7 @@ export type T_RawMediaContentFields = {
   name: string;
   description: string;
   file_url: string | null;
+  external_url: string | null;
   thumbnail_url?: string;
   likes: number;
   dislikes: number;

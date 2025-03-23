@@ -148,6 +148,7 @@ export const p_fetchMediaContentWithMetaData = ({
       'subject.name': 1,
       'subject._id': 1,
       file_url: 1,
+      external_url: 1,
       ...project,
     },
   },
@@ -277,6 +278,7 @@ export const p_fetchRandomMediaContent = ({
       'subject.name': 1,
       'subject._id': 1,
       file_url: 1,
+      external_url: 1,
     },
   },
   {

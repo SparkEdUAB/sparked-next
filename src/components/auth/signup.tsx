@@ -10,12 +10,15 @@ import { AiOutlineLock } from 'react-icons/ai';
 import { LuCircleUser } from 'react-icons/lu';
 import { Select } from 'flowbite-react';
 import { validateSignupForm } from 'utils/helpers/validation';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 
 const Signup = () => {
   const { handleSignup, loading } = useAuth();
   const [isStudent, setIsStudent] = useState(false);
   const [institutionType, setInstitutionType] = useState<string>('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Form data state to track input values
   const [formData, setFormData] = useState({
@@ -333,12 +336,25 @@ const Signup = () => {
                     disabled={loading}
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     value={formData.password}
                     onChange={handleInputChange}
                     helperText={errors.password}
                     color={errors.password ? "failure" : undefined}
                     className="rounded-lg"
+                    rightIcon={() => (
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
+                      >
+                        {showPassword ? (
+                          <AiOutlineEyeInvisible className="h-5 w-5" />
+                        ) : (
+                          <AiOutlineEye className="h-5 w-5" />
+                        )}
+                      </button>
+                    )}
                   />
                 </div>
 
@@ -351,12 +367,25 @@ const Signup = () => {
                     disabled={loading}
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     color={errors.confirmPassword ? "failure" : undefined}
                     helperText={errors.confirmPassword}
                     className="rounded-lg"
+                    rightIcon={() => (
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
+                      >
+                        {showConfirmPassword ? (
+                          <AiOutlineEyeInvisible className="h-5 w-5" />
+                        ) : (
+                          <AiOutlineEye className="h-5 w-5" />
+                        )}
+                      </button>
+                    )}
                   />
                 </div>
               </div>
