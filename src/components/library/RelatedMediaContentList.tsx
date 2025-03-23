@@ -34,6 +34,8 @@ const RelatedMediaItem = memo(({ item }: { item: T_RawMediaContentFields }) => {
   );
 });
 
+RelatedMediaItem.displayName = 'RelatedMediaItem';
+
 export function RelatedMediaContentList({
   relatedMediaContent,
 }: {
