@@ -20,34 +20,37 @@ const useAuth = () => {
 
   const isAuthenticated = status === 'authenticated';
 
-  const handleSignup = useCallback(async (fields: T_SignupFields) => {
-    const url = API_LINKS.SIGNUP;
-    const formData = {
-      body: JSON.stringify({ ...fields }),
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    };
-    setLoading(true);
-    try {
-      const resp = await fetch(url, formData);
+  const handleSignup = useCallback(
+    async (fields: T_SignupFields) => {
+      const url = API_LINKS.SIGNUP;
+      const formData = {
+        body: JSON.stringify({ ...fields }),
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+      setLoading(true);
+      try {
+        const resp = await fetch(url, formData);
 
-      const responseData = await resp.json();
+        const responseData = await resp.json();
 
-      if (!resp.ok || responseData.isError) {
-        message.warning(getProcessCodeMeaning(responseData.code));
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code));
+          return false;
+        }
+        message.success(getProcessCodeMeaning(responseData.code));
+        // router.replace('/');
+      } catch (err: any) {
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
+      } finally {
+        setLoading(false);
       }
-      message.success(getProcessCodeMeaning(responseData.code));
-      // router.replace('/');
-    } catch (err: any) {
-      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  }, [message]);
+    },
+    [message],
+  );
 
   const handleLogin = useCallback(
     async (fields: T_LoginFields) => {
@@ -139,12 +142,64 @@ const useAuth = () => {
     }
   }, [message, router]);
 
+  const handleForgotPassword = useCallback(
+    async (email: string) => {
+      try {
+        const response = await fetch('/api/password/forgotPassword', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+
+        const data = await response.json();
+        if (data.isError) {
+          message.warning(getProcessCodeMeaning(data.code));
+          return false;
+        }
+        message.success(getProcessCodeMeaning(data.code));
+        return true;
+      } catch (err: any) {
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      }
+    },
+    [message],
+  );
+
+  const handleResetPassword = useCallback(
+    async (token: string, newPassword: string) => {
+      try {
+        const response = await fetch('/api/password/resetPassword', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token, newPassword }),
+        });
+
+        const data = await response.json();
+        if (data.isError) {
+          message.warning(getProcessCodeMeaning(data.code));
+          return false;
+        }
+        message.success(getProcessCodeMeaning(AUTH_PROCESS_CODES.PASSWORD_RESET_SUCCESS));
+        return true;
+      } catch (err: any) {
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      }
+    },
+    [message],
+  );
+
   return {
     isAuthenticated,
     handleSignup,
     handleLogin,
     handleLogout,
     loading,
+    handleForgotPassword,
+    handleResetPassword,
   };
 };
 

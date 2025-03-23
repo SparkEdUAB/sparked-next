@@ -1,5 +1,4 @@
 import { dbClient } from '../lib/db';
-import { realmApp } from '../lib/db/realm';
 import AUTH_PROCESS_CODES from './processCodes';
 import { HttpStatusCode } from 'axios';
 
@@ -16,8 +15,6 @@ export default async function logout_() {
         status: HttpStatusCode.InternalServerError,
       });
     }
-
-    await realmApp.currentUser?.logOut();
 
     const response = {
       isError: false,

@@ -24,6 +24,7 @@ export function LogOutButton() {
     mutate();
   }
 
+
   return isAuthenticated ? (
     <div className="flex items-center">
       {isAdmin && (
