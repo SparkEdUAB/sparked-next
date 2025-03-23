@@ -6,11 +6,14 @@ import i18next from 'i18next';
 import AppLogo from '@components/logo';
 import Link from 'next/link';
 import useAuth from '@hooks/useAuth';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { handleResetPassword, loading } = useAuth();
 
   const token = searchParams.get('token');
@@ -74,10 +77,23 @@ const ResetPassword = () => {
                     disabled={loading}
                     id="password"
                     name="password"
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     required
                     className="rounded-lg"
+                    rightIcon={() => (
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
+                      >
+                        {showPassword ? (
+                          <AiOutlineEyeInvisible className="h-5 w-5" />
+                        ) : (
+                          <AiOutlineEye className="h-5 w-5" />
+                        )}
+                      </button>
+                    )}
                   />
                 </div>
                 <div>
@@ -89,10 +105,23 @@ const ResetPassword = () => {
                     disabled={loading}
                     id="confirmPassword"
                     name="confirmPassword"
-                    type="password"
+                    type={showConfirmPassword ? 'text' : 'password'}
                     placeholder="••••••••"
                     required
                     className="rounded-lg"
+                    rightIcon={() => (
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
+                      >
+                        {showConfirmPassword ? (
+                          <AiOutlineEyeInvisible className="h-5 w-5" />
+                        ) : (
+                          <AiOutlineEye className="h-5 w-5" />
+                        )}
+                      </button>
+                    )}
                   />
                 </div>
                 {error && (

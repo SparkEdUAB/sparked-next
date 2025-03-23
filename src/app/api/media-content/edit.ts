@@ -21,6 +21,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
     gradeId: zfd.text().optional(),
     fileUrl: zfd.text().optional(),
     thumbnailUrl: zfd.text().optional(),
+    externalUrl: zfd.text().optional(),
   });
   const formBody = await request.json();
 
@@ -37,6 +38,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
     mediaContentId,
     gradeId,
     subjectId,
+    externalUrl,
   } = schema.parse(formBody);
 
   try {
@@ -229,6 +231,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
       subject_id: new BSON.ObjectId(subjectId),
       file_url: fileUrl,
       thumbnail_url: thumbnailUrl,
+      external_url: externalUrl,
     };
 
     await db.collection(dbCollections.media_content.name).updateOne(query, {

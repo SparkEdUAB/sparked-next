@@ -21,6 +21,7 @@ export default async function createMediaContent_(request: Request, session?: Se
     gradeId: zfd.text().optional(),
     fileUrl: zfd.text().optional(),
     thumbnailUrl: zfd.text().optional(),
+    externalUrl: zfd.text().optional(),
   });
   const formBody = await request.json();
 
@@ -36,6 +37,7 @@ export default async function createMediaContent_(request: Request, session?: Se
     gradeId,
     subjectId,
     thumbnailUrl,
+    externalUrl,
   } = schema.parse(formBody);
 
   try {
@@ -204,6 +206,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       subject_id: new BSON.ObjectId(subjectId),
       file_url: fileUrl,
       thumbnail_url: thumbnailUrl,
+      external_url: externalUrl,
     });
 
     const response = {
