@@ -31,8 +31,26 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
   const [unit, setUnit] = useState<T_UnitWithoutMetadata | null>(null);
   const [topic, setTopic] = useState<T_TopicWithoutMetadata | null>(null);
-  const [isExternalResource, setIsExternalResource] = useState(false);
+  const [isExternalResource, setIsExternalResource] = useState(true);
   const [externalUrl, setExternalUrl] = useState('');
+
+  const validateExternalUrl = (url: string) => {
+    try {
+      const parsedUrl = new URL(url);
+      const trustedDomains = [
+        'youtube.com',
+        'www.youtube.com',
+        'm.youtube.com',
+        'youtu.be',
+        'vimeo.com',
+        'www.vimeo.com',
+        'player.vimeo.com'
+      ];
+      return trustedDomains.includes(parsedUrl.hostname);
+    } catch {
+      return false;
+    }
+  };
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -44,8 +62,13 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
       return message.error(i18next.t('no_file'));
     }
 
-    if (isExternalResource && !externalUrl) {
-      return message.error(i18next.t('no_external_url'));
+    if (isExternalResource) {
+      if (!externalUrl) {
+        return message.error(i18next.t('no_external_url'));
+      }
+      if (!validateExternalUrl(externalUrl)) {
+        return message.error(i18next.t('invalid_external_url'));
+      }
     }
 
     if (!topic && !subject && !unit) {

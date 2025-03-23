@@ -272,6 +272,8 @@ i18next.init({
         process_code_513: 'Invalid or expired reset link. Please request a new one.',
         process_code_514: 'Failed to reset password. Please try again later.',
         process_code_502: 'No account found with this email address.',
+        invalid_external_url: 'Invalid external URL, Currently only YouTube and Vimeo are supported.',
+        no_external_url: 'No external URL provided.',
       },
     },
   },

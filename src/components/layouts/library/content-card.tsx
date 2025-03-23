@@ -48,7 +48,7 @@ const ContentDetailsCardView = ({
   const hasExternalUrl = Boolean(externalUrl);
 
   const domainName = hasExternalUrl ? new URL(externalUrl as string).hostname : '';
-  const placeholderImage = `https://fakeimg.pl/600x400?text=${domainName || title}`;
+  const placeholderImage = `https://fakeimg.pl/600x400?text=${domainName || truncateText(title, 12)}`;
 
   const isValidImage = useCallback((url: string) => {
     return url && url.match(/\.(jpeg|jpg|gif|png)$/) !== null;
