@@ -3,9 +3,9 @@ import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { realmApp } from '../lib/db/realm';
 import AUTH_PROCESS_CODES from './processCodes';
 import { HttpStatusCode } from 'axios';
+import bcrypt from 'bcryptjs';
 
 export default async function signup_(request: Request) {
   const schema = zfd.formData({
@@ -46,16 +46,13 @@ export default async function signup_(request: Request) {
         isError: true,
         code: AUTH_PROCESS_CODES.USER_ALREADY_EXIST,
       };
-
       return new Response(JSON.stringify(response), {
         status: HttpStatusCode.BadRequest,
       });
     }
 
-    await realmApp.emailPasswordAuth.registerUser({
-      email,
-      password,
-    });
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     await db.collection(dbCollections.users.name).insertOne({
       email,
@@ -68,7 +65,8 @@ export default async function signup_(request: Request) {
       grade,
       is_verified: false,
       created_at: new Date(),
-      role: 'user', // default role
+      role: 'student',
+      password: hashedPassword,
     });
 
     const response = {

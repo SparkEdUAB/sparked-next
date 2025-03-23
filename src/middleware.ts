@@ -10,6 +10,7 @@ const PUBLIC_PATHS = [
   '/api/auth/signout',
   '/api/auth/callback/credentials',
   '/api/media-actions/createMediaView',
+  '/api/password/forgotPassword',
 ];
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;

@@ -1,22 +1,18 @@
-import Realm from 'realm';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { realmApp } from '../lib/db/realm';
 import AUTH_PROCESS_CODES from './processCodes';
 import jwt from 'jsonwebtoken';
-import sharedConfig from 'app/shared/config';
 import { p_fetchUserRoleDetails } from './pipelines';
 import { T_RECORD } from 'types';
 import { HttpStatusCode } from 'axios';
+import bcrypt from 'bcryptjs';
 
 export default async function login_(request: Request) {
   const schema = zfd.formData({
     email: zfd.text(),
     password: zfd.text(),
   });
-
-  const { JWT_SECRET } = sharedConfig();
 
   const formBody = await request.json();
 
@@ -45,6 +41,7 @@ export default async function login_(request: Request) {
           _id: 1,
           role: 1,
           is_verified: 1,
+          password: 1,
         },
       },
     );
@@ -59,9 +56,16 @@ export default async function login_(request: Request) {
       });
     }
 
-    const credentials = Realm.Credentials.emailPassword(email, password);
-
-    await realmApp.logIn(credentials);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      const response = {
+        isError: true,
+        code: AUTH_PROCESS_CODES.INVALID_CREDENTIALS,
+      };
+      return new Response(JSON.stringify(response), {
+        status: HttpStatusCode.Unauthorized,
+      });
+    }
 
     const userRole = await db
       .collection(dbCollections.user_role_mappings.name)
@@ -77,7 +81,7 @@ export default async function login_(request: Request) {
       };
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email, role }, JWT_SECRET as string, {
+    const token = jwt.sign({ id: user._id, email: user.email, role }, process.env.JWT_SECRET as string, {
       expiresIn: '72h',
     });
 

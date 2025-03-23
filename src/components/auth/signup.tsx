@@ -364,6 +364,7 @@ const Signup = () => {
               <Button
                 type="submit"
                 disabled={loading}
+                size="xs"
                 className="w-full mt-4  hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 py-2.5 rounded-lg"
               >
                 {loading ? (
