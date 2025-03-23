@@ -3,7 +3,7 @@
 import { SIGNUP_FORM_FIELDS } from '@components/auth/constants';
 import AppLogo from '@components/logo';
 import useAuth from '@hooks/useAuth';
-import { Button, Label, Spinner, TextInput } from 'flowbite-react';
+import { Button, Label, TextInput } from 'flowbite-react';
 import i18next from 'i18next';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -49,18 +49,12 @@ const ForgotPassword = () => {
               </div>
               <Button
                 disabled={loading}
+                isProcessing={loading}
                 type="submit"
                 size="sm"
                 className="w-full mt-2 py-1.5 rounded-md text-sm font-medium"
               >
-                {loading ? (
-                  <>
-                    <Spinner size="sm" className="mr-2" />
-                    {i18next.t('loading')}
-                  </>
-                ) : (
-                  i18next.t('Send Reset Link')
-                )}
+                {i18next.t('Send Reset Link')}
               </Button>
               <p className="text-md font-light text-center text-gray-600 dark:text-gray-400 mt-4">
                 Or {" "}

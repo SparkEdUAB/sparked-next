@@ -19,9 +19,9 @@ export default async function editMediaContent_(request: Request, session?: Sess
     topicId: zfd.text().optional(),
     subjectId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
-    fileUrl: zfd.text().optional(),
+    fileUrl: zfd.text().optional().nullable(),
     thumbnailUrl: zfd.text().optional(),
-    externalUrl: zfd.text().optional(),
+    externalUrl: zfd.text().optional().nullable(),
   });
   const formBody = await request.json();
 

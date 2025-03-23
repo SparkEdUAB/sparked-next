@@ -8,7 +8,8 @@ export type T_CreateResourceFields = {
   topicId?: string;
   gradeId?: string;
   subjectId?: string;
-  fileUrl?: string;
+  fileUrl?: string | null;
+  externalUrl?: string | null;
 };
 export type T_FetchTopic = {
   limit?: number;

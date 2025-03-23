@@ -9,17 +9,23 @@ import { memo, useCallback } from 'react';
 import { MEDIA_CONTENT_LIMIT } from './constants';
 import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
 
-const ContentCard = memo(({ item }: { item: T_RawMediaContentFields }) => (
-  <div className="h-full">
-    <ContentCardView
-      url={`/library/media/${item._id}`}
-      image={getImageSrc(item)}
-      title={item.name}
-      description={item.description}
-      fileUrl={item.file_url as string}
-    />
-  </div>
-));
+const ContentCard = memo(({ item }: { item: T_RawMediaContentFields }) => {
+  if (!item.file_url && !item.external_url) {
+    return null
+  }
+  return (
+    <div className="h-full">
+      <ContentCardView
+        url={`/library/media/${item._id}`}
+        image={getImageSrc(item)}
+        title={item.name}
+        description={item.description}
+        fileUrl={item.file_url as string}
+        externalUrl={item.external_url as string}
+      />
+    </div>
+  )
+});
 ContentCard.displayName = 'ContentCard';
 
 export function LibraryInfiniteScrollList({

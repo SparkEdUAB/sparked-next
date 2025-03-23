@@ -1,12 +1,10 @@
-import { useSearchParams } from 'next/navigation'
-import { FormEventHandler, useState } from 'react';
-import { Label, TextInput, Button, Spinner, Alert } from 'flowbite-react';
-import { AiOutlineLock } from 'react-icons/ai';
-import i18next from 'i18next';
 import AppLogo from '@components/logo';
-import Link from 'next/link';
 import useAuth from '@hooks/useAuth';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { Alert, Button, Label, TextInput } from 'flowbite-react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { FormEventHandler, useState } from 'react';
+import { AiOutlineEye, AiOutlineEyeInvisible, AiOutlineLock } from 'react-icons/ai';
 
 const ResetPassword = () => {
   const searchParams = useSearchParams();
@@ -131,18 +129,12 @@ const ResetPassword = () => {
                 )}
                 <Button
                   disabled={loading}
+                  isProcessing={loading}
                   type="submit"
                   size="xs"
                   className="w-full mt-4 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 py-2.5 rounded-lg text-base font-large"
                 >
-                  {loading ? (
-                    <>
-                      <Spinner size="sm" className="mr-3" />
-                      {i18next.t('loading')}
-                    </>
-                  ) : (
-                    'Reset Password'
-                  )}
+                  Reset Password
                 </Button>
               </form>
             )}
