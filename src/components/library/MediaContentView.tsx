@@ -110,6 +110,7 @@ export function MediaContentView({
       const vimeoRegex = /^(https?:\/\/)?(www\.)?(vimeo\.com)\/.+/;
 
       if (youtubeRegex.test(externalUrl)) {
+        // eslint-disable-next-line no-useless-escape
         const videoId = externalUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
         const embedUrl = `https://www.youtube.com/embed/${videoId}`;
         return (

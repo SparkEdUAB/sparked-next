@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { T_RawMediaContentFields } from 'types/media-content';
 
 const isValidImage = (url: string) => {
-  return url && url.match(/\.(jpeg|jpg|gif|png)$/) != null;
+  return url && url.match(/\.(jpeg|jpg|gif|png)$/) !== null;
 };
 
 const RelatedMediaItem = memo(({ item }: { item: T_RawMediaContentFields }) => {

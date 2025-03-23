@@ -51,7 +51,7 @@ const ContentDetailsCardView = ({
   const placeholderImage = `https://fakeimg.pl/600x400?text=${domainName || title}`;
 
   const isValidImage = useCallback((url: string) => {
-    return url && url.match(/\.(jpeg|jpg|gif|png)$/) != null;
+    return url && url.match(/\.(jpeg|jpg|gif|png)$/) !== null;
   }, []);
 
   return (
