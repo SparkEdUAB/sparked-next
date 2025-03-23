@@ -41,7 +41,7 @@ const useAuth = () => {
           return false;
         }
         message.success(getProcessCodeMeaning(responseData.code));
-        // router.replace('/');
+        router.replace('/auth/login');
       } catch (err: any) {
         message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
@@ -144,6 +144,7 @@ const useAuth = () => {
 
   const handleForgotPassword = useCallback(
     async (email: string) => {
+      setLoading(true);
       try {
         const response = await fetch('/api/password/forgotPassword', {
           method: 'POST',
@@ -161,6 +162,8 @@ const useAuth = () => {
       } catch (err: any) {
         message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
+      } finally {
+        setLoading(false);
       }
     },
     [message],
@@ -168,6 +171,7 @@ const useAuth = () => {
 
   const handleResetPassword = useCallback(
     async (token: string, newPassword: string) => {
+      setLoading(true);
       try {
         const response = await fetch('/api/password/resetPassword', {
           method: 'POST',
@@ -187,6 +191,8 @@ const useAuth = () => {
       } catch (err: any) {
         message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
         return false;
+      } finally {
+        setLoading(false);
       }
     },
     [message],
