@@ -6,6 +6,10 @@ import { dbCollections } from '../lib/db/collections';
 import AUTH_PROCESS_CODES from './processCodes';
 import { HttpStatusCode } from 'axios';
 import bcrypt from 'bcryptjs';
+import { Resend } from 'resend';
+import { WelcomeEmail } from 'emails/WelcomeEmail';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function signup_(request: Request) {
   const schema = zfd.formData({
@@ -51,7 +55,6 @@ export default async function signup_(request: Request) {
       });
     }
 
-    // Hash the password before storing it
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await db.collection(dbCollections.users.name).insertOne({
@@ -67,6 +70,13 @@ export default async function signup_(request: Request) {
       created_at: new Date(),
       role: 'student',
       password: hashedPassword,
+    });
+
+    await resend.emails.send({
+      from: 'Sparked Support <support@sparkednext.app>',
+      to: email,
+      subject: 'Welcome to Sparked!',
+      react: WelcomeEmail({ name: `${firstName} ${lastName}` }),
     });
 
     const response = {

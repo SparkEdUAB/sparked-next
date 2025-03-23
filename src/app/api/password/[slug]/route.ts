@@ -2,6 +2,7 @@ import { HttpStatusCode } from 'axios';
 import { Session } from 'next-auth';
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import forgotPassword_ from '..';
+import resetPassword_ from '../reset';
 
 export async function POST(req: Request, { params }: { params: { slug: string } }) {
   const slug = params.slug;
@@ -10,6 +11,7 @@ export async function POST(req: Request, { params }: { params: { slug: string } 
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
     forgotPassword: forgotPassword_,
+    resetPassword: resetPassword_,
   };
 
   if (passwordApiFunctions[slug]) {

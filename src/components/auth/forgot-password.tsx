@@ -11,23 +11,11 @@ import { LuCircleUser } from 'react-icons/lu';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const { loading } = useAuth();
+  const { loading, handleForgotPassword } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch('/api/password/forgotPassword', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
-    });
-
-    const data = await response.json();
-    if (data.isError) {
-      setMessage('Error sending email. Please try again.');
-    } else {
-      setMessage('Email sent! Please check your inbox.');
-    }
+    handleForgotPassword(email)
   };
 
   return (
@@ -83,7 +71,6 @@ const ForgotPassword = () => {
                   Login
                 </Link>
               </p>
-              {message && <p className="text-red-500 text-center">{message}</p>}
             </form>
           </div>
         </div>

@@ -137,21 +137,22 @@ i18next.init({
         sort_by: 'Sort By',
 
         // General process codes
+        // Update these translations to use process_code_ prefix
         process_code_100: 'An unknown error occurred',
         process_code_101: 'The specified API method was not found',
         process_code_102: 'The database connection failed',
-
-        // Auth process codes
         process_code_500: 'User already exists',
         process_code_501: 'An unknown error occurred',
-        process_code_502: 'User not found',
         process_code_503: 'User logged in successfully',
         process_code_504: 'Invalid credentials',
         process_code_505: 'User logged out successfully',
-        process_code_506: 'User already exists',
+        process_code_506: 'Failed to logout user',
         process_code_507: 'User was successfully created',
+        process_code_508: 'Password reset email sent successfully',
+        process_code_509: 'Invalid or expired reset token',
+        process_code_511: 'Failed to send password reset email, please try again',
 
-        // School process codes
+        // Auth process codes
         process_code_800: 'School already exists',
         process_code_801: 'School not found',
         process_code_802: 'School edited successfully',
@@ -265,8 +266,12 @@ i18next.init({
         process_code_8505: 'User role assigned successfully',
 
         // Permissions
-
         process_code_401: 'Permission denied',
+        process_code_510: 'Password reset email sent! Please check your inbox.',
+        process_code_512: 'Your password has been successfully reset! You can now log in with your new password.',
+        process_code_513: 'Invalid or expired reset link. Please request a new one.',
+        process_code_514: 'Failed to reset password. Please try again later.',
+        process_code_502: 'No account found with this email address.',
       },
     },
   },

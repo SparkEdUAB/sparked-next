@@ -2,12 +2,11 @@
 
 import ForgotPassword from '@components/auth/forgot-password';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
-import React from 'react';
 
-const Home: React.FC = () => {
-    useDocumentTitle('Login');
+const ForgotPasswordPage = () => {
+    useDocumentTitle('Forgot Password');
 
     return <ForgotPassword />;
 };
 
-export default Home;
+export default ForgotPasswordPage;
