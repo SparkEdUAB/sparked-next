@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {},
-  swcMinify: false,
   webpack: (config, { isServer }) => {
     // Handle externals for server-side builds
     if (isServer) {
