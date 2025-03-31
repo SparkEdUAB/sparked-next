@@ -145,14 +145,13 @@ export function MediaContentView({
       }
 
       return (
-        <div className="w-full h-[500px] md:h-[600px] lg:h-[700px] rounded-lg overflow-hidden">
+        <div className="w-full h-[80vh] md:h-[80vh] lg:h-[80vh] rounded-lg overflow-hidden">
           <iframe
             src={externalUrl}
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            style={{ width: '100%', height: '100%' }}
+            sandbox="allow-scripts allow-same-origin"
+            style={{ width: '100%', height: '80vh' }}
             title="External Video"
-            allowFullScreen
           ></iframe>
         </div>
       );
