@@ -37,16 +37,10 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   const validateExternalUrl = (url: string) => {
     try {
       const parsedUrl = new URL(url);
-      const trustedDomains = [
-        'youtube.com',
-        'www.youtube.com',
-        'm.youtube.com',
-        'youtu.be',
-        'vimeo.com',
-        'www.vimeo.com',
-        'player.vimeo.com'
-      ];
-      return trustedDomains.includes(parsedUrl.hostname);
+      if (parsedUrl.protocol !== 'https:' || parsedUrl.port) {
+        return false;
+      }
+      return true;
     } catch {
       return false;
     }
@@ -133,14 +127,14 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
               type="url"
               value={externalUrl}
               onChange={(e) => setExternalUrl(e.target.value)}
-              placeholder="https://youtube.com/resource"
+              placeholder="https://youtube.com/resource or link"
               required
               className="rounded-lg"
             />
             {externalUrl && (
               <div className="mt-4 p-4 border rounded-lg bg-gray-50 dark:bg-gray-700">
                 <p className="text-sm text-gray-600 dark:text-gray-300">
-                  External resource link will be saved. Preview may not be available for all URLs.
+                  Kindly note that Preview may not be available for all URLs.
                 </p>
               </div>
             )}
