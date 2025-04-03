@@ -17,12 +17,6 @@ import { RelatedMediaContentList } from './RelatedMediaContentList';
 import { ReactionButtons } from '@components/atom/ReactionButtons';
 import { useMediaInteractions } from '@hooks/useMediaInteractions';
 
-// Lazy load components with loading fallbacks
-const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
-  ssr: false,
-  loading: () => <div className="animate-pulse bg-gray-200 h-[500px] w-full rounded-lg"></div>,
-});
-
 const VideoViewer = dynamic(() => import('next-video/player'), {
   ssr: false,
   loading: () => <div className="animate-pulse bg-gray-200 h-[400px] w-full rounded-lg"></div>,
@@ -173,7 +167,29 @@ export function MediaContentView({
       case 'video':
         return <VideoViewer src={fileUrl} />;
       case 'pdf':
-        return <PdfViewer file={fileUrl} />;
+        return (
+          <div className="w-full h-[80vh] rounded-lg overflow-hidden relative">
+            <iframe
+              src={`${fileUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH`}
+              className="w-full h-full border-0"
+              title={`PDF: ${mediaContent.name}`}
+              loading="lazy"
+              onLoad={(e) => {
+                (e.target as HTMLIFrameElement).classList.add('pdf-loaded');
+              }}
+            />
+            <noscript>
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                <p>
+                  JavaScript is required to view this PDF.
+                  <a href={fileUrl} className="text-blue-500 ml-2" target="_blank" rel="noopener noreferrer">
+                    Download the PDF
+                  </a>
+                </p>
+              </div>
+            </noscript>
+          </div>
+        );
       default:
         return <LibraryErrorMessage>Could not recognize the file type</LibraryErrorMessage>;
     }
