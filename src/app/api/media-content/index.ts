@@ -229,11 +229,12 @@ export async function findMediaContentByName_(request: any) {
     course_id: z.string().optional(),
     unit_id: z.string().optional(),
     topic_id: z.string().optional(),
+    grade_id: z.string().optional(),
   });
   // const formBody = await request.json();
   const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
+  const { name, limit, skip, school_id, program_id, course_id, unit_id, topic_id, grade_id } = schema.parse(params);
 
   const isWithMetaData = params.withMetaData === 'true' ? true : false;
 
@@ -260,6 +261,7 @@ export async function findMediaContentByName_(request: any) {
     if (course_id) query.course_id = new BSON.ObjectId(course_id);
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+    if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     if (isWithMetaData) {

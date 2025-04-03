@@ -48,6 +48,7 @@ export function LibrarySidebar({
 
   const isMediaPage = sliptPathname[2] === 'media';
   const isLibrary = sliptPathname[1] === 'library';
+  const isSearchPage = sliptPathname.includes('search');
 
   useLayoutEffect(() => {
     // if is media Page and SideNav is not collapsed on navigate set to true
@@ -74,11 +75,14 @@ export function LibrarySidebar({
   const filteredTopicId = useSearchParams().get('topic_id');
   const filteredMediaType = useSearchParams().get('mediaType');
 
+  const backToLibrary = isMediaPage || isSearchPage;
+
   return (
     <>
       <div
-        className={`${sidebarIsCollapsed ? '-left-[300px] md:hidden' : 'left-0 md:block'
-          } fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] transition-all duration-300 flex-none md:sticky h-[calc(100vh_-_62px)] overflow-y-clip
+        className={`${
+          sidebarIsCollapsed ? '-left-[300px] md:hidden' : 'left-0 md:block'
+        } fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] transition-all duration-300 flex-none md:sticky h-[calc(100vh_-_62px)] overflow-y-clip
         `}
       >
         <Sidebar
@@ -88,11 +92,11 @@ export function LibrarySidebar({
             <Sidebar.ItemGroup>
               <Sidebar.Item
                 as={Link}
-                href={isMediaPage ? "/library" : "/"}
+                href={backToLibrary ? '/library' : '/'}
                 className={`${styles.item} mb-4`}
                 icon={() => <span className="mr-2">←</span>}
               >
-                {isMediaPage ? "Back to Library" : "Back to Home"}
+                {backToLibrary ? 'Back to Library' : 'Back to Home'}
               </Sidebar.Item>
             </Sidebar.ItemGroup>
             <Sidebar.ItemGroup>
@@ -293,8 +297,9 @@ export function LibrarySidebar({
       </div>
       <div
         onClick={toggleSidebar}
-        className={`fixed cursor-pointer inset-0 z-40 transition-all duration-300 rounded-br-full bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:backdrop-blur-none md:bg-inherit ${sidebarIsCollapsed || !isMobile ? 'w-0 h-0' : 'w-[200vmax] h-[200vmax]'
-          }`}
+        className={`fixed cursor-pointer inset-0 z-40 transition-all duration-300 rounded-br-full bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:backdrop-blur-none md:bg-inherit ${
+          sidebarIsCollapsed || !isMobile ? 'w-0 h-0' : 'w-[200vmax] h-[200vmax]'
+        }`}
       />
     </>
   );
