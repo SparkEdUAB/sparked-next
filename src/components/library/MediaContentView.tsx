@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
 import { ReactNode, memo, useCallback, useMemo, useEffect } from 'react';
@@ -28,14 +28,14 @@ const VideoViewer = dynamic(() => import('next-video/player'), {
   loading: () => <div className="animate-pulse bg-gray-200 h-[400px] w-full rounded-lg"></div>,
 });
 
-const IconWithLabel = memo(({ icon, label, title }: { label?: string; icon: ReactNode; title: string }) => (
+const IconWithLabel = memo(({ icon, label, title }: { label?: string; icon: ReactNode; title: string }) =>
   label ? (
     <div className="flex flex-row items-center gap-2" title={title}>
       {icon}
       {label}
     </div>
-  ) : null
-));
+  ) : null,
+);
 IconWithLabel.displayName = 'IconWithLabel';
 
 const MediaContentMetadata = memo(({ mediaContent }: { mediaContent: T_RawMediaContentFields }) => (
@@ -78,22 +78,16 @@ export function MediaContentView({
 }) {
   const { data: session } = useSession();
   const fileType = useMemo(() => determineFileType(mediaContent?.file_url || ''), [mediaContent?.file_url]);
-  const fileUrl = useMemo(() => mediaContent.file_url ? getFileUrl(mediaContent.file_url) : '', [mediaContent.file_url]);
+  const fileUrl = useMemo(
+    () => (mediaContent.file_url ? getFileUrl(mediaContent.file_url) : ''),
+    [mediaContent.file_url],
+  );
   const externalUrl = mediaContent.external_url;
 
-  const {
-    viewCount,
-    reactionData,
-    isLoadingReactions,
-    recordView,
-    handleReaction,
-    hasRecordedView,
-  } = useMediaInteractions(mediaContent._id);
+  const { viewCount, reactionData, isLoadingReactions, recordView, handleReaction, hasRecordedView } =
+    useMediaInteractions(mediaContent._id);
 
-  const handleReactionCallback = useCallback(
-    (type: any) => handleReaction(type, session),
-    [handleReaction, session]
-  );
+  const handleReactionCallback = useCallback((type: any) => handleReaction(type, session), [handleReaction, session]);
 
   useEffect(() => {
     const timeoutId = setTimeout(recordView, 45000);
@@ -102,7 +96,11 @@ export function MediaContentView({
 
   const renderMediaContent = useMemo(() => {
     if (!fileUrl && !externalUrl) {
-      return <LibraryErrorMessage className="h-fit min-h-0">This file cannot be rendered. Please contact the site administrator with the details.</LibraryErrorMessage>;
+      return (
+        <LibraryErrorMessage className="h-fit min-h-0">
+          This file cannot be rendered. Please contact the site administrator with the details.
+        </LibraryErrorMessage>
+      );
     }
 
     if (externalUrl) {
@@ -111,7 +109,9 @@ export function MediaContentView({
 
       if (youtubeRegex.test(externalUrl)) {
         // eslint-disable-next-line no-useless-escape
-        const videoId = externalUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
+        const videoId = externalUrl.match(
+          /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/,
+        )?.[1];
         const embedUrl = `https://www.youtube.com/embed/${videoId}`;
         return (
           <div className="w-full h-[500px] md:h-[600px] lg:h-[700px] rounded-lg overflow-hidden">
@@ -198,11 +198,7 @@ export function MediaContentView({
               <FaEye className="text-xl" />
               <span>{viewCount} views</span>
             </div>
-            {!session && (
-              <span className="text-sm text-gray-500">
-                Please login to react to this content
-              </span>
-            )}
+            {!session && <span className="text-sm text-gray-500">Please login to react to this content</span>}
           </div>
         </div>
         <div className="flex justify-between items-center">
