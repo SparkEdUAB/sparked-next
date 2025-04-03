@@ -1,5 +1,6 @@
 "use client"
 
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import {
@@ -12,6 +13,7 @@ import {
 const HeroSection = () => {
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const { status } = useSession()
 
   const backgroundImages = [
     '/hero1.jpg',
@@ -28,8 +30,7 @@ const HeroSection = () => {
 
     return () => clearInterval(interval);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [backgroundImages.length]);
 
   return (
     <>
@@ -62,7 +63,7 @@ const HeroSection = () => {
               </h3>
               <Link
                 prefetch
-                href="/library"
+                href={status === "authenticated" ? "/library" : "/auth/login"}
                 className="inline-block text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:ring-sky-300 font-semibold rounded-lg px-5 py-3 me-2 mb-2 dark:bg-sky-600 dark:hover:bg-sky-700 focus:outline-none dark:focus:ring-sky-800"
               >
                 Get Started
