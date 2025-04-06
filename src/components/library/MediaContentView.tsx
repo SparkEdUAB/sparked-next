@@ -174,20 +174,7 @@ export function MediaContentView({
               className="w-full h-full border-0"
               title={`PDF: ${mediaContent.name}`}
               loading="lazy"
-              onLoad={(e) => {
-                (e.target as HTMLIFrameElement).classList.add('pdf-loaded');
-              }}
             />
-            <noscript>
-              <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                <p>
-                  JavaScript is required to view this PDF.
-                  <a href={fileUrl} className="text-blue-500 ml-2" target="_blank" rel="noopener noreferrer">
-                    Download the PDF
-                  </a>
-                </p>
-              </div>
-            </noscript>
           </div>
         );
       default:
