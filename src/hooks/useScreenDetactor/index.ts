@@ -4,7 +4,6 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 
 export const useScreenDetector = () => {
   const [width, setWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
-  const [isDeviceMobile, setIsDeviceMobile] = useState(false);
 
   const handleWindowSizeChange = useCallback(() => {
     setWidth(window.innerWidth);
@@ -12,15 +11,6 @@ export const useScreenDetector = () => {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-
-    const checkMobileDevice = () => {
-      const userAgent = navigator.userAgent || (window as any).opera;
-      const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
-      setIsDeviceMobile(mobileRegex.test(userAgent));
-    };
-
-    checkMobileDevice();
-
     let resizeTimer: NodeJS.Timeout;
     const debouncedResizeHandler = () => {
       clearTimeout(resizeTimer);
@@ -39,15 +29,15 @@ export const useScreenDetector = () => {
     const isMobile = width <= 768;
     const isTablet = width <= 1024;
     const isDesktop = width > 1024;
+    const smallerDevices = width <= 420;
 
     return {
       isMobile,
       isTablet,
       isDesktop,
-      isDeviceMobile,
-      isMobileOrMobileDevice: isMobile || isDeviceMobile,
+      isDeviceMobile: smallerDevices,
     };
-  }, [width, isDeviceMobile]);
+  }, [width]);
 
   return screenInfo;
 };
