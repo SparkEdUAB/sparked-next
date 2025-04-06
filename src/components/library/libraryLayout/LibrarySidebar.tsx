@@ -55,10 +55,6 @@ export function LibrarySidebar({
     if (isLibrary && isMediaPage && !sidebarIsCollapsed) {
       toggleSidebar();
     }
-    // if is Library Page and SideNav is collapsed on navigate set to false
-    if (isLibrary && !isMediaPage && sidebarIsCollapsed) {
-      toggleSidebar();
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLibrary, isMediaPage]);
 
@@ -95,6 +91,7 @@ export function LibrarySidebar({
                 href={backToLibrary ? '/library' : '/'}
                 className={`${styles.item} mb-4`}
                 icon={() => <span className="mr-2">←</span>}
+                onClick={toggleSidebar}
               >
                 {backToLibrary ? 'Back to Library' : 'Back to Home'}
               </Sidebar.Item>
