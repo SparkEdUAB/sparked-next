@@ -16,8 +16,14 @@ import { LibraryErrorMessage } from './LibraryErrorMessage/LibraryErrorMessage';
 import { RelatedMediaContentList } from './RelatedMediaContentList';
 import { ReactionButtons } from '@components/atom/ReactionButtons';
 import { useMediaInteractions } from '@hooks/useMediaInteractions';
+import { useScreenDetector } from '@hooks/useScreenDetactor';
 
 const VideoViewer = dynamic(() => import('next-video/player'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-[400px] w-full rounded-lg"></div>,
+});
+
+const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
   ssr: false,
   loading: () => <div className="animate-pulse bg-gray-200 h-[400px] w-full rounded-lg"></div>,
 });
@@ -71,6 +77,7 @@ export function MediaContentView({
   relatedMediaContent: T_RawMediaContentFields[] | null;
 }) {
   const { data: session } = useSession();
+  const { isDeviceMobile } = useScreenDetector();
   const fileType = useMemo(() => determineFileType(mediaContent?.file_url || ''), [mediaContent?.file_url]);
   const fileUrl = useMemo(
     () => (mediaContent.file_url ? getFileUrl(mediaContent.file_url) : ''),
@@ -169,12 +176,16 @@ export function MediaContentView({
       case 'pdf':
         return (
           <div className="w-full h-[80vh] rounded-lg overflow-hidden relative">
-            <iframe
-              src={`${fileUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH`}
-              className="w-full h-full border-0"
-              title={`PDF: ${mediaContent.name}`}
-              loading="lazy"
-            />
+            {isDeviceMobile ? (
+              <PdfViewer file={fileUrl} />
+            ) : (
+              <iframe
+                src={`${fileUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH`}
+                className="w-full h-full border-0"
+                title={`PDF: ${mediaContent.name}`}
+                loading="lazy"
+              />
+            )}
           </div>
         );
       default:
