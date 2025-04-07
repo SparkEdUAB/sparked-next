@@ -191,7 +191,7 @@ export function MediaContentView({
       default:
         return <LibraryErrorMessage>Could not recognize the file type</LibraryErrorMessage>;
     }
-  }, [fileUrl, fileType, mediaContent.name, externalUrl]);
+  }, [fileUrl, fileType, mediaContent.name, externalUrl, isDeviceMobile]);
 
   return (
     <div className="xl:grid xl:grid-cols-[calc(100%_-_300px)_300px] 2xl:grid-cols-[calc(100%_-_400px)_400px] px-4 md:px-8 w-full">

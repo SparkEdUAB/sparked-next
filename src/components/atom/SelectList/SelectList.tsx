@@ -38,13 +38,11 @@ const SelectList = <T extends ItemType>({
 }: SelectListProps<T>) => {
   const [selected, setSelected] = useState<T | null>(selectedItem);
 
-  // Build the query string for the URL
   const queryString = Object.entries(queryParams)
-    .filter(([_, value]) => value)
+    .filter(([, value]) => value)
     .map(([key, value]) => `${key}=${value}`)
     .join('&');
 
-  // Only fetch if it's grades or if there are valid query parameters
   const shouldFetch = moduleName === 'grades' || Object.values(queryParams).some((value) => !!value);
 
   const fullUrl = queryString ? `${url}?${queryString}` : url;
