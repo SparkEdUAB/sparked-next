@@ -7,7 +7,7 @@ import { HttpStatusCode } from 'axios';
 
 export default async function fetchGrades_(request: any) {
   const schema = zfd.formData({
-    limit: zfd.numeric(),
+    limit: zfd.numeric().default(50),
     skip: zfd.numeric().default(0),
   });
   const params = request.nextUrl.searchParams;
