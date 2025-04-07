@@ -1,42 +1,50 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-
 import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { UNIT_FORM_FIELDS } from './constants';
-
 import useUnit from '@hooks/useUnit';
-
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { T_UnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { API_LINKS } from 'app/links';
-
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
-import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
-// import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
+import SelectList from '@components/atom/SelectList/SelectList';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
-// import { transformRawSubject } from '@hooks/useSubject';
 import { T_NameAndDescription } from 'types';
 import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
+import { T_GradeWithoutMetadata } from '@hooks/useGrade/types';
 
 const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSuccessfullyDone: () => void }) => {
   const { editUnit, deleteUnits } = useUnit();
   const [uploading, setUploading] = useState(false);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const [grade, setGrade] = useState<T_GradeWithoutMetadata | null>(null);
   const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // const { item: subject } = useAdminItemById(
-  //   API_LINKS.FETCH_SUBJECT_BY_ID,
-  //   unit.subjectId as string,
-  //   'subject',
-  //   transformRawSubject,
-  // );
+  // Initialize with existing data
+  useEffect(() => {
+    if (unit && unit.gradeId) {
+      setGrade({ _id: unit.gradeId, name: unit.gradeName || '' } as T_GradeWithoutMetadata);
+    }
+  }, [unit]);
+
+  // Reset subject when grade changes
+  useEffect(() => {
+    if (grade && unit && grade._id === unit.gradeId && unit.subjectId) {
+      setSubject({
+        _id: unit.subjectId,
+        name: unit.subjectName || '',
+        grade_id: unit.gradeId,
+      } as T_SubjectWithoutMetadata);
+    } else {
+      setSubject(null);
+    }
+  }, [grade, unit]);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -83,12 +91,27 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
               defaultValue={unit.description}
             />
 
-            <Autocomplete<T_SubjectWithoutMetadata>
-              url={API_LINKS.FIND_SUBJECT_BY_NAME}
+            <SelectList<T_GradeWithoutMetadata>
+              url={API_LINKS.FETCH_GRADES}
+              handleSelect={setGrade}
+              moduleName="grades"
+              label="Grade"
+              disabled={uploading}
+              selectedItem={grade}
+              placeholder="Select a grade"
+              required
+            />
+
+            <SelectList<T_SubjectWithoutMetadata>
+              url={API_LINKS.FETCH_SUBJECTS_BY_GRADE_ID}
               handleSelect={setSubject}
               moduleName="subjects"
-              defaultValue={unit.subjectName}
-              disabled={uploading}
+              label="Subject"
+              disabled={uploading || !grade}
+              selectedItem={subject}
+              placeholder={grade ? 'Select a subject' : 'Select a grade first'}
+              queryParams={{ gradeId: grade?._id || '' }}
+              required
             />
 
             <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />

@@ -3,7 +3,7 @@
 import { AdminPageTitle } from '@components/layouts';
 import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
-import { FormEventHandler, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { SUBJECT_FORM_FIELDS } from './constants';
 import useSubject from '@hooks/useSubject';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
@@ -11,9 +11,9 @@ import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormE
 import { T_SubjectFields } from '@hooks/useSubject/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
-import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import SelectList from '@components/atom/SelectList/SelectList';
 import { API_LINKS } from 'app/links';
-import { T_GradeFields } from '@hooks/useGrade/types';
+import { T_GradeWithoutMetadata } from '@hooks/useGrade/types';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 import { T_NameAndDescription } from 'types';
 
@@ -26,13 +26,16 @@ const EditSubjectView = ({
 }) => {
   const { editSubject, deleteSubject } = useSubject();
   const [uploading, setUploading] = useState(false);
-  const [gradeId, setGradeId] = useState<string | null>(null);
+  const [grade, setGrade] = useState<T_GradeWithoutMetadata | null>(null);
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  const handleClick = (grade: T_GradeFields) => {
-    setGradeId(grade?._id);
-  };
+  useEffect(() => {
+    // Initialize with existing grade data if available
+    if (subject && subject.gradeId) {
+      setGrade({ _id: subject.gradeId, name: subject.gradeName || '' } as T_GradeWithoutMetadata);
+    }
+  }, [subject]);
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -43,7 +46,7 @@ const EditSubjectView = ({
 
       let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
 
-      await editSubject({ ...subject, ...result, gradeId: gradeId || subject.gradeId }, onSuccessfullyDone);
+      await editSubject({ ...subject, ...result, gradeId: grade?._id || subject.gradeId }, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }
@@ -78,12 +81,15 @@ const EditSubjectView = ({
               defaultValue={subject.description}
             />
 
-            <Autocomplete
-              url={API_LINKS.FIND_GRADE_BY_NAME}
-              handleSelect={handleClick}
+            <SelectList<T_GradeWithoutMetadata>
+              url={API_LINKS.FETCH_GRADES}
+              handleSelect={setGrade}
               moduleName="grades"
-              defaultValue={subject.gradeName}
+              label="Grade"
               disabled={uploading}
+              selectedItem={grade}
+              placeholder="Select a grade"
+              required
             />
 
             <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />
