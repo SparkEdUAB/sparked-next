@@ -191,7 +191,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           />
 
           <SelectList<T_UnitWithoutMetadata>
-            url={API_LINKS.FETCH_UNITS}
+            url={API_LINKS.FETCH_UNITS_BY_SUBJECT_ID}
             handleSelect={setUnit}
             moduleName="units"
             label="Unit"
@@ -202,7 +202,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           />
 
           <SelectList<T_TopicWithoutMetadata>
-            url={API_LINKS.FETCH_TOPICS}
+            url={API_LINKS.FETCH_TOPICS_BY_UNIT_ID}
             handleSelect={setTopic}
             moduleName="topics"
             label="Topic"
