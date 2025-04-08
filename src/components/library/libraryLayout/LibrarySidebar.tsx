@@ -264,7 +264,7 @@ export function LibrarySidebar({
                           })
                         }
                         key={topic._id}
-                        onClick={isMobile && toggleSidebar}
+                        onClick={isMobile ? toggleSidebar : undefined}
                       >
                         {topic.name}
                       </Sidebar.Item>
