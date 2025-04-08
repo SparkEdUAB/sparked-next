@@ -129,7 +129,7 @@ export function LibrarySidebar({
                       as={Link}
                       href={`/library?grade_id=${grade._id}`}
                       key={grade._id}
-                      onClick={isMobile && toggleSidebar}
+                      onClick={isMobile ? toggleSidebar : undefined}
                     >
                       {grade.name}
                     </Sidebar.Item>
