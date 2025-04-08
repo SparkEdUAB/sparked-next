@@ -1,19 +1,19 @@
-import styles from './Layout.module.css';
+import { T_GradeFields } from '@hooks/useGrade/types';
+import { T_UnitFields } from '@hooks/useUnit/types';
 import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
-import { T_UnitFields } from '@hooks/useUnit/types';
-import { T_GradeFields } from '@hooks/useGrade/types';
 import { useSearchParams } from 'next/navigation';
+import styles from './Layout.module.css';
 
-import { useSearchQuery } from '@hooks/useSearchQuery';
-import { T_SubjectFields } from '@hooks/useSubject/types';
-import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
-import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import useNavigation from '@hooks/useNavigation';
 import { useScreenDetector } from '@hooks/useScreenDetactor';
+import { useSearchQuery } from '@hooks/useSearchQuery';
+import { T_SubjectFields } from '@hooks/useSubject/types';
+import { useRouter } from 'next/navigation';
 import { useEffect, useLayoutEffect } from 'react';
 import NETWORK_UTILS from 'utils/network';
+import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
 
 export function LibrarySidebar({
   subjects,
@@ -22,12 +22,10 @@ export function LibrarySidebar({
   grades,
   units,
   topics,
-  mediaTypes,
   isUnitsLoading,
   isSubjectsLoading,
   isTopicsLoading,
   isGradesLoading,
-  isMediaTypesLoading,
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
@@ -35,7 +33,6 @@ export function LibrarySidebar({
   topics: T_TopicFields[];
   grades: T_GradeFields[];
   units: T_UnitFields[];
-  mediaTypes: T_RawMediaTypeFieldes[];
   isUnitsLoading: boolean;
   isSubjectsLoading: boolean;
   isTopicsLoading: boolean;
@@ -50,8 +47,21 @@ export function LibrarySidebar({
   const isLibrary = sliptPathname[1] === 'library';
   const isSearchPage = sliptPathname.includes('search');
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const isExternalContent = searchParams.get('externalContent') === 'true';
+
+  const handleExternalContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      router.push(`/library?${createQueryString('externalContent', 'true')}`);
+    } else {
+      const params = new URLSearchParams(window.location.search);
+      params.delete('externalContent');
+      router.push(`/library?${params.toString()}`);
+    }
+  };
+
   useLayoutEffect(() => {
-    // if is media Page and SideNav is not collapsed on navigate set to true
     if (isLibrary && isMediaPage && !sidebarIsCollapsed) {
       toggleSidebar();
     }
@@ -69,7 +79,6 @@ export function LibrarySidebar({
   const filteredUnitId = useSearchParams().get('unit_id');
   const filteredSubjectId = useSearchParams().get('subject_id');
   const filteredTopicId = useSearchParams().get('topic_id');
-  const filteredMediaType = useSearchParams().get('mediaType');
 
   const backToLibrary = isMediaPage || isSearchPage;
 
@@ -259,35 +268,22 @@ export function LibrarySidebar({
               </Sidebar.ItemGroup>
             )}
 
-            {/* Media Types */}
             <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Media Types">
-                {!isMediaTypesLoading && (
-                  <ShowAllOrNoItems
-                    ItemName={'Media'}
-                    items={mediaTypes}
-                    filterItemId={filteredMediaType}
-                    url={`/library?${createQueryString('mediaType', '')}`}
-                  />
-                )}
-
-                {isMediaTypesLoading ? (
-                  <SidebarItemsSkeleton />
-                ) : (
-                  !isMediaTypesLoading &&
-                  mediaTypes.map((mediaType) => (
-                    <Sidebar.Item
-                      key={mediaType._id}
-                      active={filteredMediaType === mediaType.name}
-                      className={styles.item}
-                      as={Link}
-                      href={`/library?${createQueryString('mediaType', mediaType.name)}`}
-                    >
-                      {mediaType.name}
-                    </Sidebar.Item>
-                  ))
-                )}
-              </Sidebar.Collapse>
+              <div className="flex items-center px-3 py-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                <input
+                  id="external-content-checkbox"
+                  type="checkbox"
+                  checked={isExternalContent}
+                  className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={handleExternalContentChange}
+                />
+                <label
+                  htmlFor="external-content-checkbox"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer"
+                >
+                  Show External Content
+                </label>
+              </div>
             </Sidebar.ItemGroup>
           </Sidebar.Items>
         </Sidebar>
