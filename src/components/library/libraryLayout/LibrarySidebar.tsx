@@ -37,7 +37,6 @@ export function LibrarySidebar({
   isSubjectsLoading: boolean;
   isTopicsLoading: boolean;
   isGradesLoading: boolean;
-  isMediaTypesLoading: boolean;
 }) {
   const { isMobile } = useScreenDetector();
   const { pathname } = useNavigation();
@@ -58,6 +57,10 @@ export function LibrarySidebar({
       const params = new URLSearchParams(window.location.search);
       params.delete('externalContent');
       router.push(`/library?${params.toString()}`);
+    }
+    // we auto close the sidebar if we are on mobile to give more space
+    if (isMobile) {
+      toggleSidebar();
     }
   };
 
@@ -100,7 +103,6 @@ export function LibrarySidebar({
                 href={backToLibrary ? '/library' : '/'}
                 className={`${styles.item} mb-4`}
                 icon={() => <span className="mr-2">←</span>}
-                onClick={toggleSidebar}
               >
                 {backToLibrary ? 'Back to Library' : 'Back to Home'}
               </Sidebar.Item>
@@ -127,6 +129,7 @@ export function LibrarySidebar({
                       as={Link}
                       href={`/library?grade_id=${grade._id}`}
                       key={grade._id}
+                      onClick={isMobile && toggleSidebar}
                     >
                       {grade.name}
                     </Sidebar.Item>
@@ -165,6 +168,7 @@ export function LibrarySidebar({
                           })
                         }
                         key={subject._id}
+                        onClick={isMobile && toggleSidebar}
                       >
                         {subject.name}
                       </Sidebar.Item>
@@ -211,6 +215,7 @@ export function LibrarySidebar({
                             unit_id: unit._id,
                           })
                         }
+                        onClick={isMobile && toggleSidebar}
                       >
                         {unit.name}
                       </Sidebar.Item>
@@ -259,6 +264,7 @@ export function LibrarySidebar({
                           })
                         }
                         key={topic._id}
+                        onClick={isMobile && toggleSidebar}
                       >
                         {topic.name}
                       </Sidebar.Item>

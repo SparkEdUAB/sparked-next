@@ -7,6 +7,10 @@ import { SUBJECT_FIELD_NAMES_CONFIG } from './constants';
 import { p_fetchSubjectWithGrade, p_findSubjectByName } from './pipelines';
 import { BSON } from 'mongodb';
 import { HttpStatusCode } from 'axios';
+import { NextResponse } from 'next/server';
+
+const cache: Record<string, { data: any; timestamp: number }> = {};
+const CACHE_TTL = 300000;
 
 export default async function fetchSubjects_(request: any) {
   const schema = zfd.formData({
@@ -15,6 +19,17 @@ export default async function fetchSubjects_(request: any) {
     withMetaData: zfd.text().default('true').optional(),
   });
   const params = request.nextUrl.searchParams;
+  const queryKey = params.toString();
+
+  if (cache[queryKey] && Date.now() - cache[queryKey].timestamp < CACHE_TTL) {
+    return new NextResponse(JSON.stringify({ isError: false, subjects: cache[queryKey].data }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+      },
+    });
+  }
 
   const { limit, skip, withMetaData } = schema.parse(params);
   const isWithMetaData = withMetaData === 'true';
@@ -56,13 +71,20 @@ export default async function fetchSubjects_(request: any) {
         .toArray();
     }
 
+    // Store in cache
+    cache[queryKey] = { data: subjects, timestamp: Date.now() };
+
     const response = {
       isError: false,
       subjects,
     };
 
-    return new Response(JSON.stringify(response), {
-      status: HttpStatusCode.Ok,
+    return new NextResponse(JSON.stringify(response), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+      },
     });
   } catch {
     const resp = {

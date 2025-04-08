@@ -16,24 +16,20 @@ export default function LibraryLayout({
   topics,
   grades,
   units,
-  mediaTypes,
   isUnitsLoading,
   isSubjectsLoading,
   isTopicsLoading,
   isGradesLoading,
-  isMediaTypesLoading,
 }: {
   children: ReactNode;
   subjects: T_SubjectFields[];
   topics: T_TopicFields[];
   grades: T_GradeFields[];
   units: T_UnitFields[];
-  mediaTypes: T_RawMediaTypeFieldes[];
   isUnitsLoading: boolean;
   isSubjectsLoading: boolean;
   isTopicsLoading: boolean;
   isGradesLoading: boolean;
-  isMediaTypesLoading: boolean;
 }) {
   const [sidebarIsCollapsed, setSidebarIsCollapsed] = useState(true);
   const toggleSidebar = useCallback(() => setSidebarIsCollapsed((value) => !value), [setSidebarIsCollapsed]);
@@ -49,12 +45,10 @@ export default function LibraryLayout({
           topics={topics}
           grades={grades}
           units={units}
-          mediaTypes={mediaTypes}
           isUnitsLoading={isUnitsLoading}
           isSubjectsLoading={isSubjectsLoading}
           isTopicsLoading={isTopicsLoading}
           isGradesLoading={isGradesLoading}
-          isMediaTypesLoading={isMediaTypesLoading}
         />
         <div className="max-h-full overflow-y-hidden w-screen ">{children}</div>
       </div>

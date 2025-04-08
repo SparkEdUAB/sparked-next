@@ -15,18 +15,14 @@ export default function LibraryMediaContentList({
 }) {
   const searchParams = useSearchParams();
   const externalContent = searchParams.get('externalContent');
-  
+
   let filters = useSearchFilters();
-  
-  // Make sure we're passing the externalContent parameter correctly
+
   if (externalContent === 'true') {
     filters = {
       ...filters,
-      externalUrl: 'true'
+      externalUrl: 'true',
     };
-    
-    // Log to verify the filter is being set correctly
-    console.log('External content filter applied:', filters);
   }
 
   let { error, hasMore, loadMore, mediaContent, resetData } = useLibraryInfiniteScroll(
@@ -34,7 +30,6 @@ export default function LibraryMediaContentList({
     async (offset) => await fetchMedia(offset, filters),
   );
 
-  // Reset data when externalContent changes
   useEffect(() => {
     resetData(initialMediaContent);
   }, [externalContent, initialMediaContent, resetData]);
