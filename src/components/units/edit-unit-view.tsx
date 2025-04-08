@@ -26,19 +26,20 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
   const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // Initialize with existing data
   useEffect(() => {
     if (unit && unit.gradeId) {
-      setGrade({ _id: unit.gradeId, name: unit.gradeName || '' } as T_GradeWithoutMetadata);
+      setGrade({
+        _id: unit.gradeId,
+        name: unit.gradeName || unit.gradeName || '',
+      } as T_GradeWithoutMetadata);
     }
   }, [unit]);
 
-  // Reset subject when grade changes
   useEffect(() => {
     if (grade && unit && grade._id === unit.gradeId && unit.subjectId) {
       setSubject({
         _id: unit.subjectId,
-        name: unit.subjectName || '',
+        name: unit.subjectName || unit.subjectName || '',
         grade_id: unit.gradeId,
       } as T_SubjectWithoutMetadata);
     } else {
@@ -53,10 +54,15 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
       e.preventDefault();
       const keys = [UNIT_FORM_FIELDS.name.key, UNIT_FORM_FIELDS.description.key];
       let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
-      await editUnit(
-        { ...unit, ...result, subjectId: subject?._id || unit.subjectId, gradeId: subject?.grade_id || unit.gradeId },
-        onSuccessfullyDone,
-      );
+
+      const updatedUnit = {
+        ...unit,
+        ...result,
+        gradeId: grade?._id,
+        subjectId: subject?._id,
+      };
+
+      await editUnit(updatedUnit, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }

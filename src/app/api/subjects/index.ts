@@ -4,7 +4,7 @@ import { getDbFieldNamesConfigStatus } from '../config';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { SUBJECT_FIELD_NAMES_CONFIG } from './constants';
-import { p_fetchSubjectWithGrade } from './pipelines';
+import { p_fetchSubjectWithGrade, p_findSubjectByName } from './pipelines';
 import { BSON } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 
@@ -98,16 +98,10 @@ export async function findSubjectByName_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const regexPattern = new RegExp(name, 'i');
 
     const subjects = await db
       .collection(dbCollections.subjects.name)
-      .find(
-        {
-          name: { $regex: regexPattern },
-        },
-        { skip, limit },
-      )
+      .aggregate(p_findSubjectByName({ name, limit, skip }))
       .toArray();
 
     const response = {

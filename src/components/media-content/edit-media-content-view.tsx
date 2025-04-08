@@ -45,14 +45,12 @@ const EditMediaContentView = ({
 
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // Initialize with existing data
   useEffect(() => {
     if (mediaContent && mediaContent.gradeId) {
       setGrade({ _id: mediaContent.gradeId, name: mediaContent.gradeName || '' } as T_GradeWithoutMetadata);
     }
   }, [mediaContent]);
 
-  // Set subject when grade is selected or initialized
   useEffect(() => {
     if (grade && mediaContent && grade._id === mediaContent.gradeId && mediaContent.subjectId) {
       setSubject({
@@ -67,7 +65,6 @@ const EditMediaContentView = ({
     }
   }, [grade, mediaContent]);
 
-  // Set unit when subject is selected or initialized
   useEffect(() => {
     if (subject && mediaContent && subject._id === mediaContent.subjectId && mediaContent.unitId) {
       setUnit({
@@ -78,11 +75,21 @@ const EditMediaContentView = ({
       } as T_UnitWithoutMetadata);
     } else {
       setUnit(null);
-      setTopic(null);
+      // When unit is null but subject exists, try to set topic if mediaContent has topicId
+      if (subject && mediaContent && mediaContent.topicId) {
+        setTopic({
+          _id: mediaContent.topicId,
+          name: mediaContent.topicName || '',
+          unit_id: null,
+          subject_id: mediaContent.subjectId,
+          grade_id: mediaContent.gradeId,
+        } as unknown as T_TopicWithoutMetadata);
+      } else {
+        setTopic(null);
+      }
     }
   }, [subject, mediaContent]);
 
-  // Set topic when unit is selected or initialized
   useEffect(() => {
     if (unit && mediaContent && unit._id === mediaContent.unitId && mediaContent.topicId) {
       setTopic({
@@ -115,7 +122,8 @@ const EditMediaContentView = ({
           ...mediaContent,
           ...result,
           topicId: topic?._id || mediaContent.topicId,
-          unitId: topic?.unit_id || unit?._id || mediaContent.unitId,
+          // @ts-expect-error
+          unitId: topic?.unit_id || unit?._id || mediaContent.unitId || null, // Make unitId explicitly null if not selected
           subjectId: topic?.subject_id || unit?.subject_id || subject?._id || mediaContent.subjectId,
           gradeId: topic?.grade_id || unit?.grade_id || subject?.grade_id || grade?._id || mediaContent.gradeId,
         },
@@ -192,23 +200,22 @@ const EditMediaContentView = ({
             url={API_LINKS.FETCH_UNITS_BY_SUBJECT_ID}
             handleSelect={setUnit}
             moduleName="units"
-            label="Unit"
+            label="Unit (Optional)"
             disabled={uploading || !subject}
             selectedItem={unit}
-            placeholder={subject ? 'Select a unit' : 'Select a subject first'}
+            placeholder={subject ? 'Select a unit (optional)' : 'Select a subject first'}
             queryParams={{ subjectId: subject?._id || '' }}
-            required
           />
 
           <SelectList<T_TopicWithoutMetadata>
-            url={API_LINKS.FETCH_TOPICS_BY_UNIT_ID}
+            url={unit ? API_LINKS.FETCH_TOPICS_BY_UNIT_ID : API_LINKS.FETCH_TOPICS_BY_SUBJECT_ID}
             handleSelect={setTopic}
             moduleName="topics"
             label="Topic"
-            disabled={uploading || !unit}
+            disabled={uploading || !subject}
             selectedItem={topic}
-            placeholder={unit ? 'Select a topic' : 'Select a unit first'}
-            queryParams={{ unitId: unit?._id || '' }}
+            placeholder={subject ? 'Select a topic' : 'Select a subject first'}
+            queryParams={unit ? { unitId: unit?._id || '' } : { subjectId: subject?._id || '' }}
             required
           />
 

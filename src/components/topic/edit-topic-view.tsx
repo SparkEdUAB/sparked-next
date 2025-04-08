@@ -71,16 +71,17 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
       const keys = [TOPIC_FORM_FIELDS.name.key, TOPIC_FORM_FIELDS.description.key];
 
       let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
-      await editTopic(
-        {
-          ...topic,
-          ...result,
-          unitId: unit?._id || topic.unitId,
-          subjectId: unit?.subject_id || topic.subjectId,
-          gradeId: unit?.grade_id || topic.gradeId,
-        },
-        onSuccessfullyDone,
-      );
+
+      const updatedTopic = {
+        ...topic,
+        ...result,
+        gradeId: grade?._id,
+        subjectId: subject?._id,
+        unitId: unit?._id || null,
+      };
+
+      // @ts-expect-error
+      await editTopic(updatedTopic, onSuccessfullyDone);
     } finally {
       setUploading(false);
     }
@@ -141,12 +142,11 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
             url={API_LINKS.FETCH_UNITS_BY_SUBJECT_ID}
             handleSelect={setUnit}
             moduleName="units"
-            label="Unit"
+            label="Unit (Optional)"
             disabled={uploading || !subject}
             selectedItem={unit}
-            placeholder={subject ? 'Select a unit' : 'Select a subject first'}
+            placeholder={subject ? 'Select a unit (optional)' : 'Select a subject first'}
             queryParams={{ subjectId: subject?._id || '' }}
-            required
           />
 
           <UpdateButtons uploading={uploading} toggleDeletionWarning={toggleDeletionWarning} />

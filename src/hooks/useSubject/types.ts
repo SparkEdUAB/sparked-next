@@ -19,6 +19,8 @@ export type T_RawSubjectFields = {
   description: string;
   created_by: string;
   created_at: string;
+  grade_id: string;
+  grade_name: string;
   user?: {
     name: string;
     email: string;
