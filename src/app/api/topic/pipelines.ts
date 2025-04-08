@@ -1,5 +1,6 @@
 import { T_RECORD } from 'types';
 import { dbCollections } from '../lib/db/collections';
+import { BSON } from 'mongodb';
 
 export const p_fetchTopicsWithMetaData = ({
   query = {},
@@ -15,7 +16,7 @@ export const p_fetchTopicsWithMetaData = ({
   {
     $match: query,
   },
-
+  // Join with users collection for creator info
   {
     $lookup: {
       from: dbCollections.users.name,
@@ -25,50 +26,42 @@ export const p_fetchTopicsWithMetaData = ({
     },
   },
   {
-    $unwind: '$user',
+    $unwind: {
+      path: '$user',
+      preserveNullAndEmptyArrays: true,
+    },
   },
-  // {
-  //   $lookup: {
-  //     from: dbCollections.schools.name,
-  //     localField: 'school_id',
-  //     foreignField: '_id',
-  //     as: 'school',
-  //   },
-  // },
-  // {
-  //   $unwind: {
-  //     path: '$school',
-  //     preserveNullAndEmptyArrays: true,
-  //   },
-  // },
-  // {
-  //   $lookup: {
-  //     from: dbCollections.programs.name,
-  //     localField: 'program_id',
-  //     foreignField: '_id',
-  //     as: 'program',
-  //   },
-  // },
-  // {
-  //   $unwind: {
-  //     path: '$program',
-  //     preserveNullAndEmptyArrays: true,
-  //   },
-  // },
-  // {
-  //   $lookup: {
-  //     from: dbCollections.courses.name,
-  //     localField: 'course_id',
-  //     foreignField: '_id',
-  //     as: 'course',
-  //   },
-  // },
-  // {
-  //   $unwind: {
-  //     path: '$course',
-  //     preserveNullAndEmptyArrays: true,
-  //   },
-  // },
+  // Join with subjects collection
+  {
+    $lookup: {
+      from: dbCollections.subjects.name,
+      localField: 'subject_id',
+      foreignField: '_id',
+      as: 'subject',
+    },
+  },
+  {
+    $unwind: {
+      path: '$subject',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  // Join with units collection (optional)
+  {
+    $lookup: {
+      from: dbCollections.units.name,
+      localField: 'unit_id',
+      foreignField: '_id',
+      as: 'unit',
+    },
+  },
+  {
+    $unwind: {
+      path: '$unit',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  // Join with grades collection (if needed)
   {
     $lookup: {
       from: dbCollections.grades.name,
@@ -84,6 +77,54 @@ export const p_fetchTopicsWithMetaData = ({
     },
   },
   {
+    $skip: skip,
+  },
+  {
+    $limit: limit,
+  },
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      description: 1,
+      created_at: 1,
+      updated_at: 1,
+      subject_id: 1,
+      unit_id: 1,
+      grade_id: 1,
+      'subject.name': 1,
+      'subject._id': 1,
+      'unit.name': 1,
+      'unit._id': 1,
+      'grade.name': 1,
+      'grade._id': 1,
+      grade_name: '$grade.name',
+      subject_name: '$subject.name',
+      unit_name: '$unit.name',
+      'user.name': 1,
+      'user._id': 1,
+      ...project,
+    },
+  },
+];
+
+// Pipeline for fetching topics by unit ID
+export const p_fetchTopicsByUnitId = ({
+  unitId,
+  limit = 100,
+  skip = 0,
+}: {
+  unitId: string;
+  limit?: number;
+  skip?: number;
+}) => [
+  {
+    $match: {
+      unit_id: new BSON.ObjectId(unitId),
+    },
+  },
+  // Join with subjects collection
+  {
     $lookup: {
       from: dbCollections.subjects.name,
       localField: 'subject_id',
@@ -97,6 +138,7 @@ export const p_fetchTopicsWithMetaData = ({
       preserveNullAndEmptyArrays: true,
     },
   },
+  // Join with units collection
   {
     $lookup: {
       from: dbCollections.units.name,
@@ -111,26 +153,19 @@ export const p_fetchTopicsWithMetaData = ({
       preserveNullAndEmptyArrays: true,
     },
   },
-
+  // Join with grades collection
   {
-    $project: {
-      updated_at: 1,
-      name: 1,
-      description: 1,
-      created_at: 1,
-      _id: 1,
-      'user._id': 1,
-      'user.name': 1,
-      'user.email': 1,
-      // 'course._id': 1,
-      // 'course.name': 1,
-      'unit.name': 1,
-      'unit._id': 1,
-      'grade.name': 1,
-      'grade._id': 1,
-      'subject.name': 1,
-      'subject._id': 1,
-      ...project,
+    $lookup: {
+      from: dbCollections.grades.name,
+      localField: 'grade_id',
+      foreignField: '_id',
+      as: 'grade',
+    },
+  },
+  {
+    $unwind: {
+      path: '$grade',
+      preserveNullAndEmptyArrays: true,
     },
   },
   {
@@ -138,5 +173,111 @@ export const p_fetchTopicsWithMetaData = ({
   },
   {
     $limit: limit,
+  },
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      description: 1,
+      subject_id: 1,
+      unit_id: 1,
+      grade_id: 1,
+      'subject.name': 1,
+      'subject._id': 1,
+      'unit.name': 1,
+      'unit._id': 1,
+      'grade.name': 1,
+      'grade._id': 1,
+      grade_name: '$grade.name',
+      subject_name: '$subject.name',
+      unit_name: '$unit.name',
+    },
+  },
+];
+
+// Pipeline for fetching topics by subject ID
+export const p_fetchTopicsBySubjectId = ({
+  subjectId,
+  limit = 100,
+  skip = 0,
+}: {
+  subjectId: string;
+  limit?: number;
+  skip?: number;
+}) => [
+  {
+    $match: {
+      subject_id: new BSON.ObjectId(subjectId),
+    },
+  },
+  // Join with subjects collection
+  {
+    $lookup: {
+      from: dbCollections.subjects.name,
+      localField: 'subject_id',
+      foreignField: '_id',
+      as: 'subject',
+    },
+  },
+  {
+    $unwind: {
+      path: '$subject',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  // Join with units collection (optional)
+  {
+    $lookup: {
+      from: dbCollections.units.name,
+      localField: 'unit_id',
+      foreignField: '_id',
+      as: 'unit',
+    },
+  },
+  {
+    $unwind: {
+      path: '$unit',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  // Join with grades collection
+  {
+    $lookup: {
+      from: dbCollections.grades.name,
+      localField: 'grade_id',
+      foreignField: '_id',
+      as: 'grade',
+    },
+  },
+  {
+    $unwind: {
+      path: '$grade',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  {
+    $skip: skip,
+  },
+  {
+    $limit: limit,
+  },
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      description: 1,
+      subject_id: 1,
+      unit_id: 1,
+      grade_id: 1,
+      'subject.name': 1,
+      'subject._id': 1,
+      'unit.name': 1,
+      'unit._id': 1,
+      'grade.name': 1,
+      'grade._id': 1,
+      grade_name: '$grade.name',
+      subject_name: '$subject.name',
+      unit_name: '$unit.name',
+    },
   },
 ];

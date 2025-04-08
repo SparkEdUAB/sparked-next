@@ -347,29 +347,29 @@ const useUnit = () => {
   };
 };
 
-export function transformRawUnit(i: T_RawUnitFields, index: number): T_UnitFields {
+export function transformRawUnit(unit: T_RawUnitFields, index: number): T_UnitFields {
   return {
     index: index + 1,
-    key: i._id,
-    _id: i._id,
-    name: i.name,
-    description: i.description,
-    schoolId: i.school?._id,
-    programId: i.program?._id,
-    courseId: i.course?._id,
-    subjectId: i.course?._id,
-    gradeId: i.course?._id,
-    schoolName: i.school?.name,
-    programName: i.program?.name,
-    courseName: i.course?.name,
-    subjectName: i.subject?.name,
-    gradeName: i.subject?.name,
-    created_by: i.user?.email,
-    created_at: new Date(i.created_at).toDateString(),
-    school: i.school,
-    course: i.course,
-    program: i.program,
-    user: i.user,
+    key: unit._id,
+    _id: unit._id,
+    name: unit.name,
+    description: unit.description,
+    schoolId: unit.school?._id,
+    programId: unit.program?._id,
+    courseId: unit.course?._id,
+    schoolName: unit.school?.name,
+    programName: unit.program?.name,
+    courseName: unit.course?.name,
+    subjectId: unit.subject_id,
+    gradeId: unit.grade_id,
+    subjectName: unit.subject_name,
+    gradeName: unit.grade_name,
+    created_by: unit.user?.email,
+    created_at: new Date(unit.created_at).toDateString(),
+    school: unit.school,
+    course: unit.course,
+    program: unit.program,
+    user: unit.user,
   };
 }
 

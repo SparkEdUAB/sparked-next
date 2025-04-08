@@ -7,7 +7,7 @@ import { T_ColumnData, T_ItemTypeBase } from './types';
 import { DeletionWarningModal } from './DeletionWarningModal';
 import { AdminTableButtonGroup } from './AdminTableButtonGroup';
 import useConfig from '@hooks/use-config';
-import { HiMagnifyingGlass } from 'react-icons/hi2';
+import { HiMagnifyingGlass, HiXMark } from 'react-icons/hi2';
 import i18next from 'i18next';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
@@ -44,6 +44,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
   additionalButtons?: ReactNode[] | ReactNode;
 }) {
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
   const { configs, getDisabledConfigItems } = useConfig();
@@ -52,22 +53,58 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
 
   const filteredColumns = columns.filter((i) => disabledConfigItems.indexOf(i.key) === -1);
 
+  const handleSearch = () => {
+    if (onSearchQueryChange) {
+      onSearchQueryChange(searchQuery);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    if (onSearchQueryChange) {
+      onSearchQueryChange('');
+    }
+  };
+
   return (
     <>
       {onSearchQueryChange && (
-        <TextInput
-          icon={HiMagnifyingGlass}
-          className="table-search-box max-w-4xl"
-          placeholder={i18next.t('search_items')}
-          required
-          type="text"
-          onKeyDown={(e) => {
-            e.keyCode === 13 || (e.target as HTMLInputElement).value.trim() === ''
-              ? onSearchQueryChange((e.target as HTMLInputElement).value)
-              : null;
-          }}
-        />
+        <div className="relative max-w-4xl mb-4">
+          <TextInput
+            icon={HiMagnifyingGlass}
+            className="table-search-box"
+            placeholder={i18next.t('search_items')}
+            required
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleSearch();
+              }
+            }}
+          />
+          <div className="absolute right-0 top-0 h-full flex items-center pr-2 gap-1">
+            {searchQuery && (
+              <button
+                onClick={clearSearch}
+                className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                aria-label="Clear search"
+              >
+                <HiXMark className="h-5 w-5 text-gray-500" />
+              </button>
+            )}
+            <button
+              onClick={handleSearch}
+              className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Search"
+            >
+              <HiMagnifyingGlass className="h-5 w-5 text-gray-500" />
+            </button>
+          </div>
+        </div>
       )}
+      
       <AdminTableButtonGroup
         createNew={createNew}
         rowSelection={rowSelection}

@@ -11,16 +11,15 @@ export default async function createUnit_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
+    subjectId: zfd.text(), // Subject is required
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
-    subjectId: zfd.text().optional(),
-    topicId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, subjectId, topicId, gradeId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, subjectId, gradeId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -51,6 +50,7 @@ export default async function createUnit_(request: Request, session?: Session) {
       });
     }
 
+    // Check if school exists if schoolId is provided
     const school = schoolId
       ? await db.collection(dbCollections.schools.name).findOne(
           {
@@ -71,6 +71,7 @@ export default async function createUnit_(request: Request, session?: Session) {
       });
     }
 
+    // Check if program exists if programId is provided
     const program = programId
       ? await db.collection(dbCollections.programs.name).findOne(
           {
@@ -91,6 +92,7 @@ export default async function createUnit_(request: Request, session?: Session) {
       });
     }
 
+    // Check if course exists if courseId is provided
     const course = courseId
       ? await db.collection(dbCollections.courses.name).findOne(
           {
@@ -111,26 +113,7 @@ export default async function createUnit_(request: Request, session?: Session) {
       });
     }
 
-    const topic = topicId
-      ? await db.collection(dbCollections.topics.name).findOne(
-          {
-            _id: new BSON.ObjectId(topicId),
-          },
-          { projection: { _id: 1 } },
-        )
-      : null;
-
-    if (!topic && topicId) {
-      const response = {
-        isError: true,
-        code: UNIT_PROCESS_CODES.TOPIC_NOT_FOUND,
-      };
-
-      return new Response(JSON.stringify(response), {
-        status: HttpStatusCode.NotFound,
-      });
-    }
-
+    // Check if grade exists if gradeId is provided
     const grade = gradeId
       ? await db.collection(dbCollections.grades.name).findOne(
           {
@@ -151,20 +134,44 @@ export default async function createUnit_(request: Request, session?: Session) {
       });
     }
 
-    await db.collection(dbCollections.units.name).insertOne({
+    // Subject is required
+    const subject = await db.collection(dbCollections.subjects.name).findOne(
+      {
+        _id: new BSON.ObjectId(subjectId),
+      },
+      { projection: { _id: 1 } },
+    );
+
+    if (!subject) {
+      const response = {
+        isError: true,
+        code: UNIT_PROCESS_CODES.SUBJECT_NOT_FOUND,
+      };
+
+      return new Response(JSON.stringify(response), {
+        status: HttpStatusCode.NotFound,
+      });
+    }
+
+    // Create unit document with required and optional fields
+    const unitDocument = {
       name,
       description,
       created_at: new Date(),
       updated_at: new Date(),
-      //@ts-ignore
+      // @ts-ignore
       created_by_id: new BSON.ObjectId(session?.user?.id),
-      school_id: new BSON.ObjectId(schoolId),
-      program_id: new BSON.ObjectId(programId),
-      course_id: new BSON.ObjectId(courseId),
       subject_id: new BSON.ObjectId(subjectId),
-      topic_id: new BSON.ObjectId(topicId),
-      grade_id: new BSON.ObjectId(gradeId),
-    });
+    };
+
+    // Add optional fields if they exist
+    // if (schoolId) unitDocument.school_id = new BSON.ObjectId(schoolId);
+    // if (programId) unitDocument.program_id = new BSON.ObjectId(programId);
+    // if (courseId) unitDocument.course_id = new BSON.ObjectId(courseId);
+    // @ts-ignore
+    if (gradeId) unitDocument.grade_id = new BSON.ObjectId(gradeId);
+
+    await db.collection(dbCollections.units.name).insertOne(unitDocument);
 
     const response = {
       isError: false,
