@@ -53,3 +53,8 @@ body {
 .Example.fixed .pdfviewer__container {
   padding: 0 24px;
 }
+
+.pdfviewer__container__document {
+  overflow-y: auto;
+  max-height: 100vh;
+}

@@ -35,9 +35,54 @@ export const p_fetchSubjectWithGrade = ({
       _id: 1,
       name: 1,
       description: 1,
-      'grade.name': 1,
-      'grade._id': 1,
+      grade_id: 1,
+      grade_name: '$grade.name',
       ...project,
     },
+  },
+];
+
+export const p_findSubjectByName = ({
+  name,
+  limit = 100,
+  skip = 0,
+}: {
+  name: string;
+  limit?: number;
+  skip?: number;
+}) => [
+  {
+    $match: {
+      name: { $regex: new RegExp(name, 'i') },
+    },
+  },
+  {
+    $lookup: {
+      from: dbCollections.grades.name,
+      localField: 'grade_id',
+      foreignField: '_id',
+      as: 'grade',
+    },
+  },
+  {
+    $unwind: {
+      path: '$grade',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  {
+    $project: {
+      _id: 1,
+      name: 1,
+      description: 1,
+      grade_id: 1,
+      grade_name: '$grade.name',
+    },
+  },
+  {
+    $skip: skip,
+  },
+  {
+    $limit: limit,
   },
 ];

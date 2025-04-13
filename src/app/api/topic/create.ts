@@ -11,11 +11,11 @@ export default async function createTopic_(request: Request, session?: Session) 
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
-    unitId: zfd.text(),
+    unitId: zfd.text().optional(), // Make unitId optional
+    subjectId: zfd.text(), // Subject is required
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
-    subjectId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
   });
   const formBody = await request.json();
@@ -51,6 +51,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       });
     }
 
+    // Check if school exists if schoolId is provided
     const school = schoolId
       ? await db.collection(dbCollections.schools.name).findOne(
           {
@@ -71,6 +72,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       });
     }
 
+    // Check if program exists if programId is provided
     const program = programId
       ? await db.collection(dbCollections.programs.name).findOne(
           {
@@ -91,6 +93,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       });
     }
 
+    // Check if course exists if courseId is provided
     const course = courseId
       ? await db.collection(dbCollections.courses.name).findOne(
           {
@@ -111,6 +114,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       });
     }
 
+    // Check if grade exists if gradeId is provided
     const grade = gradeId
       ? await db.collection(dbCollections.grades.name).findOne(
           {
@@ -131,16 +135,15 @@ export default async function createTopic_(request: Request, session?: Session) 
       });
     }
 
-    const subject = subjectId
-      ? await db.collection(dbCollections.subjects.name).findOne(
-          {
-            _id: new BSON.ObjectId(subjectId),
-          },
-          { projection: { _id: 1 } },
-        )
-      : null;
+    // Subject is required
+    const subject = await db.collection(dbCollections.subjects.name).findOne(
+      {
+        _id: new BSON.ObjectId(subjectId),
+      },
+      { projection: { _id: 1 } },
+    );
 
-    if (!subject && subjectId) {
+    if (!subject) {
       const response = {
         isError: true,
         code: TOPIC_PROCESS_CODES.SUBJECT_NOT_FOUND,
@@ -151,38 +154,49 @@ export default async function createTopic_(request: Request, session?: Session) 
       });
     }
 
-    const unit = await db.collection(dbCollections.units.name).findOne(
-      {
-        _id: new BSON.ObjectId(unitId),
-      },
-      { projection: { _id: 1 } },
-    );
+    // Check if unit exists if unitId is provided
+    let unit = null;
+    if (unitId) {
+      unit = await db.collection(dbCollections.units.name).findOne(
+        {
+          _id: new BSON.ObjectId(unitId),
+        },
+        { projection: { _id: 1 } },
+      );
 
-    if (!unit) {
-      const response = {
-        isError: true,
-        code: TOPIC_PROCESS_CODES.UNIT_NOT_FOUND,
-      };
+      if (!unit) {
+        const response = {
+          isError: true,
+          code: TOPIC_PROCESS_CODES.UNIT_NOT_FOUND,
+        };
 
-      return new Response(JSON.stringify(response), {
-        status: HttpStatusCode.NotFound,
-      });
+        return new Response(JSON.stringify(response), {
+          status: HttpStatusCode.NotFound,
+        });
+      }
     }
 
-    await db.collection(dbCollections.topics.name).insertOne({
+    // Create topic document with required and optional fields
+    const topicDocument = {
       name,
       description,
       created_at: new Date(),
       updated_at: new Date(),
-      //@ts-ignore
+      // @ts-ignore
       created_by_id: new BSON.ObjectId(session?.user?.id),
-      school_id: new BSON.ObjectId(schoolId),
-      program_id: new BSON.ObjectId(programId),
-      course_id: new BSON.ObjectId(courseId),
-      unit_id: new BSON.ObjectId(unitId),
-      grade_id: new BSON.ObjectId(gradeId),
       subject_id: new BSON.ObjectId(subjectId),
-    });
+      grade_id: new BSON.ObjectId(gradeId),
+    };
+
+    // Add optional fields if they exist
+    // @ts-ignore
+    if (unitId) topicDocument.unit_id = new BSON.ObjectId(unitId);
+    //  if (schoolId) topicDocument.school_id = new BSON.ObjectId(schoolId);
+    //  if (programId) topicDocument.program_id = new BSON.ObjectId(programId);
+    //  if (courseId) topicDocument.course_id = new BSON.ObjectId(courseId);
+    // @ts-ignore
+
+    await db.collection(dbCollections.topics.name).insertOne(topicDocument);
 
     const response = {
       isError: false,

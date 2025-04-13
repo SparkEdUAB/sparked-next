@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
 import { ReactNode, memo, useCallback, useMemo, useEffect } from 'react';
@@ -16,26 +16,26 @@ import { LibraryErrorMessage } from './LibraryErrorMessage/LibraryErrorMessage';
 import { RelatedMediaContentList } from './RelatedMediaContentList';
 import { ReactionButtons } from '@components/atom/ReactionButtons';
 import { useMediaInteractions } from '@hooks/useMediaInteractions';
-
-// Lazy load components with loading fallbacks
-const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
-  ssr: false,
-  loading: () => <div className="animate-pulse bg-gray-200 h-[500px] w-full rounded-lg"></div>,
-});
+import { useScreenDetector } from '@hooks/useScreenDetactor';
 
 const VideoViewer = dynamic(() => import('next-video/player'), {
   ssr: false,
   loading: () => <div className="animate-pulse bg-gray-200 h-[400px] w-full rounded-lg"></div>,
 });
 
-const IconWithLabel = memo(({ icon, label, title }: { label?: string; icon: ReactNode; title: string }) => (
+const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/PdfViewer'), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-[400px] w-full rounded-lg"></div>,
+});
+
+const IconWithLabel = memo(({ icon, label, title }: { label?: string; icon: ReactNode; title: string }) =>
   label ? (
     <div className="flex flex-row items-center gap-2" title={title}>
       {icon}
       {label}
     </div>
-  ) : null
-));
+  ) : null,
+);
 IconWithLabel.displayName = 'IconWithLabel';
 
 const MediaContentMetadata = memo(({ mediaContent }: { mediaContent: T_RawMediaContentFields }) => (
@@ -77,23 +77,18 @@ export function MediaContentView({
   relatedMediaContent: T_RawMediaContentFields[] | null;
 }) {
   const { data: session } = useSession();
+  const { isDeviceMobile } = useScreenDetector();
   const fileType = useMemo(() => determineFileType(mediaContent?.file_url || ''), [mediaContent?.file_url]);
-  const fileUrl = useMemo(() => mediaContent.file_url ? getFileUrl(mediaContent.file_url) : '', [mediaContent.file_url]);
+  const fileUrl = useMemo(
+    () => (mediaContent.file_url ? getFileUrl(mediaContent.file_url) : ''),
+    [mediaContent.file_url],
+  );
   const externalUrl = mediaContent.external_url;
 
-  const {
-    viewCount,
-    reactionData,
-    isLoadingReactions,
-    recordView,
-    handleReaction,
-    hasRecordedView,
-  } = useMediaInteractions(mediaContent._id);
+  const { viewCount, reactionData, isLoadingReactions, recordView, handleReaction, hasRecordedView } =
+    useMediaInteractions(mediaContent._id);
 
-  const handleReactionCallback = useCallback(
-    (type: any) => handleReaction(type, session),
-    [handleReaction, session]
-  );
+  const handleReactionCallback = useCallback((type: any) => handleReaction(type, session), [handleReaction, session]);
 
   useEffect(() => {
     const timeoutId = setTimeout(recordView, 45000);
@@ -102,7 +97,11 @@ export function MediaContentView({
 
   const renderMediaContent = useMemo(() => {
     if (!fileUrl && !externalUrl) {
-      return <LibraryErrorMessage className="h-fit min-h-0">This file cannot be rendered. Please contact the site administrator with the details.</LibraryErrorMessage>;
+      return (
+        <LibraryErrorMessage className="h-fit min-h-0">
+          This file cannot be rendered. Please contact the site administrator with the details.
+        </LibraryErrorMessage>
+      );
     }
 
     if (externalUrl) {
@@ -110,8 +109,10 @@ export function MediaContentView({
       const vimeoRegex = /^(https?:\/\/)?(www\.)?(vimeo\.com)\/.+/;
 
       if (youtubeRegex.test(externalUrl)) {
-        // eslint-disable-next-line no-useless-escape
-        const videoId = externalUrl.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1];
+        const videoId = externalUrl.match(
+          // eslint-disable-next-line no-useless-escape
+          /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/,
+        )?.[1];
         const embedUrl = `https://www.youtube.com/embed/${videoId}`;
         return (
           <div className="w-full h-[500px] md:h-[600px] lg:h-[700px] rounded-lg overflow-hidden">
@@ -173,11 +174,24 @@ export function MediaContentView({
       case 'video':
         return <VideoViewer src={fileUrl} />;
       case 'pdf':
-        return <PdfViewer file={fileUrl} />;
+        return (
+          <div className="w-full h-[80vh] rounded-lg overflow-hidden relative">
+            {isDeviceMobile ? (
+              <PdfViewer file={fileUrl} />
+            ) : (
+              <iframe
+                src={`${fileUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH`}
+                className="w-full h-full border-0"
+                title={`PDF: ${mediaContent.name}`}
+                loading="lazy"
+              />
+            )}
+          </div>
+        );
       default:
         return <LibraryErrorMessage>Could not recognize the file type</LibraryErrorMessage>;
     }
-  }, [fileUrl, fileType, mediaContent.name, externalUrl]);
+  }, [fileUrl, fileType, mediaContent.name, externalUrl, isDeviceMobile]);
 
   return (
     <div className="xl:grid xl:grid-cols-[calc(100%_-_300px)_300px] 2xl:grid-cols-[calc(100%_-_400px)_400px] px-4 md:px-8 w-full">
@@ -198,11 +212,7 @@ export function MediaContentView({
               <FaEye className="text-xl" />
               <span>{viewCount} views</span>
             </div>
-            {!session && (
-              <span className="text-sm text-gray-500">
-                Please login to react to this content
-              </span>
-            )}
+            {!session && <span className="text-sm text-gray-500">Please login to react to this content</span>}
           </div>
         </div>
         <div className="flex justify-between items-center">

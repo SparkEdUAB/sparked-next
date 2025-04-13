@@ -13,10 +13,10 @@ export default async function editTopic_(request: Request, session?: Session) {
     description: zfd.text(),
     schoolId: zfd.text().optional(),
     programId: zfd.text().optional(),
-    courseId: zfd.text().optional(), // add subjectId instead
+    courseId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
     subjectId: zfd.text().optional(),
-    unitId: zfd.text(),
+    unitId: zfd.text().optional().nullable(),
     topicId: zfd.text(),
   });
   const formBody = await request.json();
@@ -136,22 +136,26 @@ export default async function editTopic_(request: Request, session?: Session) {
       });
     }
 
-    const unit = await db.collection(dbCollections.units.name).findOne(
-      {
-        _id: new BSON.ObjectId(unitId),
-      },
-      { projection: { _id: 1 } },
-    );
+    // Only check unit if unitId is provided
+    let unit = null;
+    if (unitId) {
+      unit = await db.collection(dbCollections.units.name).findOne(
+        {
+          _id: new BSON.ObjectId(unitId),
+        },
+        { projection: { _id: 1 } },
+      );
 
-    if (!unit) {
-      const response = {
-        isError: true,
-        code: TOPIC_PROCESS_CODES.UNIT_NOT_FOUND,
-      };
+      if (!unit) {
+        const response = {
+          isError: true,
+          code: TOPIC_PROCESS_CODES.UNIT_NOT_FOUND,
+        };
 
-      return new Response(JSON.stringify(response), {
-        status: HttpStatusCode.NotFound,
-      });
+        return new Response(JSON.stringify(response), {
+          status: HttpStatusCode.NotFound,
+        });
+      }
     }
 
     const regexPattern = new RegExp(`^\\s*${name}\\s*$`, 'i');
@@ -176,19 +180,22 @@ export default async function editTopic_(request: Request, session?: Session) {
       _id: new BSON.ObjectId(topicId),
     };
 
-    const updateQuery = {
+    // Create update object with only defined fields
+    const updateQuery: any = {
       name,
       description,
       updated_at: new Date(),
-      school_id: new BSON.ObjectId(schoolId),
-      course_id: new BSON.ObjectId(courseId),
-      program_id: new BSON.ObjectId(programId),
-      unit_id: new BSON.ObjectId(unitId),
-      grade_id: new BSON.ObjectId(gradeId),
-      subject_id: new BSON.ObjectId(subjectId),
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
     };
+
+    // Only add optional fields if they exist
+    if (schoolId) updateQuery.school_id = new BSON.ObjectId(schoolId);
+    if (courseId) updateQuery.course_id = new BSON.ObjectId(courseId);
+    if (programId) updateQuery.program_id = new BSON.ObjectId(programId);
+    if (unitId) updateQuery.unit_id = new BSON.ObjectId(unitId);
+    if (gradeId) updateQuery.grade_id = new BSON.ObjectId(gradeId);
+    if (subjectId) updateQuery.subject_id = new BSON.ObjectId(subjectId);
 
     await db.collection(dbCollections.topics.name).updateOne(query, {
       $set: updateQuery,

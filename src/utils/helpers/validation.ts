@@ -10,14 +10,14 @@ export const isValidPhoneNumber = (phone: string): boolean => {
 };
 
 export const isValidPassword = (password: string): boolean => {
-  // At least 6 characters, at least one letter and one number
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+  // At least 6 characters, at least one letter and one number, allows special characters
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[\w\d!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{6,}$/;
   return passwordRegex.test(password);
 };
 
 export const validateSignupForm = (formData: any, isStudent: boolean, institutionType: string) => {
   const errors: Record<string, string> = {};
-  
+
   // Validate required fields
   if (!formData.firstName) {
     errors.firstName = 'First name is required';
@@ -66,7 +66,7 @@ export const validateSignupForm = (formData: any, isStudent: boolean, institutio
       if (!formData.schoolName) {
         errors.schoolName = 'School name is required for a student';
       }
-      
+
       if (!formData.grade) {
         errors.grade = 'Grade is required for a student';
       }
@@ -75,6 +75,6 @@ export const validateSignupForm = (formData: any, isStudent: boolean, institutio
 
   return {
     errors,
-    isValid: Object.keys(errors).length === 0
+    isValid: Object.keys(errors).length === 0,
   };
 };
