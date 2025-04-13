@@ -7,6 +7,7 @@ import { p_fetchTopicsWithMetaData } from './pipelines';
 import { TOPIC_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { HttpStatusCode } from 'axios';
+import { sortByNumericValue } from '../utils/sorting';
 
 const dbConfigData = TOPIC_FIELD_NAMES_CONFIG;
 
@@ -370,7 +371,7 @@ export async function fetchTopicsBySubjectId_(request: any) {
 
     const response = {
       isError: false,
-      topic: topics,
+      topic: sortByNumericValue(topics, 'name'),
     };
 
     return new Response(JSON.stringify(response), {
@@ -435,7 +436,7 @@ export async function fetchTopicsByGradeId_(request: any) {
 
     const response = {
       isError: false,
-      topics,
+      topics: sortByNumericValue(topics, 'name'),
     };
 
     return new Response(JSON.stringify(response), {
