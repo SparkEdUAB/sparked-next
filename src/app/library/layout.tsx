@@ -6,14 +6,12 @@ import useUnit from '@hooks/useUnit';
 import useSubject from '@hooks/useSubject';
 import useGrade from '@hooks/useGrade';
 import useTopic from '@hooks/use-topic';
-import useMediaContent from '@hooks/use-media-content';
 
 export default function Layout({ children }: { children: ReactNode | ReactNode[]; params: any }) {
   const { fetchUnitsBySubjectId, units, setUnits, isLoading: isUnitsLoading } = useUnit();
   const { subjects, setSubjects, fetchSubjectsByGradeId, isLoading: isSubjectsLoading } = useSubject();
   const { grades, fetchGrades, isLoading: isGradesLoading } = useGrade();
   const { topics, setTopics, fetchTopicsByUnitId, isLoading: isTopicsLoading } = useTopic();
-  const { mediaContentTypes, isLoading: isMediaTypesLoading } = useMediaContent();
 
   const filteredGradeId = useSearchParams().get('grade_id');
   const filteredSubjectId = useSearchParams().get('subject_id');
@@ -50,12 +48,10 @@ export default function Layout({ children }: { children: ReactNode | ReactNode[]
       topics={topics instanceof Error ? [] : topics}
       units={units instanceof Error ? [] : units}
       grades={grades instanceof Error ? [] : grades}
-      mediaTypes={mediaContentTypes instanceof Error ? [] : mediaContentTypes}
       isSubjectsLoading={isSubjectsLoading}
       isUnitsLoading={isUnitsLoading}
       isTopicsLoading={isTopicsLoading}
       isGradesLoading={isGradesLoading}
-      isMediaTypesLoading={isMediaTypesLoading}
     >
       {children}
     </LibraryLayout>

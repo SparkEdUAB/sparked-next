@@ -1,19 +1,19 @@
-import styles from './Layout.module.css';
+import { T_GradeFields } from '@hooks/useGrade/types';
+import { T_UnitFields } from '@hooks/useUnit/types';
 import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
-import { T_UnitFields } from '@hooks/useUnit/types';
-import { T_GradeFields } from '@hooks/useGrade/types';
 import { useSearchParams } from 'next/navigation';
+import styles from './Layout.module.css';
 
-import { useSearchQuery } from '@hooks/useSearchQuery';
-import { T_SubjectFields } from '@hooks/useSubject/types';
-import { T_RawMediaTypeFieldes } from '@hooks/use-media-content/types';
-import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
 import { T_TopicFields } from '@hooks/use-topic/types';
 import useNavigation from '@hooks/useNavigation';
 import { useScreenDetector } from '@hooks/useScreenDetactor';
+import { useSearchQuery } from '@hooks/useSearchQuery';
+import { T_SubjectFields } from '@hooks/useSubject/types';
+import { useRouter } from 'next/navigation';
 import { useEffect, useLayoutEffect } from 'react';
 import NETWORK_UTILS from 'utils/network';
+import { ShowAllOrNoItems } from './LibraryNoOrAllItems';
 
 export function LibrarySidebar({
   subjects,
@@ -22,12 +22,10 @@ export function LibrarySidebar({
   grades,
   units,
   topics,
-  mediaTypes,
   isUnitsLoading,
   isSubjectsLoading,
   isTopicsLoading,
   isGradesLoading,
-  isMediaTypesLoading,
 }: {
   sidebarIsCollapsed: boolean;
   toggleSidebar: () => void;
@@ -35,12 +33,10 @@ export function LibrarySidebar({
   topics: T_TopicFields[];
   grades: T_GradeFields[];
   units: T_UnitFields[];
-  mediaTypes: T_RawMediaTypeFieldes[];
   isUnitsLoading: boolean;
   isSubjectsLoading: boolean;
   isTopicsLoading: boolean;
   isGradesLoading: boolean;
-  isMediaTypesLoading: boolean;
 }) {
   const { isMobile } = useScreenDetector();
   const { pathname } = useNavigation();
@@ -48,14 +44,28 @@ export function LibrarySidebar({
 
   const isMediaPage = sliptPathname[2] === 'media';
   const isLibrary = sliptPathname[1] === 'library';
+  const isSearchPage = sliptPathname.includes('search');
 
-  useLayoutEffect(() => {
-    // if is media Page and SideNav is not collapsed on navigate set to true
-    if (isLibrary && isMediaPage && !sidebarIsCollapsed) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const isExternalContent = searchParams.get('externalContent') === 'true';
+
+  const handleExternalContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      router.push(`/library?${createQueryString('externalContent', 'true')}`);
+    } else {
+      const params = new URLSearchParams(window.location.search);
+      params.delete('externalContent');
+      router.push(`/library?${params.toString()}`);
+    }
+    // we auto close the sidebar if we are on mobile to give more space
+    if (isMobile) {
       toggleSidebar();
     }
-    // if is Library Page and SideNav is collapsed on navigate set to false
-    if (isLibrary && !isMediaPage && sidebarIsCollapsed) {
+  };
+
+  useLayoutEffect(() => {
+    if (isLibrary && isMediaPage && !sidebarIsCollapsed) {
       toggleSidebar();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,13 +82,15 @@ export function LibrarySidebar({
   const filteredUnitId = useSearchParams().get('unit_id');
   const filteredSubjectId = useSearchParams().get('subject_id');
   const filteredTopicId = useSearchParams().get('topic_id');
-  const filteredMediaType = useSearchParams().get('mediaType');
+
+  const backToLibrary = isMediaPage || isSearchPage;
 
   return (
     <>
       <div
-        className={`${sidebarIsCollapsed ? '-left-[300px] md:hidden' : 'left-0 md:block'
-          } fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] transition-all duration-300 flex-none md:sticky h-[calc(100vh_-_62px)] overflow-y-clip
+        className={`${
+          sidebarIsCollapsed ? '-left-[300px] md:hidden' : 'left-0 md:block'
+        } fixed top-[62px] md:top-0 inset-0 z-50 w-[300px] transition-all duration-300 flex-none md:sticky h-[calc(100vh_-_62px)] overflow-y-clip
         `}
       >
         <Sidebar
@@ -88,11 +100,11 @@ export function LibrarySidebar({
             <Sidebar.ItemGroup>
               <Sidebar.Item
                 as={Link}
-                href={isMediaPage ? "/library" : "/"}
+                href={backToLibrary ? '/library' : '/'}
                 className={`${styles.item} mb-4`}
                 icon={() => <span className="mr-2">←</span>}
               >
-                {isMediaPage ? "Back to Library" : "Back to Home"}
+                {backToLibrary ? 'Back to Library' : 'Back to Home'}
               </Sidebar.Item>
             </Sidebar.ItemGroup>
             <Sidebar.ItemGroup>
@@ -117,6 +129,7 @@ export function LibrarySidebar({
                       as={Link}
                       href={`/library?grade_id=${grade._id}`}
                       key={grade._id}
+                      onClick={isMobile ? toggleSidebar : undefined}
                     >
                       {grade.name}
                     </Sidebar.Item>
@@ -155,6 +168,7 @@ export function LibrarySidebar({
                           })
                         }
                         key={subject._id}
+                        onClick={isMobile ? toggleSidebar : () => {}}
                       >
                         {subject.name}
                       </Sidebar.Item>
@@ -201,6 +215,7 @@ export function LibrarySidebar({
                             unit_id: unit._id,
                           })
                         }
+                        onClick={isMobile && toggleSidebar}
                       >
                         {unit.name}
                       </Sidebar.Item>
@@ -249,6 +264,7 @@ export function LibrarySidebar({
                           })
                         }
                         key={topic._id}
+                        onClick={isMobile ? toggleSidebar : undefined}
                       >
                         {topic.name}
                       </Sidebar.Item>
@@ -258,43 +274,31 @@ export function LibrarySidebar({
               </Sidebar.ItemGroup>
             )}
 
-            {/* Media Types */}
             <Sidebar.ItemGroup>
-              <Sidebar.Collapse label="Media Types">
-                {!isMediaTypesLoading && (
-                  <ShowAllOrNoItems
-                    ItemName={'Media'}
-                    items={mediaTypes}
-                    filterItemId={filteredMediaType}
-                    url={`/library?${createQueryString('mediaType', '')}`}
-                  />
-                )}
-
-                {isMediaTypesLoading ? (
-                  <SidebarItemsSkeleton />
-                ) : (
-                  !isMediaTypesLoading &&
-                  mediaTypes.map((mediaType) => (
-                    <Sidebar.Item
-                      key={mediaType._id}
-                      active={filteredMediaType === mediaType.name}
-                      className={styles.item}
-                      as={Link}
-                      href={`/library?${createQueryString('mediaType', mediaType.name)}`}
-                    >
-                      {mediaType.name}
-                    </Sidebar.Item>
-                  ))
-                )}
-              </Sidebar.Collapse>
+              <div className="flex items-center px-3 py-2 text-base font-normal text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
+                <input
+                  id="external-content-checkbox"
+                  type="checkbox"
+                  checked={isExternalContent}
+                  className="w-5 h-5 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  onChange={handleExternalContentChange}
+                />
+                <label
+                  htmlFor="external-content-checkbox"
+                  className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer"
+                >
+                  Show External Content
+                </label>
+              </div>
             </Sidebar.ItemGroup>
           </Sidebar.Items>
         </Sidebar>
       </div>
       <div
         onClick={toggleSidebar}
-        className={`fixed cursor-pointer inset-0 z-40 transition-all duration-300 rounded-br-full bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:backdrop-blur-none md:bg-inherit ${sidebarIsCollapsed || !isMobile ? 'w-0 h-0' : 'w-[200vmax] h-[200vmax]'
-          }`}
+        className={`fixed cursor-pointer inset-0 z-40 transition-all duration-300 rounded-br-full bg-gray-900/50 dark:bg-gray-900/60 backdrop-blur-sm md:backdrop-blur-none md:bg-inherit ${
+          sidebarIsCollapsed || !isMobile ? 'w-0 h-0' : 'w-[200vmax] h-[200vmax]'
+        }`}
       />
     </>
   );

@@ -1,12 +1,12 @@
-import { authOptions } from '@app/api/auth/authOptions';
+"use client"
 import AppLogo from '@components/logo';
 import { DarkThemeToggle } from 'flowbite-react';
-import { getServerSession } from 'next-auth';
+import { useSession } from 'next-auth/react';
 import { LogOutButton } from './LogOutButton';
 import { LoginSignupLinks } from './LoginSignupLinks';
 
-const HeaderSection = async () => {
-  const session = await getServerSession(authOptions);
+const HeaderSection = () => {
+  const { status } = useSession();
 
   return (
     <header className="bg-sky-50  dark:bg-gray-900">
@@ -17,7 +17,7 @@ const HeaderSection = async () => {
           </a>
           <div className="flex items-center lg:order-2">
             <div className="flex flex-row gap-2 flex-wrap items-center">
-              {!session ? <LoginSignupLinks /> : <LogOutButton />}
+              {status === "authenticated" ? <LogOutButton /> : <LoginSignupLinks />}
               <DarkThemeToggle color="" className="text-sky-600 dark:text-sky-400 theme-toggle" />
             </div>
           </div>

@@ -13,11 +13,10 @@ import { revalidateTag } from 'next/cache';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
 
-// Add cache configuration
 const CACHE_TAG_MEDIA = 'media-content';
 
 const cache: Record<string, { data: any; timestamp: number }> = {};
-const CACHE_TTL = 300000; // Cache expiry time in milliseconds (5 min)
+const CACHE_TTL = 300000;
 
 export default async function fetchMediaContent_(request: any) {
   const schema = zfd.formData({
@@ -31,10 +30,12 @@ export default async function fetchMediaContent_(request: any) {
     course_id: z.string().optional(),
     unit_id: z.string().optional(),
     topic_id: z.string().optional(),
+    externalUrl: z.string().optional(),
+    externalContent: z.string().optional(),
   });
 
   const params = request.nextUrl.searchParams;
-  const queryKey = params.toString(); // Generate a unique cache key
+  const queryKey = params.toString();
 
   // Check if data is cached and still valid
   if (cache[queryKey] && Date.now() - cache[queryKey].timestamp < CACHE_TTL) {
@@ -47,8 +48,20 @@ export default async function fetchMediaContent_(request: any) {
     });
   }
 
-  const { limit, skip, withMetaData, school_id, program_id, course_id, unit_id, topic_id, subject_id, grade_id } =
-    schema.parse(params);
+  const {
+    limit,
+    skip,
+    withMetaData,
+    school_id,
+    program_id,
+    course_id,
+    unit_id,
+    topic_id,
+    subject_id,
+    grade_id,
+    externalUrl,
+    externalContent,
+  } = schema.parse(params);
 
   const isWithMetaData = withMetaData === 'true';
   const _limit = parseInt(limit);
@@ -66,7 +79,7 @@ export default async function fetchMediaContent_(request: any) {
     let mediaContent = [];
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
-    let query: { [key: string]: BSON.ObjectId } = {};
+    let query: { [key: string]: any } = {};
 
     if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
     if (subject_id) query.subject_id = new BSON.ObjectId(subject_id);
@@ -75,6 +88,10 @@ export default async function fetchMediaContent_(request: any) {
     if (course_id) query.course_id = new BSON.ObjectId(course_id);
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+
+    if (externalUrl === 'true' || externalContent === 'true') {
+      query.external_url = { $ne: null };
+    }
 
     if (isWithMetaData) {
       mediaContent = await db
@@ -229,11 +246,12 @@ export async function findMediaContentByName_(request: any) {
     course_id: z.string().optional(),
     unit_id: z.string().optional(),
     topic_id: z.string().optional(),
+    grade_id: z.string().optional(),
   });
   // const formBody = await request.json();
   const params = request.nextUrl.searchParams;
 
-  const { name, limit, skip, school_id, program_id, course_id, unit_id, topic_id } = schema.parse(params);
+  const { name, limit, skip, school_id, program_id, course_id, unit_id, topic_id, grade_id } = schema.parse(params);
 
   const isWithMetaData = params.withMetaData === 'true' ? true : false;
 
@@ -260,6 +278,7 @@ export async function findMediaContentByName_(request: any) {
     if (course_id) query.course_id = new BSON.ObjectId(course_id);
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+    if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     if (isWithMetaData) {

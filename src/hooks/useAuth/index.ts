@@ -49,7 +49,7 @@ const useAuth = () => {
         setLoading(false);
       }
     },
-    [message],
+    [message, router],
   );
 
   const handleLogin = useCallback(

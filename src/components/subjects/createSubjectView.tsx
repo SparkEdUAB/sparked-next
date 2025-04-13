@@ -1,7 +1,7 @@
 'use client';
 
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import SelectList from '@components/atom/SelectList/SelectList';
 import { AdminPageTitle } from '@components/layouts';
 import { T_GradeWithoutMetadata } from '@hooks/useGrade/types';
 import useSubject from '@hooks/useSubject';
@@ -39,10 +39,6 @@ const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => 
     );
   };
 
-  // const handleClick = (grade: T_GradeFields) => {
-  //   setGradeId(grade?._id);
-  // };
-
   return (
     <>
       <AdminPageTitle title={i18next.t('create_subject')} />
@@ -62,11 +58,15 @@ const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => 
           required
         />
 
-        <Autocomplete<T_GradeWithoutMetadata>
-          url={API_LINKS.FIND_GRADE_BY_NAME}
+        <SelectList<T_GradeWithoutMetadata>
+          url={API_LINKS.FETCH_GRADES}
           handleSelect={setGrade}
           moduleName="grades"
+          label="Grade"
           disabled={isLoading}
+          selectedItem={grade}
+          placeholder="Select a grade"
+          required
         />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
