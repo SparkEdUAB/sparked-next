@@ -10,6 +10,7 @@ export type T_Filters = {
   course_id?: string;
   unit_id?: string;
   topic_id?: string;
+  externalUrl?: string;
 };
 
 export default function useSearchFilters() {
@@ -25,6 +26,7 @@ export default function useSearchFilters() {
     if (params.get('course_id')) filters.course_id = params.get('course_id') as string;
     if (params.get('unit_id')) filters.unit_id = params.get('unit_id') as string;
     if (params.get('topic_id')) filters.topic_id = params.get('topic_id') as string;
+    if (params.get('externalContent') === 'true') filters.externalUrl = 'true';
 
     return filters;
   }, [params]);

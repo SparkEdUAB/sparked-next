@@ -7,17 +7,22 @@ import { MEDIA_CONTENT_LIMIT } from '@components/library/constants';
 
 type SORT_BY = string;
 
-export async function searchMedia(skip: number, searchText: string, sort_by: SORT_BY = '') {
+export function getSearchMediaUrl(skip: number, searchText: string, sort_by: SORT_BY = '', grade_id: string = '') {
+  return (BASE_URL || '') +
+    API_LINKS.FIND_MEDIA_CONTENT_BY_NAME +
+    NETWORK_UTILS.formatGetParams({
+      name: searchText,
+      skip: skip.toString(),
+      limit: MEDIA_CONTENT_LIMIT.toString(),
+      withMetaData: 'false',
+      sort_by: sort_by,
+      grade_id
+    });
+}
+
+export async function searchMedia(skip: number, searchText: string, sort_by: SORT_BY = '', grade_id: string = '') {
   return await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
-    (BASE_URL || '') +
-      API_LINKS.FIND_MEDIA_CONTENT_BY_NAME +
-      NETWORK_UTILS.formatGetParams({
-        name: searchText,
-        skip: skip.toString(),
-        limit: MEDIA_CONTENT_LIMIT.toString(),
-        withMetaData: 'false',
-        sort_by: sort_by,
-      }),
+    getSearchMediaUrl(skip, searchText, sort_by, grade_id),
     { next: { revalidate: 60 } },
   );
 }

@@ -13,12 +13,13 @@ import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea
 import { FileUploadSection } from './FileUploadSection';
 import { API_LINKS } from 'app/links';
 import { useToastMessage } from 'providers/ToastMessageContext';
-import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
+import SelectList from '@components/atom/SelectList/SelectList';
 import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
 import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
 import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 import { T_NameAndDescription } from 'types';
 import { Label, TextInput } from 'flowbite-react';
+import { T_GradeWithoutMetadata } from '@hooks/useGrade/types';
 
 const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
   const { createResource, isLoading: loadingResource } = useMediaContent();
@@ -31,6 +32,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
   const [subject, setSubject] = useState<T_SubjectWithoutMetadata | null>(null);
   const [unit, setUnit] = useState<T_UnitWithoutMetadata | null>(null);
   const [topic, setTopic] = useState<T_TopicWithoutMetadata | null>(null);
+  const [grade, setGrade] = useState<T_GradeWithoutMetadata | null>(null);
   const [isExternalResource, setIsExternalResource] = useState(true);
   const [externalUrl, setExternalUrl] = useState('');
 
@@ -80,14 +82,16 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
         {
           ...(subject ? { gradeId: subject.grade_id, subjectId: subject._id } : {}),
           ...(unit ? { unitId: unit._id, gradeId: unit.grade_id, subjectId: unit.subject_id } : {}),
-          ...(topic ? { unitId: topic.unit_id, topicId: topic._id, gradeId: topic.grade_id, subjectId: topic.subject_id } : {}),
+          ...(topic
+            ? { unitId: topic.unit_id, topicId: topic._id, gradeId: topic.grade_id, subjectId: topic.subject_id }
+            : {}),
           ...result,
           externalUrl: isExternalResource ? externalUrl : null,
         },
         // @ts-expect-error
         fileUrl,
         thumbnailUrl,
-        onSuccessfullyDone
+        onSuccessfullyDone,
       );
     } catch {
       message.error(i18next.t('failed_to_upload'));
@@ -164,26 +168,50 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           rows={4}
         />
 
-        <Autocomplete<T_SubjectWithoutMetadata>
-          url={API_LINKS.FIND_SUBJECT_BY_NAME}
-          handleSelect={setSubject}
-          moduleName="subjects"
-          disabled={isLoading}
-        />
+        <div className="grid grid-cols-1 gap-4">
+          <SelectList<T_GradeWithoutMetadata>
+            url={API_LINKS.FETCH_GRADES}
+            handleSelect={setGrade}
+            moduleName="grades"
+            label="Grade"
+            disabled={isLoading}
+            selectedItem={grade}
+            placeholder="Select a grade"
+          />
 
-        <Autocomplete<T_UnitWithoutMetadata>
-          url={API_LINKS.FIND_UNITS_BY_NAME}
-          handleSelect={setUnit}
-          moduleName="units"
-          disabled={isLoading}
-        />
+          <SelectList<T_SubjectWithoutMetadata>
+            url={`${API_LINKS.FETCH_SUBJECTS_BY_GRADE_ID}`}
+            handleSelect={setSubject}
+            moduleName="subjects"
+            label="Subject"
+            disabled={isLoading || !grade}
+            selectedItem={subject}
+            placeholder={grade ? 'Select a subject' : 'Select a grade first'}
+            queryParams={{ gradeId: grade?._id || '' }}
+          />
 
-        <Autocomplete<T_TopicWithoutMetadata>
-          url={API_LINKS.FIND_TOPIC_BY_NAME}
-          handleSelect={setTopic}
-          moduleName="topics"
-          disabled={isLoading}
-        />
+          <SelectList<T_UnitWithoutMetadata>
+            url={API_LINKS.FETCH_UNITS_BY_SUBJECT_ID}
+            handleSelect={setUnit}
+            moduleName="units"
+            label="Unit"
+            disabled={isLoading || !subject}
+            selectedItem={unit}
+            placeholder={subject ? 'Select a unit' : 'Select a subject first'}
+            queryParams={{ subjectId: subject?._id || '' }}
+          />
+
+          <SelectList<T_TopicWithoutMetadata>
+            url={API_LINKS.FETCH_TOPICS_BY_UNIT_ID}
+            handleSelect={setTopic}
+            moduleName="topics"
+            label="Topic"
+            disabled={isLoading || !subject}
+            selectedItem={topic}
+            placeholder={unit ? 'Select a topic' : 'Select a unit first'}
+            queryParams={{ unitId: unit?._id || '' }}
+          />
+        </div>
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
           {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}

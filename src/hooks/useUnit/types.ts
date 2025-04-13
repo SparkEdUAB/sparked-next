@@ -103,6 +103,8 @@ export type T_RawUnitFields = {
     _id: string;
     name: string;
   };
+  subject_name: string;
+  grade_name: string;
 };
 
 export type T_UnitWithoutMetadata = {

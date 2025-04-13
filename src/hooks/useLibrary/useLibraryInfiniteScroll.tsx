@@ -13,8 +13,8 @@ export function useLibraryInfiniteScroll(
 ) {
   const [mediaContent, setMediaContent] = useState(initialMediaContent);
   const [offset, setOffset] = useState(MEDIA_CONTENT_LIMIT);
-  let [hasMore, setHasMore] = useState(initialMediaContent.length >= MEDIA_CONTENT_LIMIT);
-  let [error, setError] = useState(false);
+  const [hasMore, setHasMore] = useState(initialMediaContent.length >= MEDIA_CONTENT_LIMIT);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     setMediaContent(initialMediaContent);
@@ -23,9 +23,16 @@ export function useLibraryInfiniteScroll(
     setError(false);
   }, [initialMediaContent]);
 
+  const resetData = useCallback((newInitialData: T_RawMediaContentFields[]) => {
+    setMediaContent(newInitialData);
+    setOffset(MEDIA_CONTENT_LIMIT);
+    setHasMore(newInitialData.length >= MEDIA_CONTENT_LIMIT);
+    setError(false);
+  }, []);
+
   const loadMore = useCallback(async () => {
     try {
-      let result = await fetchData(offset);
+      const result = await fetchData(offset);
 
       if (result instanceof Error || !result.mediaContent || !(result.mediaContent instanceof Array)) {
         setError(true);
@@ -49,5 +56,6 @@ export function useLibraryInfiniteScroll(
     loadMore,
     mediaContent,
     error,
+    resetData,
   };
 }
