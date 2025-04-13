@@ -72,13 +72,11 @@ export default async function fetchSubjects_(request: any) {
         .toArray();
     }
 
-    subjects = sortByNumericValue(subjects, 'name');
-
     cache[queryKey] = { data: subjects, timestamp: Date.now() };
 
     const response = {
       isError: false,
-      subjects,
+      subjects: sortByNumericValue(subjects, 'name'),
     };
 
     return new NextResponse(JSON.stringify(response), {

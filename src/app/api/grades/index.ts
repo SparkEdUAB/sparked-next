@@ -5,6 +5,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { HttpStatusCode } from 'axios';
 import { NextResponse } from 'next/server';
+import { sortByNumericValue } from '../utils/sorting';
 
 const cache: Record<string, { data: any; timestamp: number }> = {};
 const CACHE_TTL = 300000;
@@ -42,7 +43,7 @@ export default async function fetchGrades_(request: any) {
       });
     }
 
-    let grades = await db
+    const grades = await db
       .collection(dbCollections.grades.name)
       .find(
         {},
@@ -53,17 +54,11 @@ export default async function fetchGrades_(request: any) {
       )
       .toArray();
 
-    grades.sort((a, b) => {
-      const numA = parseInt(a.name.replace(/\D/g, '')) || 0;
-      const numB = parseInt(b.name.replace(/\D/g, '')) || 0;
-      return numA - numB;
-    });
-
     cache[queryKey] = { data: grades, timestamp: Date.now() };
 
     const response = {
       isError: false,
-      grades,
+      grades: sortByNumericValue(grades, 'name'),
     };
 
     return new NextResponse(JSON.stringify(response), {
