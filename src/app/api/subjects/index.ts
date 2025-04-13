@@ -8,6 +8,7 @@ import { p_fetchSubjectWithGrade, p_findSubjectByName } from './pipelines';
 import { BSON } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 import { NextResponse } from 'next/server';
+import { sortByNumericValue } from '../utils/sorting';
 
 const cache: Record<string, { data: any; timestamp: number }> = {};
 const CACHE_TTL = 300000;
@@ -71,7 +72,8 @@ export default async function fetchSubjects_(request: any) {
         .toArray();
     }
 
-    // Store in cache
+    subjects = sortByNumericValue(subjects, 'name');
+
     cache[queryKey] = { data: subjects, timestamp: Date.now() };
 
     const response = {
@@ -128,7 +130,7 @@ export async function findSubjectByName_(request: any) {
 
     const response = {
       isError: false,
-      subjects,
+      subjects: sortByNumericValue(subjects, 'name'),
     };
 
     return new Response(JSON.stringify(response), {
@@ -181,7 +183,7 @@ export async function fetchSubjectsByGradeId_(request: any) {
 
     const response = {
       isError: false,
-      subjects,
+      subjects: sortByNumericValue(subjects, 'name'),
     };
 
     return new Response(JSON.stringify(response), {

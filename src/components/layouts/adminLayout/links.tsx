@@ -1,18 +1,15 @@
-import { T_MenuItemLink } from 'types/navigation/links';
-import React from 'react';
 import i18next from 'i18next';
 import {
-  AiOutlineBarChart,
   AiOutlineBlock,
   AiOutlineBook,
   AiOutlineBulb,
   AiOutlineContainer,
   AiOutlineDashboard,
   AiOutlineHdd,
-  AiOutlineMessage,
-  AiOutlineUser,
   AiOutlineSetting,
+  AiOutlineUser,
 } from 'react-icons/ai';
+import { T_MenuItemLink } from 'types/navigation/links';
 
 // Todo:
 // - Add logout link
@@ -164,20 +161,20 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     icon: () => <AiOutlineContainer />,
     index: 8,
   },
-  statistics: {
-    link: '/admin/statistics',
-    roles: ['admin'],
-    label: i18next.t('statistics'),
-    key: 'admin_statistics',
-    icon: () => <AiOutlineBarChart />,
-    index: 9,
-  },
-  feedback: {
-    link: '/admin/feedback',
-    roles: ['admin'],
-    label: i18next.t('feedback'),
-    key: 'admin_feedback',
-    icon: () => <AiOutlineMessage />,
-    index: 10,
-  },
+  // statistics: {
+  //   link: '/admin/statistics',
+  //   roles: ['admin'],
+  //   label: i18next.t('statistics'),
+  //   key: 'admin_statistics',
+  //   icon: () => <AiOutlineBarChart />,
+  //   index: 9,
+  // },
+  // feedback: {
+  //   link: '/admin/feedback',
+  //   roles: ['admin'],
+  //   label: i18next.t('feedback'),
+  //   key: 'admin_feedback',
+  //   icon: () => <AiOutlineMessage />,
+  //   index: 10,
+  // },
 };
