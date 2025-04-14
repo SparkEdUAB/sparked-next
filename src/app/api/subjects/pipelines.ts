@@ -40,6 +40,7 @@ export const p_fetchSubjectWithGrade = ({
       ...project,
     },
   },
+  { $sort: { name: 1 } },
 ];
 
 export const p_findSubjectByName = ({

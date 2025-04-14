@@ -5,10 +5,10 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { HttpStatusCode } from 'axios';
 import { NextResponse } from 'next/server';
+import { sortByNumericValue } from '../utils/sorting';
 
-// Add cache configuration
 const cache: Record<string, { data: any; timestamp: number }> = {};
-const CACHE_TTL = 300000; // Cache expiry time in milliseconds (5 min)
+const CACHE_TTL = 300000;
 
 export default async function fetchGrades_(request: any) {
   const schema = zfd.formData({
@@ -16,9 +16,8 @@ export default async function fetchGrades_(request: any) {
     skip: zfd.numeric().default(0),
   });
   const params = request.nextUrl.searchParams;
-  const queryKey = params.toString(); // Generate a unique cache key
+  const queryKey = params.toString();
 
-  // Check if data is cached and still valid
   if (cache[queryKey] && Date.now() - cache[queryKey].timestamp < CACHE_TTL) {
     return new NextResponse(JSON.stringify({ isError: false, grades: cache[queryKey].data }), {
       status: 200,
@@ -55,12 +54,11 @@ export default async function fetchGrades_(request: any) {
       )
       .toArray();
 
-    // Store in cache
     cache[queryKey] = { data: grades, timestamp: Date.now() };
 
     const response = {
       isError: false,
-      grades,
+      grades: sortByNumericValue(grades, 'name'),
     };
 
     return new NextResponse(JSON.stringify(response), {
