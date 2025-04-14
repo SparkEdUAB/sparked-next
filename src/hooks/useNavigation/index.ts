@@ -3,21 +3,14 @@ import useConfig from '@hooks/use-config';
 import axios from 'axios';
 import { useRouter } from 'next-nprogress-bar';
 import { useParams, usePathname } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
-import {
-  T_BreadcrumbItems,
-  T_ChildMenuItemLinkParams,
-  T_MenuItemLink,
-  T_MenuItemLinkParams,
-} from 'types/navigation/links';
+import { useCallback } from 'react';
+import { T_BreadcrumbItems, T_MenuItemLink, T_MenuItemLinkParams } from 'types/navigation/links';
 
 const useNavigation = () => {
   const pathname = usePathname();
   const router = useRouter();
 
   const { configs, getDisabledConfigItems } = useConfig();
-
-  const [activeMenuItem, setActiveMenuItem] = useState<T_MenuItemLinkParams | T_ChildMenuItemLinkParams | null>(null);
 
   const fetchAdminMenuItems = useCallback(() => {
     const menuItems: Array<T_MenuItemLinkParams> = [];
@@ -32,27 +25,9 @@ const useNavigation = () => {
     return menuItems.filter((i) => filteredMenuItems.indexOf(i.key.replace('admin_', '')) === -1);
   }, [configs, getDisabledConfigItems]);
 
-  useEffect(() => {
-    let menuItems = fetchAdminMenuItems();
-
-    for (let menuItem of menuItems) {
-      if (pathname === menuItem.link) {
-        setActiveMenuItem(menuItem);
-      } else {
-        const childActiveMenus = menuItem.children?.filter((i) => i.link === pathname);
-        childActiveMenus?.length && setActiveMenuItem(childActiveMenus[0]);
-      }
-    }
-  }, [pathname, fetchAdminMenuItems]);
-
   const isActiveMenuItem = useCallback(
     (menuItem: T_MenuItemLinkParams): boolean => {
-      if (pathname === menuItem.link) {
-        return true;
-      }
-
-      const childActiveMenus = menuItem.children?.filter((i) => i.link === pathname);
-      return menuItem.children && childActiveMenus?.length !== 0 ? true : false;
+      return pathname === menuItem.link;
     },
     [pathname],
   );
@@ -106,7 +81,6 @@ const useNavigation = () => {
     fetchAdminMenuItems,
     isActiveMenuItem,
     pathname,
-    activeMenuItem,
     generateBreadcrumbItems,
     router,
     getChildLinkByKey,
