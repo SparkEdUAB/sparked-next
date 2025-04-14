@@ -3,21 +3,14 @@ import useConfig from '@hooks/use-config';
 import axios from 'axios';
 import { useRouter } from 'next-nprogress-bar';
 import { useParams, usePathname } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  T_BreadcrumbItems,
-  T_ChildMenuItemLinkParams,
-  T_MenuItemLink,
-  T_MenuItemLinkParams,
-} from 'types/navigation/links';
+import { useCallback, useMemo } from 'react';
+import { T_BreadcrumbItems, T_MenuItemLink, T_MenuItemLinkParams } from 'types/navigation/links';
 
 const useNavigation = () => {
   const pathname = usePathname();
   const router = useRouter();
 
   const { configs, getDisabledConfigItems } = useConfig();
-
-  const [activeMenuItem, setActiveMenuItem] = useState<T_MenuItemLinkParams | T_ChildMenuItemLinkParams | null>(null);
 
   const fetchAdminMenuItems = useCallback(() => {
     const menuItems: Array<T_MenuItemLinkParams> = [];
