@@ -10,6 +10,7 @@ import { getDbFieldNamesConfigStatus } from '../config';
 import { NextRequest, NextResponse } from 'next/server';
 import { HttpStatusCode } from 'axios';
 import { revalidateTag } from 'next/cache';
+import { sortByNumericValue } from '../utils/sorting';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
 
@@ -105,10 +106,11 @@ export default async function fetchMediaContent_(request: any) {
         .toArray();
     }
 
+    const data = sortByNumericValue(mediaContent, 'name');
     // Store in cache
-    cache[queryKey] = { data: mediaContent, timestamp: Date.now() };
+    cache[queryKey] = { data, timestamp: Date.now() };
 
-    return new NextResponse(JSON.stringify({ isError: false, mediaContent }), {
+    return new NextResponse(JSON.stringify({ isError: false, mediaContent: data }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
