@@ -1,7 +1,6 @@
 import useNavigation from '@hooks/useNavigation';
-import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
-import { AiOutlineMenu, AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
+import { AiOutlineArrowLeft, AiOutlineArrowRight } from 'react-icons/ai';
 
 const AdminSidebar = ({
   sidebarIsCollapsed,
@@ -41,7 +40,7 @@ const AdminSidebar = ({
                     href={i.link}
                     className={`flex items-center p-3 mx-2 rounded-lg transition-colors ${
                       isActiveMenuItem(i)
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-700 dark:text-white'
+                        ? 'bg-teal-500 text-teal-50 dark:bg-teal-600 dark:text-white'
                         : 'hover:bg-gray-100 dark:hover:bg-gray-700'
                     } ${sidebarIsCollapsed ? 'justify-center' : 'justify-start'}`}
                   >
