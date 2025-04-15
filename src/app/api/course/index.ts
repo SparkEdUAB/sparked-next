@@ -4,7 +4,7 @@ import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchCoursesWithMetaData } from './pipelines';
-import { getDbFieldNamesConfigStatus } from '../config';
+import { getDbFieldNamesConfigStatus } from '../settings';
 import { COURSE_FIELD_NAMES_CONFIG } from './constants';
 import { HttpStatusCode } from 'axios';
 
@@ -130,7 +130,7 @@ export async function fetchCourseById_(request: any) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -177,7 +177,7 @@ export async function deleteCourse_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -252,7 +252,7 @@ export async function findCourseByName_(request: any) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

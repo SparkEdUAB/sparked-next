@@ -1,6 +1,6 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { zfd } from 'zod-form-data';
-import { getDbFieldNamesConfigStatus } from '../config';
+import { getDbFieldNamesConfigStatus } from '../settings';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { SUBJECT_FIELD_NAMES_CONFIG } from './constants';

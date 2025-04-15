@@ -6,7 +6,6 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchMediaContentWithMetaData, p_fetchRandomMediaContent } from './pipelines';
 import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
-import { getDbFieldNamesConfigStatus } from '../config';
 import { NextRequest, NextResponse } from 'next/server';
 import { HttpStatusCode } from 'axios';
 import { revalidateTag } from 'next/cache';
@@ -78,7 +77,6 @@ export default async function fetchMediaContent_(request: any) {
     }
 
     let mediaContent = [];
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let query: { [key: string]: any } = {};
 
@@ -97,7 +95,7 @@ export default async function fetchMediaContent_(request: any) {
     if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .aggregate(p_fetchMediaContentWithMetaData({ query, project }))
+        .aggregate(p_fetchMediaContentWithMetaData({ query }))
         .toArray();
     } else {
       mediaContent = await db
@@ -148,14 +146,12 @@ export async function fetchMediaContentById_(request: any) {
     }
 
     let mediaContent: { [key: string]: string } | null;
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     if (isWithMetaData) {
       const mediaContentList = await db
         .collection(dbCollections.media_content.name)
         .aggregate(
           p_fetchMediaContentWithMetaData({
-            project,
             query: {
               _id: new BSON.ObjectId(mediaContentId),
             },
@@ -281,14 +277,12 @@ export async function findMediaContentByName_(request: any) {
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
     if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
         .aggregate(
           p_fetchMediaContentWithMetaData({
-            project,
             query: {
               name: { $regex: regexPattern },
               ...query,

@@ -5,7 +5,6 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchUnitsWithMetaData } from './pipelines';
 import { UNIT_FIELD_NAMES_CONFIG } from './constants';
-import { getDbFieldNamesConfigStatus } from '../config';
 import { T_RECORD } from 'types';
 import { HttpStatusCode } from 'axios';
 import { sortByNumericValue } from '../utils/sorting';
@@ -38,12 +37,10 @@ export default async function fetchUnits_(request: any) {
 
     let units = [];
 
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
-
     if (isWithMetaData) {
       units = await db
         .collection(dbCollections.units.name)
-        .aggregate(p_fetchUnitsWithMetaData({ query: {}, limit, skip, project }))
+        .aggregate(p_fetchUnitsWithMetaData({ query: {}, limit, skip }))
         .toArray();
     } else {
       units = await db
@@ -100,7 +97,6 @@ export async function fetchUnitById_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let unit: T_RECORD | null;
 
@@ -109,7 +105,6 @@ export async function fetchUnitById_(request: any) {
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
-            project,
             query: {
               _id: new BSON.ObjectId(unitId),
             },
@@ -214,7 +209,6 @@ export async function findUnitsByName_(request: any) {
       });
     }
     const regexPattern = new RegExp(name, 'i');
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let units = null;
 
@@ -223,7 +217,6 @@ export async function findUnitsByName_(request: any) {
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
-            project,
             query: {
               name: { $regex: regexPattern },
             },
@@ -287,7 +280,6 @@ export async function fetchUnitsBySubjectId_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let units: T_RECORD[];
 
@@ -296,7 +288,6 @@ export async function fetchUnitsBySubjectId_(request: any) {
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
-            project,
             query: {
               subject_id: new BSON.ObjectId(subjectId),
             },
@@ -351,7 +342,6 @@ export async function fetchUnitsByTopicId_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let units: T_RECORD[];
 
@@ -360,7 +350,6 @@ export async function fetchUnitsByTopicId_(request: any) {
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
-            project,
             query: {
               topic_id: new BSON.ObjectId(topicId),
             },
@@ -416,7 +405,6 @@ export async function fetchUnitsByGradeId_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let units: T_RECORD[];
 
@@ -425,7 +413,6 @@ export async function fetchUnitsByGradeId_(request: any) {
         .collection(dbCollections.units.name)
         .aggregate(
           p_fetchUnitsWithMetaData({
-            project,
             query: {
               grade_id: new BSON.ObjectId(gradeId),
             },
