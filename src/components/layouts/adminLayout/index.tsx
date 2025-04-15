@@ -15,7 +15,11 @@ const AdminLayout: FC<T_AdminLayout> = ({ children, withBreadcrumb = true }) => 
   return (
     <main className="h-[calc(100vh_-_62px)]">
       <AdminNavbar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
-      <div className="md:grid md:grid-cols-[256px_calc(100%_-_256px)]  h-[calc(100vh_-_62px)]">
+      <div
+        className={`md:grid h-[calc(100vh_-_62px)] ${
+          sidebarIsCollapsed ? 'md:grid-cols-[80px_calc(100%_-_80px)]' : 'md:grid-cols-[256px_calc(100%_-_256px)]'
+        } transition-all duration-300`}
+      >
         <AdminSidebar sidebarIsCollapsed={sidebarIsCollapsed} toggleSidebar={toggleSidebar} />
         <div id="scrollableDiv" className="p-6 max-h-full overflow-y-scroll">
           {withBreadcrumb && <AdminHeader menuItems={ADMIN_LINKS} />}
