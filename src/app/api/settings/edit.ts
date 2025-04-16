@@ -10,14 +10,10 @@ import SETTINGS_PROCESS_CODES from './processCodes';
 
 export default async function editSetting_(request: Request, session?: Session) {
   const schema = zfd.formData({
-    key: zfd.text(),
-    value: zfd.text().optional(),
-    description: zfd.text().optional(),
+    key: zfd.text().optional().default('global_settings'),
     category: zfd.text().optional(),
     scope: zfd.text().optional(),
-    orgName: zfd.text().optional(),
-    setupType: zfd.text().optional(),
-    isActive: zfd.text().optional(),
+    uploadSetup: zfd.text().optional().default('s3'),
   });
 
   const formBody = await request.json();
@@ -52,20 +48,9 @@ export default async function editSetting_(request: Request, session?: Session) 
       updated_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
     };
 
-    if (parsedData.description) updateData.description = parsedData.description;
     if (parsedData.category) updateData.category = parsedData.category;
     if (parsedData.scope) updateData.scope = parsedData.scope;
-    if (parsedData.orgName) updateData.orgName = parsedData.orgName;
-    if (parsedData.setupType) updateData.setupType = parsedData.setupType;
-    if (parsedData.isActive !== undefined) updateData.isActive = parsedData.isActive === 'true';
-
-    if (parsedData.value !== undefined) {
-      try {
-        updateData.value = JSON.parse(parsedData.value);
-      } catch {
-        updateData.value = parsedData.value;
-      }
-    }
+    if (parsedData.uploadSetup) updateData.uploadSetup = parsedData.uploadSetup;
 
     const mergedData = { ...existingSetting, ...updateData };
     const preparedData = prepareDataForValidation(mergedData);

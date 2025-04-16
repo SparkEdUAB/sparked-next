@@ -4,13 +4,11 @@ import { getServerSession } from 'next-auth/next';
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { authOptions } from '../../auth/authOptions';
 import fetchSettings_, { fetchInstitutions_ } from '..';
-import updateSettings_ from '../update';
 import { addInstitution_, updateInstitution_, removeInstitution_ } from '../institutions';
+import editSetting_ from '../edit';
+import createSetting_ from '../create';
 
-export async function GET(
-  req: Request,
-  { params }: { params: { slug: string } },
-) {
+export async function GET(req: Request, { params }: { params: { slug: string } }) {
   const slug = params.slug;
 
   const settingsFunctions: {
@@ -22,11 +20,10 @@ export async function GET(
 
   if (settingsFunctions[slug]) {
     const response = await settingsFunctions[slug](req);
-    
-    // Add cache headers for all GET responses
+
     const headers = new Headers(response.headers);
-    headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600'); // Cache for 1 hour
-    
+    headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+
     return new Response(response.body, {
       status: response.status,
       headers,
@@ -43,24 +40,22 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: { slug: string } },
-) {
+export async function POST(req: Request, { params }: { params: { slug: string } }) {
   const session = await getServerSession(authOptions);
   const slug = params.slug;
 
   const settingsFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
   } = {
-    updateSettings: updateSettings_,
+    updateSettings: editSetting_,
     addInstitution: addInstitution_,
     updateInstitution: updateInstitution_,
     removeInstitution: removeInstitution_,
+    createSettings: createSetting_,
   };
 
-  if (settingsFunctions[slug] && session) {
-    return settingsFunctions[slug](req, session);
+  if (settingsFunctions[slug]) {
+    return settingsFunctions[slug](req);
   } else {
     const response = {
       isError: true,

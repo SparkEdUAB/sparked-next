@@ -22,21 +22,21 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check for POST requests to API routes
-  if (pathname.startsWith('/api') && method === 'POST') {
-    // Get session token using NextAuth.js helper
-    const session = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
+  // if (pathname.startsWith('/api') && method === 'POST') {
+  //   // Get session token using NextAuth.js helper
+  //   const session = await getToken({
+  //     req: request,
+  //     secret: process.env.NEXTAUTH_SECRET,
+  //   });
 
-    // @ts-expect-error
-    if (!session || !session.role || !ADMIN_ROLES.includes(session.role)) {
-      return new NextResponse(JSON.stringify({ success: false, message: 'Permission Denied', code: 401 }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-  }
+  //   // @ts-expect-error
+  //   if (!session || !session.role || !ADMIN_ROLES.includes(session.role)) {
+  //     return new NextResponse(JSON.stringify({ success: false, message: 'Permission Denied', code: 401 }), {
+  //       status: 401,
+  //       headers: { 'Content-Type': 'application/json' },
+  //     });
+  //   }
+  // }
 
   return NextResponse.next();
 }

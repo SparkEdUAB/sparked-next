@@ -89,14 +89,12 @@ export const collectionSchemas = {
 
   [dbCollections.settings.name]: baseSchema.extend({
     key: z.string().default('global_settings'),
-    value: z.any(),
     isActive: z.boolean().optional().default(true),
     lastUpdated: z.date().optional(),
     scope: z.enum(['global', 'user', 'school']).optional().default('global'),
     institutions: z
       .array(
         z.object({
-          id: z.string(),
           name: z.string(),
           type: z.enum(['highSchool', 'college', 'other']).optional(),
           address: z.string().optional(),
@@ -108,6 +106,7 @@ export const collectionSchemas = {
       .optional()
       .default([]),
     version: z.number().optional().default(1),
+    uploadSetup: z.enum(['local', 's3']).optional().default('s3'),
   }),
 };
 

@@ -1,38 +1,44 @@
+import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { HttpStatusCode } from 'axios';
 import { BSON } from 'mongodb';
 import { Session } from 'next-auth';
+import { z } from 'zod';
 import { zfd } from 'zod-form-data';
-import { HttpStatusCode } from 'axios';
-import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { validateCollectionData } from '../lib/db/schemas';
 import SETTINGS_PROCESS_CODES from './processCodes';
 
 export default async function createSetting_(request: Request, session?: Session) {
   const schema = zfd.formData({
-    key: zfd.text(),
-    value: zfd.text(),
+    key: zfd.text().default('global_settings'),
     description: zfd.text().optional(),
     category: zfd.text().optional(),
     scope: zfd.text().optional(),
-    orgName: zfd.text().optional(),
     setupType: zfd.text().optional(),
+    uploadSetupType: zfd.text().optional(),
+    institutions: zfd
+      .json(
+        z.array(
+          z.object({
+            name: z.string(),
+            type: z.enum(['highSchool', 'college', 'other']).optional(),
+            address: z.string().optional(),
+            contactInfo: z.string().optional(),
+            isActive: z.boolean().optional().default(true),
+            isConfigured: z.boolean().optional().default(false),
+          }),
+        ),
+      )
+      .optional()
+      .default([]),
   });
 
   const formBody = await request.json();
   const parsedData = schema.parse(formBody);
 
   try {
-    let valueField;
-    try {
-      valueField = JSON.parse(parsedData.value);
-    } catch {
-      valueField = parsedData.value;
-    }
-
     const settingData = {
       ...parsedData,
-      value: valueField,
       created_at: new Date(),
       updated_at: new Date(),
       // @ts-ignore
@@ -59,21 +65,6 @@ export default async function createSetting_(request: Request, session?: Session
       return new Response(JSON.stringify(response), {
         status: HttpStatusCode.BadRequest,
       });
-    }
-
-    // const preparedData = prepareDataForValidation(settingData);
-    const validatedData = validateCollectionData(dbCollections.settings.name, settingData);
-    if (!validatedData._id) {
-      return new Response(
-        JSON.stringify({
-          isError: true,
-          code: 'VALIDATION_ERROR',
-          message: 'VALIDATION_ERROR',
-        }),
-        {
-          status: HttpStatusCode.InternalServerError,
-        },
-      );
     }
 
     await db.collection(dbCollections.settings.name).insertOne(settingData);

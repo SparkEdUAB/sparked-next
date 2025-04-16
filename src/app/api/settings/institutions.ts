@@ -34,7 +34,7 @@ export async function addInstitution_(request: Request, session?: Session) {
     const institutionId = new BSON.ObjectId().toString();
 
     const newInstitution = {
-      id: institutionId,
+      _id: institutionId,
       name: institutionData.name,
       type: institutionData.type || 'other',
       address: institutionData.address || '',
@@ -43,7 +43,7 @@ export async function addInstitution_(request: Request, session?: Session) {
       isConfigured: false,
     };
 
-    const result = await db.collection(dbCollections.settings.name).updateOne(
+    await db.collection(dbCollections.settings.name).updateOne(
       { key: 'global_settings' },
       {
         // @ts-expect-error
@@ -85,13 +85,11 @@ export async function updateInstitution_(request: Request, session?: Session) {
     const formBody = await request.json();
 
     const schema = zfd.formData({
-      id: zfd.text(),
+      _id: zfd.text(),
       name: zfd.text().optional(),
       type: zfd.text().optional(),
       address: zfd.text().optional(),
       contactInfo: zfd.text().optional(),
-      //   isActive: zfd.boolean().optional(),
-      //   isConfigured: zfd.boolean().optional(),
     });
 
     const institutionData = schema.parse(formBody);
@@ -115,14 +113,14 @@ export async function updateInstitution_(request: Request, session?: Session) {
     }
 
     updateFields['updated_at'] = new Date();
-    updateFields['lastUpdated'] = new Date();
+    updateFields['last_updated_at'] = new Date();
     // @ts-ignore
     updateFields['updated_by_id'] = session?.user?.id ? new BSON.ObjectId(session.user.id) : null;
 
     const result = await db.collection(dbCollections.settings.name).updateOne(
       {
         key: 'global_settings',
-        'institutions.id': institutionData.id,
+        'institutions._id': institutionData._id,
       },
       { $set: updateFields },
     );
