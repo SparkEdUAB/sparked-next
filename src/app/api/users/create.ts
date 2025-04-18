@@ -14,10 +14,11 @@ export default async function createUser_(request: Request, session?: Session) {
     lastName: zfd.text(),
     role: zfd.text(),
     password: zfd.text(),
+    institutionId: zfd.text().optional().nullable(),
   });
 
   const formBody = await request.json();
-  const { email, firstName, lastName, role, password } = schema.parse(formBody);
+  const { email, firstName, lastName, role, password, institutionId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -64,6 +65,7 @@ export default async function createUser_(request: Request, session?: Session) {
       email,
       firstName,
       lastName,
+      institutionId,
       password, // Note: In production, ensure password is hashed
       createdAt: new Date(),
       updatedAt: new Date(),

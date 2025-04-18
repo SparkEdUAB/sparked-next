@@ -4,7 +4,6 @@ import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchCoursesWithMetaData } from './pipelines';
-import { getDbFieldNamesConfigStatus } from '../settings';
 import { COURSE_FIELD_NAMES_CONFIG } from './constants';
 import { HttpStatusCode } from 'axios';
 
@@ -36,7 +35,7 @@ export default async function fetchCourses_(request: any) {
 
     let courses = [];
 
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+    const project = {};
 
     if (isWithMetaData) {
       courses = await db
@@ -100,7 +99,7 @@ export async function fetchCourseById_(request: any) {
       });
     }
 
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+    const project = {};
 
     let course;
 
@@ -214,7 +213,7 @@ export async function findCourseByName_(request: any) {
       });
     }
     const regexPattern = new RegExp(name, 'i');
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+    const project = {};
 
     let courses = null;
 

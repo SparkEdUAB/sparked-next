@@ -1,29 +1,19 @@
 'use client';
-import { useFetch } from '@hooks/use-swr';
 import useAuth from '@hooks/useAuth';
-import { API_LINKS } from 'app/links';
 import { Spinner } from 'flowbite-react';
-import { useSession } from "next-auth/react";
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { useMemo } from 'react';
 import { LoginSignupLinks } from './LoginSignupLinks';
 
 export function LogOutButton() {
-  const { data: session } = useSession()
+  const { data: session } = useSession();
   const { handleLogout, loading, isAuthenticated } = useAuth();
 
-  const userEmail = session?.user?.email as string;
-  const shouldFetch = isAuthenticated && userEmail;
-  const { data, mutate } = useFetch(
-    shouldFetch ? `${API_LINKS.FIND_USER_BY_EMAIL}?email=${encodeURIComponent(userEmail)}` : null,
-  );
-
-  const isAdmin = useMemo(() => data?.user?.role === "Admin", [data])
+  // @ts-expect-error
+  const isAdmin = session?.user?.role === 'Admin';
   const handleUserLogout = () => {
     handleLogout();
-    mutate();
-  }
-
+  };
 
   return isAuthenticated ? (
     <div className="flex items-center">

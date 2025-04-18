@@ -12,7 +12,7 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
   const slug = params.slug;
 
   const settingsFunctions: {
-    [key: string]: (request: Request, session?: Session) => Promise<Response>;
+    [key: string]: (request: Request) => Promise<Response>;
   } = {
     fetchSettings: fetchSettings_,
     fetchInstitutions: fetchInstitutions_,
