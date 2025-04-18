@@ -30,7 +30,7 @@ export default async function updateSettings_(request: Request, session?: Sessio
       updated_at: new Date(),
       lastUpdated: new Date(),
       // @ts-ignore
-      updated_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+      updated_by_id: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
     };
 
     if (!existingSettings) {
@@ -38,7 +38,7 @@ export default async function updateSettings_(request: Request, session?: Sessio
         ...updateData,
         created_at: new Date(),
         // @ts-ignore
-        created_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+        created_by_id: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
         isActive: true,
         scope: 'global',
         version: 1,

@@ -195,7 +195,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       created_at: new Date(),
       updated_at: new Date(),
       //@ts-ignore
-      created_by_id: new BSON.ObjectId(session?.user?.id),
+      created_by_id: new BSON.ObjectId(session?.user?._id),
       school_id: new BSON.ObjectId(schoolId),
       program_id: new BSON.ObjectId(programId),
       course_id: new BSON.ObjectId(courseId),

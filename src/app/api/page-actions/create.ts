@@ -63,7 +63,7 @@ export default async function createPageAction_(request: Request, session?: Sess
       label,
       action_key: actionKey,
       //@ts-ignore
-      created_by_id: new BSON.ObjectId(session?.user?.id),
+      created_by_id: new BSON.ObjectId(session?.user?._id),
     });
 
     const response = {

@@ -45,7 +45,7 @@ export default async function editSetting_(request: Request, session?: Session) 
     const updateData: any = {
       updated_at: new Date(),
       // @ts-ignore
-      updated_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+      updated_by_id: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
     };
 
     if (parsedData.category) updateData.category = parsedData.category;

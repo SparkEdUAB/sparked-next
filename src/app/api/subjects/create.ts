@@ -61,7 +61,7 @@ export default async function createSubject_(request: Request, session?: Session
       updated_at: new Date(),
       grade_id: new BSON.ObjectId(gradeId),
       //@ts-ignore
-      created_by_id: new BSON.ObjectId(session?.user?.id),
+      created_by_id: new BSON.ObjectId(session?.user?._id),
     });
 
     const response = {

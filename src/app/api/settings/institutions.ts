@@ -52,7 +52,7 @@ export async function addInstitution_(request: Request, session?: Session) {
           updated_at: new Date(),
           lastUpdated: new Date(),
           // @ts-ignore
-          updated_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+          updated_by_id: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
         },
       },
       { upsert: true },
@@ -115,7 +115,7 @@ export async function updateInstitution_(request: Request, session?: Session) {
     updateFields['updated_at'] = new Date();
     updateFields['last_updated_at'] = new Date();
     // @ts-ignore
-    updateFields['updated_by_id'] = session?.user?.id ? new BSON.ObjectId(session.user.id) : null;
+    updateFields['updated_by_id'] = session?.user?._id ? new BSON.ObjectId(session.user.id) : null;
 
     const result = await db.collection(dbCollections.settings.name).updateOne(
       {
@@ -186,7 +186,7 @@ export async function removeInstitution_(request: Request, session?: Session) {
           updated_at: new Date(),
           lastUpdated: new Date(),
           // @ts-ignore
-          updated_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+          updated_by_id: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
         },
       },
     );

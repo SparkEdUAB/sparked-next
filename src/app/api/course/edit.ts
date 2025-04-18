@@ -100,7 +100,7 @@ export default async function editCourse_(request: Request, session?: Session) {
       school_id: new BSON.ObjectId(schoolId),
 
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
+      updated_by_id: new BSON.ObjectId(session?.user?._id),
     };
 
     await db.collection(dbCollections.courses.name).updateOne(query, {

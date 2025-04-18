@@ -42,7 +42,7 @@ export default async function createSetting_(request: Request, session?: Session
       created_at: new Date(),
       updated_at: new Date(),
       // @ts-ignore
-      created_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+      created_by_id: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
     };
 
     const db = await dbClient();

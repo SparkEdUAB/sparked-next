@@ -71,7 +71,7 @@ export default async function editUser_(request: Request, session?: Session) {
             role_id: roleExists._id,
             updatedAt: new Date(),
             //   @ts-expect-error
-            updatedById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+            updatedById: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
           },
         },
         { upsert: true }, // Create if doesn't exist
@@ -89,7 +89,7 @@ export default async function editUser_(request: Request, session?: Session) {
           phoneNumber,
           updatedAt: new Date(),
           //   @ts-expect-error
-          updatedById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+          updatedById: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
         },
       },
     );

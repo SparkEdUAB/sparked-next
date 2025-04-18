@@ -70,7 +70,7 @@ export default async function createUser_(request: Request, session?: Session) {
       createdAt: new Date(),
       updatedAt: new Date(),
       //   @ts-expect-error
-      createdById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+      createdById: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
     });
 
     // Create role mapping
@@ -80,7 +80,7 @@ export default async function createUser_(request: Request, session?: Session) {
       created_at: new Date(),
       updated_at: new Date(),
       //   @ts-expect-error
-      created_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+      created_by_id: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
     });
 
     return new Response(
