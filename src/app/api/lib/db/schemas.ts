@@ -95,6 +95,7 @@ export const collectionSchemas = {
     institutions: z
       .array(
         z.object({
+          _id: z.string(),
           name: z.string(),
           type: z.enum(['highSchool', 'college', 'other']).optional(),
           address: z.string().optional(),

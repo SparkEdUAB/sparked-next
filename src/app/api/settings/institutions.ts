@@ -181,7 +181,7 @@ export async function removeInstitution_(request: Request, session?: Session) {
       { key: 'global_settings' },
       {
         // @ts-expect-error
-        $pull: { institutions: { id } },
+        $pull: { institutions: { _id: id } },
         $set: {
           updated_at: new Date(),
           lastUpdated: new Date(),

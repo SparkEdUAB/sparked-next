@@ -15,3 +15,21 @@ export async function fetcher<JSON = any>(input: RequestInfo, init?: RequestInit
     return new Error('An error occured while fetching data: ' + error.toString());
   }
 }
+
+export async function postMutationFetcher(url: string, { arg }: { arg: any }) {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(arg),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || data.isError) {
+    throw new Error(data.message || 'Operation failed');
+  }
+
+  return data;
+}
