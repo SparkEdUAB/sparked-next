@@ -13,7 +13,7 @@
     "@auth/mongodb-adapter": "^3.0.0",
     "@aws-sdk/client-s3": "^3.598.0",
     "@headlessui/react": "^2.0.0",
-    "@types/node": "22.13.14",
+    "@types/node": "22.14.1",
     "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "@uidotdev/usehooks": "^2.4.1",
@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.51.0",
-    "@react-email/components": "^0.0.34",
+    "@react-email/components": "^0.0.36",
     "@types/bcryptjs": "^2.4.6",
     "@types/formidable": "^3.4.5",
     "@types/jsonwebtoken": "^9.0.6",

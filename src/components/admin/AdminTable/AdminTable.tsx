@@ -104,7 +104,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
           </div>
         </div>
       )}
-      
+
       <AdminTableButtonGroup
         createNew={createNew}
         rowSelection={rowSelection}
@@ -144,8 +144,8 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                     }
                   />
                 </Table.HeadCell>
-                {filteredColumns.map((column) => (
-                  <Table.HeadCell key={column.key} className="bg-gray-100">
+                {filteredColumns.map((column, i) => (
+                  <Table.HeadCell key={`${column.key}-${i}`} className="bg-gray-100">
                     {column.title?.toString()}
                   </Table.HeadCell>
                 ))}

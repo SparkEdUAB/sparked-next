@@ -8,6 +8,7 @@ import { UNIT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { T_RECORD } from 'types';
 import { HttpStatusCode } from 'axios';
+import { sortByNumericValue } from '../utils/sorting';
 
 const dbConfigData = UNIT_FIELD_NAMES_CONFIG;
 
@@ -59,7 +60,7 @@ export default async function fetchUnits_(request: any) {
 
     const response = {
       isError: false,
-      units,
+      units: sortByNumericValue(units, 'name'),
     };
 
     return new Response(JSON.stringify(response), {
@@ -311,7 +312,7 @@ export async function fetchUnitsBySubjectId_(request: any) {
 
     const response = {
       isError: false,
-      units,
+      units: sortByNumericValue(units, 'name'),
     };
 
     return new Response(JSON.stringify(response), {
@@ -375,7 +376,7 @@ export async function fetchUnitsByTopicId_(request: any) {
 
     const response = {
       isError: false,
-      units,
+      units: sortByNumericValue(units, 'name'),
     };
 
     return new Response(JSON.stringify(response), {
@@ -440,7 +441,7 @@ export async function fetchUnitsByGradeId_(request: any) {
 
     const response = {
       isError: false,
-      units,
+      units: sortByNumericValue(units, 'name'),
     };
 
     return new Response(JSON.stringify(response), {
