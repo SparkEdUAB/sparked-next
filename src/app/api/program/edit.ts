@@ -78,7 +78,7 @@ export default async function editProgram_(request: Request, session?: Session) 
       school_id: new BSON.ObjectId(schoolId),
 
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
+      updated_by_id: new BSON.ObjectId(session?.user?._id),
     };
 
     await db.collection(dbCollections.programs.name).updateOne(query, {

@@ -57,19 +57,11 @@ export const validateSignupForm = (formData: any, isStudent: boolean, institutio
 
   // Validate student-specific fields
   if (isStudent) {
-    if (!formData.institutionType) {
-      errors.institutionType = 'Institution type is required';
+    if (!formData.institutionId) {
+      errors.institutionId = 'Institution type is required';
     }
-
-    // Validate school name and grade for general school type
-    if (institutionType === 'general') {
-      if (!formData.schoolName) {
-        errors.schoolName = 'School name is required for a student';
-      }
-
-      if (!formData.grade) {
-        errors.grade = 'Grade is required for a student';
-      }
+    if (!formData.grade && isStudent) {
+      errors.grade = 'Grade is required for a student';
     }
   }
 

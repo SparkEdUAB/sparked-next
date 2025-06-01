@@ -64,7 +64,7 @@ export default async function editUserRole_(request: Request, session?: Session)
       description,
       updated_at: new Date(),
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
+      updated_by_id: new BSON.ObjectId(session?.user?._id),
     };
 
     await db.collection(dbCollections.user_roles.name).updateOne(query, {

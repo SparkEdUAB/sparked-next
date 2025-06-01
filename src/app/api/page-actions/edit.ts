@@ -68,7 +68,7 @@ export default async function editPageAction_(request: Request, session?: Sessio
       label,
       action_key: actionKey,
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
+      updated_by_id: new BSON.ObjectId(session?.user?._id),
     };
 
     await db.collection(dbCollections.page_actions.name).updateOne(query, {

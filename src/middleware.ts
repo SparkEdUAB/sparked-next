@@ -12,6 +12,7 @@ const PUBLIC_PATHS = [
   '/api/media-actions/createMediaView',
   '/api/password/forgotPassword',
   '/api/password/resetPassword',
+  '/api/settings/fetchInstitutions',
 ];
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
@@ -21,9 +22,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Check for POST requests to API routes
   if (pathname.startsWith('/api') && method === 'POST') {
-    // Get session token using NextAuth.js helper
     const session = await getToken({
       req: request,
       secret: process.env.NEXTAUTH_SECRET,

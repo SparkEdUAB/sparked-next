@@ -1,6 +1,5 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { zfd } from 'zod-form-data';
-import { getDbFieldNamesConfigStatus } from '../config';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { SUBJECT_FIELD_NAMES_CONFIG } from './constants';
@@ -52,12 +51,10 @@ export default async function fetchSubjects_(request: any) {
 
     const dbConfigData = SUBJECT_FIELD_NAMES_CONFIG;
 
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
-
     if (isWithMetaData) {
       subjects = await db
         .collection(dbCollections.subjects.name)
-        .aggregate(p_fetchSubjectWithGrade({ skip, limit, project }))
+        .aggregate(p_fetchSubjectWithGrade({ skip, limit }))
         .toArray();
     } else {
       subjects = await db

@@ -4,11 +4,11 @@ import { dbCollections } from '../lib/db/collections';
 export const p_fetchSubjectWithGrade = ({
   limit = 1000,
   skip = 0,
-  project,
+  project = {},
 }: {
   limit?: number;
   skip?: number;
-  project: T_RECORD;
+  project?: T_RECORD;
 }) => [
   {
     $lookup: {
