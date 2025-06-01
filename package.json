@@ -51,7 +51,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.51.0",
-    "@react-email/components": "^0.0.36",
+    "@react-email/components": "^0.0.41",
     "@types/bcryptjs": "^2.4.6",
     "@types/formidable": "^3.4.5",
     "@types/jsonwebtoken": "^9.0.6",
