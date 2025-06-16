@@ -11,7 +11,7 @@ export const p_fetchMediaContentWithMetaData = ({
   query?: Record<string, any>;
   limit?: number;
   skip?: number;
-  project: T_RECORD;
+  project?: T_RECORD;
 }) => [
   {
     $match: query,

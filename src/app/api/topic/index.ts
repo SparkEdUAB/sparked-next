@@ -5,7 +5,6 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchTopicsWithMetaData } from './pipelines';
 import { TOPIC_FIELD_NAMES_CONFIG } from './constants';
-import { getDbFieldNamesConfigStatus } from '../config';
 import { HttpStatusCode } from 'axios';
 import { sortByNumericValue } from '../utils/sorting';
 
@@ -34,14 +33,13 @@ export default async function fetchTopics_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let topics = [];
 
     if (isWithMetaData) {
       topics = await db
         .collection(dbCollections.topics.name)
-        .aggregate(p_fetchTopicsWithMetaData({ query: {}, project }))
+        .aggregate(p_fetchTopicsWithMetaData({ query: {} }))
         .toArray();
     } else {
       topics = await db
@@ -98,7 +96,6 @@ export async function fetchTopicById_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let topic: { [key: string]: string } | null;
 
@@ -107,7 +104,6 @@ export async function fetchTopicById_(request: any) {
         .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
-            project,
             query: {
               _id: new BSON.ObjectId(topicId),
             },
@@ -212,7 +208,6 @@ export async function findTopicsByName_(request: any) {
       });
     }
     const regexPattern = new RegExp(name, 'i');
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let topics = null;
 
@@ -221,7 +216,6 @@ export async function findTopicsByName_(request: any) {
         .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
-            project,
             query: {
               name: { $regex: regexPattern },
             },
@@ -281,7 +275,6 @@ export async function fetchTopicsByUnitId_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let topics: Array<{ [key: string]: string }>;
 
@@ -290,7 +283,6 @@ export async function fetchTopicsByUnitId_(request: any) {
         .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
-            project,
             query: {
               unit_id: new BSON.ObjectId(unitId),
             },
@@ -346,7 +338,6 @@ export async function fetchTopicsBySubjectId_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let topics: Array<{ [key: string]: string }>;
 
@@ -355,7 +346,6 @@ export async function fetchTopicsBySubjectId_(request: any) {
         .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
-            project,
             query: {
               subject_id: new BSON.ObjectId(subjectId),
             },
@@ -411,7 +401,6 @@ export async function fetchTopicsByGradeId_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let topics: Array<{ [key: string]: string }>;
 
@@ -420,7 +409,6 @@ export async function fetchTopicsByGradeId_(request: any) {
         .collection(dbCollections.topics.name)
         .aggregate(
           p_fetchTopicsWithMetaData({
-            project,
             query: {
               grade_id: new BSON.ObjectId(gradeId),
             },

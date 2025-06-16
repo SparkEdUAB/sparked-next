@@ -186,7 +186,7 @@ export default async function editTopic_(request: Request, session?: Session) {
       description,
       updated_at: new Date(),
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
+      updated_by_id: new BSON.ObjectId(session?.user?._id),
     };
 
     // Only add optional fields if they exist

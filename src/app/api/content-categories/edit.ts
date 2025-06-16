@@ -61,7 +61,7 @@ export default async function editContentCategory_(request: Request, session?: S
       description,
       updated_at: new Date(),
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
+      updated_by_id: new BSON.ObjectId(session?.user?._id),
     };
 
     await db.collection(dbCollections.content_categories.name).updateOne(query, {

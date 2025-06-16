@@ -68,4 +68,8 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
+  settings: {
+    name: string;
+    label: string;
+  };
 };

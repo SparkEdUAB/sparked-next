@@ -158,7 +158,7 @@ export async function assignUserRole_(request: Request, session?: Session) {
       role_id: new BSON.ObjectId(roleId),
       user_id: new BSON.ObjectId(userId),
       //@ts-ignore
-      created_by_id: new BSON.ObjectId(session?.user?.id),
+      created_by_id: new BSON.ObjectId(session?.user?._id),
     });
 
     const response = {

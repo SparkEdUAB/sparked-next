@@ -2,7 +2,6 @@ import NextAuth, { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import { BSON } from 'mongodb';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -15,7 +14,7 @@ export const authOptions: NextAuthOptions = {
         const { jwtToken } = credentials;
 
         try {
-          const user = { ...credentials }; // Extract user details from credentials
+          const user = { ...credentials };
           return { ...user, token: jwtToken };
         } catch {
           return null;
@@ -28,9 +27,11 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async session({ session, token }) {
-      if (token.sub && session.user) {
-        // @ts-expect-error
-        session.user.id = token.sub;
+      if (token.email && session.user) {
+        if (token.userData) {
+          // @ts-expect-error
+          session.user = { ...session.user, ...token.userData, role: token.role };
+        }
       }
       return session;
     },
@@ -40,25 +41,66 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role;
       }
 
-      if (token.sub) {
+      if (token.userData) {
+        return token;
+      }
+
+      if (token.email) {
         const db = await dbClient();
         if (db) {
-          const roleMapping = await db.collection(dbCollections.user_role_mappings.name).findOne({
-            user_id: new BSON.ObjectId(token.sub),
-          });
+          const userWithRole = await db
+            .collection(dbCollections.users.name)
+            .aggregate([
+              { $match: { email: token.email } },
+              {
+                $lookup: {
+                  from: dbCollections.user_role_mappings.name,
+                  localField: '_id',
+                  foreignField: 'user_id',
+                  as: 'roleMapping',
+                },
+              },
+              { $unwind: { path: '$roleMapping', preserveNullAndEmptyArrays: true } },
+              {
+                $lookup: {
+                  from: dbCollections.user_roles.name,
+                  localField: 'roleMapping.role_id',
+                  foreignField: '_id',
+                  as: 'role',
+                },
+              },
+              { $unwind: { path: '$role', preserveNullAndEmptyArrays: true } },
+              {
+                $project: {
+                  _id: 1,
+                  firstName: 1,
+                  lastName: 1,
+                  email: 1,
+                  institutionId: 1,
+                  grade: 1,
+                  'role.name': 1,
+                },
+              },
+            ])
+            .toArray();
 
-          if (roleMapping) {
-            const role = await db.collection(dbCollections.user_roles.name).findOne({
-              _id: roleMapping.role_id,
-            });
+          const userData = userWithRole[0];
 
-            if (role) {
-              token.role = role.name;
+          if (userData) {
+            token.userData = {
+              fullName: `${userData.firstName} ${userData.lastName}`,
+              email: userData.email,
+              institutionId: userData.institutionId?.toString(),
+              _id: userData._id?.toString(),
+              grade: userData.grade,
+            };
+
+            if (userData.role?.name) {
+              token.role = userData.role.name;
             }
           }
         }
       }
-
       return token;
     },
   },

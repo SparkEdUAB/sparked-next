@@ -14,10 +14,11 @@ export default async function createUser_(request: Request, session?: Session) {
     lastName: zfd.text(),
     role: zfd.text(),
     password: zfd.text(),
+    institutionId: zfd.text().optional().nullable(),
   });
 
   const formBody = await request.json();
-  const { email, firstName, lastName, role, password } = schema.parse(formBody);
+  const { email, firstName, lastName, role, password, institutionId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -64,11 +65,12 @@ export default async function createUser_(request: Request, session?: Session) {
       email,
       firstName,
       lastName,
+      institutionId,
       password, // Note: In production, ensure password is hashed
       createdAt: new Date(),
       updatedAt: new Date(),
       //   @ts-expect-error
-      createdById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+      createdById: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
     });
 
     // Create role mapping
@@ -78,7 +80,7 @@ export default async function createUser_(request: Request, session?: Session) {
       created_at: new Date(),
       updated_at: new Date(),
       //   @ts-expect-error
-      created_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+      created_by_id: session?.user?._id ? new BSON.ObjectId(session.user.id) : null,
     });
 
     return new Response(

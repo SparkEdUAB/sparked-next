@@ -11,16 +11,16 @@ import { LuCircleUser } from 'react-icons/lu';
 import { Select } from 'flowbite-react';
 import { validateSignupForm } from 'utils/helpers/validation';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-
+import { useFetch } from '@hooks/use-swr';
 
 const Signup = () => {
   const { handleSignup, loading } = useAuth();
   const [isStudent, setIsStudent] = useState(false);
-  const [institutionType, setInstitutionType] = useState<string>('');
+  const [selectedInstitutionId, setSelectedInstitutionId] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { data, error, isLoading } = useFetch('/api/settings/fetchInstitutions');
 
-  // Form data state to track input values
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -28,11 +28,12 @@ const Signup = () => {
     phoneNumber: '',
     password: '',
     confirmPassword: '',
-    schoolName: '',
-    grade: ''
+    grade: '',
   });
 
-  // Errors state
+  // Get the selected institution object
+  const selectedInstitution = data?.institutions?.find((institution: any) => institution._id === selectedInstitutionId);
+
   const [errors, setErrors] = useState<{
     email?: string;
     phoneNumber?: string;
@@ -40,37 +41,30 @@ const Signup = () => {
     firstName?: string;
     lastName?: string;
     confirmPassword?: string;
-    institutionType?: string;
-    schoolName?: string;
+    institutionId?: string;
     grade?: string;
   }>({});
 
-  // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  // Validate form fields as user types
   useEffect(() => {
-    // Create a temporary object with current form values
     const dataToValidate = {
       ...formData,
-      institutionType
+      institutionId: selectedInstitutionId,
     };
 
-    // Run validation
-    const validation = validateSignupForm(dataToValidate, isStudent, institutionType);
+    const validation = validateSignupForm(dataToValidate, isStudent, selectedInstitution?.type);
 
-    // Update errors - only clear errors for fields that are now valid
-    setErrors(prevErrors => {
+    setErrors((prevErrors) => {
       const newErrors = { ...prevErrors };
 
-      // Check each field that has a value
-      Object.keys(dataToValidate).forEach(key => {
+      Object.keys(dataToValidate).forEach((key) => {
         const fieldKey = key as keyof typeof dataToValidate;
         const value = dataToValidate[fieldKey];
 
@@ -93,20 +87,16 @@ const Signup = () => {
 
       return newErrors;
     });
-  }, [formData, isStudent, institutionType]);
+  }, [formData, isStudent, selectedInstitutionId]);
 
-  // Update the student radio button handling
   const handleStudentChange = (isStudentValue: boolean) => {
     setIsStudent(isStudentValue);
 
-    // Reset institution type when changing student status
     if (!isStudentValue) {
-      setInstitutionType('');
-      // Also reset school-related fields
-      setFormData(prev => ({
+      setSelectedInstitutionId('');
+      setFormData((prev) => ({
         ...prev,
-        schoolName: '',
-        grade: ''
+        grade: '',
       }));
     }
   };
@@ -114,21 +104,15 @@ const Signup = () => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
-    // Create a complete result object that includes all form data
     let result: T_SignupFields = {
       ...formData,
       isStudent,
+      institutionId: isStudent ? selectedInstitutionId : null,
     } as T_SignupFields;
 
-    // Add student-related fields
-    if (isStudent) {
-      // @ts-expect-error
-      result.institutionType = institutionType;
-    }
+    const validation = validateSignupForm(result, isStudent, selectedInstitution?.type);
 
-    // Validate the form for submission (show all errors)
-    const validation = validateSignupForm(result, isStudent, institutionType);
-
+    console.log(validation);
     if (!validation.isValid) {
       setErrors(validation.errors);
       return;
@@ -145,9 +129,7 @@ const Signup = () => {
         </Link>
         <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
           <div className="p-8 space-y-4">
-            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">
-              Join Our Community
-            </h1>
+            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">Join Our Community</h1>
             <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
               Create an account and start your learning journey
             </p>
@@ -156,7 +138,11 @@ const Signup = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor={SIGNUP_FORM_FIELDS.firstName.key} value="First Name *" className="text-gray-700 dark:text-gray-300" />
+                    <Label
+                      htmlFor={SIGNUP_FORM_FIELDS.firstName.key}
+                      value="First Name *"
+                      className="text-gray-700 dark:text-gray-300"
+                    />
                   </div>
                   <TextInput
                     icon={LuCircleUser}
@@ -167,7 +153,7 @@ const Signup = () => {
                     placeholder="John"
                     value={formData.firstName}
                     onChange={handleInputChange}
-                    color={errors.firstName ? "failure" : undefined}
+                    color={errors.firstName ? 'failure' : undefined}
                     helperText={errors.firstName}
                     className="rounded-lg"
                   />
@@ -175,7 +161,11 @@ const Signup = () => {
 
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor={SIGNUP_FORM_FIELDS.lastName.key} value="Last Name *" className="text-gray-700 dark:text-gray-300" />
+                    <Label
+                      htmlFor={SIGNUP_FORM_FIELDS.lastName.key}
+                      value="Last Name *"
+                      className="text-gray-700 dark:text-gray-300"
+                    />
                   </div>
                   <TextInput
                     icon={LuCircleUser}
@@ -186,7 +176,7 @@ const Signup = () => {
                     placeholder="Doe"
                     value={formData.lastName}
                     onChange={handleInputChange}
-                    color={errors.lastName ? "failure" : undefined}
+                    color={errors.lastName ? 'failure' : undefined}
                     helperText={errors.lastName}
                     className="rounded-lg"
                   />
@@ -195,7 +185,11 @@ const Signup = () => {
 
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email *" className="text-gray-700 dark:text-gray-300" />
+                  <Label
+                    htmlFor={SIGNUP_FORM_FIELDS.email.key}
+                    value="Your email *"
+                    className="text-gray-700 dark:text-gray-300"
+                  />
                 </div>
                 <TextInput
                   icon={LuCircleUser}
@@ -206,7 +200,7 @@ const Signup = () => {
                   placeholder="name@example.com"
                   value={formData.email}
                   onChange={handleInputChange}
-                  color={errors.email ? "failure" : undefined}
+                  color={errors.email ? 'failure' : undefined}
                   helperText={errors.email}
                   className="rounded-lg"
                 />
@@ -224,7 +218,7 @@ const Signup = () => {
                   disabled={loading}
                   value={formData.phoneNumber}
                   onChange={handleInputChange}
-                  color={errors.phoneNumber ? "failure" : undefined}
+                  color={errors.phoneNumber ? 'failure' : undefined}
                   helperText={errors.phoneNumber}
                   className="rounded-lg"
                 />
@@ -261,45 +255,43 @@ const Signup = () => {
               </div>
 
               {isStudent && (
-                <div className="animate-fadeIn space-y-4 bg-blue-50 dark:bg-gray-700/50 p-4 rounded-lg   dark:border-blue-400">
+                <div className="animate-fadeIn space-y-4 bg-blue-50 dark:bg-gray-700/50 p-4 rounded-lg dark:border-blue-400">
                   <div>
                     <div className="mb-1.5 block">
-                      <Label htmlFor="institutionType" value="Institution Type *" className="text-gray-700 dark:text-gray-300" />
+                      <Label
+                        htmlFor="institutionId"
+                        value="Institution *"
+                        className="text-gray-700 dark:text-gray-300"
+                      />
                     </div>
                     <Select
-                      id="institutionType"
-                      value={institutionType}
-                      onChange={(e) => setInstitutionType(e.target.value)}
-                      color={errors.institutionType ? "failure" : undefined}
-                      helperText={errors.institutionType}
+                      id="institutionId"
+                      value={selectedInstitutionId}
+                      onChange={(e) => setSelectedInstitutionId(e.target.value)}
+                      color={errors.institutionId ? 'failure' : undefined}
+                      helperText={errors.institutionId}
                       className="rounded-lg"
+                      disabled={isLoading}
                     >
-                      <option value="">Select Institution Type</option>
-                      <option value="general">General School</option>
-                      <option value="college">College</option>
-                      <option value="university">University</option>
+                      <option value="">Select Institution</option>
+                      {data?.institutions?.map((institution: any) => (
+                        <option key={institution._id} value={institution._id}>
+                          {institution.name} (
+                          {institution.type === 'highSchool'
+                            ? 'High School'
+                            : institution.type === 'college'
+                            ? 'College'
+                            : 'Other'}
+                          )
+                        </option>
+                      ))}
                     </Select>
+                    {isLoading && <p className="text-sm text-gray-500 mt-1">Loading institutions...</p>}
                   </div>
 
-                  {institutionType === 'general' && (
+                  {/* Show grade selection only for high school institutions */}
+                  {selectedInstitution?.type === 'highSchool' && (
                     <div className="animate-fadeIn space-y-4">
-                      <div>
-                        <div className="mb-1.5 block">
-                          <Label htmlFor="schoolName" value="School Name *" className="text-gray-700 dark:text-gray-300" />
-                        </div>
-                        <TextInput
-                          id="schoolName"
-                          name="schoolName"
-                          type="text"
-                          value={formData.schoolName}
-                          onChange={handleInputChange}
-                          color={errors.schoolName ? "failure" : undefined}
-                          helperText={errors.schoolName}
-                          disabled={loading}
-                          className="rounded-lg"
-                        />
-                      </div>
-
                       <div>
                         <div className="mb-1.5 block">
                           <Label htmlFor="grade" value="Grade *" className="text-gray-700 dark:text-gray-300" />
@@ -309,7 +301,7 @@ const Signup = () => {
                           name="grade"
                           value={formData.grade}
                           onChange={handleInputChange}
-                          color={errors.grade ? "failure" : undefined}
+                          color={errors.grade ? 'failure' : undefined}
                           helperText={errors.grade}
                           className="rounded-lg"
                         >
@@ -340,7 +332,7 @@ const Signup = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     helperText={errors.password}
-                    color={errors.password ? "failure" : undefined}
+                    color={errors.password ? 'failure' : undefined}
                     className="rounded-lg"
                     rightIcon={() => (
                       <button
@@ -360,7 +352,11 @@ const Signup = () => {
 
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor="confirmPassword" value="Confirm Password *" className="text-gray-700 dark:text-gray-300" />
+                    <Label
+                      htmlFor="confirmPassword"
+                      value="Confirm Password *"
+                      className="text-gray-700 dark:text-gray-300"
+                    />
                   </div>
                   <TextInput
                     icon={AiOutlineLock}
@@ -370,7 +366,7 @@ const Signup = () => {
                     type={showConfirmPassword ? 'text' : 'password'}
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    color={errors.confirmPassword ? "failure" : undefined}
+                    color={errors.confirmPassword ? 'failure' : undefined}
                     helperText={errors.confirmPassword}
                     className="rounded-lg"
                     rightIcon={() => (
@@ -407,7 +403,7 @@ const Signup = () => {
               </Button>
 
               <p className="text-md font-light text-center text-gray-600 dark:text-gray-400 mt-4">
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <Link
                   href="/auth/login"
                   className="font-medium  hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"
