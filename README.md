@@ -69,7 +69,7 @@ Before pushing anything to your fork, always
 
 `yarn run lint`
 
-Before you make commit, make sure that the linting are passing, check with the eslintrc.yml to check the rules.
+Before you make commit, make sure that lint is passing, check with the eslintrc.yml to check the rules.
 
 ### Issues
 
