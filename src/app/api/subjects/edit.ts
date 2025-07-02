@@ -67,7 +67,7 @@ export default async function editSubject_(request: Request, session?: Session) 
       updated_at: new Date(),
       grade_id: new BSON.ObjectId(gradeId),
       //@ts-ignore
-      updated_by_id: new BSON.ObjectId(session?.user?.id),
+      updated_by_id: new BSON.ObjectId(session?.user?._id),
     };
 
     await db.collection(dbCollections.subjects.name).updateOne(query, {

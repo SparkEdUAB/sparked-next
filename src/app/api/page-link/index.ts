@@ -111,7 +111,7 @@ export async function assignPageActionToPageLink_(request: Request, session?: Se
     const updateQuery = {
       $set: {
         //@ts-ignore
-        updated_by: new BSON.ObjectId(session?.user?.id),
+        updated_by: new BSON.ObjectId(session?.user?._id),
         updated_at: new Date(),
       },
       $push: { page_action_ids: new BSON.ObjectId(pageActionId) },
@@ -190,7 +190,7 @@ export async function unAssignPageActionToPageLink_(request: Request, session?: 
     const updateQuery = {
       $set: {
         //@ts-ignore
-        updated_by: new BSON.ObjectId(session?.user?.id),
+        updated_by: new BSON.ObjectId(session?.user?._id),
         updated_at: new Date(),
       },
       $pull: { page_action_ids: new BSON.ObjectId(pageActionId) },

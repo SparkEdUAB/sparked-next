@@ -183,7 +183,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       created_at: new Date(),
       updated_at: new Date(),
       // @ts-ignore
-      created_by_id: new BSON.ObjectId(session?.user?.id),
+      created_by_id: new BSON.ObjectId(session?.user?._id),
       subject_id: new BSON.ObjectId(subjectId),
       grade_id: new BSON.ObjectId(gradeId),
     };

@@ -69,4 +69,8 @@ export const dbCollections: T_dbCollection = {
     name: 'media_reactions',
     label: 'Media Reactions',
   },
+  settings: {
+    name: 'settings',
+    label: 'Settings',
+  },
 } as const;

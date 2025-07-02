@@ -221,7 +221,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
       description,
       updated_at: new Date(),
       //@ts-ignore
-      created_by_id: new BSON.ObjectId(session?.user?.id),
+      created_by_id: new BSON.ObjectId(session?.user?._id),
       school_id: new BSON.ObjectId(schoolId),
       program_id: new BSON.ObjectId(programId),
       course_id: new BSON.ObjectId(courseId),

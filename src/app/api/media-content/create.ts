@@ -1,12 +1,11 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
+import { HttpStatusCode } from 'axios';
 import { BSON } from 'mongodb';
 import { Session } from 'next-auth';
 import { zfd } from 'zod-form-data';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
-import RESOURCE_PROCESS_CODES from './processCodes';
-import MEDIA_CONTENT_PROCESS_CODES from './processCodes';
-import { HttpStatusCode } from 'axios';
+import { default as MEDIA_CONTENT_PROCESS_CODES, default as RESOURCE_PROCESS_CODES } from './processCodes';
 
 export default async function createMediaContent_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -196,7 +195,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       created_at: new Date(),
       updated_at: new Date(),
       //@ts-ignore
-      created_by_id: new BSON.ObjectId(session?.user?.id),
+      created_by_id: new BSON.ObjectId(session?.user?._id),
       school_id: new BSON.ObjectId(schoolId),
       program_id: new BSON.ObjectId(programId),
       course_id: new BSON.ObjectId(courseId),

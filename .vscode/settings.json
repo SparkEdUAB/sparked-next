@@ -8,9 +8,10 @@
   "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
   "editor.rulers": [100],
   "[svg]": {
-    "editor.defaultFormatter": "jock.svg"
+    "editor.defaultFormatter": "oxc.oxc-vscode"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative"
 }

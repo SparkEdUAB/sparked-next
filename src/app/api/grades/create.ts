@@ -58,8 +58,10 @@ export default async function createGrade_(request: Request, session?: Session) 
       description,
       created_at: new Date(),
       updated_at: new Date(),
-      //@ts-ignore
-      created_by_id: new BSON.ObjectId(session?.user?.id),
+      // @ts-expect-error
+      institutionId: new BSON.ObjectId(session?.user?.institutionId),
+      // @ts-expect-error
+      created_by_id: new BSON.ObjectId(session?.user?._id),
     });
 
     const response = {
