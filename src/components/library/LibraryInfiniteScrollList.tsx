@@ -66,11 +66,13 @@ export function LibraryInfiniteScrollList({
     >
       <div className="px-4 sm:px-6 md:px-8 mt-5">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 media-content-list">
-          {mediaContent.slice(0, initialItemsToRender).map((item) => (
-            <ContentCard key={item._id} item={item} />
+          {mediaContent.slice(0, initialItemsToRender).map((item, i) => (
+            <ContentCard key={`content-card-${i}-${item._id}`} item={item} />
           ))}
           {mediaContent.length > initialItemsToRender &&
-            mediaContent.slice(initialItemsToRender).map((item) => <ContentCard key={item._id} item={item} />)}
+            mediaContent
+              .slice(initialItemsToRender)
+              .map((item, i) => <ContentCard key={`content-card-${i}-${item._id}`} item={item} />)}
         </div>
       </div>
     </InfiniteScroll>

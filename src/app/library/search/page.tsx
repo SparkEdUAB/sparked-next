@@ -1,9 +1,11 @@
-import { T_LibrarySearchPageProps } from '@components/library/types';
-import { Metadata, ResolvingMetadata } from 'next';
+import type { Metadata, ResolvingMetadata } from 'next';
 import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
 import { SearchMediaContentList } from './SearchMediaContentList';
 
-export async function generateMetadata(props: { params: Promise<{}>; searchParams: Promise<{ q: string }> }, parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  props: { params: Promise<{}>; searchParams: Promise<{ q: string }> },
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
   const { q } = await props.searchParams;
 
