@@ -15,13 +15,13 @@ import { NextRequest } from 'next/server';
 import { HttpStatusCode } from 'axios';
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
 
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const schoolFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -48,9 +48,9 @@ export async function POST(
 export async function GET(
   req: NextRequest,
 
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const slug = params.slug;
+  const { slug } = await params;
 
   const schoolFunctions: {
     [key: string]: (request: NextRequest, session?: Session | undefined) => Promise<Response>;

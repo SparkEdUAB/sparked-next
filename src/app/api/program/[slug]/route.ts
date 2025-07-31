@@ -6,11 +6,12 @@ import { authOptions } from '../../auth/authOptions';
 import createProgram_ from '../create';
 import editProgram_ from '../edit';
 import { HttpStatusCode } from 'axios';
+import { NextRequest } from 'next/server';
 
-const schoolApiHandler_ = async function POST(req: Request, { params }: { params: { slug: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const schoolFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -35,6 +36,4 @@ const schoolApiHandler_ = async function POST(req: Request, { params }: { params
       status: HttpStatusCode.NotFound,
     });
   }
-};
-
-export { schoolApiHandler_ as POST };
+}

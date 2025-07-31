@@ -1,4 +1,4 @@
 export type T_WelcomePageProps = {
-  params: {};
-  searchParams: {};
+  params: Promise<{}>;
+  searchParams: Promise<{}>;
 };
