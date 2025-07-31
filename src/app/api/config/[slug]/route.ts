@@ -2,9 +2,10 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { Session } from 'next-auth';
 import readConfigFile_ from '..';
 import { HttpStatusCode } from 'axios';
+import { NextRequest } from 'next/server';
 
-export async function GET(req: Request, { params }: { params: { slug: string } }) {
-  const slug = params.slug;
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   const configFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;

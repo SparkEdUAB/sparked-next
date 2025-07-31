@@ -13,7 +13,8 @@ export async function generateMetadata(props: {}, parent: ResolvingMetadata): Pr
   return getMetadata('Library Content', 'View the list of media content on the site');
 }
 
-const LibraryPage = async ({ searchParams }: T_LibraryPageProps) => {
+const LibraryPage = async ({ searchParams: searchParamsPromise }: T_LibraryPageProps) => {
+  const searchParams = await searchParamsPromise;
   const mediaResult = await fetchMedia(0, searchParams);
 
   return (

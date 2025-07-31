@@ -3,9 +3,10 @@ import { Session } from 'next-auth';
 import { getMediaReactionCounts_ } from '..';
 import { HttpStatusCode } from 'axios';
 import createMediaView_, { createMediaReaction_ } from '../create';
+import { NextRequest } from 'next/server';
 
-export async function POST(request: Request, { params }: { params: { slug: string } }) {
-  const slug = params.slug;
+export async function POST(request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   const pageLinksFunctions: {
     [key: string]: (request: any) => Promise<Response>;
@@ -29,11 +30,11 @@ export async function POST(request: Request, { params }: { params: { slug: strin
 }
 
 export async function GET(
-  req: Request,
+  req: NextRequest,
 
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
-  const slug = params.slug;
+  const { slug } = await params;
 
   const pageLinksFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;

@@ -5,25 +5,28 @@ import { FaFile, FaFileAudio, FaFileImage, FaFilePdf, FaFileVideo, FaLink } from
 import { determineFileType } from 'utils/helpers/determineFileType';
 import { truncateText } from 'utils/helpers/truncateText';
 
-const FileTypeIcon = ({ fileType, hasExternalUrl }: { fileType: string, hasExternalUrl: boolean }) => {
-  const iconClass = "inline-block mr-2";
+const FileTypeIcon = ({ fileType, hasExternalUrl }: { fileType: string; hasExternalUrl: boolean }) => {
+  const iconClass = 'inline-block mr-2';
 
   const fileTypeMap: Record<string, { icon: React.ElementType; color: string; text: string }> = {
-    pdf: { icon: FaFilePdf, color: "text-gray-500", text: "PDF" },
-    video: { icon: FaFileVideo, color: "text-gray-500", text: "Video" },
-    audio: { icon: FaFileAudio, color: "text-gray-500", text: "Audio" },
-    image: { icon: FaFileImage, color: "text-gray-500", text: "Image" },
-    link: { icon: FaLink, color: "text-gray-500", text: "External Link" },
-    default: { icon: FaFile, color: "text-gray-500", text: "File" },
+    pdf: { icon: FaFilePdf, color: 'text-gray-500', text: 'PDF' },
+    video: { icon: FaFileVideo, color: 'text-gray-500', text: 'Video' },
+    audio: { icon: FaFileAudio, color: 'text-gray-500', text: 'Audio' },
+    image: { icon: FaFileImage, color: 'text-gray-500', text: 'Image' },
+    link: { icon: FaLink, color: 'text-gray-500', text: 'External Link' },
+    default: { icon: FaFile, color: 'text-gray-500', text: 'File' },
   };
 
-  const { icon: IconComponent, color: textColor, text: fileTypeText } =
-    hasExternalUrl ? fileTypeMap.link : (fileTypeMap[fileType?.toLowerCase()] || fileTypeMap.default);
+  const {
+    icon: IconComponent,
+    color: textColor,
+    text: fileTypeText,
+  } = hasExternalUrl ? fileTypeMap.link : fileTypeMap[fileType?.toLowerCase()] || fileTypeMap.default;
 
   return (
     <div className={`flex items-center ${textColor} mt-1`}>
       <IconComponent className={iconClass} />
-      <span className='text-sm'>{fileTypeText}</span>
+      <span className="text-sm">{fileTypeText}</span>
     </div>
   );
 };
@@ -34,7 +37,7 @@ const ContentDetailsCardView = ({
   title,
   description,
   fileUrl,
-  externalUrl
+  externalUrl,
 }: {
   url: string;
   image: string;
@@ -43,8 +46,7 @@ const ContentDetailsCardView = ({
   fileUrl?: string;
   externalUrl?: string;
 }) => {
-
-  const fileType = determineFileType(fileUrl || "") as string;
+  const fileType = determineFileType(fileUrl || '') as string;
   const hasExternalUrl = Boolean(externalUrl);
 
   const domainName = hasExternalUrl ? new URL(externalUrl as string).hostname : '';
@@ -61,7 +63,7 @@ const ContentDetailsCardView = ({
           <Image
             className="rounded-t-md aspect-[4/3] object-cover object-center"
             alt={title}
-            src={hasExternalUrl || !isValidImage(image) ? placeholderImage : image}
+            src={hasExternalUrl || !isValidImage(image) ? placeholderImage.trimEnd() : image?.trimEnd()}
             width={450}
             height={340}
           />
