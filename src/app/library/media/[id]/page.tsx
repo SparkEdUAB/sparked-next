@@ -12,9 +12,7 @@ import { fetchRelatedMedia } from '../../../../fetchers/library/fetchRelatedMedi
 import { unstable_cache } from 'next/cache';
 
 type T_MediaContentPageProps = {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 };
 
 // Cache the media content fetch
@@ -42,7 +40,8 @@ const getRelatedMedia = unstable_cache(
 
 export async function generateMetadata(props: T_MediaContentPageProps, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
-  const result = await getMediaContent(props.params.id);
+  const { id } = await props.params;
+  const result = await getMediaContent(id);
 
   if (result instanceof Error) {
     return getMetadata('Media Content View', 'Shows details about the selected media content file');
@@ -58,8 +57,9 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
   }
 }
 
-export default async function MediaContentPage({ params }: T_MediaContentPageProps) {
-  const result = await getMediaContent(params.id);
+export default async function MediaContentPage({ params: paramsPromise }: T_MediaContentPageProps) {
+  const { id } = await paramsPromise;
+  const result = await getMediaContent(id);
   const relatedMediaContent = result instanceof Error ? null : await getRelatedMedia(result.mediaContent);
 
   return (

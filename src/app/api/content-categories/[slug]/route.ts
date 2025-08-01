@@ -6,15 +6,15 @@ import createContentCategory_ from '../create';
 import { HttpStatusCode } from 'axios';
 import editContentCategory_ from '../edit';
 import { deleteContentCategoriesById_ } from '../delete';
+import { NextRequest } from 'next/server';
 
 export async function POST(
-  req: Request,
-
-  { params }: { params: { slug: string } },
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -37,13 +37,12 @@ export async function POST(
 }
 
 export async function PUT(
-  req: Request,
-
-  { params }: { params: { slug: string } },
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -66,13 +65,12 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: Request,
-
-  { params }: { params: { slug: string } },
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -95,11 +93,10 @@ export async function DELETE(
 }
 
 export async function GET(
-  req: Request,
-
-  { params }: { params: { slug: string } },
+  req: NextRequest,
+  { params }: { params: Promise<{ slug: string }> }
 ) {
-  const slug = params.slug;
+  const { slug } = await params;
 
   const contentCategoryFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;

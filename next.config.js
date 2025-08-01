@@ -26,12 +26,6 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'fakeimg.pl',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'sparked-next.s3.eu-north-1.amazonaws.com',
         port: '',
         pathname: '/**',

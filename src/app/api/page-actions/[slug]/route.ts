@@ -7,15 +7,16 @@ import createPageAction_ from '../create';
 import deletePageActions_ from '../delete';
 import editPageAction_ from '../edit';
 import { HttpStatusCode } from 'axios';
+import { NextRequest } from 'next/server';
 
 export async function POST(
-  req: Request,
+  req: NextRequest,
 
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const pageActionApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -38,13 +39,13 @@ export async function POST(
 }
 
 export async function PUT(
-  req: Request,
+  req: NextRequest,
 
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const pageActionApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -67,13 +68,13 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: Request,
+  req: NextRequest,
 
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const pageActionApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -95,13 +96,13 @@ export async function DELETE(
   }
 }
 export async function GET(
-  req: Request,
+  req: NextRequest,
 
-  { params }: { params: { slug: string } },
+  { params }: { params: Promise<{ slug: string }> },
 ) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const pageActionApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;

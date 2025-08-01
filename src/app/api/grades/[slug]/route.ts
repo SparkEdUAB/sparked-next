@@ -7,11 +7,12 @@ import deleteGrades_ from '../delete';
 import editGrade_ from '../edit';
 import fetchGrades, { fetchGradeById_, findGradeByName_ } from '..';
 import { HttpStatusCode } from 'axios';
+import { NextRequest } from 'next/server';
 
-export async function POST(req: Request, { params }: { params: { slug: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const gradeApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -33,10 +34,10 @@ export async function POST(req: Request, { params }: { params: { slug: string } 
   }
 }
 
-export async function PUT(req: Request, { params }: { params: { slug: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const gradeApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -58,10 +59,10 @@ export async function PUT(req: Request, { params }: { params: { slug: string } }
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { slug: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const session = await getServerSession(authOptions);
 
-  const slug = params.slug;
+  const { slug } = await params;
 
   const gradeApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
@@ -83,8 +84,8 @@ export async function DELETE(req: Request, { params }: { params: { slug: string 
   }
 }
 
-export async function GET(req: Request, { params }: { params: { slug: string } }) {
-  const slug = params.slug;
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   const GradeFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;

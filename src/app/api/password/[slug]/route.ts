@@ -3,9 +3,10 @@ import { Session } from 'next-auth';
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import forgotPassword_ from '..';
 import resetPassword_ from '../reset';
+import { NextRequest } from 'next/server';
 
-export async function POST(req: Request, { params }: { params: { slug: string } }) {
-  const slug = params.slug;
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
 
   const passwordApiFunctions: {
     [key: string]: (request: Request, session?: Session) => Promise<Response>;
