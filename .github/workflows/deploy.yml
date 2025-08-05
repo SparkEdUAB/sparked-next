@@ -34,7 +34,7 @@ jobs:
           sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no root@95.111.229.11 << 'EOF'
             cd /var/www/sparked-next
             git pull origin main
-            yarn install --frozen-lockfile
+            yarn install
             yarn build
             if pm2 list | grep -q sparked-next; then
               pm2 restart sparked-next
