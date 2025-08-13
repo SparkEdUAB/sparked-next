@@ -11,6 +11,7 @@ import { useRouter } from 'next-nprogress-bar';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 import { jwtDecode } from 'jwt-decode';
+import { routes } from 'routes';
 
 const useAuth = () => {
   const { status } = useSession();
@@ -65,7 +66,14 @@ const useAuth = () => {
       setLoading(true);
       try {
         const resp = await fetch(url, formData);
-        const responseData = await resp.json();
+
+        let responseData;
+        try {
+          responseData = await resp.json();
+        } catch {
+          message.error(i18next.t('invalid_server_response'));
+          return false;
+        }
 
         if (!resp.ok || responseData.isError) {
           message.warning(getProcessCodeMeaning(responseData.code));
@@ -74,7 +82,7 @@ const useAuth = () => {
 
         const { jwtToken } = responseData;
         const decodedToken: { role?: { name: string } } = jwtDecode(jwtToken);
-        const userRole = decodedToken.role;
+        const userRole = decodedToken.role || { name: 'student' };
 
         await signIn('credentials', {
           redirect: false,
@@ -84,11 +92,7 @@ const useAuth = () => {
         });
 
         // Route based on role
-        if (!userRole?.name || userRole.name === 'student') {
-          router.replace('/library');
-        } else {
-          router.replace('/admin');
-        }
+        router.replace(userRole.name === 'student' ? routes.library : routes.admin);
 
         message.success(i18next.t('logged_in'));
       } catch (err: any) {
