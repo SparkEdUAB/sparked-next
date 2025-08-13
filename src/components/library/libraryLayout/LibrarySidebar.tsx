@@ -44,7 +44,6 @@ export function LibrarySidebar({
 
   const isMediaPage = sliptPathname[2] === 'media';
   const isLibrary = sliptPathname[1] === 'library';
-  const isSearchPage = sliptPathname.includes('search');
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -82,8 +81,6 @@ export function LibrarySidebar({
   const filteredUnitId = useSearchParams().get('unit_id');
   const filteredSubjectId = useSearchParams().get('subject_id');
   const filteredTopicId = useSearchParams().get('topic_id');
-
-  const backToLibrary = isMediaPage || isSearchPage;
 
   return (
     <>
