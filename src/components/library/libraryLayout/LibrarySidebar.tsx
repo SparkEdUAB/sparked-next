@@ -98,16 +98,6 @@ export function LibrarySidebar({
         >
           <Sidebar.Items>
             <Sidebar.ItemGroup>
-              <Sidebar.Item
-                as={Link}
-                href={backToLibrary ? '/library' : '/'}
-                className={`${styles.item} mb-4`}
-                icon={() => <span className="mr-2">←</span>}
-              >
-                {backToLibrary ? 'Back to Library' : 'Back to Home'}
-              </Sidebar.Item>
-            </Sidebar.ItemGroup>
-            <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Grades" data-collapse-toggle="true">
                 {!isGradesLoading && (
                   <ShowAllOrNoItems
