@@ -11,6 +11,7 @@ import { useRouter } from 'next-nprogress-bar';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 import { jwtDecode } from 'jwt-decode';
+import { routes } from 'routes';
 
 const useAuth = () => {
   const { status } = useSession();
@@ -91,7 +92,7 @@ const useAuth = () => {
         });
 
         // Route based on role
-        router.replace(userRole.name === 'student' ? '/library' : '/admin');
+        router.replace(userRole.name === 'student' ? routes.library : routes.admin);
 
         message.success(i18next.t('logged_in'));
       } catch (err: any) {
