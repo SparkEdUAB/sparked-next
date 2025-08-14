@@ -44,7 +44,6 @@ export function LibrarySidebar({
 
   const isMediaPage = sliptPathname[2] === 'media';
   const isLibrary = sliptPathname[1] === 'library';
-  const isSearchPage = sliptPathname.includes('search');
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -83,8 +82,6 @@ export function LibrarySidebar({
   const filteredSubjectId = useSearchParams().get('subject_id');
   const filteredTopicId = useSearchParams().get('topic_id');
 
-  const backToLibrary = isMediaPage || isSearchPage;
-
   return (
     <>
       <div
@@ -97,16 +94,6 @@ export function LibrarySidebar({
           className={`${styles.sidebar} w-full custom-scrollbar overflow-y-auto h-[calc(100vh_-_62px)] bg-white dark:bg-gray-800 `}
         >
           <Sidebar.Items>
-            <Sidebar.ItemGroup>
-              <Sidebar.Item
-                as={Link}
-                href={backToLibrary ? '/library' : '/'}
-                className={`${styles.item} mb-4`}
-                icon={() => <span className="mr-2">←</span>}
-              >
-                {backToLibrary ? 'Back to Library' : 'Back to Home'}
-              </Sidebar.Item>
-            </Sidebar.ItemGroup>
             <Sidebar.ItemGroup>
               <Sidebar.Collapse label="Grades" data-collapse-toggle="true">
                 {!isGradesLoading && (
