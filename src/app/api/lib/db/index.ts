@@ -1,37 +1,47 @@
-import { MongoClient } from "mongodb";
+import { MongoClient } from 'mongodb';
 
 if (!process.env.MONGODB_URI) {
-  console.error('Invalid/Missing environment variable: "MONGODB_URI"');
+  throw new Error('Please add your Mongo URI to .env.local');
 }
 
-const uri = process.env.MONGODB_URI || "mongodb://...."; // Just to allow the build to pass
-const options = {};
+const uri = process.env.MONGODB_URI;
+const options = {
+  maxPoolSize: 10,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+};
 
-let client: MongoClient;
-let mongoClientPromise: Promise<MongoClient>;
-
-if (process.env.NODE_ENV === "development") {
-  //@ts-ignore
-  if (!global._mongomongoClientPromise) {
-    client = new MongoClient(uri, options);
-    //@ts-ignore
-    global._mongomongoClientPromise = client.connect();
-  }
-  //@ts-ignore
-  mongoClientPromise = global._mongomongoClientPromise;
-} else {
-  client = new MongoClient(uri, options);
-  mongoClientPromise = client.connect();
-}
+let cachedClient: MongoClient | null = null;
+let cachedDb: any = null;
 
 export const dbClient = async () => {
+  // If we have a cached connection, return it
+  if (cachedDb) {
+    return cachedDb;
+  }
+
   try {
-    const mongoClient = new MongoClient(uri, options);
-    const dbConnection = await mongoClient.connect();
-    return dbConnection.db(process.env.MONGODB_DB);
-  } catch {
+    // If no cached client, create new connection
+    if (!cachedClient) {
+      cachedClient = new MongoClient(uri, options);
+      await cachedClient.connect();
+    }
+
+    const db = cachedClient.db(process.env.MONGODB_DB);
+    cachedDb = db;
+
+    // Add connection error handler
+    cachedClient.on('error', (error) => {
+      console.error('MongoDB connection error:', error);
+      cachedClient = null;
+      cachedDb = null;
+    });
+
+    return db;
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    cachedClient = null;
+    cachedDb = null;
     return null;
   }
 };
-
-export default mongoClientPromise;
