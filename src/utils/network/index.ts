@@ -1,4 +1,4 @@
-import { T_Record } from 'types/navigation';
+import type { T_Record } from 'types/navigation';
 
 const NETWORK_UTILS = {
   formatGetParams: (params: T_Record) => '?' + new URLSearchParams(params).toString(),
