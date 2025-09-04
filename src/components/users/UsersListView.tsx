@@ -4,7 +4,7 @@ import { AdminTable } from '@components/admin/AdminTable/AdminTable';
 import { AdminPageTitle } from '@components/layouts';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
-import { Drawer, Modal } from 'flowbite-react';
+import { Button, Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import CreateUserView from './create-user-view';
@@ -12,11 +12,14 @@ import EditUserView from './edit-user-view';
 import useUser, { transformRawUser } from '@hooks/useUser';
 import { T_UserFields } from '@hooks/useUser/types';
 import { userTableColumns } from '.';
+import useAuth from '@hooks/useAuth';
 
 const UsersListView = () => {
   const { selectedUserIds, setSelectedUserIds, deleteUsers } = useUser();
   const [creatingUser, setCreatingUser] = useState(false);
   const [edittingUser, setEdittingUser] = useState<T_UserFields | null>(null);
+  const { handleForgotPassword, loading } = useAuth();
+  const [resettingPasswordFor, setResettingPasswordFor] = useState<string | null>(null);
 
   const {
     items: users,
@@ -49,7 +52,27 @@ const UsersListView = () => {
         isLoading={isLoading}
         createNew={() => setCreatingUser(true)}
         editItem={(id) => setEdittingUser(id)}
-        columns={userTableColumns}
+        columns={userTableColumns.map((col) => {
+          if (col.key === 'action') {
+            return {
+              ...col,
+              render: (_, record) => (
+                <Button
+                  color="gray"
+                  isProcessing={loading && resettingPasswordFor === record.email}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setResettingPasswordFor(record.email);
+                    handleForgotPassword(record.email, () => setResettingPasswordFor(null));
+                  }}
+                >
+                  Reset Password
+                </Button>
+              ),
+            };
+          }
+          return col;
+        })}
         loadMore={loadMore}
         hasMore={hasMore}
         error={error}
