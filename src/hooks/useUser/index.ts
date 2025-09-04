@@ -141,7 +141,7 @@ export default function useUser() {
               programId: i.program?._id,
               created_by: i.user?.email,
               created_at: new Date(i.created_at).toDateString(),
-            } satisfies T_UserFields),
+            }) satisfies T_UserFields,
         );
 
         setUsers(_users);
