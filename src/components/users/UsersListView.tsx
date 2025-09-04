@@ -60,7 +60,7 @@ const UsersListView = () => {
                 <Button
                   color="gray"
                   isProcessing={loading && resettingPasswordFor === record.email}
-                  onClick={(e) => {
+                  onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
                     e.stopPropagation();
                     setResettingPasswordFor(record.email);
                     handleForgotPassword(record.email, () => setResettingPasswordFor(null));
