@@ -29,8 +29,10 @@ export async function middleware(request: NextRequest) {
       secret: process.env.NEXTAUTH_SECRET,
     });
 
+    console.log('Unauthorized access attempt@@', { pathname, method, session });
     // @ts-expect-error
     if (!session || !session.role || !ADMIN_ROLES.includes(session.role)) {
+      console.log('Unauthorized access attempt', { pathname, method, session });
       return new NextResponse(JSON.stringify({ success: false, message: 'Permission Denied', code: 401 }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
