@@ -1,13 +1,14 @@
 'use client';
 import LibraryLayout from '@components/library/libraryLayout/LibraryLayout';
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, use, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import useUnit from '@hooks/useUnit';
 import useSubject from '@hooks/useSubject';
 import useGrade from '@hooks/useGrade';
 import useTopic from '@hooks/use-topic';
+import withAuth from 'hocs/withAuth';
 
-export default function Layout({ children }: { children: ReactNode | ReactNode[]; params: any }) {
+function Layout({ children }: { children: ReactNode | ReactNode[]; params: any }) {
   const { fetchUnitsBySubjectId, units, setUnits, isLoading: isUnitsLoading } = useUnit();
   const { subjects, setSubjects, fetchSubjectsByGradeId, isLoading: isSubjectsLoading } = useSubject();
   const { grades, fetchGrades, isLoading: isGradesLoading } = useGrade();
@@ -57,3 +58,5 @@ export default function Layout({ children }: { children: ReactNode | ReactNode[]
     </LibraryLayout>
   );
 }
+
+export default withAuth(Layout);
