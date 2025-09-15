@@ -1,6 +1,6 @@
 'use client';
 
-import { DarkThemeToggle, Navbar, TextInput } from 'flowbite-react';
+import { Avatar, Button, DarkThemeToggle, Dropdown, Navbar, TextInput } from 'flowbite-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { HiSearch, HiX } from 'react-icons/hi';
@@ -52,6 +52,26 @@ export function LibraryNavbar({
             icon={HiSearch}
           />
         </form>
+
+        <Dropdown
+          label="User"
+          renderTrigger={() => (
+            <Avatar
+              id="dropdownHoverButton"
+              data-dropdown-toggle="dropdownHover"
+              data-dropdown-trigger="hover"
+              // src="/avatar.png"
+              alt="User Avatar"
+              size="xs"
+              rounded
+            />
+          )}
+        >
+          <Dropdown.Item>
+            <Link href="/library/logout">Logout</Link>
+          </Dropdown.Item>
+        </Dropdown>
+
         <button
           onClick={() => setSearching((value) => !value)}
           className="rounded-lg md:hidden p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
