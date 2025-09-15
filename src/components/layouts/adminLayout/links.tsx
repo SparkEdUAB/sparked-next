@@ -54,6 +54,28 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     icon: () => <AiOutlineUser />,
     index: 3,
   },
+  institutions: {
+    link: '/admin/institutions',
+    roles: ['admin'],
+    label: 'Institutions',
+    key: 'admin_institutions',
+    icon: () => <AiOutlineHdd />,
+    index: 4,
+    children: [
+      {
+        label: 'create',
+        key: 'create',
+        link: '/admin/institutions/create',
+        roles: ['admin'],
+      },
+      {
+        label: 'edit',
+        key: 'edit',
+        link: '/admin/institutions/edit',
+        roles: ['admin'],
+      },
+    ],
+  },
   // We won't need list of courses for now, This should be configurable in settings page
   // courses: {
   //   link: '/admin/courses',
@@ -83,7 +105,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('grades'),
     key: 'admin_grades',
     icon: () => <AiOutlineBook />,
-    index: 4,
+    index: 5,
   },
   subjects: {
     link: '/admin/subjects',
@@ -91,7 +113,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('subjects'),
     key: 'admin_subjects',
     icon: () => <AiOutlineHdd />,
-    index: 5,
+    index: 6,
   },
   units: {
     link: '/admin/units',
@@ -99,7 +121,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('units'),
     key: 'admin_units',
     icon: () => <AiOutlineBlock />,
-    index: 6,
+    index: 7,
   },
   topics: {
     link: '/admin/topics',
@@ -107,7 +129,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: i18next.t('topics'),
     key: 'admin_topics',
     icon: () => <AiOutlineBulb />,
-    index: 7,
+    index: 8,
   },
   // schools: {
   //   link: '/admin/schools',
@@ -159,7 +181,7 @@ export const ADMIN_LINKS: T_MenuItemLink = {
     label: 'Media Content',
     key: 'admin_media-content',
     icon: () => <AiOutlineContainer />,
-    index: 8,
+    index: 9,
   },
   // statistics: {
   //   link: '/admin/statistics',

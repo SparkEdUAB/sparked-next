@@ -2,6 +2,7 @@ export type T_MenuItemLink = {
   home: T_MenuItemLinkParams;
   settings: T_MenuItemLinkParams;
   users: T_MenuItemLinkParams;
+  institutions: T_MenuItemLinkParams;
   courses?: T_MenuItemLinkParams;
   grades: T_MenuItemLinkParams;
   subjects: T_MenuItemLinkParams;

@@ -146,6 +146,46 @@ export const schoolSchema = {
   primaryKey: '_id',
 };
 
+// Enhanced institutions schema (evolved from schools)
+export type institutions = {
+  _id: ObjectId;
+  name: string;
+  description?: string;
+  type: 'school' | 'college' | 'university' | 'organization';
+  logo?: string;
+  website?: string;
+  address?: string;
+  contact_email?: string;
+  contact_phone?: string;
+  is_verified: boolean; // Admin-verified institutions
+  created_at: Date;
+  created_by_id: ObjectId;
+  updated_at?: Date;
+  updated_by_id?: ObjectId;
+};
+
+export const institutionsSchema = {
+  name: 'institutions',
+  properties: {
+    _id: 'objectId',
+    name: 'string',
+    description: 'string?',
+    type: 'string',
+    logo: 'string?',
+    website: 'string?',
+    address: 'string?',
+    contact_email: 'string?',
+    contact_phone: 'string?',
+    is_verified: 'bool',
+    created_at: 'date',
+    created_by_id: 'objectId',
+    updated_at: 'date?',
+    updated_by_id: 'objectId?',
+  },
+  primaryKey: '_id',
+};
+
+// Keep schools schema for backward compatibility (will be migrated to institutions)
 export const schoolsSchema = {
   name: 'schools',
   properties: {

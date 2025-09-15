@@ -7,6 +7,10 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
+  institutions: {
+    name: string;
+    label: string;
+  };
   programs: {
     name: string;
     label: string;

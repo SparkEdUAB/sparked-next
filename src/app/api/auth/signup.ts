@@ -8,6 +8,7 @@ import { HttpStatusCode } from 'axios';
 import bcrypt from 'bcryptjs';
 import { Resend } from 'resend';
 import { WelcomeEmail } from 'emails/WelcomeEmail';
+import { BSON } from 'mongodb';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -22,10 +23,12 @@ export default async function signup_(request: Request) {
     institutionType: zfd.text().optional(),
     schoolName: z.string().optional().default(''),
     grade: z.any().optional().default(0),
+    institutionId: zfd.text().optional(),
+    institutionName: zfd.text().optional(),
   });
 
   const formBody = await request.json();
-  const { email, password, firstName, lastName, phoneNumber, isStudent, institutionType, schoolName, grade } =
+  const { email, password, firstName, lastName, phoneNumber, isStudent, institutionType, schoolName, grade, institutionId } =
     schema.parse(formBody);
 
   try {
@@ -57,20 +60,35 @@ export default async function signup_(request: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await db.collection(dbCollections.users.name).insertOne({
+    const userDoc: any = {
       email,
       firstName,
       lastName,
       phoneNumber,
       isStudent,
-      institutionType,
-      schoolName,
-      grade,
       is_verified: false,
       created_at: new Date(),
       role: 'student',
       password: hashedPassword,
-    });
+    };
+
+    // Add institution data if provided
+    if (institutionId) {
+      userDoc.institution_id = new BSON.ObjectId(institutionId);
+    }
+
+    // Keep legacy fields for backward compatibility
+    if (institutionType) {
+      userDoc.institutionType = institutionType;
+    }
+    if (schoolName) {
+      userDoc.schoolName = schoolName;
+    }
+    if (grade) {
+      userDoc.grade = grade;
+    }
+
+    await db.collection(dbCollections.users.name).insertOne(userDoc);
 
     await resend.emails.send({
       from: 'Sparked Support <support@sparkednext.app>',
