@@ -11,12 +11,15 @@ import { LuCircleUser } from 'react-icons/lu';
 import { Select } from 'flowbite-react';
 import { validateSignupForm } from 'utils/helpers/validation';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import InstitutionSelector from '@components/institution/InstitutionSelector';
 
 
 const Signup = () => {
   const { handleSignup, loading } = useAuth();
   const [isStudent, setIsStudent] = useState(false);
   const [institutionType, setInstitutionType] = useState<string>('');
+  const [selectedInstitutionId, setSelectedInstitutionId] = useState<string | null>(null);
+  const [selectedInstitutionName, setSelectedInstitutionName] = useState<string>('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -43,6 +46,7 @@ const Signup = () => {
     institutionType?: string;
     schoolName?: string;
     grade?: string;
+    institution?: string;
   }>({});
 
   // Handle input changes
@@ -52,6 +56,20 @@ const Signup = () => {
       ...prev,
       [name]: value
     }));
+  };
+
+  // Handle institution selection
+  const handleInstitutionSelect = (institutionId: string | null, institutionName?: string) => {
+    setSelectedInstitutionId(institutionId);
+    setSelectedInstitutionName(institutionName || '');
+    
+    // Clear institution error when an institution is selected
+    if (institutionId) {
+      setErrors(prev => ({
+        ...prev,
+        institution: undefined
+      }));
+    }
   };
 
   // Validate form fields as user types
@@ -124,10 +142,18 @@ const Signup = () => {
     if (isStudent) {
       // @ts-expect-error
       result.institutionType = institutionType;
+      
+      // Add institution data if selected
+      if (selectedInstitutionId) {
+        // @ts-expect-error
+        result.institutionId = selectedInstitutionId;
+        // @ts-expect-error
+        result.institutionName = selectedInstitutionName;
+      }
     }
 
     // Validate the form for submission (show all errors)
-    const validation = validateSignupForm(result, isStudent, institutionType);
+    const validation = validateSignupForm(result, isStudent, institutionType, selectedInstitutionId);
 
     if (!validation.isValid) {
       setErrors(validation.errors);
@@ -261,68 +287,40 @@ const Signup = () => {
               </div>
 
               {isStudent && (
-                <div className="animate-fadeIn space-y-4 bg-blue-50 dark:bg-gray-700/50 p-4 rounded-lg   dark:border-blue-400">
+                <div className="animate-fadeIn space-y-4 bg-blue-50 dark:bg-gray-700/50 p-4 rounded-lg dark:border-blue-400">
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
+                    Institution Information
+                  </h3>
+                  
+                  <InstitutionSelector
+                    selectedInstitutionId={selectedInstitutionId || undefined}
+                    onInstitutionSelect={handleInstitutionSelect}
+                    error={errors.institution}
+                    disabled={loading}
+                  />
+                  
                   <div>
                     <div className="mb-1.5 block">
-                      <Label htmlFor="institutionType" value="Institution Type *" className="text-gray-700 dark:text-gray-300" />
+                      <Label htmlFor="grade" value="Grade (Optional)" className="text-gray-700 dark:text-gray-300" />
                     </div>
                     <Select
-                      id="institutionType"
-                      value={institutionType}
-                      onChange={(e) => setInstitutionType(e.target.value)}
-                      color={errors.institutionType ? "failure" : undefined}
-                      helperText={errors.institutionType}
+                      id="grade"
+                      name="grade"
+                      value={formData.grade}
+                      onChange={handleInputChange}
+                      color={errors.grade ? "failure" : undefined}
+                      helperText={errors.grade}
                       className="rounded-lg"
+                      disabled={loading}
                     >
-                      <option value="">Select Institution Type</option>
-                      <option value="general">General School</option>
-                      <option value="college">College</option>
-                      <option value="university">University</option>
+                      <option value="">Select Grade</option>
+                      {Array.from({ length: 12 }, (_, i) => (
+                        <option key={i + 1} value={i + 1}>
+                          Grade {i + 1}
+                        </option>
+                      ))}
                     </Select>
                   </div>
-
-                  {institutionType === 'general' && (
-                    <div className="animate-fadeIn space-y-4">
-                      <div>
-                        <div className="mb-1.5 block">
-                          <Label htmlFor="schoolName" value="School Name *" className="text-gray-700 dark:text-gray-300" />
-                        </div>
-                        <TextInput
-                          id="schoolName"
-                          name="schoolName"
-                          type="text"
-                          value={formData.schoolName}
-                          onChange={handleInputChange}
-                          color={errors.schoolName ? "failure" : undefined}
-                          helperText={errors.schoolName}
-                          disabled={loading}
-                          className="rounded-lg"
-                        />
-                      </div>
-
-                      <div>
-                        <div className="mb-1.5 block">
-                          <Label htmlFor="grade" value="Grade *" className="text-gray-700 dark:text-gray-300" />
-                        </div>
-                        <Select
-                          id="grade"
-                          name="grade"
-                          value={formData.grade}
-                          onChange={handleInputChange}
-                          color={errors.grade ? "failure" : undefined}
-                          helperText={errors.grade}
-                          className="rounded-lg"
-                        >
-                          <option value="">Select Grade</option>
-                          {Array.from({ length: 12 }, (_, i) => (
-                            <option key={i + 1} value={i + 1}>
-                              Grade {i + 1}
-                            </option>
-                          ))}
-                        </Select>
-                      </div>
-                    </div>
-                  )}
                 </div>
               )}
 

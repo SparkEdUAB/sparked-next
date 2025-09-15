@@ -11,6 +11,13 @@ export type T_link = {
   EDIT_SCHOOL: string;
   DELETE_SCHOOLS: string;
   FIND_SCHOOLS_BY_NAME: string;
+  CREATE_INSTITUTION: string;
+  FETCH_INSTITUTIONS: string;
+  FETCH_INSTITUTION: string;
+  FETCH_PUBLIC_INSTITUTIONS: string;
+  EDIT_INSTITUTION: string;
+  DELETE_INSTITUTIONS: string;
+  FIND_INSTITUTIONS_BY_NAME: string;
   CREATE_PROGRAM: string;
   FETCH_PROGRAMS: string;
   FETCH_PROGRAM_BY_ID: string;

@@ -15,7 +15,7 @@ export const isValidPassword = (password: string): boolean => {
   return passwordRegex.test(password);
 };
 
-export const validateSignupForm = (formData: any, isStudent: boolean, institutionType: string) => {
+export const validateSignupForm = (formData: any, isStudent: boolean, institutionType: string, selectedInstitutionId?: string | null) => {
   const errors: Record<string, string> = {};
 
   // Validate required fields
@@ -57,19 +57,8 @@ export const validateSignupForm = (formData: any, isStudent: boolean, institutio
 
   // Validate student-specific fields
   if (isStudent) {
-    if (!formData.institutionType) {
-      errors.institutionType = 'Institution type is required';
-    }
-
-    // Validate school name and grade for general school type
-    if (institutionType === 'general') {
-      if (!formData.schoolName) {
-        errors.schoolName = 'School name is required for a student';
-      }
-
-      if (!formData.grade) {
-        errors.grade = 'Grade is required for a student';
-      }
+    if (!selectedInstitutionId) {
+      errors.institution = 'Please select an institution or create a new one';
     }
   }
 
