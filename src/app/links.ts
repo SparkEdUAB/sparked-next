@@ -73,7 +73,7 @@ export const API_LINKS = {
   EDIT_CATEGORY: '/api/category/editCategory',
   FIND_CATEGORY_BY_NAME: '/api/category/findCategoryByName',
 
-  //   users
+  // users
   CREATE_USER: '/api/users/createUser',
 
   //   Media content

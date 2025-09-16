@@ -147,7 +147,7 @@ const useAuth = () => {
   }, [message, router]);
 
   const handleForgotPassword = useCallback(
-    async (email: string) => {
+    async (email: string, onDone?: () => void) => {
       setLoading(true);
       try {
         const response = await fetch('/api/password/forgotPassword', {
@@ -168,6 +168,7 @@ const useAuth = () => {
         return false;
       } finally {
         setLoading(false);
+        onDone?.();
       }
     },
     [message],
