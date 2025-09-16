@@ -152,9 +152,9 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
               </Table.Head>
 
               <Table.Body className="divide-y">
-                {items?.map((item) => (
+                {items?.map((item, index) => (
                   <Table.Row
-                    key={item._id}
+                    key={`${item._id}-${index}`}
                     className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-50 hover:dark:bg-gray-700 active:bg-gray-100 active:dark:bg-gray-600 cursor-pointer"
                     onClick={() => editItem(item)}
                   >

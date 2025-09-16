@@ -33,4 +33,9 @@ export const userTableColumns: T_ColumnData<any>[] = [
       </div>
     ),
   },
+  {
+    title: i18next.t('action'),
+    dataIndex: 'action',
+    key: 'action',
+  },
 ];
