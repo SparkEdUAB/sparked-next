@@ -64,6 +64,7 @@ const ContentDetailsCardView = ({
             className="rounded-t-md aspect-[4/3] object-cover object-center"
             alt={title}
             src={hasExternalUrl || !isValidImage(image) ? placeholderImage.trimEnd() : image?.trimEnd()}
+            unoptimized={hasExternalUrl || !isValidImage(image)}
             width={450}
             height={340}
           />

@@ -1,11 +1,12 @@
+import 'server-only';
 import { CONFIG_CORE_PATH } from '@hooks/use-config/constants';
 import fs from 'fs';
+const fsPromises = fs.promises;
+
 import { T_RECORD } from 'types';
 import CONFIG_PROCESS_CODES from './processCodes';
 import { T_CONFIG_DB_VARIABLE, T_CONFIG_VARIABLE, T_CONFIG_VARIABLES } from 'types/config';
 import { HttpStatusCode } from 'axios';
-
-const fsPromises = fs.promises;
 
 export default async function readConfigFile_() {
   const configData = await getConfigFile();
