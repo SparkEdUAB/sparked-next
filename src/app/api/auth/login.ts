@@ -8,7 +8,39 @@ import { T_RECORD } from 'types';
 import { HttpStatusCode } from 'axios';
 import bcrypt from 'bcryptjs';
 
+const CACHE_TTL = 300000; // 5 minutes
+const userCache = new Map();
+
+// Add caching to user lookup
+const getCachedUser = async (email: string, db: any) => {
+  const cacheKey = `user_${email}`;
+  const cached = userCache.get(cacheKey);
+
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return cached.data;
+  }
+
+  const user = await db.collection(dbCollections.users.name).findOne({ email });
+  if (user) {
+    userCache.set(cacheKey, {
+      data: user,
+      timestamp: Date.now(),
+    });
+  }
+
+  return user;
+};
+
+// Add at the top of the file to debug env vars
+console.log('Environment check:', {
+  hasUri: !!process.env.MONGODB_URI,
+  hasDbName: !!process.env.MONGODB_DB,
+  hasJwtSecret: !!process.env.JWT_SECRET,
+});
+
 export default async function login_(request: Request) {
+  const startTime = performance.now();
+
   const schema = zfd.formData({
     email: zfd.text(),
     password: zfd.text(),
@@ -19,7 +51,18 @@ export default async function login_(request: Request) {
   const { email, password } = schema.parse(formBody);
 
   try {
+    // Add connection debugging
+    console.log('Connecting to database...');
     const db = await dbClient();
+    console.log('Database connection result:', {
+      connected: !!db,
+      uri: process.env.MONGODB_URI?.substring(0, 20) + '...', // Only log part of the URI for security
+      dbName: process.env.MONGODB_DB,
+    });
+
+    console.log('====================================');
+    console.log('db log@@', db, email, password);
+    console.log('====================================');
 
     if (!db) {
       const response = {
@@ -31,20 +74,11 @@ export default async function login_(request: Request) {
       });
     }
 
-    const user = await db.collection(dbCollections.users.name).findOne(
-      {
-        email,
-      },
-      {
-        projection: {
-          email: 1,
-          _id: 1,
-          role: 1,
-          is_verified: 1,
-          password: 1,
-        },
-      },
-    );
+    const user = await getCachedUser(email, db);
+
+    console.log('====================================');
+    console.log('db log@@', user);
+    console.log('====================================');
 
     if (!user) {
       const response = {
@@ -67,17 +101,36 @@ export default async function login_(request: Request) {
       });
     }
 
-    const userRole = await db
-      .collection(dbCollections.user_role_mappings.name)
-      .aggregate(p_fetchUserRoleDetails({ userId: `${user._id}` }))
+    // Combine user and role queries into single aggregation
+    const userWithRole = await db
+      .collection(dbCollections.users.name)
+      .aggregate([
+        { $match: { email } },
+        {
+          $lookup: {
+            from: dbCollections.user_role_mappings.name,
+            localField: '_id',
+            foreignField: 'user_id',
+            as: 'role_mapping',
+          },
+        },
+        {
+          $lookup: {
+            from: dbCollections.user_roles.name,
+            localField: 'role_mapping.role_id',
+            foreignField: '_id',
+            as: 'role',
+          },
+        },
+      ])
       .toArray();
 
     let role: null | T_RECORD = null;
 
-    if (userRole[0]) {
+    if (userWithRole[0]?.role[0]) {
       role = {
-        id: userRole[0].role_details._id,
-        name: userRole[0].role_details.name,
+        id: userWithRole[0].role[0]._id,
+        name: userWithRole[0].role[0].name,
       };
     }
 
@@ -99,14 +152,19 @@ export default async function login_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch {
+  } catch (error) {
+    console.error('Login error:', error);
     const resp = {
       isError: true,
       code: AUTH_PROCESS_CODES.INVALID_CREDENTIALS,
+      error: error.message,
     };
 
     return new Response(JSON.stringify(resp), {
       status: HttpStatusCode.BadRequest,
     });
+  } finally {
+    const duration = performance.now() - startTime;
+    console.log(`Login attempt took ${duration}ms`);
   }
 }

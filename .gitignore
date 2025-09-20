@@ -45,3 +45,4 @@ yarn.lock
 # uploads
 public/uploads/*
 test-results
+.env.stagging
