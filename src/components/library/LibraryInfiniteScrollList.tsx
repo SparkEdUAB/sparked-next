@@ -1,9 +1,8 @@
 'use client';
 
-import React from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { T_RawMediaContentFields } from 'types/media-content';
+import type { T_RawMediaContentFields } from 'types/media-content';
 import { getImageSrc } from 'utils/helpers/getImageSrc';
 import { memo, useCallback } from 'react';
 import { MEDIA_CONTENT_LIMIT } from './constants';
@@ -65,7 +64,7 @@ export function LibraryInfiniteScrollList({
       scrollThreshold={0.8}
     >
       <div className="px-4 sm:px-6 md:px-8 mt-5">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 media-content-list">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 media-content-list">
           {mediaContent.slice(0, initialItemsToRender).map((item, i) => (
             <ContentCard key={`content-card-${i}-${item._id}`} item={item} />
           ))}
