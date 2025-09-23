@@ -9,6 +9,16 @@ import { memo, useCallback } from 'react';
 import { MEDIA_CONTENT_LIMIT } from './constants';
 import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
 
+const CardSkeleton = () => (
+  <div className="h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
+    <div className="bg-gray-200 dark:bg-gray-700 rounded-lg h-48 animate-pulse"></div>
+    <div className="mt-4">
+      <div className="bg-gray-200 dark:bg-gray-700 rounded-md h-6 w-3/4 animate-pulse"></div>
+      <div className="bg-gray-200 dark:bg-gray-700 rounded-md h-4 w-1/2 mt-2 animate-pulse"></div>
+    </div>
+  </div>
+);
+
 const ContentCard = memo(({ item }: { item: T_RawMediaContentFields }) => {
   if (!item.file_url && !item.external_url) {
     return null;
@@ -65,7 +75,7 @@ export function LibraryInfiniteScrollList({
       scrollThreshold={0.8}
     >
       <div className="px-4 sm:px-6 md:px-8 mt-5">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 media-content-list">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 media-content-list">
           {mediaContent.slice(0, initialItemsToRender).map((item, i) => (
             <ContentCard key={`content-card-${i}-${item._id}`} item={item} />
           ))}
