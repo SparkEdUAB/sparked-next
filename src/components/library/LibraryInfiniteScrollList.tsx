@@ -1,23 +1,12 @@
 'use client';
 
-import React from 'react';
 import ContentCardView from '@components/layouts/library/content-card';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { T_RawMediaContentFields } from 'types/media-content';
+import type { T_RawMediaContentFields } from 'types/media-content';
 import { getImageSrc } from 'utils/helpers/getImageSrc';
 import { memo, useCallback } from 'react';
 import { MEDIA_CONTENT_LIMIT } from './constants';
 import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
-
-const CardSkeleton = () => (
-  <div className="h-full bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4">
-    <div className="bg-gray-200 dark:bg-gray-700 rounded-lg h-48 animate-pulse"></div>
-    <div className="mt-4">
-      <div className="bg-gray-200 dark:bg-gray-700 rounded-md h-6 w-3/4 animate-pulse"></div>
-      <div className="bg-gray-200 dark:bg-gray-700 rounded-md h-4 w-1/2 mt-2 animate-pulse"></div>
-    </div>
-  </div>
-);
 
 const ContentCard = memo(({ item }: { item: T_RawMediaContentFields }) => {
   if (!item.file_url && !item.external_url) {
