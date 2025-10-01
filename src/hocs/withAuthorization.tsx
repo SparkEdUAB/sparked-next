@@ -30,11 +30,11 @@ export function withAuthorization<P extends object>(
 
       if (!user) {
         console.log("hhe rre", router, routes)
-        router.replace(routes.login);
+        router.replace(routes.auth.login);
         message.warning(i18next.t('Not logged in'));
         return;
       }
- console.log("hhe after", user)
+       console.log("hhe after", user)
       if (requireAdmin && !user.isAdmin) {
         router.replace(routes.library);
         message.warning(i18next.t('Not authorized'));
