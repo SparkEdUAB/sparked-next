@@ -49,7 +49,7 @@ function LibraryLayoutWrapper({ children }: { children: ReactNode }) {
   return (
     <LibraryLayout
       subjects={subjects instanceof Error ? [] : subjects}
-      topics={topics instanceof Error ? [] : topics}P
+      topics={topics instanceof Error ? [] : topics}
       units={units instanceof Error ? [] : units}
       grades={grades instanceof Error ? [] : grades}
       isSubjectsLoading={isSubjectsLoading}
