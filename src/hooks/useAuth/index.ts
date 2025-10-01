@@ -12,11 +12,17 @@ import { useToastMessage } from 'providers/ToastMessageContext';
 import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 import { jwtDecode } from 'jwt-decode';
 import { routes } from 'routes';
+import { useMeStore } from 'stores/useMeStore';
 
 const useAuth = () => {
   const { status } = useSession();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  
+  const setUser = useMeStore((state) => state.setUser);
+  const clearUser = useMeStore((state) => state.clearUser);
+
+
   const message = useToastMessage();
 
   const isAuthenticated = status === 'authenticated';
@@ -82,7 +88,16 @@ const useAuth = () => {
 
         const { jwtToken } = responseData;
         const decodedToken: { role?: { name: string } } = jwtDecode(jwtToken);
-        const userRole = decodedToken.role || { name: 'student' };
+        const userRole: typeof decodedToken.role = decodedToken.role || { name: 'student' };
+
+        setUser({
+          email: fields.email,
+          firstName: responseData.firstName,
+          lastName: responseData.lastName,
+          phone: responseData.phoneNumber,
+          role: userRole?.name as 'student' | 'user' | 'admin', 
+          isAdmin: userRole?.name.toLowerCase() === "admin" ? true : false 
+        })
 
         await signIn('credentials', {
           redirect: false,
@@ -91,7 +106,7 @@ const useAuth = () => {
           role: userRole?.name,
         });
 
-        // Route based on role
+        // Route based userRoleon role
         router.replace(userRole.name === 'student' ? routes.library : routes.admin);
 
         message.success(i18next.t('logged_in'));
@@ -126,10 +141,11 @@ const useAuth = () => {
         );
         return false;
       }
+      clearUser()
 
       const isAdminRoute = window.location.pathname.startsWith('/admin');
       await signOut({
-        redirect: false,
+        redirect: true,
         callbackUrl: isAdminRoute ? '/' : window.location.pathname,
       });
 

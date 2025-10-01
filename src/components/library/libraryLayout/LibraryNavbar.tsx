@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, DarkThemeToggle, Dropdown, Navbar, TextInput } from 'flowbite-react';
+import { Avatar, DarkThemeToggle, Dropdown, Navbar, TextInput, Button } from 'flowbite-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { HiSearch, HiX } from 'react-icons/hi';
@@ -10,6 +10,8 @@ import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormE
 import { useRouter } from 'next-nprogress-bar';
 import useAuth from '@hooks/useAuth';
 import { routes } from 'routes';
+import { useMeStore } from '@stores/useMeStore';
+
 
 export function LibraryNavbar({
   toggleSidebar,
@@ -21,6 +23,9 @@ export function LibraryNavbar({
   let [searching, setSearching] = useState(false);
   let router = useRouter();
   const { handleLogout, loading } = useAuth();
+  const isAdmin = useMeStore((state) => state.user.isAdmin);
+
+console.log("isAdmin", isAdmin)
   return (
     <Navbar fluid rounded className="sticky top-0 z-[60]  flex-nowrap">
       <div className={`pl-2 flex flex-row sm:gap-2 md:gap-4 flex-nowrap ${searching ? 'hidden md:flex' : ''}`}>
@@ -69,11 +74,21 @@ export function LibraryNavbar({
             />
           )}
         >
+          {isAdmin &&
+            <Dropdown.Item>
+              <Link href={routes.admin} aria-disabled={loading}>
+                Dashboard
+              </Link>
+            </Dropdown.Item>
+          }
+
           <Dropdown.Item>
-            <Link href={routes.home} onClick={handleLogout} aria-disabled={loading}>
+            <Button onClick={handleLogout} aria-disabled={loading}>
               Logout
-            </Link>
+            </Button>
           </Dropdown.Item>
+          
+        
         </Dropdown>
 
         <button
