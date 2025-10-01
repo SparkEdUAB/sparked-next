@@ -5,11 +5,11 @@ import React from 'react';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
 import { withAuthorization } from '@hocs/withAuthorization';
 
-const Home: React.FC = () => {
+const LoginPage: React.FC = () => {
   useDocumentTitle('Login');
 
   return <Login />;
 };
 
-export default  withAuthorization(Home);
+export default  withAuthorization(LoginPage, { requireGuest: true });
 ;

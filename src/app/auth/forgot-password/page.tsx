@@ -1,6 +1,7 @@
 'use client';
 
 import ForgotPassword from '@components/auth/forgot-password';
+import { withAuthorization } from '@hocs/withAuthorization';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
 
 const ForgotPasswordPage = () => {
@@ -9,4 +10,5 @@ const ForgotPasswordPage = () => {
     return <ForgotPassword />;
 };
 
-export default ForgotPasswordPage;
+
+export default  withAuthorization(ForgotPasswordPage, { requireGuest: true });
