@@ -36,9 +36,9 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
-        // @ts-expect-error
         token.id = user.id;
         token.email = user.email;
+        // @ts-expect-error
         token.role = user.role ?? token.role;
       }
 
@@ -64,14 +64,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
   },
-  async session({ session, token }) {
-    if (session.user) {
-      session.user.id = token.id!;
-      session.user.email = token.email!;
-      session.user.role = token.role;
-    }
-    return session;
-  },
+
   session: {
     strategy: 'jwt',
   },

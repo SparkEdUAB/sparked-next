@@ -9,9 +9,8 @@ export type User = {
   email?: string;
   phone?: string;
   avatar?: string;
-  role: {
-    name: 'student' | 'user' | 'admin';
-  };
+  role: 'student' | 'user' | 'admin';
+  
   isAdmin: boolean;
 };
 
@@ -71,7 +70,7 @@ export const useMeStore = create<MeStore>()(
 
         hasRole: (role: string) => {
           const { user } = get();
-          return user?.role?.name === role || false;
+          return user?.role === role || false;
         },
       }),
       {

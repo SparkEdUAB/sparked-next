@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
-    "build": "next build",
+    "type-check": "tsc --noEmit",
+    "build": "tsc --noEmit && next build",
     "start": "next start",
     "lint": "npx oxlint --fix",
     "pm2": "pm2 start npm --name \"sparked-next\" -- start"

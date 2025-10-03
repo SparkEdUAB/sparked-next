@@ -70,7 +70,6 @@ export default async function editUser_(request: Request, session?: Session) {
           $set: {
             role_id: roleExists._id,
             updatedAt: new Date(),
-            //   @ts-expect-error
             updatedById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
           },
         },
@@ -88,7 +87,6 @@ export default async function editUser_(request: Request, session?: Session) {
           lastName,
           phoneNumber,
           updatedAt: new Date(),
-          //   @ts-expect-error
           updatedById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
         },
       },
@@ -111,3 +109,4 @@ export default async function editUser_(request: Request, session?: Session) {
     );
   }
 }
+

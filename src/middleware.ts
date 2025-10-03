@@ -29,7 +29,8 @@ export async function middleware(request: NextRequest) {
       secret: process.env.NEXTAUTH_SECRET,
     });
 
-    // @ts-expect-error
+    const token = await getToken({ req: request });
+
     if (!session || !session.role || !ADMIN_ROLES.includes(session.role)) {
       return new NextResponse(JSON.stringify({ success: false, message: 'Permission Denied', code: 401 }), {
         status: 401,

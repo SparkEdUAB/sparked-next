@@ -93,7 +93,7 @@ const useAuth = () => {
           redirect: false,
           jwtToken,
           email: fields.email,
-          role: userRole?.name,
+          role: (userRole?.name ?? 'user') as 'student' | 'user' | 'admin',
         });
 
         if (singInResp) {

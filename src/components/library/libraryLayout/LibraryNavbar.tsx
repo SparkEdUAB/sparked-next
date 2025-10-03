@@ -1,16 +1,16 @@
 'use client';
 
-import { Avatar, DarkThemeToggle, Dropdown, Navbar, TextInput, Button } from 'flowbite-react';
+import AppLogo from '@components/logo';
+import useAuth from '@hooks/useAuth';
+import { useMeStore } from '@stores/useMeStore';
+import { Avatar, DarkThemeToggle, Dropdown, Navbar, TextInput } from 'flowbite-react';
+import { useRouter } from 'next-nprogress-bar';
 import Link from 'next/link';
 import { useState } from 'react';
 import { HiSearch, HiX } from 'react-icons/hi';
 import { MdMenu } from 'react-icons/md';
-import AppLogo from '@components/logo';
-import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { useRouter } from 'next-nprogress-bar';
-import useAuth from '@hooks/useAuth';
 import { routes } from 'routes';
-import { useMeStore } from '@stores/useMeStore';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 
 export function LibraryNavbar({
   toggleSidebar,
@@ -22,8 +22,8 @@ export function LibraryNavbar({
   let [searching, setSearching] = useState(false);
   let router = useRouter();
   const { handleLogout, loading } = useAuth();
-  const isAdmin = useMeStore((state) => state.user.isAdmin);
-  const userEmail = useMeStore((state) => state.user.email);
+  const isAdmin = useMeStore((state) => state.user?.isAdmin);
+  const userEmail = useMeStore((state) => state.user?.email);
 
   return (
     <Navbar fluid rounded className="sticky top-0 z-[60]  flex-nowrap">
