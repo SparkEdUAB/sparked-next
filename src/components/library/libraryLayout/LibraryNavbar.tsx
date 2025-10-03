@@ -12,7 +12,6 @@ import useAuth from '@hooks/useAuth';
 import { routes } from 'routes';
 import { useMeStore } from '@stores/useMeStore';
 
-
 export function LibraryNavbar({
   toggleSidebar,
   sidebarIsCollapsed,
@@ -24,8 +23,8 @@ export function LibraryNavbar({
   let router = useRouter();
   const { handleLogout, loading } = useAuth();
   const isAdmin = useMeStore((state) => state.user.isAdmin);
+  const userEmail = useMeStore((state) => state.user.email);
 
-console.log("isAdmin", isAdmin)
   return (
     <Navbar fluid rounded className="sticky top-0 z-[60]  flex-nowrap">
       <div className={`pl-2 flex flex-row sm:gap-2 md:gap-4 flex-nowrap ${searching ? 'hidden md:flex' : ''}`}>
@@ -74,21 +73,20 @@ console.log("isAdmin", isAdmin)
             />
           )}
         >
-          {isAdmin &&
+          {userEmail && <Dropdown.Item>{userEmail}</Dropdown.Item>}
+          {isAdmin && (
             <Dropdown.Item>
               <Link href={routes.admin} aria-disabled={loading}>
                 Dashboard
               </Link>
             </Dropdown.Item>
-          }
-
-          <Dropdown.Item>
-            <Button onClick={handleLogout} aria-disabled={loading}>
+          )}
+          <Dropdown.Divider />
+          <Dropdown.Item className="hover:none" onClick={() => null}>
+            <span onClick={handleLogout} aria-disabled={loading}>
               Logout
-            </Button>
+            </span>
           </Dropdown.Item>
-          
-        
         </Dropdown>
 
         <button

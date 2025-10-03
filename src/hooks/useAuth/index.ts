@@ -18,10 +18,9 @@ const useAuth = () => {
   const { status } = useSession();
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  
+
   const setUser = useMeStore((state) => state.setUser);
   const clearUser = useMeStore((state) => state.clearUser);
-
 
   const message = useToastMessage();
 
@@ -90,24 +89,23 @@ const useAuth = () => {
         const decodedToken: { role?: { name: string } } = jwtDecode(jwtToken);
         const userRole: typeof decodedToken.role = decodedToken.role || { name: 'student' };
 
-        setUser({
-          email: fields.email,
-          firstName: responseData.firstName,
-          lastName: responseData.lastName,
-          phone: responseData.phoneNumber,
-          role: userRole?.name as 'student' | 'user' | 'admin', 
-          isAdmin: userRole?.name.toLowerCase() === "admin" ? true : false 
-        })
-
-        await signIn('credentials', {
+        const singInResp = await signIn('credentials', {
           redirect: false,
           jwtToken,
           email: fields.email,
           role: userRole?.name,
         });
 
-        // Route based userRoleon role
-        router.replace(userRole.name === 'student' ? routes.library : routes.admin);
+        if (singInResp) {
+          setUser({
+            email: fields.email,
+            firstName: responseData.firstName,
+            lastName: responseData.lastName,
+            phone: responseData.phoneNumber,
+            role: userRole?.name as 'student' | 'user' | 'admin',
+            isAdmin: userRole?.name.toLowerCase() === 'admin' ? true : false,
+          });
+        }
 
         message.success(i18next.t('logged_in'));
       } catch (err: any) {
@@ -141,19 +139,18 @@ const useAuth = () => {
         );
         return false;
       }
-      clearUser()
 
-      const isAdminRoute = window.location.pathname.startsWith('/admin');
-      await signOut({
-        redirect: true,
-        callbackUrl: isAdminRoute ? '/' : window.location.pathname,
+      const signOutResposne = await signOut({
+        redirect: false,
+        callbackUrl: routes.auth.login,
       });
+      if (signOutResposne) {
+        const userclearFromStoreResp = clearUser();
 
-      if (isAdminRoute) {
-        router.replace('/');
+        message.success(i18next.t('logout_ok'));
       }
 
-      message.success(i18next.t('logout_ok'));
+      // const isAdminRoute = window.location.pathname.startsWith('/admin');
     } catch (err: any) {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;

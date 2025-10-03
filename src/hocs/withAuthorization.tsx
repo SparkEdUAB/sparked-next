@@ -31,31 +31,30 @@ type ExtendedSession = {
 
 // Helper to check if route is an auth route
 const isAuthRoute = (pathname: string): boolean => {
-  return Object.values(routes.auth).some(route => pathname.startsWith(route));
+  return Object.values(routes.auth).some((route) => pathname.startsWith(route));
 };
 
 export function withAuthorization<P extends object>(
   WrappedComponent: ComponentType<P>,
-  { requireAdmin = false, requireGuest = false }: Options = {}
+  { requireAdmin = false, requireGuest = false }: Options = {},
 ) {
   return function AuthorizedComponent(props: P) {
     const router = useRouter();
     const pathname = usePathname();
-    const { data: session, status } = useSession() as { 
-      data: ExtendedSession | null; 
-      status: 'loading' | 'authenticated' | 'unauthenticated' 
+    const { data: session, status } = useSession() as {
+      data: ExtendedSession | null;
+      status: 'loading' | 'authenticated' | 'unauthenticated';
     };
-    
+
     // Use individual action hooks
     const user = useUser();
     const setUser = useSetUser();
     const clearUser = useClearUser();
     const setLoading = useSetLoading();
     const hasHydrated = useMeStore((state) => state._hasHydrated);
-    
+
     const message = useToastMessage();
     const hasRedirected = useRef(false);
-
     // Sync session with store
     useEffect(() => {
       if (status === 'loading' || !hasHydrated) {
@@ -69,9 +68,9 @@ export function withAuthorization<P extends object>(
         // Update store with session data
         const sessionUser = {
           ...session.user,
-          isAdmin: session.user.role?.name === 'admin'
+          isAdmin: session.user.role?.name === 'admin',
         };
-        
+
         // Only update if user data is different
         if (!user || user.email !== sessionUser.email || user.role?.name !== sessionUser.role?.name) {
           setUser(sessionUser);
@@ -122,16 +121,16 @@ export function withAuthorization<P extends object>(
 
     // Prevent render until we know the auth state
     if (status === 'loading' || !hasHydrated) return <LoadingSpinner />;
-    
+
     // For guest-only routes (auth pages)
     if (requireGuest) {
       if (user) return null; // Already authenticated, will redirect
       return <WrappedComponent {...props} />;
     }
-    
+
     // For protected routes
     if (!user) return null;
-    
+
     const isAdmin = user.role?.name === 'admin' || user.isAdmin;
     if (requireAdmin && !isAdmin) return null;
 

@@ -1,18 +1,18 @@
-'use client'; 
+'use client';
 import { create } from 'zustand';
 import { persist, devtools } from 'zustand/middleware';
 
 export type User = {
-    id?: string;
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    phone?: string;
-    avatar?: string;
-    role: {
-        name: 'student' | 'user' | 'admin';
-    };
-    isAdmin: boolean;
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  avatar?: string;
+  role: {
+    name: 'student' | 'user' | 'admin';
+  };
+  isAdmin: boolean;
 };
 
 interface MeStore {
@@ -21,14 +21,14 @@ interface MeStore {
   isLoading: boolean;
   error: string | null;
   _hasHydrated: boolean;
-  
+
   // Actions
   setUser: (user: User | null) => void;
   updateUser: (updates: Partial<User>) => void;
   clearUser: () => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
-  
+
   // Computed values
   getFullName: () => string;
   hasRole: (role: string) => boolean;
@@ -43,32 +43,32 @@ export const useMeStore = create<MeStore>()(
         isLoading: false,
         error: null,
         _hasHydrated: false,
-        
+
         // Actions
-        setUser: (user) => 
-          set({ user, error: null }, false, 'setUser'),
-          
-        updateUser: (updates) => 
-          set((state) => ({
-            user: state.user ? { ...state.user, ...updates } : null
-          }), false, 'updateUser'),
-          
-        clearUser: () => 
-          set({ user: null, error: null }, false, 'clearUser'),
-          
-        setLoading: (isLoading) => 
-          set({ isLoading }, false, 'setLoading'),
-          
-        setError: (error) => 
-          set({ error }, false, 'setError'),
-        
+        setUser: (user) => set({ user, error: null }, false, 'setUser'),
+
+        updateUser: (updates) =>
+          set(
+            (state) => ({
+              user: state.user ? { ...state.user, ...updates } : null,
+            }),
+            false,
+            'updateUser',
+          ),
+
+        clearUser: () => set({ user: null, error: null }, false, 'clearUser'),
+
+        setLoading: (isLoading) => set({ isLoading }, false, 'setLoading'),
+
+        setError: (error) => set({ error }, false, 'setError'),
+
         // Computed values
         getFullName: () => {
           const { user } = get();
           if (!user) return '';
           return `${user.firstName || ''} ${user.lastName || ''}`.trim();
         },
-        
+
         hasRole: (role: string) => {
           const { user } = get();
           return user?.role?.name === role || false;
@@ -87,10 +87,10 @@ export const useMeStore = create<MeStore>()(
             state.error = null;
           }
         },
-      }
+      },
     ),
-    { name: 'MeStore' }
-  )
+    { name: 'MeStore' },
+  ),
 );
 
 // Custom hooks for better DX
