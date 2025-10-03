@@ -23,9 +23,7 @@ type ExtendedSession = {
     email?: string;
     phone?: string;
     avatar?: string;
-    role: {
-      name: 'student' | 'user' | 'admin';
-    };
+    role?: string;
   };
 };
 
@@ -68,11 +66,12 @@ export function withAuthorization<P extends object>(
         // Update store with session data
         const sessionUser = {
           ...session.user,
-          isAdmin: session.user.role?.name === 'admin',
+          role: session.user.role as 'student' | 'user' | 'admin',
+          isAdmin: session.user.role === 'admin',
         };
 
         // Only update if user data is different
-        if (!user || user.email !== sessionUser.email || user.role?.name !== sessionUser.role?.name) {
+        if (!user || user.email !== sessionUser.email || user.role !== sessionUser.role) {
           setUser(sessionUser);
         }
       } else if (status === 'unauthenticated') {
@@ -81,14 +80,14 @@ export function withAuthorization<P extends object>(
           clearUser();
         }
       }
-    }, [status, session?.user, user?.email, user?.role?.name, setUser, clearUser, setLoading, hasHydrated]);
+    }, [status, session?.user, user?.email, user?.role, setUser, clearUser, setLoading, hasHydrated]);
 
     // Redirect logic
     useEffect(() => {
       if (status === 'loading' || !hasHydrated || hasRedirected.current) return;
 
       const isAuthenticated = !!user;
-      const isAdmin = user?.role?.name === 'admin' || user?.isAdmin;
+      const isAdmin = user?.role === 'admin' || user?.isAdmin;
 
       // If requireGuest (auth routes) and user is authenticated, redirect them away
       if (requireGuest && isAuthenticated) {
@@ -131,7 +130,7 @@ export function withAuthorization<P extends object>(
     // For protected routes
     if (!user) return null;
 
-    const isAdmin = user.role?.name === 'admin' || user.isAdmin;
+    const isAdmin = user.role === 'admin' || user.isAdmin;
     if (requireAdmin && !isAdmin) return null;
 
     return <WrappedComponent {...props} />;

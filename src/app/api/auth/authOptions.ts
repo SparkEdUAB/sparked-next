@@ -29,8 +29,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (token.sub && session.user) {
-        // @ts-expect-error
         session.user.id = token.sub;
+        session.user.role = token.role as string;
+        session.role = token.role as string;
       }
       return session;
     },
@@ -38,7 +39,6 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.email = user.email;
-        // @ts-expect-error
         token.role = user.role ?? token.role;
       }
 
