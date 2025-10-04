@@ -1,35 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useCallback } from 'react';
-import { FaFile, FaFileAudio, FaFileImage, FaFilePdf, FaFileVideo, FaLink } from 'react-icons/fa6';
 import { determineFileType } from 'utils/helpers/determineFileType';
 import { truncateText } from 'utils/helpers/truncateText';
-
-const FileTypeIcon = ({ fileType, hasExternalUrl }: { fileType: string; hasExternalUrl: boolean }) => {
-  const iconClass = 'inline-block mr-2';
-
-  const fileTypeMap: Record<string, { icon: React.ElementType; color: string; text: string }> = {
-    pdf: { icon: FaFilePdf, color: 'text-gray-500', text: 'PDF' },
-    video: { icon: FaFileVideo, color: 'text-gray-500', text: 'Video' },
-    audio: { icon: FaFileAudio, color: 'text-gray-500', text: 'Audio' },
-    image: { icon: FaFileImage, color: 'text-gray-500', text: 'Image' },
-    link: { icon: FaLink, color: 'text-gray-500', text: 'External Link' },
-    default: { icon: FaFile, color: 'text-gray-500', text: 'File' },
-  };
-
-  const {
-    icon: IconComponent,
-    color: textColor,
-    text: fileTypeText,
-  } = hasExternalUrl ? fileTypeMap.link : fileTypeMap[fileType?.toLowerCase()] || fileTypeMap.default;
-
-  return (
-    <div className={`flex items-center ${textColor} mt-1`}>
-      <IconComponent className={iconClass} />
-      <span className="text-sm">{fileTypeText}</span>
-    </div>
-  );
-};
 
 const ContentDetailsCardView = ({
   image,
@@ -48,8 +21,9 @@ const ContentDetailsCardView = ({
 }) => {
   const fileType = determineFileType(fileUrl || '') as string;
   const hasExternalUrl = Boolean(externalUrl);
+  const mediaType = hasExternalUrl ? 'Web Link' : fileType;
 
-  const domainName = hasExternalUrl ? new URL(externalUrl as string).hostname : '';
+  const domainName = hasExternalUrl && externalUrl ? new URL(externalUrl).hostname : '';
   const placeholderImage = `https://placehold.co/600x400?text=${domainName || truncateText(title, 12)}`;
 
   const isValidImage = useCallback((url: string) => {
@@ -57,22 +31,23 @@ const ContentDetailsCardView = ({
   }, []);
 
   return (
-    <Link href={url} className="block h-full content-card">
-      <div className="h-full relative shadow-md hover:shadow-lg transition-shadow duration-300 rounded-lg bg-white dark:bg-gray-800">
-        <div className="relative">
+    <Link href={url} className="block h-full content-card group">
+      <div className="h-full relative shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-xl bg-white dark:bg-gray-800 overflow-hidden">
+        <div className="relative h-56 mb-2">
           <Image
-            className="rounded-t-md aspect-[4/3] object-cover object-center"
+            className="rounded-t-xl object-contain object-center transition-transform duration-300 group-hover:scale-105"
             alt={title}
             src={hasExternalUrl || !isValidImage(image) ? placeholderImage.trimEnd() : image?.trimEnd()}
             unoptimized={hasExternalUrl || !isValidImage(image)}
-            width={450}
-            height={340}
+            fill
           />
+           <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded-bl-xl">
+            {mediaType}
+          </div>
         </div>
         <div className="p-3">
-          <h5 className="text-base font-semibold text-gray-900 dark:text-white truncate">{title}</h5>
-          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{truncateText(description, 60)}</p>
-          <FileTypeIcon fileType={fileType} hasExternalUrl={hasExternalUrl} />
+          <h5 className="text-lg font-bold text-gray-900 dark:text-white truncate">{title}</h5>
+          <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mt-1">{truncateText(description, 60)}</p>
         </div>
       </div>
     </Link>

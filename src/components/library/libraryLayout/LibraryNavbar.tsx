@@ -1,5 +1,6 @@
 'use client';
 
+
 import AppLogo from '@components/logo';
 import useAuth from '@hooks/useAuth';
 import { useMeStore } from '@stores/useMeStore';
@@ -24,6 +25,7 @@ export function LibraryNavbar({
   const { handleLogout, loading } = useAuth();
   const isAdmin = useMeStore((state) => state.user?.isAdmin);
   const userEmail = useMeStore((state) => state.user?.email);
+
 
   return (
     <Navbar fluid rounded className="sticky top-0 z-[60]  flex-nowrap">
