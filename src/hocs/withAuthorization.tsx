@@ -27,10 +27,7 @@ type ExtendedSession = {
   };
 };
 
-// Helper to check if route is an auth route
-const isAuthRoute = (pathname: string): boolean => {
-  return Object.values(routes.auth).some((route) => pathname.startsWith(route));
-};
+
 
 export function withAuthorization<P extends object>(
   WrappedComponent: ComponentType<P>,

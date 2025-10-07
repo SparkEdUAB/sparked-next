@@ -29,7 +29,6 @@ export async function middleware(request: NextRequest) {
       secret: process.env.NEXTAUTH_SECRET,
     });
 
-    const token = await getToken({ req: request });
 
     if (!session || !session.role || !ADMIN_ROLES.includes(session.role)) {
       return new NextResponse(JSON.stringify({ success: false, message: 'Permission Denied', code: 401 }), {

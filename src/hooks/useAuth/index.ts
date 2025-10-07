@@ -145,8 +145,7 @@ const useAuth = () => {
         callbackUrl: routes.auth.login,
       });
       if (signOutResposne) {
-        const userclearFromStoreResp = clearUser();
-
+        clearUser();
         message.success(i18next.t('logout_ok'));
       }
 
