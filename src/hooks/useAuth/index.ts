@@ -55,7 +55,7 @@ const useAuth = () => {
         setLoading(false);
       }
     },
-    [message, router],
+    [message, router]
   );
 
   const handleLogin = useCallback(
@@ -115,7 +115,7 @@ const useAuth = () => {
         setLoading(false);
       }
     },
-    [message, router],
+    [message, setUser]
   );
 
   const handleLogout = useCallback(async () => {
@@ -156,7 +156,7 @@ const useAuth = () => {
     } finally {
       setLoading(false);
     }
-  }, [message, router]);
+  }, [message, clearUser]);
 
   const handleForgotPassword = useCallback(
     async (email: string, onDone?: () => void) => {

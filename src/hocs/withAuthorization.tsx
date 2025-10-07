@@ -77,7 +77,7 @@ export function withAuthorization<P extends object>(
           clearUser();
         }
       }
-    }, [status, session?.user, user?.email, user?.role, setUser, clearUser, setLoading, hasHydrated]);
+    }, [status, session?.user, user, setUser, clearUser, setLoading, hasHydrated]);
 
     // Redirect logic
     useEffect(() => {
@@ -113,7 +113,7 @@ export function withAuthorization<P extends object>(
         message.warning(i18next.t('Not authorized'));
         router.replace(routes.library);
       }
-    }, [status, user, requireAdmin, requireGuest, router, message, hasHydrated, pathname]);
+    }, [status, user, router, message, hasHydrated, pathname]);
 
     // Prevent render until we know the auth state
     if (status === 'loading' || !hasHydrated) return <LoadingSpinner />;
