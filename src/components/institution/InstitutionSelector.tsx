@@ -10,6 +10,7 @@ interface InstitutionSelectorProps {
   onInstitutionSelect: (institutionId: string | null, institutionName?: string) => void;
   error?: string;
   disabled?: boolean;
+  isOptional?: boolean;
 }
 
 const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
@@ -17,6 +18,7 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
   onInstitutionSelect,
   error,
   disabled = false,
+  isOptional = false,
 }) => {
   const { fetchPublicInstitutions, publicInstitutions, createInstitution, isLoading } = useInstitution();
   const [searchTerm, setSearchTerm] = useState('');
@@ -124,7 +126,9 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
 
       <div>
         <div className="mb-1.5 block">
-          <Label htmlFor="institution-select" value="Select Institution *" className="text-gray-700 dark:text-gray-300" />
+                  <Label htmlFor="institution-select" className="block mb-2 text-sm font-medium text-gray-900">
+          Select Institution {!isOptional && "*"}
+        </Label>
         </div>
         <Select
           id="institution-select"
@@ -135,7 +139,7 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
           disabled={disabled || isLoading}
           className="rounded-lg"
         >
-          <option value="">Select your institution</option>
+          <option value="">{isOptional ? "Select your institution (optional)" : "Select your institution"}</option>
           {publicInstitutions.map((institution) => (
             <option key={institution._id} value={institution._id}>
               {institution.name} ({institution.type})

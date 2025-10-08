@@ -1,5 +1,4 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
-import { zfd } from 'zod-form-data';
 import { dbClient } from '../../lib/db';
 import { dbCollections } from '../../lib/db/collections';
 import { HttpStatusCode } from 'axios';
@@ -7,22 +6,24 @@ import { NextRequest } from 'next/server';
 import { z } from 'zod';
 
 export async function POST(request: NextRequest) {
-  const schema = zfd.formData({
-    name: zfd.text(),
-    description: zfd.text().optional(),
+  const schema = z.object({
+    name: z.string().min(1, "Name is required"),
+    description: z.string().default(""),
     type: z.enum(['school', 'college', 'university', 'organization']),
-    website: zfd.text().optional(),
-    address: zfd.text().optional(),
-    contact_email: zfd.text().optional(),
-    contact_phone: zfd.text().optional(),
+    website: z.string().default(""),
+    address: z.string().default(""),
+    contact_email: z.string().default(""),
+    contact_phone: z.string().default(""),
     is_verified: z.boolean().default(false),
   });
 
-  const formBody = await request.json();
-  const { name, description, type, website, address, contact_email, contact_phone, is_verified } = 
-    schema.parse(formBody);
-
   try {
+    const formBody = await request.json();
+    console.log("formBody:", formBody);
+    
+    const { name, description, type, website, address, contact_email, contact_phone, is_verified } = 
+      schema.parse(formBody);
+
     const db = await dbClient();
 
     if (!db) {
@@ -53,12 +54,12 @@ export async function POST(request: NextRequest) {
 
     const institutionDoc = {
       name,
-      description: description || '',
+      description,
       type,
-      website: website || '',
-      address: address || '',
-      contact_email: contact_email || '',
-      contact_phone: contact_phone || '',
+      website,
+      address,
+      contact_email,
+      contact_phone,
       is_verified,
       created_at: new Date(),
       created_by_id: null, // TODO: Get from session when auth is available
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch {
+  } catch (error) {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

@@ -297,6 +297,7 @@ const Signup = () => {
                     onInstitutionSelect={handleInstitutionSelect}
                     error={errors.institution}
                     disabled={loading}
+                    isOptional={!isStudent}
                   />
                   
                   <div>

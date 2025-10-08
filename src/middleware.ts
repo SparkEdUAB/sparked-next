@@ -12,6 +12,8 @@ const PUBLIC_PATHS = [
   '/api/media-actions/createMediaView',
   '/api/password/forgotPassword',
   '/api/password/resetPassword',
+  '/api/institution/createInstitution',
+  '/api/institution/fetchPublicInstitutions',
 ];
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;

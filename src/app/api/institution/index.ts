@@ -1,22 +1,21 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
-import { zfd } from 'zod-form-data';
+import { z } from 'zod';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { p_fetchInstitutionsWithCreator } from './pipelines';
 import { BSON } from 'mongodb';
 import { HttpStatusCode } from 'axios';
-import { z } from 'zod';
 
 export default async function fetchInstitutions_(request: Request) {
-  const schema = zfd.formData({
-    limit: zfd.numeric(),
-    skip: zfd.numeric(),
+  const schema = z.object({
+    limit: z.number(),
+    skip: z.number(),
   });
-  const formBody = await request.json();
-
-  const { limit, skip } = schema.parse(formBody);
-
+  
   try {
+    const formBody = await request.json();
+    const { limit, skip } = schema.parse(formBody);
+
     const db = await dbClient();
 
     if (!db) {
@@ -42,7 +41,7 @@ export default async function fetchInstitutions_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch {
+  } catch (error) {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -55,14 +54,24 @@ export default async function fetchInstitutions_(request: Request) {
 }
 
 export async function fetchInstitution_(request: Request) {
-  const schema = zfd.formData({
-    institutionId: zfd.text(),
+  const schema = z.object({
+    institutionId: z.string(),
   });
-  const formBody = await request.json();
-
-  const { institutionId } = schema.parse(formBody);
-
+  
   try {
+    const formBody = await request.json();
+    const { institutionId } = schema.parse(formBody);
+
+    // Validate ObjectId format
+    if (!BSON.ObjectId.isValid(institutionId)) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+      };
+      return new Response(JSON.stringify(response), {
+        status: HttpStatusCode.BadRequest,
+      });
+    }
     const db = await dbClient();
 
     if (!db) {
@@ -87,7 +96,7 @@ export async function fetchInstitution_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch {
+  } catch (error) {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -100,15 +109,14 @@ export async function fetchInstitution_(request: Request) {
 }
 
 export async function fetchPublicInstitutions_(request: Request) {
-  const schema = zfd.formData({
-    limit: zfd.numeric().optional(),
-    search: zfd.text().optional(),
+  const schema = z.object({
+    limit: z.number().optional(),
+    search: z.string().optional(),
   });
-  const formBody = await request.json();
-
-  const { limit = 50, search } = schema.parse(formBody);
-
+  
   try {
+    const formBody = await request.json();
+    const { limit = 50, search } = schema.parse(formBody);
     const db = await dbClient();
 
     if (!db) {
@@ -145,7 +153,7 @@ export async function fetchPublicInstitutions_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch {
+  } catch (error) {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -158,14 +166,25 @@ export async function fetchPublicInstitutions_(request: Request) {
 }
 
 export async function deleteInstitutions_(request: Request) {
-  const schema = zfd.formData({
-    institutionIds: z.array(zfd.text()),
+  const schema = z.object({
+    institutionIds: z.array(z.string()),
   });
-  const formBody = await request.json();
-
-  const { institutionIds } = schema.parse(formBody);
-
+  
   try {
+    const formBody = await request.json();
+    const { institutionIds } = schema.parse(formBody);
+
+    // Validate all ObjectIds
+    const invalidIds = institutionIds.filter(id => !BSON.ObjectId.isValid(id));
+    if (invalidIds.length > 0) {
+      const response = {
+        isError: true,
+        code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
+      };
+      return new Response(JSON.stringify(response), {
+        status: HttpStatusCode.BadRequest,
+      });
+    }
     const db = await dbClient();
 
     if (!db) {
@@ -178,7 +197,7 @@ export async function deleteInstitutions_(request: Request) {
       });
     }
 
-    const objectIds = institutionIds.map((id) => new BSON.ObjectId(id));
+    const objectIds = institutionIds.map((id: string) => new BSON.ObjectId(id));
 
     await db.collection(dbCollections.institutions.name).deleteMany({
       _id: { $in: objectIds },
@@ -191,7 +210,7 @@ export async function deleteInstitutions_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch {
+  } catch (error) {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -204,15 +223,14 @@ export async function deleteInstitutions_(request: Request) {
 }
 
 export async function findInstitutionsByName_(request: Request) {
-  const schema = zfd.formData({
-    searchQuery: zfd.text(),
-    limit: zfd.numeric().optional(),
+  const schema = z.object({
+    searchQuery: z.string(),
+    limit: z.number().optional(),
   });
-  const formBody = await request.json();
-
-  const { searchQuery, limit = 20 } = schema.parse(formBody);
-
+  
   try {
+    const formBody = await request.json();
+    const { searchQuery, limit = 20 } = schema.parse(formBody);
     const db = await dbClient();
 
     if (!db) {
@@ -241,7 +259,7 @@ export async function findInstitutionsByName_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch {
+  } catch (error) {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

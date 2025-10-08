@@ -68,11 +68,11 @@ export default async function signup_(request: Request) {
       isStudent,
       is_verified: false,
       created_at: new Date(),
-      role: 'student',
+      role: isStudent ? 'student' : 'user',
       password: hashedPassword,
     };
 
-    // Add institution data if provided
+    // Add institution data if provided (for both students and non-students)
     if (institutionId) {
       userDoc.institution_id = new BSON.ObjectId(institutionId);
     }
