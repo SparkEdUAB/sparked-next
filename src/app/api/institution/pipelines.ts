@@ -14,7 +14,10 @@ export const p_fetchInstitutionsWithCreator = (limit: number, skip: number) => [
     },
   },
   {
-    $unwind: '$user',
+    $unwind: {
+      path: '$user',
+      preserveNullAndEmptyArrays: true,
+    },
   },
   {
     $project: {

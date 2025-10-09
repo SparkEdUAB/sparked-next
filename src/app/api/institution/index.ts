@@ -7,15 +7,35 @@ import { BSON } from 'mongodb';
 import { HttpStatusCode } from 'axios';
 
 export default async function fetchInstitutions_(request: Request) {
+  const url = new URL(request.url);
+  const limitParam = url.searchParams.get('limit');
+  const skipParam = url.searchParams.get('skip');
+  
   const schema = z.object({
     limit: z.number(),
     skip: z.number(),
   });
-    console.log("institi:");
   
   try {
-    const formBody = await request.json();
-    const { limit, skip } = schema.parse(formBody);
+    let limit: number;
+    let skip: number;
+
+    // Handle both GET (query params) and POST (JSON body) requests
+    if (limitParam !== null && skipParam !== null) {
+      // GET request with query parameters
+      const result = schema.parse({
+        limit: parseInt(limitParam),
+        skip: parseInt(skipParam)
+      });
+      limit = result.limit;
+      skip = result.skip;
+    } else {
+      // POST request with JSON body
+      const formBody = await request.json();
+      const result = schema.parse(formBody);
+      limit = result.limit;
+      skip = result.skip;
+    }
 
     const db = await dbClient();
 
@@ -33,7 +53,6 @@ export default async function fetchInstitutions_(request: Request) {
       .collection(dbCollections.institutions.name)
       .aggregate(p_fetchInstitutionsWithCreator(limit, skip))
       .toArray();
-    console.log("institi:", institutions);
     
 
     const response = {
@@ -133,7 +152,7 @@ export async function fetchPublicInstitutions_(request: Request) {
     }
 
     // Build search filter
-    const searchFilter: any = { is_verified: false };
+    const searchFilter: any = { is_verified: true };
     if (search) {
       searchFilter.$or = [
         { name: { $regex: search, $options: 'i' } },
@@ -147,7 +166,6 @@ export async function fetchPublicInstitutions_(request: Request) {
       .limit(limit)
       .sort({ name: 1 })
       .toArray();
-console.log("institutions:", institutions);
 
     const response = {
       isError: false,
@@ -227,14 +245,31 @@ export async function deleteInstitutions_(request: Request) {
 }
 
 export async function findInstitutionsByName_(request: Request) {
+  const url = new URL(request.url);
+  const nameParam = url.searchParams.get('name');
+  const limitParam = url.searchParams.get('limit');
+  
   const schema = z.object({
     searchQuery: z.string(),
     limit: z.number().optional(),
   });
   
   try {
-    const formBody = await request.json();
-    const { searchQuery, limit = 20 } = schema.parse(formBody);
+    let searchQuery: string;
+    let limit: number;
+
+    // Handle both GET (query params) and POST (JSON body) requests
+    if (nameParam !== null) {
+      // GET request with query parameters
+      searchQuery = nameParam;
+      limit = limitParam ? parseInt(limitParam) : 20;
+    } else {
+      // POST request with JSON body
+      const formBody = await request.json();
+      const result = schema.parse(formBody);
+      searchQuery = result.searchQuery;
+      limit = result.limit || 20;
+    }
     const db = await dbClient();
 
     if (!db) {
