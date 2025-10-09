@@ -4,7 +4,7 @@ import { transformRawUser } from '@hooks/useUser';
 import { T_UserFields } from '@hooks/useUser/types';
 import { API_LINKS } from 'app/links';
 import { Button, Spinner } from 'flowbite-react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 interface InstitutionUsersViewProps {
   institutionId: string;
@@ -18,39 +18,42 @@ const InstitutionUsersView: React.FC<InstitutionUsersViewProps> = ({ institution
   const [hasMore, setHasMore] = useState(true);
   const limit = 10;
 
-  const fetchUsers = async (skipValue: number) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(
-        `${API_LINKS.FETCH_INSTITUTION_USERS}?institutionId=${institutionId}&limit=${limit}&skip=${skipValue}`
-      );
-      const data = await response.json();
+  const fetchUsers = useCallback(
+    async (skipValue: number) => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `${API_LINKS.FETCH_INSTITUTION_USERS}?institutionId=${institutionId}&limit=${limit}&skip=${skipValue}`
+        );
+        const data = await response.json();
 
-      if (!data.isError) {
-        const transformedUsers = data.users.map((user: any, index: number) => ({
-          ...transformRawUser(user),
-          index: skipValue + index + 1,
-          key: user._id,
-        }));
+        if (!data.isError) {
+          const transformedUsers = data.users.map((user: any, index: number) => ({
+            ...transformRawUser(user),
+            index: skipValue + index + 1,
+            key: user._id,
+          }));
 
-        if (skipValue === 0) {
-          setUsers(transformedUsers);
-        } else {
-          setUsers((prev) => [...prev, ...transformedUsers]);
+          if (skipValue === 0) {
+            setUsers(transformedUsers);
+          } else {
+            setUsers((prev) => [...prev, ...transformedUsers]);
+          }
+
+          setHasMore(data.users.length === limit);
         }
-
-        setHasMore(data.users.length === limit);
+      } catch (error) {
+        console.error('Error fetching institution users:', error);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Error fetching institution users:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [institutionId]
+  ); // Only recreate if institutionId changes
 
   useEffect(() => {
     fetchUsers(0);
-  }, [institutionId]);
+  }, [fetchUsers]); // Now it's safe to include fetchUsers
 
   const loadMore = () => {
     const newSkip = skip + limit;
@@ -83,15 +86,26 @@ const InstitutionUsersView: React.FC<InstitutionUsersViewProps> = ({ institution
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="px-6 py-3">Name</th>
-                  <th scope="col" className="px-6 py-3">Email</th>
-                  <th scope="col" className="px-6 py-3">Phone</th>
-                  <th scope="col" className="px-6 py-3">Role</th>
+                  <th scope="col" className="px-6 py-3">
+                    Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Email
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Phone
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Role
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <tr
+                    key={user._id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                  >
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {user.firstName} {user.lastName}
                     </td>
