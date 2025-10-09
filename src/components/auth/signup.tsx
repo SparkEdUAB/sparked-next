@@ -116,9 +116,12 @@ const Signup = () => {
   // Update the student radio button handling
   const handleStudentChange = (isStudentValue: boolean) => {
     setIsStudent(isStudentValue);
-
-    // Reset institution type when changing student status
-    if (!isStudentValue) {
+    
+    if (isStudentValue) {
+      // Set default institution type when user becomes a student
+      setInstitutionType('institution');
+    } else {
+      // Reset institution type when changing student status
       setInstitutionType('');
       setSelectedInstitutionId(null);
       setSelectedInstitutionName('');
@@ -134,9 +137,7 @@ const Signup = () => {
         institution: undefined
       }));
     }
-  };
-
-  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  };  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     // Create a complete result object that includes all form data
@@ -147,7 +148,7 @@ const Signup = () => {
 
     // Add student-related fields
     if (isStudent) {
-      result.institutionType = institutionType;
+      result.institutionType = institutionType || 'institution';
       
       // Add institution data if selected
       if (selectedInstitutionId) {

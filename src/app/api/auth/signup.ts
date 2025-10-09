@@ -1,5 +1,4 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
-import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
@@ -13,18 +12,18 @@ import { BSON } from 'mongodb';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function signup_(request: Request) {
-  const schema = zfd.formData({
-    email: zfd.text(),
-    password: zfd.text(),
-    firstName: zfd.text(),
-    lastName: zfd.text(),
-    phoneNumber: zfd.text(),
+  const schema = z.object({
+    email: z.string(),
+    password: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
+    phoneNumber: z.string(),
     isStudent: z.boolean().default(true),
-    institutionType: zfd.text().optional(),
+    institutionType: z.string().optional(),
     schoolName: z.string().optional().default(''),
     grade: z.any().optional().default(0),
-    institutionId: zfd.text().optional(),
-    institutionName: zfd.text().optional(),
+    institutionId: z.string().optional(),
+    institutionName: z.string().optional(),
   });
 
   const formBody = await request.json();
