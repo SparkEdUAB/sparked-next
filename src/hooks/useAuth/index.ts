@@ -17,6 +17,7 @@ import { useMeStore } from 'stores/useMeStore';
 const useAuth = () => {
   const { status } = useSession();
   const [loading, setLoading] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const router = useRouter();
 
   const setUser = useMeStore((state) => state.setUser);
@@ -126,7 +127,7 @@ const useAuth = () => {
         'Content-Type': 'application/json',
       },
     };
-    setLoading(true);
+    setLogoutLoading(true);
     try {
       const resp = await fetch(url, formData);
       const responseData = await resp.json();
@@ -140,11 +141,12 @@ const useAuth = () => {
         return false;
       }
 
-      const signOutResposne = await signOut({
+      const signOutResponse = await signOut({
         redirect: false,
         callbackUrl: routes.auth.login,
       });
-      if (signOutResposne) {
+
+      if (signOutResponse.url) {
         clearUser();
         message.success(i18next.t('logout_ok'));
       }
@@ -154,7 +156,7 @@ const useAuth = () => {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     } finally {
-      setLoading(false);
+      setLogoutLoading(false);
     }
   }, [message, clearUser]);
 
@@ -220,6 +222,7 @@ const useAuth = () => {
     handleSignup,
     handleLogin,
     handleLogout,
+    logoutLoading,
     loading,
     handleForgotPassword,
     handleResetPassword,

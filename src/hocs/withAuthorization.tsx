@@ -41,7 +41,6 @@ export function withAuthorization<P extends object>(
       status: 'loading' | 'authenticated' | 'unauthenticated';
     };
 
-    // Use individual action hooks
     const user = useUser();
     const setUser = useSetUser();
     const clearUser = useClearUser();
@@ -50,6 +49,7 @@ export function withAuthorization<P extends object>(
 
     const message = useToastMessage();
     const hasRedirected = useRef(false);
+
     // Sync session with store
     useEffect(() => {
       if (status === 'loading' || !hasHydrated) {
@@ -60,26 +60,28 @@ export function withAuthorization<P extends object>(
       setLoading(false);
 
       if (status === 'authenticated' && session?.user) {
-        // Update store with session data
         const sessionUser = {
           ...session.user,
           role: session.user.role as 'student' | 'user' | 'admin',
           isAdmin: session.user.role === 'admin',
         };
 
-        // Only update if user data is different
         if (!user || user.email !== sessionUser.email || user.role !== sessionUser.role) {
           setUser(sessionUser);
         }
       } else if (status === 'unauthenticated') {
-        // Clear store when session is cleared
         if (user) {
           clearUser();
         }
       }
     }, [status, session?.user, user, setUser, clearUser, setLoading, hasHydrated]);
 
-    // Redirect logic
+    // Redirect logic - RESET hasRedirected when auth state changes
+    useEffect(() => {
+      // Reset redirect flag when auth state changes
+      hasRedirected.current = false;
+    }, [status, user?.id]); // Reset when status or user identity changes
+
     useEffect(() => {
       if (status === 'loading' || !hasHydrated || hasRedirected.current) return;
 
@@ -89,8 +91,6 @@ export function withAuthorization<P extends object>(
       // If requireGuest (auth routes) and user is authenticated, redirect them away
       if (requireGuest && isAuthenticated) {
         hasRedirected.current = true;
-        message.info(i18next.t('Already logged in'));
-        // Redirect based on role
         if (isAdmin) {
           router.replace(routes.admin);
         } else {
@@ -102,7 +102,6 @@ export function withAuthorization<P extends object>(
       // If requires auth and user is not authenticated, redirect to login
       if (!requireGuest && !isAuthenticated) {
         hasRedirected.current = true;
-        message.warning(i18next.t('Not logged in'));
         router.replace(routes.auth.login);
         return;
       }
@@ -113,7 +112,7 @@ export function withAuthorization<P extends object>(
         message.warning(i18next.t('Not authorized'));
         router.replace(routes.library);
       }
-    }, [status, user, router, message, hasHydrated, pathname]);
+    }, [status, user, router, message, hasHydrated, pathname, requireGuest, requireAdmin]);
 
     // Prevent render until we know the auth state
     if (status === 'loading' || !hasHydrated) return <LoadingSpinner />;

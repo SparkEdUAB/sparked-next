@@ -22,7 +22,7 @@ export function LibraryNavbar({
 }) {
   let [searching, setSearching] = useState(false);
   let router = useRouter();
-  const { handleLogout, loading } = useAuth();
+  const { handleLogout, logoutLoading } = useAuth();
   const isAdmin = useMeStore((state) => state.user?.isAdmin);
   const userEmail = useMeStore((state) => state.user?.email);
 
@@ -78,14 +78,14 @@ export function LibraryNavbar({
           {userEmail && <Dropdown.Item>{userEmail}</Dropdown.Item>}
           {isAdmin && (
             <Dropdown.Item>
-              <Link href={routes.admin} aria-disabled={loading}>
+              <Link href={routes.admin} >
                 Dashboard
               </Link>
             </Dropdown.Item>
           )}
           <Dropdown.Divider />
-          <Dropdown.Item className="hover:none" onClick={() => null}>
-            <span onClick={handleLogout} aria-disabled={loading}>
+          <Dropdown.Item disabled={logoutLoading} className="hover:none"  onClick={handleLogout} aria-disabled={logoutLoading}>
+            <span  className={logoutLoading ? 'opacity-50 pointer-events-none' : ''}>
               Logout
             </span>
           </Dropdown.Item>
