@@ -5,6 +5,7 @@ import { Label, Select, TextInput, Button, Modal, Spinner } from 'flowbite-react
 import useInstitution from '@hooks/useInstitution';
 import useDebounceValue from '@hooks/use-debounce';
 import { HiPlus, HiSearch } from 'react-icons/hi';
+import i18next from 'i18next';
 
 interface InstitutionSelectorProps {
   selectedInstitutionId?: string;
@@ -123,12 +124,12 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
     <div className="space-y-4">
       <div>
         <div className="mb-1.5 block">
-          <Label htmlFor="institution-search" value="Search Institution" className="text-gray-700 dark:text-gray-300" />
+          <Label htmlFor="institution-search" value={i18next.t('search_institution')} className="text-gray-700 dark:text-gray-300" />
         </div>
         <TextInput
           id="institution-search"
           icon={HiSearch}
-          placeholder="Search for your institution..."
+          placeholder={i18next.t('search_institution_placeholder')}
           value={searchTerm}
           onChange={handleSearchChange}
           disabled={disabled}
@@ -139,7 +140,7 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
       <div>
         <div className="mb-1.5 block">
                   <Label htmlFor="institution-select" className="block mb-2 text-sm font-medium text-gray-900">
-          Select Institution {!isOptional && "*"}
+          {i18next.t('institution_label')} {!isOptional && "*"}
         </Label>
         </div>
         <Select
@@ -153,8 +154,8 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
         >
           <option value="">
             {isFetchingInstitutions 
-              ? "Loading institutions..." 
-              : (isOptional ? "Select your institution (optional)" : "Select your institution")
+              ? i18next.t('loading_institutions')
+              : (isOptional ? i18next.t('select_institution_optional') : i18next.t('select_institution'))
             }
           </option>
           {!isFetchingInstitutions && publicInstitutions.map((institution) => (
@@ -164,7 +165,7 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
           ))}
           {!isFetchingInstitutions && (
             <option value="create_new" className="font-semibold text-blue-600">
-              + Create New Institution
+              + {i18next.t('create_new_institution')}
             </option>
           )}
         </Select>
@@ -172,7 +173,7 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
 
       {/* Create New Institution Modal */}
       <Modal show={showCreateModal} onClose={() => setShowCreateModal(false)} size="lg">
-        <Modal.Header>Create New Institution</Modal.Header>
+        <Modal.Header>{i18next.t('create_new_institution')}</Modal.Header>
         <Modal.Body>
           <div className="space-y-4">
             <p className="text-sm text-gray-600 dark:text-gray-400">

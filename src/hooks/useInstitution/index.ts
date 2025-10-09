@@ -225,6 +225,79 @@ export default function useInstitution() {
     [selectedInstitutionIds, message, fetchInstitutions],
   );
 
+  const approveInstitution = useCallback(
+    async (institutionId: string) => {
+      const url = API_LINKS.VERIFY_INSTITUTION;
+      const formData = {
+        body: JSON.stringify({ 
+          institutionId,
+          action: 'approve' 
+        }),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code) || responseData.message);
+          return false;
+        }
+
+        message.success(i18next.t('institution_approved'));
+        return true;
+      } catch (err: any) {
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      } finally {
+        setLoaderStatus(false);
+      }
+    },
+    [message],
+  );
+
+  const rejectInstitution = useCallback(
+    async (institutionId: string, rejectionReason?: string) => {
+      const url = API_LINKS.VERIFY_INSTITUTION;
+      const formData = {
+        body: JSON.stringify({ 
+          institutionId,
+          action: 'reject',
+          rejectionReason 
+        }),
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      try {
+        setLoaderStatus(true);
+        const resp = await fetch(url, formData);
+        const responseData = await resp.json();
+
+        if (!resp.ok || responseData.isError) {
+          message.warning(getProcessCodeMeaning(responseData.code) || responseData.message);
+          return false;
+        }
+
+        message.success(i18next.t('institution_rejected'));
+        return true;
+      } catch (err: any) {
+        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+        return false;
+      } finally {
+        setLoaderStatus(false);
+      }
+    },
+    [message],
+  );
+
   const onSearchQueryChange = useCallback(
     (text: string) => {
       setSearchQuery(text);
@@ -270,6 +343,8 @@ export default function useInstitution() {
     deleteInstitutions,
     publicInstitutions,
     setPublicInstitutions,
+    approveInstitution,
+    rejectInstitution,
   };
 }
 

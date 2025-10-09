@@ -20,6 +20,7 @@ export const API_LINKS = {
   EDIT_INSTITUTION: '/api/institution/editInstitution',
   DELETE_INSTITUTIONS: '/api/institution/deleteInstitutions',
   FIND_INSTITUTIONS_BY_NAME: '/api/institution/findInstitutionsByName',
+  VERIFY_INSTITUTION: '/api/institution/verifyInstitution',
   // program links
   CREATE_PROGRAM: '/api/program/createProgram',
   FETCH_PROGRAMS: '/api/program/fetchPrograms',

@@ -1,6 +1,8 @@
 import i18next from 'i18next';
 import { T_ColumnData } from '@components/admin/AdminTable/types';
 import { T_InstitutionFields } from '@hooks/useInstitution/types';
+import { Button } from 'flowbite-react';
+import { HiCheck, HiX } from 'react-icons/hi';
 
 export const institutionTableColumns: T_ColumnData<T_InstitutionFields>[] = [
   {
@@ -63,5 +65,55 @@ export const institutionTableColumns: T_ColumnData<T_InstitutionFields>[] = [
     title: i18next.t('created_at'),
     dataIndex: 'created_at',
     key: 'created_at',
+  },
+];
+
+// Institution table columns with verification actions
+export const institutionTableColumnsWithActions = (
+  onApprove: (institution: T_InstitutionFields) => void,
+  onReject: (institution: T_InstitutionFields) => void,
+  isProcessing: boolean
+): T_ColumnData<T_InstitutionFields>[] => [
+  ...institutionTableColumns,
+  {
+    title: i18next.t('actions'),
+    dataIndex: '_id' as keyof T_InstitutionFields, // Use existing field but render custom content
+    key: 'actions',
+    render: (text: string, item: T_InstitutionFields) => (
+      <div className="flex gap-2">
+        {!item.is_verified ? (
+          <>
+            <Button
+              size="xs"
+              color="success"
+              onClick={(e: any) => {
+                e.stopPropagation();
+                onApprove(item);
+              }}
+              disabled={isProcessing}
+              className="flex items-center"
+            >
+              <HiCheck className="w-3 h-3 mr-1" />
+              {i18next.t('approve')}
+            </Button>
+            <Button
+              size="xs"
+              color="failure"
+              onClick={(e: any) => {
+                e.stopPropagation();
+                onReject(item);
+              }}
+              disabled={isProcessing}
+              className="flex items-center"
+            >
+              <HiX className="w-3 h-3 mr-1" />
+              {i18next.t('reject')}
+            </Button>
+          </>
+        ) : (
+          <span className="text-green-600 text-sm font-medium">✓ Verified</span>
+        )}
+      </div>
+    ),
   },
 ];

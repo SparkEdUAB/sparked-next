@@ -19,8 +19,6 @@ export async function POST(request: NextRequest) {
 
   try {
     const formBody = await request.json();
-    console.log("formBody:", formBody);
-    
     const { name, description, type, website, address, contact_email, contact_phone, is_verified } = 
       schema.parse(formBody);
 
