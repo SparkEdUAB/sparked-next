@@ -25,8 +25,6 @@ export function LibraryNavbar({
   const { handleLogout, logoutLoading } = useAuth();
   const isAdmin = useMeStore((state) => state.user?.isAdmin);
   const userEmail = useMeStore((state) => state.user?.email);
-  const user = useMeStore((state) => state.user);
-console.log(user)
 
   return (
     <Navbar fluid rounded className="sticky top-0 z-[60]  flex-nowrap">

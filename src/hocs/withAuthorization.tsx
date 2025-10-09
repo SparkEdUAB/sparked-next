@@ -60,13 +60,14 @@ export function withAuthorization<P extends object>(
       setLoading(false);
 
       if (status === 'authenticated' && session?.user) {
-        const sessionUser = {
-          ...session.user,
-          role: session.user.role as 'student' | 'user' | 'admin',
-          isAdmin: session.user.role === 'admin' || session.user.role === 'Admin',
-        };
-
-        if (!user || user.email !== sessionUser.email || user.role !== sessionUser.role) {
+        // Only sync session to store if user is not already set
+        // This prevents overwriting the correct isAdmin value set during login
+        if (!user) {
+          const sessionUser = {
+            ...session.user,
+            role: session.user.role as 'student' | 'user' | 'admin',
+            isAdmin: session.user.role?.toLowerCase() === 'admin',
+          };
           setUser(sessionUser);
         }
       } else if (status === 'unauthenticated') {
@@ -86,7 +87,7 @@ export function withAuthorization<P extends object>(
       if (status === 'loading' || !hasHydrated || hasRedirected.current) return;
 
       const isAuthenticated = !!user;
-      const isAdmin = user?.role === 'admin' || user?.isAdmin;
+      const isAdmin = user?.role?.toLowerCase() === 'admin' || user?.isAdmin;
 
       // If requireGuest (auth routes) and user is authenticated, redirect them away
       if (requireGuest && isAuthenticated) {
@@ -126,7 +127,7 @@ export function withAuthorization<P extends object>(
     // For protected routes
     if (!user) return null;
 
-    const isAdmin = user.role === 'admin' || user.isAdmin;
+    const isAdmin = user.role?.toLowerCase() === 'admin' || user.isAdmin;
     if (requireAdmin && !isAdmin) return null;
 
     return <WrappedComponent {...props} />;
