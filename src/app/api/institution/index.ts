@@ -11,6 +11,7 @@ export default async function fetchInstitutions_(request: Request) {
     limit: z.number(),
     skip: z.number(),
   });
+    console.log("institi:");
   
   try {
     const formBody = await request.json();
@@ -32,6 +33,8 @@ export default async function fetchInstitutions_(request: Request) {
       .collection(dbCollections.institutions.name)
       .aggregate(p_fetchInstitutionsWithCreator(limit, skip))
       .toArray();
+    console.log("institi:", institutions);
+    
 
     const response = {
       isError: false,
@@ -130,7 +133,7 @@ export async function fetchPublicInstitutions_(request: Request) {
     }
 
     // Build search filter
-    const searchFilter: any = { is_verified: true };
+    const searchFilter: any = { is_verified: false };
     if (search) {
       searchFilter.$or = [
         { name: { $regex: search, $options: 'i' } },
@@ -144,6 +147,7 @@ export async function fetchPublicInstitutions_(request: Request) {
       .limit(limit)
       .sort({ name: 1 })
       .toArray();
+console.log("institutions:", institutions);
 
     const response = {
       isError: false,

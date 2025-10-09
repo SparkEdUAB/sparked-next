@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Label, Select, TextInput, Button, Modal, Spinner } from 'flowbite-react';
 import useInstitution from '@hooks/useInstitution';
+import useDebounceValue from '@hooks/use-debounce';
 import { HiPlus, HiSearch } from 'react-icons/hi';
 
 interface InstitutionSelectorProps {
@@ -32,20 +33,31 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
     contact_email: '',
   });
   const [isCreatingInstitution, setIsCreatingInstitution] = useState(false);
+  const [isFetchingInstitutions, setIsFetchingInstitutions] = useState(false);
+
+  // Debounce the search term with a 500ms delay
+  const debouncedSearchTerm = useDebounceValue(searchTerm, 500);
 
   useEffect(() => {
     // Load public institutions on component mount
-    fetchPublicInstitutions();
+    setIsFetchingInstitutions(true);
+    fetchPublicInstitutions().finally(() => setIsFetchingInstitutions(false));
   }, [fetchPublicInstitutions]);
+
+  // Effect to handle debounced search
+  useEffect(() => {
+    // Skip initial empty search to avoid duplicate API call on mount
+    if (debouncedSearchTerm === '' && searchTerm === '') {
+      return;
+    }
+    
+    setIsFetchingInstitutions(true);
+    fetchPublicInstitutions(debouncedSearchTerm || '').finally(() => setIsFetchingInstitutions(false));
+  }, [debouncedSearchTerm, searchTerm, fetchPublicInstitutions]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchTerm(value);
-    
-    // Debounced search
-    setTimeout(() => {
-      fetchPublicInstitutions(value);
-    }, 300);
   };
 
   const handleInstitutionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -136,18 +148,25 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
           onChange={handleInstitutionChange}
           color={error ? "failure" : undefined}
           helperText={error}
-          disabled={disabled || isLoading}
+          disabled={disabled || isLoading || isFetchingInstitutions}
           className="rounded-lg"
         >
-          <option value="">{isOptional ? "Select your institution (optional)" : "Select your institution"}</option>
-          {publicInstitutions.map((institution) => (
+          <option value="">
+            {isFetchingInstitutions 
+              ? "Loading institutions..." 
+              : (isOptional ? "Select your institution (optional)" : "Select your institution")
+            }
+          </option>
+          {!isFetchingInstitutions && publicInstitutions.map((institution) => (
             <option key={institution._id} value={institution._id}>
               {institution.name} ({institution.type})
             </option>
           ))}
-          <option value="create_new" className="font-semibold text-blue-600">
-            + Create New Institution
-          </option>
+          {!isFetchingInstitutions && (
+            <option value="create_new" className="font-semibold text-blue-600">
+              + Create New Institution
+            </option>
+          )}
         </Select>
       </div>
 

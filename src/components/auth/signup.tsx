@@ -120,11 +120,18 @@ const Signup = () => {
     // Reset institution type when changing student status
     if (!isStudentValue) {
       setInstitutionType('');
+      setSelectedInstitutionId(null);
+      setSelectedInstitutionName('');
       // Also reset school-related fields
       setFormData(prev => ({
         ...prev,
         schoolName: '',
         grade: ''
+      }));
+      // Clear institution error
+      setErrors(prev => ({
+        ...prev,
+        institution: undefined
       }));
     }
   };
@@ -140,14 +147,11 @@ const Signup = () => {
 
     // Add student-related fields
     if (isStudent) {
-      // @ts-expect-error
       result.institutionType = institutionType;
       
       // Add institution data if selected
       if (selectedInstitutionId) {
-        // @ts-expect-error
         result.institutionId = selectedInstitutionId;
-        // @ts-expect-error
         result.institutionName = selectedInstitutionName;
       }
     }
