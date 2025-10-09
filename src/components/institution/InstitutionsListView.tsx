@@ -12,6 +12,7 @@ import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
 import { T_InstitutionFields } from '@hooks/useInstitution/types';
 import i18next from 'i18next';
+import InstitutionUsersView from './InstitutionUsersView';
 
 const InstitutionsListView: React.FC = () => {
   const { 
@@ -29,6 +30,7 @@ const InstitutionsListView: React.FC = () => {
   const [rejectingInstitution, setRejectingInstitution] = useState<T_InstitutionFields | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
   const [verificationFilter, setVerificationFilter] = useState<'all' | 'verified' | 'pending'>('all');
+  const [viewingUsersFor, setViewingUsersFor] = useState<T_InstitutionFields | null>(null);
 
   // Verification handlers
   const handleApprove = async (institution: T_InstitutionFields) => {
@@ -98,7 +100,7 @@ const InstitutionsListView: React.FC = () => {
         isLoading={isLoading}
         createNew={() => setCreatingInstitution(true)}
         editItem={(item) => setEdittingInstitution(item)}
-        columns={institutionTableColumnsWithActions(handleApprove, handleReject, isProcessing)}
+        columns={institutionTableColumnsWithActions(handleApprove, handleReject, isProcessing, setViewingUsersFor)}
         onSearchQueryChange={onSearchQueryChange}
         hasMore={hasMore}
         loadMore={loadMore}
@@ -191,6 +193,19 @@ const InstitutionsListView: React.FC = () => {
             {i18next.t('cancel')}
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      {/* View Users Modal */}
+      <Modal show={!!viewingUsersFor} onClose={() => setViewingUsersFor(null)} size="4xl">
+        <Modal.Header>Users - {viewingUsersFor?.name}</Modal.Header>
+        <Modal.Body>
+          {viewingUsersFor && (
+            <InstitutionUsersView
+              institutionId={viewingUsersFor._id}
+              institutionName={viewingUsersFor.name}
+            />
+          )}
+        </Modal.Body>
       </Modal>
     </>
   );

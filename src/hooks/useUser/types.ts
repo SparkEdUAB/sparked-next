@@ -47,6 +47,8 @@ export interface I_RawUserFields extends I_BaseUser, I_PersonalInfo, I_StudentIn
   _id: string;
   is_verified: boolean;
   created_at: string;
+  institution_id?: string;
+  institutionName?: string;
 }
 
 // Signup fields
@@ -64,6 +66,9 @@ export interface I_UserFields extends I_BaseUser, I_PersonalInfo, I_StudentInfo,
   
   created_by?: string;
   created_at: string;
+  
+  institution_id?: string;
+  institutionName?: string;
   
   user?: {
     name: string;

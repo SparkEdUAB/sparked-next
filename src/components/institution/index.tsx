@@ -2,7 +2,7 @@ import i18next from 'i18next';
 import { T_ColumnData } from '@components/admin/AdminTable/types';
 import { T_InstitutionFields } from '@hooks/useInstitution/types';
 import { Button } from 'flowbite-react';
-import { HiCheck, HiX } from 'react-icons/hi';
+import { HiCheck, HiX, HiUsers } from 'react-icons/hi';
 
 export const institutionTableColumns: T_ColumnData<T_InstitutionFields>[] = [
   {
@@ -72,15 +72,29 @@ export const institutionTableColumns: T_ColumnData<T_InstitutionFields>[] = [
 export const institutionTableColumnsWithActions = (
   onApprove: (institution: T_InstitutionFields) => void,
   onReject: (institution: T_InstitutionFields) => void,
-  isProcessing: boolean
+  isProcessing: boolean,
+  onViewUsers?: (institution: T_InstitutionFields) => void
 ): T_ColumnData<T_InstitutionFields>[] => [
   ...institutionTableColumns,
   {
     title: i18next.t('actions'),
-    dataIndex: '_id' as keyof T_InstitutionFields, // Use existing field but render custom content
+    dataIndex: '_id' as keyof T_InstitutionFields,
     key: 'actions',
     render: (text: string, item: T_InstitutionFields) => (
       <div className="flex gap-2">
+        {onViewUsers && (
+          <Button
+            size="xs"
+            color="light"
+            onClick={(e: any) => {
+              e.stopPropagation();
+              onViewUsers(item);
+            }}
+          >
+            <HiUsers className="w-3 h-3 mr-1" />
+            Users
+          </Button>
+        )}
         {!item.is_verified ? (
           <>
             <Button

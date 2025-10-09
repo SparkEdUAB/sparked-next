@@ -73,6 +73,7 @@ i18next.init({
         institution_created: 'Institution created successfully',
         institution_approved: 'Institution approved successfully',
         institution_rejected: 'Institution rejected successfully',
+        users_assigned_to_institution: '{{count}} user(s) assigned to institution successfully',
 
         topics_found: 'topics found',
         media_content_found: 'media content found',
@@ -99,10 +100,6 @@ i18next.init({
         reject_institution_confirm: 'Are you sure you want to reject',
         rejection_reason_label: 'Rejection Reason (Optional)',
         rejection_reason_placeholder: 'Provide a reason for rejection (optional)',
-        cancel: 'Cancel',
-        approve: 'Approve',
-        reject: 'Reject',
-        actions: 'Actions',
 
         search_items: 'Search Items',
 
@@ -127,6 +124,8 @@ i18next.init({
         topics: 'Topics',
         schools: 'Schools',
         institutions: 'Institutions',
+        verified_institutions: 'Verified Institutions',
+        unassigned_users: 'Unassigned Users',
         programs: 'Programs',
         media_content: 'Media Content',
         statistics: 'Statistics',

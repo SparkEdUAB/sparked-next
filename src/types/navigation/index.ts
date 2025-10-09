@@ -19,6 +19,8 @@ export type T_link = {
   DELETE_INSTITUTIONS: string;
   FIND_INSTITUTIONS_BY_NAME: string;
   VERIFY_INSTITUTION: string;
+  ASSIGN_USERS_TO_INSTITUTION: string;
+  FETCH_INSTITUTION_USERS: string;
   CREATE_PROGRAM: string;
   FETCH_PROGRAMS: string;
   FETCH_PROGRAM_BY_ID: string;

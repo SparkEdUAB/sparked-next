@@ -55,6 +55,7 @@ export interface I_PublicInstitution {
   description?: string;
   type: string;
   logo?: string;
+  is_verified?: boolean;
 }
 
 // Type aliases for easier use
