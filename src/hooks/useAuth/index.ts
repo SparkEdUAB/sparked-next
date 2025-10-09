@@ -96,17 +96,23 @@ const useAuth = () => {
           email: fields.email,
           role: (userRole?.name ?? 'user') as 'student' | 'user' | 'admin',
         });
+        const isUserAdmin = userRole?.name === 'Admin' 
+        console.log("signInResp", {isAdmin: userRole?.name === 'Admin'}, {"isUserAdmin": isUserAdmin});
 
-        if (singInResp) {
+        if (singInResp?.ok && !singInResp?.error) {
+          console.log("in check running", singInResp);
+          clearUser()
+          
           setUser({
             email: fields.email,
             firstName: responseData.firstName,
             lastName: responseData.lastName,
             phone: responseData.phoneNumber,
             role: userRole?.name as 'student' | 'user' | 'admin',
-            isAdmin: userRole?.name.toLowerCase() === 'admin' ? true : false,
+            isAdmin: isUserAdmin,
           });
         }
+// console.log(user);
 
         message.success(i18next.t('logged_in'));
       } catch (err: any) {

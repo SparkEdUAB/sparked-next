@@ -63,7 +63,7 @@ export function withAuthorization<P extends object>(
         const sessionUser = {
           ...session.user,
           role: session.user.role as 'student' | 'user' | 'admin',
-          isAdmin: session.user.role === 'admin',
+          isAdmin: session.user.role === 'admin' || session.user.role === 'Admin',
         };
 
         if (!user || user.email !== sessionUser.email || user.role !== sessionUser.role) {
