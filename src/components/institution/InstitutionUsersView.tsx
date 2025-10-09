@@ -1,13 +1,10 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Button, Spinner } from 'flowbite-react';
-import { API_LINKS } from 'app/links';
-import { T_UserFields } from '@hooks/useUser/types';
 import { transformRawUser } from '@hooks/useUser';
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { userTableColumns } from '@components/users';
-import i18next from 'i18next';
+import { T_UserFields } from '@hooks/useUser/types';
+import { API_LINKS } from 'app/links';
+import { Button, Spinner } from 'flowbite-react';
+import React, { useEffect, useState } from 'react';
 
 interface InstitutionUsersViewProps {
   institutionId: string;
