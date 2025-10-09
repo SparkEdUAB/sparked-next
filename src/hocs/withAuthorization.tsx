@@ -112,7 +112,7 @@ export function withAuthorization<P extends object>(
         message.warning(i18next.t('Not authorized'));
         router.replace(routes.library);
       }
-    }, [status, user, router, message, hasHydrated, pathname, requireGuest, requireAdmin]);
+    }, [status, user, router, message, hasHydrated, pathname]);
 
     // Prevent render until we know the auth state
     if (status === 'loading' || !hasHydrated) return <LoadingSpinner />;
