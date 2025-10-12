@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
-    "build": "next build",
+    "type-check": "tsc --noEmit",
+    "build": "tsc --noEmit && next build",
     "start": "next start",
     "lint": "npx oxlint --fix",
     "pm2": "pm2 start npm --name \"sparked-next\" -- start"
@@ -50,7 +51,8 @@
     "swr": "^2.2.5",
     "typescript": "5.6.3",
     "zod": "^3.23.8",
-    "zod-form-data": "^2.0.1"
+    "zod-form-data": "^2.0.1",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@playwright/test": "^1.51.0",

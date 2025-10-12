@@ -12,11 +12,17 @@ import { useToastMessage } from 'providers/ToastMessageContext';
 import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 import { jwtDecode } from 'jwt-decode';
 import { routes } from 'routes';
+import { useMeStore } from 'stores/useMeStore';
 
 const useAuth = () => {
   const { status } = useSession();
   const [loading, setLoading] = useState(false);
+  const [logoutLoading, setLogoutLoading] = useState(false);
   const router = useRouter();
+
+  const setUser = useMeStore((state) => state.setUser);
+  const clearUser = useMeStore((state) => state.clearUser);
+
   const message = useToastMessage();
 
   const isAuthenticated = status === 'authenticated';
@@ -50,7 +56,7 @@ const useAuth = () => {
         setLoading(false);
       }
     },
-    [message, router],
+    [message, router]
   );
 
   const handleLogin = useCallback(
@@ -82,17 +88,30 @@ const useAuth = () => {
 
         const { jwtToken } = responseData;
         const decodedToken: { role?: { name: string } } = jwtDecode(jwtToken);
-        const userRole = decodedToken.role || { name: 'student' };
+        const userRole: typeof decodedToken.role = decodedToken.role || { name: 'student' };
 
-        await signIn('credentials', {
+        const singInResp = await signIn('credentials', {
           redirect: false,
           jwtToken,
           email: fields.email,
-          role: userRole?.name,
+          role: (userRole?.name ?? 'user') as 'student' | 'user' | 'admin',
         });
+        
+        const isUserAdmin = userRole?.name?.toLowerCase() === 'admin';
 
-        // Route based on role
-        router.replace(userRole.name === 'student' ? routes.library : routes.admin);
+        if (singInResp?.ok && !singInResp?.error) {
+          
+          const userData = {
+            email: fields.email,
+            firstName: responseData.firstName,
+            lastName: responseData.lastName,
+            phone: responseData.phoneNumber,
+            role: userRole?.name as 'student' | 'user' | 'admin',
+            isAdmin: isUserAdmin,
+          };
+          
+          setUser(userData);
+        }
 
         message.success(i18next.t('logged_in'));
       } catch (err: any) {
@@ -102,7 +121,7 @@ const useAuth = () => {
         setLoading(false);
       }
     },
-    [message, router],
+    [message, setUser]
   );
 
   const handleLogout = useCallback(async () => {
@@ -113,7 +132,7 @@ const useAuth = () => {
         'Content-Type': 'application/json',
       },
     };
-    setLoading(true);
+    setLogoutLoading(true);
     try {
       const resp = await fetch(url, formData);
       const responseData = await resp.json();
@@ -127,24 +146,24 @@ const useAuth = () => {
         return false;
       }
 
-      const isAdminRoute = window.location.pathname.startsWith('/admin');
-      await signOut({
+      const signOutResponse = await signOut({
         redirect: false,
-        callbackUrl: isAdminRoute ? '/' : window.location.pathname,
+        callbackUrl: routes.auth.login,
       });
 
-      if (isAdminRoute) {
-        router.replace('/');
+      if (signOutResponse.url) {
+        clearUser();
+        message.success(i18next.t('logout_ok'));
       }
 
-      message.success(i18next.t('logout_ok'));
+      // const isAdminRoute = window.location.pathname.startsWith('/admin');
     } catch (err: any) {
       message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
       return false;
     } finally {
-      setLoading(false);
+      setLogoutLoading(false);
     }
-  }, [message, router]);
+  }, [message, clearUser]);
 
   const handleForgotPassword = useCallback(
     async (email: string, onDone?: () => void) => {
@@ -208,6 +227,7 @@ const useAuth = () => {
     handleSignup,
     handleLogin,
     handleLogout,
+    logoutLoading,
     loading,
     handleForgotPassword,
     handleResetPassword,

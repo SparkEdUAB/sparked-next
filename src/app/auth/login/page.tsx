@@ -3,11 +3,13 @@
 import Login from '@components/auth/login';
 import React from 'react';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
+import { withAuthorization } from '@hocs/withAuthorization';
 
-const Home: React.FC = () => {
+const LoginPage: React.FC = () => {
   useDocumentTitle('Login');
 
   return <Login />;
 };
 
-export default Home;
+export default  withAuthorization(LoginPage, { requireGuest: true });
+;
