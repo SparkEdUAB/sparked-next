@@ -1,15 +1,17 @@
 'use client';
 
+
+import AppLogo from '@components/logo';
+import useAuth from '@hooks/useAuth';
+import { useMeStore } from '@stores/useMeStore';
 import { Avatar, DarkThemeToggle, Dropdown, Navbar, TextInput } from 'flowbite-react';
+import { useRouter } from 'next-nprogress-bar';
 import Link from 'next/link';
 import { useState } from 'react';
 import { HiSearch, HiX } from 'react-icons/hi';
 import { MdMenu } from 'react-icons/md';
-import AppLogo from '@components/logo';
-import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { useRouter } from 'next-nprogress-bar';
-import useAuth from '@hooks/useAuth';
 import { routes } from 'routes';
+import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 
 export function LibraryNavbar({
   toggleSidebar,
@@ -20,7 +22,10 @@ export function LibraryNavbar({
 }) {
   let [searching, setSearching] = useState(false);
   let router = useRouter();
-  const { handleLogout, loading } = useAuth();
+  const { handleLogout, logoutLoading } = useAuth();
+  const isAdmin = useMeStore((state) => state.user?.isAdmin);
+  const userEmail = useMeStore((state) => state.user?.email);
+
   return (
     <Navbar fluid rounded className="sticky top-0 z-[60]  flex-nowrap">
       <div className={`pl-2 flex flex-row sm:gap-2 md:gap-4 flex-nowrap ${searching ? 'hidden md:flex' : ''}`}>
@@ -69,10 +74,19 @@ export function LibraryNavbar({
             />
           )}
         >
-          <Dropdown.Item>
-            <Link href={routes.home} onClick={handleLogout} aria-disabled={loading}>
+          {userEmail && <Dropdown.Item>{userEmail}</Dropdown.Item>}
+          {isAdmin && (
+            <Dropdown.Item>
+              <Link href={routes.admin} >
+                Dashboard
+              </Link>
+            </Dropdown.Item>
+          )}
+          <Dropdown.Divider />
+          <Dropdown.Item disabled={logoutLoading} className="hover:none"  onClick={handleLogout} aria-disabled={logoutLoading}>
+            <span  className={logoutLoading ? 'opacity-50 pointer-events-none' : ''}>
               Logout
-            </Link>
+            </span>
           </Dropdown.Item>
         </Dropdown>
 

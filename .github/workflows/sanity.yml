@@ -47,6 +47,9 @@ jobs:
       - name: Run linting
         run: npx --yes oxlint@latest --deny-warnings
 
+      - name: Type check
+        run: yarn type-check
+
       - name: Build
         id: build
         run: yarn build

@@ -67,7 +67,6 @@ export default async function createUser_(request: Request, session?: Session) {
       password, // Note: In production, ensure password is hashed
       createdAt: new Date(),
       updatedAt: new Date(),
-      //   @ts-expect-error
       createdById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
     });
 
@@ -77,7 +76,6 @@ export default async function createUser_(request: Request, session?: Session) {
       role_id: roleExists._id,
       created_at: new Date(),
       updated_at: new Date(),
-      //   @ts-expect-error
       created_by_id: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
     });
 

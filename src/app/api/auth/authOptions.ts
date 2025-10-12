@@ -29,15 +29,17 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async session({ session, token }) {
       if (token.sub && session.user) {
-        // @ts-expect-error
         session.user.id = token.sub;
+        session.user.role = token.role as string;
+        session.role = token.role as string;
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        // @ts-expect-error
-        token.role = user.role;
+        token.id = user.id;
+        token.email = user.email;
+        token.role = user.role ?? token.role;
       }
 
       if (token.sub) {
@@ -62,6 +64,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
   },
+
   session: {
     strategy: 'jwt',
   },
