@@ -19,6 +19,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
     topicId: zfd.text().optional(),
     subjectId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
     fileUrl: zfd.text().optional().nullable(),
     thumbnailUrl: zfd.text().optional(),
     externalUrl: zfd.text().optional().nullable(),
@@ -39,6 +40,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
     gradeId,
     subjectId,
     externalUrl,
+    institutionId,
   } = schema.parse(formBody);
 
   try {
@@ -222,13 +224,14 @@ export default async function editMediaContent_(request: Request, session?: Sess
       updated_at: new Date(),
       //@ts-ignore
       created_by_id: new BSON.ObjectId(session?.user?.id),
-      school_id: new BSON.ObjectId(schoolId),
-      program_id: new BSON.ObjectId(programId),
-      course_id: new BSON.ObjectId(courseId),
-      unit_id: new BSON.ObjectId(unitId),
-      topic_id: new BSON.ObjectId(topicId),
-      grade_id: new BSON.ObjectId(gradeId),
-      subject_id: new BSON.ObjectId(subjectId),
+      ...(schoolId ? { school_id: new BSON.ObjectId(schoolId) } : {}),
+      ...(programId ? { program_id: new BSON.ObjectId(programId) } : {}),
+      ...(courseId ? { course_id: new BSON.ObjectId(courseId) } : {}),
+      ...(unitId ? { unit_id: new BSON.ObjectId(unitId) } : {}),
+      ...(topicId ? { topic_id: new BSON.ObjectId(topicId) } : {}),
+      ...(gradeId ? { grade_id: new BSON.ObjectId(gradeId) } : {}),
+      ...(subjectId ? { subject_id: new BSON.ObjectId(subjectId) } : {}),
+      ...(institutionId ? { institution_id: new BSON.ObjectId(institutionId) } : {}),
       file_url: fileUrl,
       thumbnail_url: thumbnailUrl,
       external_url: externalUrl,

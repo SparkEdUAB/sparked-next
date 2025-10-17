@@ -14,6 +14,10 @@ export const MEDIA_CONTENT_FORM_FIELDS: T_MediaContentFormFields = {
     label: i18next.t('school'),
     key: 'schoolId',
   },
+  ['institution']: {
+    label: 'Institution',
+    key: 'institutionId',
+  },
   ['program']: {
     label: i18next.t('program'),
     key: 'programId',

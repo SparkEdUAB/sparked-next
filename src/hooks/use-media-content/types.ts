@@ -8,6 +8,7 @@ export type T_CreateResourceFields = {
   topicId?: string;
   gradeId?: string;
   subjectId?: string;
+  institutionId?: string;
   fileUrl?: string | null;
   externalUrl?: string | null;
 };

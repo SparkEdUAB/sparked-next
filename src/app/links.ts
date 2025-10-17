@@ -95,6 +95,8 @@ export const API_LINKS = {
   DELETE_MEDIA_CONTENT: '/api/media-content/deleteMediaContentByIds',
   FETCH_RANDOM_MEDIA_CONTENT: '/api/media-content/fetchRandomMediaContent',
   FETCH_MEDIA_TYPES: '/api/media-content/fetchMediaTypes',
+  BULK_ASSIGN_CONTENT_TO_INSTITUTION: '/api/media-content/bulkAssignToInstitution',
+  REMOVE_CONTENT_FROM_INSTITUTION: '/api/media-content/removeFromInstitution',
 
   FETCH_ALL_STATS: '/api/stats/fetchCounts',
 

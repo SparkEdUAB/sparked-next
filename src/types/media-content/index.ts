@@ -16,6 +16,7 @@ export type T_MediaContentFields = {
   topicId?: string;
   gradeId?: string;
   subjectId?: string;
+  institutionId?: string;
 
   schoolName?: string;
   programName?: string;
@@ -24,6 +25,7 @@ export type T_MediaContentFields = {
   topicName?: string;
   gradeName?: string;
   subjectName?: string;
+  institutionName?: string;
 
   created_by?: string;
   created_at?: string;
@@ -49,6 +51,11 @@ export type T_RawMediaContentFields = {
   school?: {
     _id: string;
     name: string;
+  };
+  institution?: {
+    _id: string;
+    name: string;
+    type: string;
   };
   program?: {
     _id: string;
@@ -80,6 +87,7 @@ export type T_MediaContentFormFields = {
   name: I_FORM;
   description: I_FORM;
   school: I_FORM;
+  institution: I_FORM;
   program: I_FORM;
   course: I_FORM;
   unit: I_FORM;

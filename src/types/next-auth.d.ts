@@ -13,8 +13,10 @@ declare module 'next-auth' {
       phone?: string;
       avatar?: string;
       role?: string;
+      institution_id?: string;
     };
     role?: string;
+    institution_id?: string;
   }
 
   interface User {
@@ -26,6 +28,7 @@ declare module 'next-auth' {
     phone?: string;
     avatar?: string;
     role?: string;
+    institution_id?: string;
   }
 }
 
@@ -34,5 +37,6 @@ declare module 'next-auth/jwt' {
     id?: string;
     role?: string;
     sub?: string;
+    institution_id?: string;
   }
 }

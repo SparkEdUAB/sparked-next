@@ -11,6 +11,7 @@ import fetchMediaContent_, {
 import { authOptions } from '../../auth/authOptions';
 import createMediaContent_ from '../create';
 import editMediaContent_ from '../edit';
+import bulkAssignContentToInstitution_, { removeContentFromInstitution_ } from '../bulk-assign';
 import { NextRequest } from 'next/server';
 import { HttpStatusCode } from 'axios';
 
@@ -29,6 +30,8 @@ export async function POST(
     createMediaContent: createMediaContent_,
     editMediaContent: editMediaContent_,
     deleteMediaContentByIds: deleteMediaContentByIds_,
+    bulkAssignToInstitution: bulkAssignContentToInstitution_,
+    removeFromInstitution: removeContentFromInstitution_,
   };
 
   if (schoolFunctions[slug] && session) {

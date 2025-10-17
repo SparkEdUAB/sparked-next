@@ -11,6 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { HttpStatusCode } from 'axios';
 import { revalidateTag } from 'next/cache';
 import { sortByNumericValue } from '../utils/sorting';
+import { applyInstitutionFilter } from './middleware';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
 
@@ -31,6 +32,7 @@ export default async function fetchMediaContent_(request: any) {
     course_id: z.string().optional(),
     unit_id: z.string().optional(),
     topic_id: z.string().optional(),
+    institution_id: z.string().optional(),
     externalUrl: z.string().optional(),
     externalContent: z.string().optional(),
   });
@@ -60,6 +62,7 @@ export default async function fetchMediaContent_(request: any) {
     topic_id,
     subject_id,
     grade_id,
+    institution_id,
     externalUrl,
     externalContent,
   } = schema.parse(params);
@@ -89,10 +92,14 @@ export default async function fetchMediaContent_(request: any) {
     if (course_id) query.course_id = new BSON.ObjectId(course_id);
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+    if (institution_id) query.institution_id = new BSON.ObjectId(institution_id);
 
     if (externalUrl === 'true' || externalContent === 'true') {
       query.external_url = { $ne: null };
     }
+
+    // Apply institution filtering for non-admin users
+    query = await applyInstitutionFilter(query);
 
     if (isWithMetaData) {
       mediaContent = await db

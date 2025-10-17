@@ -59,6 +59,11 @@ export type T_RawMediaContentFields = {
     _id: string;
     name: string;
   };
+  institution?: {
+    _id: string;
+    name: string;
+    type: string;
+  };
   program?: {
     _id: string;
     name: string;
@@ -89,6 +94,7 @@ export type T_MediaContentFormFields = {
   name: I_FORM;
   description: I_FORM;
   school: I_FORM;
+  institution: I_FORM;
   program: I_FORM;
   course: I_FORM;
   unit: I_FORM;

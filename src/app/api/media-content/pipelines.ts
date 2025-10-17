@@ -30,6 +30,20 @@ export const p_fetchMediaContentWithMetaData = ({
   // },
   {
     $lookup: {
+      from: dbCollections.institutions.name,
+      localField: 'institution_id',
+      foreignField: '_id',
+      as: 'institution',
+    },
+  },
+  {
+    $unwind: {
+      path: '$institution',
+      preserveNullAndEmptyArrays: true,
+    },
+  },
+  {
+    $lookup: {
       from: dbCollections.schools.name,
       localField: 'school_id',
       foreignField: '_id',

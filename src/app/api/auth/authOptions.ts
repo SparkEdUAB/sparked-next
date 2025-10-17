@@ -31,7 +31,9 @@ export const authOptions: NextAuthOptions = {
       if (token.sub && session.user) {
         session.user.id = token.sub;
         session.user.role = token.role as string;
+        session.user.institution_id = token.institution_id as string;
         session.role = token.role as string;
+        session.institution_id = token.institution_id as string;
       }
       return session;
     },
@@ -40,11 +42,23 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.role = user.role ?? token.role;
+        token.institution_id = user.institution_id ?? token.institution_id;
       }
 
       if (token.sub) {
         const db = await dbClient();
         if (db) {
+          // Get user's institution_id
+          const userData = await db.collection(dbCollections.users.name).findOne({
+            _id: new BSON.ObjectId(token.sub),
+          }, {
+            projection: { institution_id: 1 }
+          });
+
+          if (userData?.institution_id) {
+            token.institution_id = userData.institution_id.toString();
+          }
+
           const roleMapping = await db.collection(dbCollections.user_role_mappings.name).findOne({
             user_id: new BSON.ObjectId(token.sub),
           });
