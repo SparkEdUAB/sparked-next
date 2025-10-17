@@ -12,6 +12,17 @@ export const API_LINKS = {
   EDIT_SCHOOL: '/api/school/editSchool',
   DELETE_SCHOOLS: '/api/school/deleteSchools',
   FIND_SCHOOLS_BY_NAME: '/api/school/findSchoolsByName',
+  // institution links
+  CREATE_INSTITUTION: '/api/institution/createInstitution',
+  FETCH_INSTITUTIONS: '/api/institution/fetchInstitutions',
+  FETCH_INSTITUTION: '/api/institution/fetchInstitution',
+  FETCH_PUBLIC_INSTITUTIONS: '/api/institution/fetchPublicInstitutions',
+  EDIT_INSTITUTION: '/api/institution/editInstitution',
+  DELETE_INSTITUTIONS: '/api/institution/deleteInstitutions',
+  FIND_INSTITUTIONS_BY_NAME: '/api/institution/findInstitutionsByName',
+  VERIFY_INSTITUTION: '/api/institution/verifyInstitution',
+  ASSIGN_USERS_TO_INSTITUTION: '/api/institution/assignUsers',
+  FETCH_INSTITUTION_USERS: '/api/institution/fetchInstitutionUsers',
   // program links
   CREATE_PROGRAM: '/api/program/createProgram',
   FETCH_PROGRAMS: '/api/program/fetchPrograms',

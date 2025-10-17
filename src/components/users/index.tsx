@@ -34,6 +34,16 @@ export const userTableColumns: T_ColumnData<any>[] = [
     ),
   },
   {
+    title: 'Institution',
+    dataIndex: 'institutionName',
+    key: 'institutionName',
+    render: (institutionName: string) => (
+      <div className="flex items-center gap-2">
+        <span>{institutionName || <span className="text-gray-400">Unassigned</span>}</span>
+      </div>
+    ),
+  },
+  {
     title: i18next.t('action'),
     dataIndex: 'action',
     key: 'action',

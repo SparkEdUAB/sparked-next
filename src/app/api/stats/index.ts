@@ -25,6 +25,14 @@ export default async function fetchCounts_() {
     const pageViews = await db.collection(dbCollections.page_views.name).countDocuments();
     const mediaContent = await db.collection(dbCollections.media_content.name).countDocuments();
     const searches = await db.collection(dbCollections.searches.name).countDocuments();
+    const institutions = await db.collection(dbCollections.institutions.name).countDocuments();
+    const verifiedInstitutions = await db.collection(dbCollections.institutions.name).countDocuments({ is_verified: true });
+    const unassignedUsers = await db.collection(dbCollections.users.name).countDocuments({
+      $or: [
+        { institution_id: { $exists: false } },
+        { institution_id: null }
+      ]
+    });
 
     const stats = [
       {
@@ -58,6 +66,18 @@ export default async function fetchCounts_() {
       {
         name: 'searches',
         value: searches,
+      },
+      {
+        name: 'institutions',
+        value: institutions,
+      },
+      {
+        name: 'verified_institutions',
+        value: verifiedInstitutions,
+      },
+      {
+        name: 'unassigned_users',
+        value: unassignedUsers,
       },
     ];
 

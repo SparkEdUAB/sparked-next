@@ -6,9 +6,11 @@ export type T_SignupFields = {
   lastName: string;
   phoneNumber: string;
   isStudent: boolean;
-  institutionType?: 'general' | 'college' | 'university';
+  institutionType?: string;
   schoolName?: string;
   grade?: number | string;
+  institutionId?: string;
+  institutionName?: string;
 };
 
 export type T_LoginFields = {

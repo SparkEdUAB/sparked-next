@@ -22,6 +22,8 @@ export function transformRawUser(user: T_RawUserFields) {
     schoolName: user.schoolName,
     isStudent: user.isStudent,
     grade: user.grade,
+    institution_id: user.institution_id,
+    institutionName: user.institutionName,
     // updated_at: user.updatedAt,
   };
 }
@@ -334,6 +336,47 @@ export default function useUser() {
     }
   };
 
+  const assignUsersToInstitution = useCallback(
+    async (userIds: string[], institutionId: string) => {
+      if (!userIds.length) {
+        return message.warning(i18next.t('select_item'));
+      }
+
+      setLoaderStatus(true);
+      try {
+        const response = await fetch(API_LINKS.ASSIGN_USERS_TO_INSTITUTION, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userIds, institutionId }),
+        });
+
+        const result = await response.json();
+
+        if (result.isError) {
+          message.error(getProcessCodeMeaning(result.code));
+          return false;
+        }
+
+        message.success(
+          i18next.t('users_assigned_to_institution', {
+            count: result.modifiedCount,
+            defaultValue: `${result.modifiedCount} user(s) assigned successfully`,
+          })
+        );
+        return true;
+      } catch (error) {
+        console.error('Error assigning users to institution:', error);
+        message.error(i18next.t('unknown_error'));
+        return false;
+      } finally {
+        setLoaderStatus(false);
+      }
+    },
+    [message]
+  );
+
   return {
     createUser,
     fetchUsers,
@@ -354,6 +397,7 @@ export default function useUser() {
     tempUsers,
     deleteUsers,
     assignRole,
+    assignUsersToInstitution,
   };
 }
 

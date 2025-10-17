@@ -9,6 +9,10 @@ export const dbCollections: T_dbCollection = {
     name: 'schools',
     label: 'Schools',
   },
+  institutions: {
+    name: 'institutions',
+    label: 'Institutions',
+  },
   programs: {
     name: 'programs',
     label: 'Programs',

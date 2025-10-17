@@ -60,6 +60,20 @@ export default async function fetchUsers_(request: any) {
           },
         },
         {
+          $lookup: {
+            from: dbCollections.institutions.name,
+            localField: 'institution_id',
+            foreignField: '_id',
+            as: 'institution',
+          },
+        },
+        {
+          $unwind: {
+            path: '$institution',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
           $project: {
             _id: 1,
             email: 1,
@@ -72,7 +86,9 @@ export default async function fetchUsers_(request: any) {
             isStudent: 1,
             institutionType: 1,
             schoolName: 1,
-            grade: 1
+            grade: 1,
+            institution_id: 1,
+            institutionName: '$institution.name',
           },
         },
         {
@@ -169,6 +185,20 @@ export async function findUserByName_(request: any) {
           },
         },
         {
+          $lookup: {
+            from: dbCollections.institutions.name,
+            localField: 'institution_id',
+            foreignField: '_id',
+            as: 'institution',
+          },
+        },
+        {
+          $unwind: {
+            path: '$institution',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
           $project: {
             _id: 1,
             email: 1,
@@ -181,7 +211,9 @@ export async function findUserByName_(request: any) {
             isStudent: 1,
             institutionType: 1,
             schoolName: 1,
-            grade: 1
+            grade: 1,
+            institution_id: 1,
+            institutionName: '$institution.name',
           },
         },
         {
