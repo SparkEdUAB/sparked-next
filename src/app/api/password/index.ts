@@ -1,3 +1,4 @@
+import { randomBytes } from 'crypto';
 import { ResetPasswordEmail } from 'emails/ResetPasswordEmail';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
@@ -42,7 +43,7 @@ export default async function forgotPassword_(request: Request) {
       );
     }
 
-    const resetToken = Math.random().toString(36).substring(2);
+    const resetToken = randomBytes(32).toString('hex');
 
     await db.collection(dbCollections.users.name).updateOne(
       { email },

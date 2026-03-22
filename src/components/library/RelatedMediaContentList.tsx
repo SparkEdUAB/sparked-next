@@ -16,7 +16,7 @@ const RelatedMediaItem = memo(({ item }: { item: T_RawMediaContentFields }) => {
   return (
     <List.Item key={item._id}>
       <Link href={`/library/media/${item._id}`} className="flex flex-row gap-2 mb-2">
-        <Image src={thumbnailUrl as string} alt={item.name} width={120} height={90} objectFit="cover" />
+        <Image src={thumbnailUrl as string} alt={item.name} width={120} height={90} className="object-cover" />
         <div className="flex flex-col">
           <h4 className="font-semibold text-black dark:text-white line-clamp-2 overflow-ellipsis">{item.name}</h4>
           <div className="line-clamp-2 overflow-ellipsis">{item.description}</div>

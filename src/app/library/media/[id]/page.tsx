@@ -9,34 +9,25 @@ import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
 import NETWORK_UTILS from 'utils/network';
 import { MediaContentView } from '../../../../components/library/MediaContentView';
 import { fetchRelatedMedia } from '../../../../fetchers/library/fetchRelatedMedia';
-import { unstable_cache } from 'next/cache';
+
+export const revalidate = 360;
 
 type T_MediaContentPageProps = {
   params: Promise<{ id: string }>;
 };
 
-// Cache the media content fetch
-const getMediaContent = unstable_cache(
-  async (id: string) => {
-    const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
-      BASE_URL +
-      API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-      NETWORK_UTILS.formatGetParams({ mediaContentId: id, withMetaData: 'true' }),
-    );
-    return result;
-  },
-  ['media-content'],
-  { revalidate: 360 }
-);
+async function getMediaContent(id: string) {
+  const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
+    BASE_URL +
+    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+    NETWORK_UTILS.formatGetParams({ mediaContentId: id, withMetaData: 'true' }),
+  );
+  return result;
+}
 
-// Cache the related media fetch
-const getRelatedMedia = unstable_cache(
-  async (mediaContent: T_RawMediaContentFields) => {
-    return await fetchRelatedMedia(mediaContent);
-  },
-  ['related-media'],
-  { revalidate: 360 }
-);
+async function getRelatedMedia(mediaContent: T_RawMediaContentFields) {
+  return await fetchRelatedMedia(mediaContent);
+}
 
 export async function generateMetadata(props: T_MediaContentPageProps, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);

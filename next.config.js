@@ -1,20 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {},
-  webpack: (config, { isServer }) => {
-    // Handle externals for server-side builds
-    if (isServer) {
-      config.externals = [...config.externals, '@highlight-run/next'];
-    }
-
-    // Handle browser-only modules
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      canvas: false,
-      '@highlight-run/next': isServer ? false : '@highlight-run/next',
-    };
-
-    return config;
+  turbopack: {
+    resolveAlias: {
+      // Exclude canvas module (needed for react-pdf)
+      canvas: '',
+    },
   },
   images: {
     remotePatterns: [
