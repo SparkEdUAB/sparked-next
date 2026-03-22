@@ -3,14 +3,20 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { DeletionWarningModal } from './DeletionWarningModal';
 
 vi.mock('flowbite-react', () => {
-  const Modal = ({ children, show, onClose, ...props }: any) =>
-    show ? <div data-testid="modal" {...props}>{children}</div> : null;
+  const Modal = ({ children, show, ...props }: any) =>
+    show ? (
+      <div data-testid="modal" {...props}>
+        {children}
+      </div>
+    ) : null;
   Modal.Header = () => <div data-testid="modal-header" />;
   Modal.Body = ({ children }: any) => <div>{children}</div>;
   return {
     Modal,
     Button: ({ children, onClick, ...props }: any) => (
-      <button onClick={onClick} {...props}>{children}</button>
+      <button onClick={onClick} {...props}>
+        {children}
+      </button>
     ),
   };
 });
