@@ -304,7 +304,7 @@ const useMediaContent = () => {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.media_content) + `?mediaContentId=${selectedMediaContentIds[0]}`);
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.media_content) + `?mediaContentId=${String(selectedMediaContentIds[0])}`);
   }, [getChildLinkByKey, message, router, selectedMediaContentIds]);
 
   return {

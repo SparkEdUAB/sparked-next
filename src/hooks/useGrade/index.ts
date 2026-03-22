@@ -252,7 +252,7 @@ const useGrade = () => {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.grades) + `?gradeId=${selectedGradeIds[0]}`);
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.grades) + `?gradeId=${String(selectedGradeIds[0])}`);
   }, [getChildLinkByKey, message, router, selectedGradeIds]);
 
   return {

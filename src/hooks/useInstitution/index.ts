@@ -316,7 +316,7 @@ export default function useInstitution() {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.institutions) + `?institutionId=${selectedInstitutionIds[0]}`);
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.institutions) + `?institutionId=${String(selectedInstitutionIds[0])}`);
   }, [getChildLinkByKey, message, router, selectedInstitutionIds]);
 
   const triggerDelete = useCallback(async () => {
