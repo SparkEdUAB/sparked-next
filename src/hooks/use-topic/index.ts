@@ -365,7 +365,7 @@ const useTopic = () => {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.topics) + `?topicId=${selectedTopicIds[0]}`);
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.topics) + `?topicId=${String(selectedTopicIds[0])}`);
   }, [getChildLinkByKey, message, router, selectedTopicIds]);
 
   return {

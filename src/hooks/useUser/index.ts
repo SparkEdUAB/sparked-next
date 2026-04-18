@@ -313,7 +313,7 @@ export default function useUser() {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.users) + `?userId=${selectedUserIds[0]}`);
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.users) + `?userId=${String(selectedUserIds[0])}`);
   }, [getChildLinkByKey, message, router, selectedUserIds]);
 
   const assignRole = async (userId: string, roleId: string) => {

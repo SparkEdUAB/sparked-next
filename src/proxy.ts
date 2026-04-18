@@ -15,7 +15,7 @@ const PUBLIC_PATHS = [
   '/api/institution/createInstitution',
   '/api/institution/fetchPublicInstitutions',
 ];
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const method = request.method;
 

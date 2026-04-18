@@ -1,6 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-// eslint-disable-next-line 
-import flowbite from 'flowbite-react/tailwind';
+const flowbite = require('flowbite-react/tailwind');
 
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', flowbite.content()],

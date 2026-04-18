@@ -320,7 +320,7 @@ const useUnit = () => {
       return message.warning(i18next.t('select_one_item'));
     }
 
-    router.push(getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${selectedUnitIds[0]}`);
+    router.push(getChildLinkByKey('edit', ADMIN_LINKS.units) + `?unitId=${String(selectedUnitIds[0])}`);
   }, [getChildLinkByKey, message, router, selectedUnitIds]);
 
   return {

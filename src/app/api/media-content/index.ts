@@ -9,12 +9,9 @@ import { MEDIAL_CONTENT_FIELD_NAMES_CONFIG } from './constants';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { NextRequest, NextResponse } from 'next/server';
 import { HttpStatusCode } from 'axios';
-import { revalidateTag } from 'next/cache';
 import { sortByNumericValue } from '../utils/sorting';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
-
-const CACHE_TAG_MEDIA = 'media-content';
 
 const cache: Record<string, { data: any; timestamp: number }> = {};
 const CACHE_TTL = 300000;
@@ -460,7 +457,3 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
   }
 }
 
-// Add a function to invalidate cache when needed
-export async function invalidateMediaCache() {
-  revalidateTag(CACHE_TAG_MEDIA);
-}
