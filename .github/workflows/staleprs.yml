@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     if: false
     steps:
-      - uses: actions/stale@v9
+      - uses: actions/stale@v10
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-pr-message: '@SparkEdUAB/contributors There has been no activity on this PR for the past 24hrs.  Will close in the next day if no further activity.  You may reopen if you still intend to work on this PR.'
