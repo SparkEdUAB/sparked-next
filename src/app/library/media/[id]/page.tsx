@@ -3,6 +3,7 @@ import { fetcher } from '@hooks/use-swr/fetcher';
 import { API_LINKS } from 'app/links';
 import { BASE_URL } from 'app/shared/constants';
 import { Metadata, ResolvingMetadata } from 'next';
+import { cache } from 'react';
 import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers/determineFileType';
 import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
@@ -10,24 +11,22 @@ import NETWORK_UTILS from 'utils/network';
 import { MediaContentView } from '../../../../components/library/MediaContentView';
 import { fetchRelatedMedia } from '../../../../fetchers/library/fetchRelatedMedia';
 
+// Route-level revalidation replaces per-fetch unstable_cache wrappers removed during Next.js 16 upgrade
 export const revalidate = 360;
 
 type T_MediaContentPageProps = {
   params: Promise<{ id: string }>;
 };
 
-async function getMediaContent(id: string) {
+// cache() deduplicates calls within a single render (generateMetadata + page body both call this)
+const getMediaContent = cache(async (id: string) => {
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
     BASE_URL +
     API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
     NETWORK_UTILS.formatGetParams({ mediaContentId: id, withMetaData: 'true' }),
   );
   return result;
-}
-
-async function getRelatedMedia(mediaContent: T_RawMediaContentFields) {
-  return await fetchRelatedMedia(mediaContent);
-}
+});
 
 export async function generateMetadata(props: T_MediaContentPageProps, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
@@ -51,7 +50,7 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
 export default async function MediaContentPage({ params: paramsPromise }: T_MediaContentPageProps) {
   const { id } = await paramsPromise;
   const result = await getMediaContent(id);
-  const relatedMediaContent = result instanceof Error ? null : await getRelatedMedia(result.mediaContent);
+  const relatedMediaContent = result instanceof Error ? null : await fetchRelatedMedia(result.mediaContent);
 
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] py-6 ">
