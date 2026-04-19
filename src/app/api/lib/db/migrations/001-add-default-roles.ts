@@ -1,4 +1,4 @@
-import { dbClient } from '../';
+import { Db } from 'mongodb';
 import { dbCollections } from '../collections';
 
 const DEFAULT_ROLES = [
@@ -20,10 +20,9 @@ const DEFAULT_ROLES = [
   },
 ];
 
-export async function addDefaultRoles() {
-  const db = await dbClient();
-  if (!db) return;
+export const name = '001-add-default-roles';
 
+export async function up(db: Db): Promise<void> {
   for (const role of DEFAULT_ROLES) {
     const exists = await db.collection(dbCollections.user_roles.name).findOne({ name: role.name });
     if (!exists) {
