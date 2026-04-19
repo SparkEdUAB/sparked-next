@@ -5,7 +5,10 @@ if (!process.env.MONGODB_URI) {
 }
 
 const uri = process.env.MONGODB_URI || "mongodb://...."; // Just to allow the build to pass
-const options = {};
+const options = {
+  serverSelectionTimeoutMS: 5000,
+  connectTimeoutMS: 5000,
+};
 
 declare global {
   // eslint-disable-next-line no-var

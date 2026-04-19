@@ -14,7 +14,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <ThemeModeScript />
       </head>
