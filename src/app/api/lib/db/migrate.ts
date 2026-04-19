@@ -1,6 +1,11 @@
 import { Db } from 'mongodb';
 import { migrations } from './migrations';
 
+export type Migration = {
+  name: string;
+  up: (db: Db) => Promise<void>;
+};
+
 export async function runMigrations(db: Db): Promise<void> {
   // 1. Ensure _migrations collection + unique index exist
   await db.collection('_migrations').createIndex({ name: 1 }, { unique: true });
@@ -11,7 +16,12 @@ export async function runMigrations(db: Db): Promise<void> {
     if (already) continue;
 
     const start = Date.now();
-    await migration.up(db);
+    try {
+      await migration.up(db);
+    } catch (err) {
+      console.error(`[migrate] FAILED: ${migration.name}`, err);
+      throw err;
+    }
     await db.collection('_migrations').insertOne({
       name: migration.name,
       applied_at: new Date(),
