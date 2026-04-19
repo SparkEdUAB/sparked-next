@@ -21,7 +21,7 @@ export default async function editUser_(request: Request, session?: Session) {
   const parsed = schema.safeParse(formBody);
   if (!parsed.success) {
     return new Response(
-      JSON.stringify({ isError: true, code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR }),
+      JSON.stringify({ isError: true, code: USER_PROCESS_CODES.INVALID_INPUT }),
       { status: HttpStatusCode.BadRequest },
     );
   }

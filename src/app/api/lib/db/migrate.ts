@@ -16,6 +16,8 @@ export async function runMigrations(db: Db): Promise<void> {
     if (already) continue;
 
     const start = Date.now();
+    // NOTE: up() and insertOne() are not atomic. If up() succeeds but insertOne() fails,
+    // the migration will re-run on the next startup. Every migration must be idempotent.
     try {
       await migration.up(db);
     } catch (err) {
