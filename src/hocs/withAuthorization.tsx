@@ -27,8 +27,6 @@ type ExtendedSession = {
   };
 };
 
-
-
 export function withAuthorization<P extends object>(
   WrappedComponent: ComponentType<P>,
   { requireAdmin = false, requireGuest = false }: Options = {},
@@ -40,6 +38,8 @@ export function withAuthorization<P extends object>(
       data: ExtendedSession | null;
       status: 'loading' | 'authenticated' | 'unauthenticated';
     };
+
+    console.log(session);
 
     const user = useUser();
     const setUser = useSetUser();
@@ -60,15 +60,17 @@ export function withAuthorization<P extends object>(
       setLoading(false);
 
       if (status === 'authenticated' && session?.user) {
-        // Only sync session to store if user is not already set
-        // This prevents overwriting the correct isAdmin value set during login
+        const sessionRole = session.user.role?.toLowerCase() as 'student' | 'user' | 'admin';
+        const sessionIsAdmin = sessionRole === 'admin';
         if (!user) {
-          const sessionUser = {
+          setUser({
             ...session.user,
-            role: session.user.role as 'student' | 'user' | 'admin',
-            isAdmin: session.user.role?.toLowerCase() === 'admin',
-          };
-          setUser(sessionUser);
+            role: sessionRole,
+            isAdmin: sessionIsAdmin,
+          });
+        } else if (user.role?.toLowerCase() !== sessionRole || user.isAdmin !== sessionIsAdmin) {
+          // Role changed (e.g. user was promoted to admin) — sync from session
+          setUser({ ...user, role: sessionRole, isAdmin: sessionIsAdmin });
         }
       } else if (status === 'unauthenticated') {
         if (user) {
@@ -107,6 +109,7 @@ export function withAuthorization<P extends object>(
         return;
       }
 
+      console.log(isAdmin, requireAdmin);
       // If requires admin and user is not admin, redirect to library
       if (requireAdmin && !isAdmin) {
         hasRedirected.current = true;

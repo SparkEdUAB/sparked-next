@@ -1,10 +1,11 @@
-import { MongoClient } from "mongodb";
+import { MongoClient } from 'mongodb';
+import { runMigrations } from './migrate';
 
 if (!process.env.MONGODB_URI) {
   console.error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
 
-const uri = process.env.MONGODB_URI || "mongodb://...."; // Just to allow the build to pass
+const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/sparked'; // Just to allow the build to pass
 const options = {
   serverSelectionTimeoutMS: 5000,
   connectTimeoutMS: 5000,
@@ -13,6 +14,8 @@ const options = {
 declare global {
   // eslint-disable-next-line no-var
   var _mongoClientPromise: Promise<MongoClient> | undefined;
+  // eslint-disable-next-line no-var
+  var _migrationsRun: boolean | undefined;
 }
 
 function getClientPromise(): Promise<MongoClient> {
@@ -30,7 +33,14 @@ function getClientPromise(): Promise<MongoClient> {
 export const dbClient = async () => {
   try {
     const client = await getClientPromise();
-    return client.db(process.env.MONGODB_DB);
+    const db = client.db(process.env.MONGODB_DB);
+
+    if (!global._migrationsRun) {
+      global._migrationsRun = true; // set before await to prevent concurrent runs
+      await runMigrations(db);
+    }
+
+    return db;
   } catch {
     return null;
   }

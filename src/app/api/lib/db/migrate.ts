@@ -20,9 +20,12 @@ export async function runMigrations(db: Db): Promise<void> {
     // the migration will re-run on the next startup. Every migration must be idempotent.
     try {
       await migration.up(db);
-    } catch (err) {
-      console.error(`[migrate] FAILED: ${migration.name}`, err);
-      throw err;
+    } catch (err: any) {
+      const detail = err?.errorResponse?.errmsg ?? err?.message ?? String(err);
+      console.error(`[migrate] FAILED: ${migration.name} — ${detail}`);
+      // Do not throw — app continues with remaining migrations skipped for this run.
+      // Fix the migration and restart to retry.
+      break;
     }
     await db.collection('_migrations').insertOne({
       name: migration.name,
@@ -30,6 +33,6 @@ export async function runMigrations(db: Db): Promise<void> {
       duration_ms: Date.now() - start,
     });
 
-    console.log(`[migrate] Applied: ${migration.name}`);
+    console.log(`[migrate] Applied: ${migration.name} (${Date.now() - start}ms)`);
   }
 }
