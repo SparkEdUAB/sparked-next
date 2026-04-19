@@ -341,7 +341,7 @@ export const user_rolesSchema = {
     description: 'string?',
     label: 'string?',
     name: 'string?',
-    permission_ids: 'user_permissions[]',
+    permission_ids: 'objectId[]',
     updated_at: 'date?',
     updated_by_id: 'objectId?',
   },
