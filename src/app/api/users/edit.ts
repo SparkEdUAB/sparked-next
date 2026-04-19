@@ -18,7 +18,14 @@ export default async function editUser_(request: Request, session?: Session) {
   });
 
   const formBody = await request.json();
-  const { _id, email, firstName, lastName, role, phoneNumber } = schema.parse(formBody);
+  const parsed = schema.safeParse(formBody);
+  if (!parsed.success) {
+    return new Response(
+      JSON.stringify({ isError: true, code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR }),
+      { status: HttpStatusCode.BadRequest },
+    );
+  }
+  const { _id, email, firstName, lastName, role, phoneNumber } = parsed.data;
 
   try {
     const db = await dbClient();

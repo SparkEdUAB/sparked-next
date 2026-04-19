@@ -42,6 +42,7 @@ export type T_RawMediaContentFields = {
   created_at: string;
   updated_at: string;
   institution_id?: string;
+  external_url?: string;
 
   user?: {
     _id: string;
