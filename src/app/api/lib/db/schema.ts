@@ -72,7 +72,7 @@ export const coursesSchema = {
     code: 'string',
     created_at: 'date',
     created_by_id: 'objectId',
-    institutions_id: 'objectId?',
+    institution_id: 'objectId?',
     is_visible: 'bool?',
     languages: 'courses_languages []',
     name: 'string',
@@ -97,7 +97,7 @@ export const courses_languagesSchema = {
 };
 
 export type feed_back = {
-  _id?: ObjectId;
+  _id: ObjectId;
   attachment_link?: string;
   created_at?: Date;
   message?: string;
@@ -108,7 +108,7 @@ export type feed_back = {
 export const feed_backSchema = {
   name: 'feed_back',
   properties: {
-    _id: 'objectId?',
+    _id: 'objectId',
     attachment_link: 'string?',
     created_at: 'date?',
     message: 'string?',
@@ -185,6 +185,52 @@ export const institutionsSchema = {
   primaryKey: '_id',
 };
 
+export type institution_memberships = {
+  _id: ObjectId;
+  user_id: ObjectId;
+  institution_id: ObjectId;
+  role: 'admin' | 'member';
+  joined_at: Date;
+  invited_by_id?: ObjectId;
+};
+
+export const institution_membershipsSchema = {
+  name: 'institution_memberships',
+  properties: {
+    _id: 'objectId',
+    user_id: 'objectId',
+    institution_id: 'objectId',
+    role: 'string',
+    joined_at: 'date',
+    invited_by_id: 'objectId?',
+  },
+  primaryKey: '_id',
+};
+
+export type institution_invites = {
+  _id: ObjectId;
+  institution_id: ObjectId;
+  email: string;
+  token: string;
+  invited_by_id: ObjectId;
+  expires_at: Date;
+  used_at?: Date;
+};
+
+export const institution_invitesSchema = {
+  name: 'institution_invites',
+  properties: {
+    _id: 'objectId',
+    institution_id: 'objectId',
+    email: 'string',
+    token: 'string',
+    invited_by_id: 'objectId',
+    expires_at: 'date',
+    used_at: 'date?',
+  },
+  primaryKey: '_id',
+};
+
 // Keep schools schema for backward compatibility (will be migrated to institutions)
 export const schoolsSchema = {
   name: 'schools',
@@ -207,7 +253,7 @@ export type preferences = {
   description?: string;
   title?: string;
   updated_at?: Date;
-  updated_by_id?: Date;
+  updated_by_id?: ObjectId;
 };
 
 export const preferencesSchema = {
@@ -219,7 +265,7 @@ export const preferencesSchema = {
     description: 'string?',
     title: 'string?',
     updated_at: 'date?',
-    updated_by_id: 'date?',
+    updated_by_id: 'objectId?',
   },
   primaryKey: '_id',
 };
@@ -230,7 +276,7 @@ export type settings = {
   created_by_id: ObjectId;
   description?: string;
   title: string;
-  upated_at?: Date;
+  updated_at?: Date;
   updated_by_id?: ObjectId;
 };
 
@@ -242,7 +288,7 @@ export const settingsSchema = {
     created_by_id: 'objectId',
     description: 'string?',
     title: 'string',
-    upated_at: 'date?',
+    updated_at: 'date?',
     updated_by_id: 'objectId?',
   },
   primaryKey: '_id',
@@ -281,7 +327,7 @@ export type user_roles = {
   description?: string;
   label?: string;
   name?: string;
-  permission_ids: user_permissions[];
+  permission_ids: ObjectId[];
   updated_at?: Date;
   updated_by_id?: ObjectId;
 };
