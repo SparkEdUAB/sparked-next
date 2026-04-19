@@ -24,3 +24,24 @@ export async function fetchRelatedMedia(mediaContent: T_RawMediaContentFields) {
     { next: { revalidate: 60 } },
   );
 }
+
+export async function fetchRelatedMediaClient(
+  mediaContent: T_RawMediaContentFields,
+): Promise<T_RawMediaContentFields[] | null> {
+  const { _id, grade } = mediaContent;
+
+  const params: Record<string, string> = {
+    media_content_id: _id,
+    limit: '10',
+    skip: '0',
+    withMetaData: 'false',
+  };
+  if (grade?._id) params.grade_id = grade._id;
+
+  const result = await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
+    API_LINKS.FETCH_RELATED_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams(params),
+  );
+
+  if (result instanceof Error) return null;
+  return result.mediaContent;
+}

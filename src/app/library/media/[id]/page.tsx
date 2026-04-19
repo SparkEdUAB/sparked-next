@@ -8,7 +8,7 @@ import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers/determineFileType';
 import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
 import NETWORK_UTILS from 'utils/network';
-import { MediaContentView } from '../../../../components/library/MediaContentView';
+import { MediaContentPlayer } from '../../../../components/library/MediaContentPlayer';
 import { fetchRelatedMedia } from '../../../../fetchers/library/fetchRelatedMedia';
 
 // Route-level revalidation replaces per-fetch unstable_cache wrappers removed during Next.js 16 upgrade
@@ -57,9 +57,9 @@ export default async function MediaContentPage({ params: paramsPromise }: T_Medi
       {result instanceof Error ? (
         <LibraryErrorMessage>{result.message}</LibraryErrorMessage>
       ) : (
-        <MediaContentView
-          mediaContent={result.mediaContent}
-          relatedMediaContent={
+        <MediaContentPlayer
+          initialMediaContent={result.mediaContent}
+          initialRelatedMedia={
             relatedMediaContent instanceof Error || relatedMediaContent === null
               ? null
               : relatedMediaContent.mediaContent
