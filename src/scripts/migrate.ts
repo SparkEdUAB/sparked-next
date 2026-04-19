@@ -12,9 +12,12 @@ async function main() {
 
   const client = new MongoClient(uri);
   await client.connect();
-  const db = client.db(dbName);
-  await runMigrations(db);
-  await client.close();
+  try {
+    const db = client.db(dbName);
+    await runMigrations(db);
+  } finally {
+    await client.close();
+  }
   console.log('[migrate] Done.');
 }
 
