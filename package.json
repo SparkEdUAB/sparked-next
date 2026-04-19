@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "npx oxlint --fix",
-    "pm2": "pm2 start npm --name \"sparked-next\" -- start"
+    "pm2": "pm2 start npm --name \"sparked-next\" -- start",
+    "migrate": "dotenv -e .env.local -- tsx src/scripts/migrate.ts"
   },
   "engines": {
     "node": ">=22"
