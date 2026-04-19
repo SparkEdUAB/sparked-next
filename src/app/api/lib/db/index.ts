@@ -12,16 +12,25 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-if (!global._mongoClientPromise) {
-  const client = new MongoClient(uri, options);
-  global._mongoClientPromise = client.connect();
+function getClientPromise(): Promise<MongoClient> {
+  if (!global._mongoClientPromise) {
+    const client = new MongoClient(uri, options);
+    global._mongoClientPromise = client.connect().catch((err) => {
+      // Reset so the next request gets a fresh attempt
+      global._mongoClientPromise = undefined;
+      return Promise.reject(err);
+    });
+  }
+  return global._mongoClientPromise;
 }
 
-const mongoClientPromise = global._mongoClientPromise;
-
 export const dbClient = async () => {
-  const client = await mongoClientPromise;
-  return client.db(process.env.MONGODB_DB);
+  try {
+    const client = await getClientPromise();
+    return client.db(process.env.MONGODB_DB);
+  } catch {
+    return null;
+  }
 };
 
-export default mongoClientPromise;
+export default getClientPromise();
