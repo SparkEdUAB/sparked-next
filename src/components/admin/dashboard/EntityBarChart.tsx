@@ -37,7 +37,7 @@ export function EntityBarChart({ stats }: { stats: T_StatFields[] }) {
                 fontSize: '12px',
               }}
             />
-            <Bar dataKey="count" fill="hsl(174, 72%, 40%)" radius={[4, 4, 0, 0]} maxBarSize={60} />
+            <Bar dataKey="count" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} maxBarSize={60} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>
