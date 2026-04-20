@@ -8,7 +8,7 @@ import { TOPIC_FORM_FIELDS } from './constants';
 import useTopic from '@hooks/use-topic';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_TopicFields } from '@hooks/use-topic/types';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { API_LINKS } from 'app/links';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
@@ -99,7 +99,7 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
         <LibraryErrorMessage>{topic.message}</LibraryErrorMessage>
       ) : (
         <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-          <AdminFormInput
+          <FormInput
             disabled={uploading}
             name={TOPIC_FORM_FIELDS.name.key}
             label={TOPIC_FORM_FIELDS.name.label}
@@ -107,7 +107,7 @@ const EditTopicView = ({ topic, onSuccessfullyDone }: { topic: T_TopicFields; on
             required
           />
 
-          <AdminFormInput
+          <FormInput
             disabled={uploading}
             name={TOPIC_FORM_FIELDS.description.key}
             label={TOPIC_FORM_FIELDS.description.label}

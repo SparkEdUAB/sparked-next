@@ -6,7 +6,7 @@ import { Button, Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { TOPIC_FORM_FIELDS } from './constants';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateTopicFields } from '@hooks/use-topic/types';
 import { API_LINKS } from 'app/links';
@@ -61,14 +61,14 @@ const CreateTopicView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
       <AdminPageTitle title={i18next.t('create_topic')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={TOPIC_FORM_FIELDS.name.key}
           label={TOPIC_FORM_FIELDS.name.label}
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={TOPIC_FORM_FIELDS.description.key}
           label={TOPIC_FORM_FIELDS.description.label}
