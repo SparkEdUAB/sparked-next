@@ -10,9 +10,9 @@ import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_MediaContentFields } from 'types/media-content';
 import useFileUpload from '@hooks/use-file-upload';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { FileUploadSection } from './FileUploadSection';
-import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
+import { FormTextarea } from '@components/admin/form/FormTextarea';
 import { API_LINKS } from 'app/links';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
@@ -156,7 +156,7 @@ const EditMediaContentView = ({
             setThumbnail={setThumbnail}
           />
 
-          <AdminFormInput
+          <FormInput
             disabled={uploading}
             name={MEDIA_CONTENT_FORM_FIELDS.name.key}
             defaultValue={mediaContent.name}
@@ -164,7 +164,7 @@ const EditMediaContentView = ({
             required
           />
 
-          <AdminFormTextarea
+          <FormTextarea
             disabled={uploading}
             name={MEDIA_CONTENT_FORM_FIELDS.description.key}
             defaultValue={mediaContent.description}

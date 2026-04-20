@@ -2,14 +2,15 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useMediaContent from '@hooks/use-media-content';
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Spinner } from 'flowbite-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import useFileUpload from '@hooks/use-file-upload';
-import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
+import { FormTextarea } from '@components/admin/form/FormTextarea';
 import { FileUploadSection } from './FileUploadSection';
 import { API_LINKS } from 'app/links';
 import { useToastMessage } from 'providers/ToastMessageContext';
@@ -18,7 +19,8 @@ import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
 import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
 import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 import { T_NameAndDescription } from 'types';
-import { Label, TextInput } from 'flowbite-react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { T_GradeWithoutMetadata } from '@hooks/useGrade/types';
 
 const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
@@ -124,7 +126,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
             <div className="mb-1.5 block">
               <Label htmlFor="externalUrl" value="External URL" className="text-gray-700 dark:text-gray-300" />
             </div>
-            <TextInput
+            <Input
               disabled={isLoading}
               id="externalUrl"
               name="externalUrl"
@@ -153,14 +155,14 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
           />
         )}
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={MEDIA_CONTENT_FORM_FIELDS.name.key}
           label={MEDIA_CONTENT_FORM_FIELDS.name.label}
           required
         />
 
-        <AdminFormTextarea
+        <FormTextarea
           disabled={isLoading}
           name={MEDIA_CONTENT_FORM_FIELDS.description.key}
           label={MEDIA_CONTENT_FORM_FIELDS.description.label}
