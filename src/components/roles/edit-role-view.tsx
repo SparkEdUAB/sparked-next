@@ -6,7 +6,7 @@ import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { ROLE_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
@@ -46,7 +46,7 @@ const EditRoleView = ({ role, onSuccessfullyDone }: { role: T_RoleFields; onSucc
         <LibraryErrorMessage>{role.message}</LibraryErrorMessage>
       ) : (
         <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-          <AdminFormInput
+          <FormInput
             disabled={uploading}
             name={ROLE_FORM_FIELDS.name.key}
             label={ROLE_FORM_FIELDS.name.label}
@@ -54,7 +54,7 @@ const EditRoleView = ({ role, onSuccessfullyDone }: { role: T_RoleFields; onSucc
             required
           />
 
-          <AdminFormInput
+          <FormInput
             disabled={uploading}
             name={ROLE_FORM_FIELDS.description.key}
             label={ROLE_FORM_FIELDS.description.label}

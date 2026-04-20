@@ -1,19 +1,16 @@
 'use client';
 
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { AdminPageTitle } from '@components/layouts';
-import { rolesTableColumns } from '@components/roles';
+import React, { useState } from 'react';
+import { DataTable } from '@components/admin/data-table/DataTable';
+import { FormSheet } from '@components/admin/form/FormSheet';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
 import { transformRawRole, useRoles } from '@hooks/useRoles';
 import { T_RawRoleFields, T_RoleFields } from '@hooks/useRoles/types';
-import { API_LINKS } from 'app/links';
-import { Button, Drawer, Modal } from 'flowbite-react';
-import i18next from 'i18next';
-import { useState } from 'react';
-import { FaRegHandPointer } from 'react-icons/fa';
-import { RiFileList2Line } from 'react-icons/ri';
-import EditRoleView from './edit-role-view';
+import { rolesTableColumns } from '@components/roles';
 import CreateRoleView from './create-role-view';
+import EditRoleView from './edit-role-view';
+import i18next from 'i18next';
 
 export function RolesListView() {
   const { selectedRoleIds, setSelectedRoleIds, deleteRoles } = useRoles();
@@ -27,7 +24,11 @@ export function RolesListView() {
     loadMore,
     hasMore,
     error,
-  } = useAdminListViewData<T_RoleFields, T_RawRoleFields>(API_LINKS.FETCH_USER_ROLES, 'userRoles', transformRawRole);
+  } = useAdminListViewData<T_RoleFields, T_RawRoleFields>(
+    API_LINKS.FETCH_USER_ROLES,
+    'userRoles',
+    transformRawRole,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedRoleIds,
@@ -38,62 +39,55 @@ export function RolesListView() {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t('roles')} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{i18next.t('roles')}</h1>
+      </div>
 
-      <AdminTable<T_RoleFields>
-        deleteItems={deleteRoles}
+      <DataTable<T_RoleFields>
+        deleteItems={async () => {
+          const r = await deleteRoles();
+          mutate();
+          return r;
+        }}
         rowSelection={rowSelection}
         items={roles}
         isLoading={isLoading}
         createNew={() => setCreatingRole(true)}
-        editItem={setEdittingRole}
+        editItem={(item) => setEdittingRole(item)}
         columns={rolesTableColumns}
         loadMore={loadMore}
         hasMore={hasMore}
         error={error}
-        additionalButtons={
-          <>
-            <Button className="rounded-none">
-              <FaRegHandPointer className="mr-3 h-4 w-4" />
-              Assign Actions
-            </Button>
-            <Button className="rounded-none">
-              <RiFileList2Line className="mr-3 h-4 w-4" />
-              Assign Pages
-            </Button>
-          </>
-        }
       />
-      <Modal dismissible show={creatingRole} onClose={() => setCreatingRole(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          <CreateRoleView
-            onSuccessfullyDone={() => {
-              mutate();
-              setCreatingRole(false);
-            }}
-          />
-        </Modal.Body>
-      </Modal>
-      <Drawer
-        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+
+      <FormSheet
+        open={creatingRole}
+        onClose={() => setCreatingRole(false)}
+        title={`Create ${i18next.t('roles')}`}
+      >
+        <CreateRoleView
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingRole(false);
+          }}
+        />
+      </FormSheet>
+
+      <FormSheet
         open={!!edittingRole}
         onClose={() => setEdittingRole(null)}
-        position="right"
+        title={`Edit ${i18next.t('roles')}`}
       >
-        <Drawer.Header titleIcon={() => <></>} />
-        <Drawer.Items>
-          {edittingRole ? (
-            <EditRoleView
-              role={edittingRole}
-              onSuccessfullyDone={() => {
-                mutate();
-                setEdittingRole(null);
-              }}
-            />
-          ) : null}
-        </Drawer.Items>
-      </Drawer>
+        {edittingRole && (
+          <EditRoleView
+            role={edittingRole}
+            onSuccessfullyDone={() => {
+              mutate();
+              setEdittingRole(null);
+            }}
+          />
+        )}
+      </FormSheet>
     </>
   );
 }
