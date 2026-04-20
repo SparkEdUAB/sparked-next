@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import { FormEventHandler } from 'react';
 import { GRADE_FORM_FIELDS } from './constants';
 // import { transformRawProgram } from '@hooks/useProgram';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 // import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateGradeFields } from '@hooks/useGrade/types';
@@ -47,14 +47,14 @@ const CreateGradeView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
       <AdminPageTitle title={i18next.t('create_grade')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={GRADE_FORM_FIELDS.name.key}
           label={GRADE_FORM_FIELDS.name.label}
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={GRADE_FORM_FIELDS.description.key}
           label={GRADE_FORM_FIELDS.description.label}

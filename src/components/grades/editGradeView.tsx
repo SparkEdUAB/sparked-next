@@ -6,7 +6,7 @@ import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { GRADE_FORM_FIELDS } from './constants';
 import useGrade from '@hooks/useGrade';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_GradeFields } from '@hooks/useGrade/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
@@ -48,7 +48,7 @@ const EditGradeView = ({ grade, onSuccessfullyDone }: { grade: T_GradeFields; on
       ) : (
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 max-w-xl w-full">
-            <AdminFormInput
+            <FormInput
               disabled={uploading}
               name={GRADE_FORM_FIELDS.name.key}
               label={GRADE_FORM_FIELDS.name.label}
@@ -56,7 +56,7 @@ const EditGradeView = ({ grade, onSuccessfullyDone }: { grade: T_GradeFields; on
               defaultValue={grade.name}
             />
 
-            <AdminFormInput
+            <FormInput
               disabled={uploading}
               name={GRADE_FORM_FIELDS.description.key}
               label={GRADE_FORM_FIELDS.description.label}

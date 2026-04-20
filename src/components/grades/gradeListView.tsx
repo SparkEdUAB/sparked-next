@@ -1,31 +1,24 @@
 'use client';
 
-import { AdminPageTitle } from '@components/layouts';
-import { Drawer, Modal } from 'flowbite-react';
-import i18next from 'i18next';
 import React, { useState } from 'react';
+import { DataTable } from '@components/admin/data-table/DataTable';
+import { FormSheet } from '@components/admin/form/FormSheet';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
 import useGrade, { transformRawGrade } from '@hooks/useGrade';
 import { T_GradeFields } from '@hooks/useGrade/types';
-import { AdminTable } from '../admin/AdminTable/AdminTable';
 import { gradeTableColumns } from '.';
 import EditGradeView from './editGradeView';
 import CreateGradeView from './createGradeView';
-import { API_LINKS } from 'app/links';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import i18next from 'i18next';
 
 const GradeListView: React.FC = () => {
-  const { selectedGradeIds, setSelectedGradeIds, onSearchQueryChange, deleteGrade, searchQuery } = useGrade();
+  const { selectedGradeIds, setSelectedGradeIds, onSearchQueryChange, deleteGrade, searchQuery } =
+    useGrade();
   const [creatingGrade, setCreatingGrade] = useState(false);
   const [edittingGrade, setEdittingGrade] = useState<T_GradeFields | null>(null);
 
-  const {
-    items: grades,
-    isLoading,
-    mutate,
-    loadMore,
-    hasMore,
-    error,
-  } = useAdminListViewData(
+  const { items: grades, isLoading, mutate, loadMore, hasMore, error } = useAdminListViewData(
     API_LINKS.FETCH_GRADES,
     'grades',
     transformRawGrade,
@@ -35,21 +28,17 @@ const GradeListView: React.FC = () => {
 
   const rowSelection = {
     selectedRowKeys: selectedGradeIds,
-    onChange: (selectedRowKeys: React.Key[]) => {
-      setSelectedGradeIds(selectedRowKeys);
-    },
+    onChange: (selectedRowKeys: React.Key[]) => setSelectedGradeIds(selectedRowKeys),
   };
 
   return (
     <>
-      <AdminPageTitle title={i18next.t('grades')} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{i18next.t('grades')}</h1>
+      </div>
 
-      <AdminTable<T_GradeFields>
-        deleteItems={async () => {
-          const result = await deleteGrade();
-          mutate();
-          return result;
-        }}
+      <DataTable<T_GradeFields>
+        deleteItems={async () => { const r = await deleteGrade(); mutate(); return r; }}
         rowSelection={rowSelection}
         items={grades}
         isLoading={isLoading}
@@ -61,36 +50,29 @@ const GradeListView: React.FC = () => {
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingGrade} onClose={() => setCreatingGrade(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          <CreateGradeView
-            onSuccessfullyDone={() => {
-              mutate();
-              setCreatingGrade(false);
-            }}
-          />
-        </Modal.Body>
-      </Modal>
-      <Drawer
-        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+
+      <FormSheet
+        open={creatingGrade}
+        onClose={() => setCreatingGrade(false)}
+        title={`Create ${i18next.t('grades')}`}
+      >
+        <CreateGradeView
+          onSuccessfullyDone={() => { mutate(); setCreatingGrade(false); }}
+        />
+      </FormSheet>
+
+      <FormSheet
         open={!!edittingGrade}
         onClose={() => setEdittingGrade(null)}
-        position="right"
+        title={`Edit ${i18next.t('grades')}`}
       >
-        <Drawer.Header titleIcon={() => <></>} />
-        <Drawer.Items>
-          {edittingGrade ? (
-            <EditGradeView
-              grade={edittingGrade}
-              onSuccessfullyDone={() => {
-                mutate();
-                setEdittingGrade(null);
-              }}
-            />
-          ) : null}
-        </Drawer.Items>
-      </Drawer>
+        {edittingGrade && (
+          <EditGradeView
+            grade={edittingGrade}
+            onSuccessfullyDone={() => { mutate(); setEdittingGrade(null); }}
+          />
+        )}
+      </FormSheet>
     </>
   );
 };
