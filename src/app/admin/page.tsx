@@ -39,8 +39,8 @@ export default function AdminHomePage() {
     <div className="space-y-6">
       {/* Stat cards */}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-        {stats.map((stat, index) => (
-          <StatsCard key={index} {...stat} />
+        {stats.map((stat) => (
+          <StatsCard key={stat.name} {...stat} />
         ))}
       </div>
 

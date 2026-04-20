@@ -39,7 +39,7 @@ export function RecentActivityTable({ stats }: { stats: T_StatFields[] }) {
               entityStats.map((stat) => (
                 <TableRow key={stat.name}>
                   <TableCell className="font-medium capitalize">
-                    {stat.name.replace('_', ' ')}
+                    {stat.name.replaceAll('_', ' ')}
                   </TableCell>
                   <TableCell className="text-right font-semibold">{stat.value}</TableCell>
                   <TableCell>
