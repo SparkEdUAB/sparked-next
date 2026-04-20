@@ -58,6 +58,7 @@ export function DataTable<ItemType extends T_ItemTypeBase>({
 }) {
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [pendingDeleteId, setPendingDeleteId] = useState<React.Key | null>(null);
 
   const { configs, getDisabledConfigItems } = useConfig();
   const disabledConfigItems: string[] = configs ? getDisabledConfigItems({ configs }) : [];
@@ -74,7 +75,7 @@ export function DataTable<ItemType extends T_ItemTypeBase>({
   };
 
   const handleDeleteRow = (item: ItemType) => {
-    rowSelection.onChange([item._id]);
+    setPendingDeleteId(item._id);
     setShowDeletionWarning(true);
   };
 
@@ -220,20 +221,27 @@ export function DataTable<ItemType extends T_ItemTypeBase>({
         )}
       </div>
 
-      {!isLoading && hasMore && (
+      {!isLoading && (hasMore || error) && (
         <DataTableLoadMore loadMore={loadMore} error={error} />
       )}
 
       <DeletionWarningModal
         showDeletionWarning={showDeletionWarning}
-        toggleDeletionWarning={() => setShowDeletionWarning(false)}
+        toggleDeletionWarning={() => {
+          setShowDeletionWarning(false);
+          setPendingDeleteId(null);
+        }}
         deleteItems={async () => {
+          if (pendingDeleteId) {
+            rowSelection.onChange([pendingDeleteId]);
+            setPendingDeleteId(null);
+          }
           const result = await deleteItems();
           setShowDeletionWarning(false);
           rowSelection.onChange([]);
           return result;
         }}
-        numberOfElements={rowSelection.selectedRowKeys.length}
+        numberOfElements={pendingDeleteId ? 1 : rowSelection.selectedRowKeys.length}
       />
     </TooltipProvider>
   );

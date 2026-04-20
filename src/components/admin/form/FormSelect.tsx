@@ -19,6 +19,7 @@ export function FormSelect({
   label,
   defaultValue,
   required,
+  onChange,
 }: {
   name: string;
   label: string;
@@ -27,6 +28,7 @@ export function FormSelect({
   options: Array<{ _id: string; name: string }>;
   defaultValue?: string;
   required?: boolean;
+  onChange?: (value: string) => void;
 }) {
   const [selected, setSelected] = useState(defaultValue ?? '');
 
@@ -46,7 +48,10 @@ export function FormSelect({
           <input type="hidden" name={name} value={selected} />
           <Select
             value={selected}
-            onValueChange={setSelected}
+            onValueChange={(value) => {
+              setSelected(value);
+              onChange?.(value);
+            }}
             disabled={disabled}
             required={required}
           >
