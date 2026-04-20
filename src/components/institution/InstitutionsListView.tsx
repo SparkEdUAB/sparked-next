@@ -1,43 +1,62 @@
 'use client';
 
-import { AdminPageTitle } from '@components/layouts';
-import useInstitution, { transformRawInstitution } from '@hooks/useInstitution';
-import { Modal, Button, Label, Textarea, Select } from 'flowbite-react';
 import React, { useState, useMemo } from 'react';
-import { institutionTableColumnsWithActions } from './index';
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import CreateInstitutionView from './CreateInstitutionView';
-import EditInstitutionView from './EditInstitutionView';
+import { DataTable } from '@components/admin/data-table/DataTable';
+import { FormSheet } from '@components/admin/form/FormSheet';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogDescription,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
+import useInstitution, { transformRawInstitution } from '@hooks/useInstitution';
 import { T_InstitutionFields } from '@hooks/useInstitution/types';
-import i18next from 'i18next';
+import { institutionTableColumnsWithActions } from './index';
+import CreateInstitutionView from './CreateInstitutionView';
+import EditInstitutionView from './EditInstitutionView';
 import InstitutionUsersView from './InstitutionUsersView';
+import i18next from 'i18next';
 
 const InstitutionsListView: React.FC = () => {
-  const { 
-    selectedInstitutionIds, 
-    setSelectedInstitutionIds, 
-    onSearchQueryChange, 
-    deleteInstitutions, 
+  const {
+    selectedInstitutionIds,
+    setSelectedInstitutionIds,
+    onSearchQueryChange,
+    deleteInstitutions,
     searchQuery,
     approveInstitution,
     rejectInstitution,
-    isLoading: isProcessing
+    isLoading: isProcessing,
   } = useInstitution();
+
   const [creatingInstitution, setCreatingInstitution] = useState(false);
   const [edittingInstitution, setEdittingInstitution] = useState<T_InstitutionFields | null>(null);
-  const [rejectingInstitution, setRejectingInstitution] = useState<T_InstitutionFields | null>(null);
+  const [rejectingInstitution, setRejectingInstitution] = useState<T_InstitutionFields | null>(
+    null,
+  );
   const [rejectionReason, setRejectionReason] = useState('');
-  const [verificationFilter, setVerificationFilter] = useState<'all' | 'verified' | 'pending'>('all');
+  const [verificationFilter, setVerificationFilter] = useState<'all' | 'verified' | 'pending'>(
+    'all',
+  );
   const [viewingUsersFor, setViewingUsersFor] = useState<T_InstitutionFields | null>(null);
 
-  // Verification handlers
   const handleApprove = async (institution: T_InstitutionFields) => {
     const success = await approveInstitution(institution._id);
-    if (success) {
-      mutate(); // Refresh the list
-    }
+    if (success) mutate();
   };
 
   const handleReject = (institution: T_InstitutionFields) => {
@@ -50,163 +69,167 @@ const InstitutionsListView: React.FC = () => {
       if (success) {
         setRejectingInstitution(null);
         setRejectionReason('');
-        mutate(); // Refresh the list
+        mutate();
       }
     }
   };
 
-  const {
-    items: allInstitutions,
-    isLoading,
-    mutate,
-    loadMore,
-    hasMore,
-    error,
-  } = useAdminListViewData(
-    API_LINKS.FETCH_INSTITUTIONS,
-    'institutions',
-    transformRawInstitution,
-    API_LINKS.FIND_INSTITUTIONS_BY_NAME,
-    searchQuery,
-  );
+  const { items: allInstitutions, isLoading, mutate, loadMore, hasMore, error } =
+    useAdminListViewData(
+      API_LINKS.FETCH_INSTITUTIONS,
+      'institutions',
+      transformRawInstitution,
+      API_LINKS.FIND_INSTITUTIONS_BY_NAME,
+      searchQuery,
+    );
 
-  // Filter institutions based on verification status
   const institutions = useMemo(() => {
-    if (verificationFilter === 'all') return allInstitutions;
-    if (verificationFilter === 'verified') return allInstitutions.filter(inst => inst.is_verified);
-    if (verificationFilter === 'pending') return allInstitutions.filter(inst => !inst.is_verified);
+    if (verificationFilter === 'verified') return allInstitutions.filter((i) => i.is_verified);
+    if (verificationFilter === 'pending') return allInstitutions.filter((i) => !i.is_verified);
     return allInstitutions;
   }, [allInstitutions, verificationFilter]);
 
   const rowSelection = {
     selectedRowKeys: selectedInstitutionIds,
-    onChange: (selectedRowKeys: React.Key[]) => {
-      setSelectedInstitutionIds(selectedRowKeys);
-    },
+    onChange: (selectedRowKeys: React.Key[]) => setSelectedInstitutionIds(selectedRowKeys),
   };
 
   return (
     <>
-      <AdminPageTitle title="Institutions" />
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-foreground">Institutions</h1>
+        <div className="flex items-center gap-2">
+          <Label htmlFor="verification-filter" className="text-sm">
+            Filter:
+          </Label>
+          <Select
+            value={verificationFilter}
+            onValueChange={(v) => setVerificationFilter(v as typeof verificationFilter)}
+          >
+            <SelectTrigger id="verification-filter" className="w-32 h-8">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All ({allInstitutions.length})</SelectItem>
+              <SelectItem value="pending">
+                Pending ({allInstitutions.filter((i) => !i.is_verified).length})
+              </SelectItem>
+              <SelectItem value="verified">
+                Verified ({allInstitutions.filter((i) => i.is_verified).length})
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
-      <AdminTable<T_InstitutionFields>
+      <DataTable<T_InstitutionFields>
         deleteItems={async () => {
-          const result = await deleteInstitutions();
+          const r = await deleteInstitutions();
           mutate();
-          return !!result;
+          return !!r;
         }}
         rowSelection={rowSelection}
         items={institutions}
         isLoading={isLoading}
         createNew={() => setCreatingInstitution(true)}
         editItem={(item) => setEdittingInstitution(item)}
-        columns={institutionTableColumnsWithActions(handleApprove, handleReject, isProcessing, setViewingUsersFor)}
+        columns={institutionTableColumnsWithActions(
+          handleApprove,
+          handleReject,
+          isProcessing,
+          setViewingUsersFor,
+        )}
         onSearchQueryChange={onSearchQueryChange}
         hasMore={hasMore}
         loadMore={loadMore}
         error={error}
-        additionalButtons={
-          <div className="flex items-center space-x-2">
-            <Label htmlFor="verification-filter" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Filter:
-            </Label>
-            <Select
-              id="verification-filter"
-              value={verificationFilter}
-              onChange={(e) => setVerificationFilter(e.target.value as 'all' | 'verified' | 'pending')}
-              className="w-32"
-            >
-              <option value="all">{i18next.t('all')} ({allInstitutions.length})</option>
-              <option value="pending">{i18next.t('pending')} ({allInstitutions.filter(i => !i.is_verified).length})</option>
-              <option value="verified">{i18next.t('verified')} ({allInstitutions.filter(i => i.is_verified).length})</option>
-            </Select>
-          </div>
-        }
       />
 
-      <Modal show={creatingInstitution} onClose={() => setCreatingInstitution(false)} size="2xl">
-        <Modal.Header>{i18next.t('create_institution')}</Modal.Header>
-        <Modal.Body>
-          <CreateInstitutionView
+      {/* Create */}
+      <FormSheet
+        open={creatingInstitution}
+        onClose={() => setCreatingInstitution(false)}
+        title={i18next.t('create_institution')}
+      >
+        <CreateInstitutionView
+          onSuccessfullyDone={() => {
+            setCreatingInstitution(false);
+            mutate();
+          }}
+        />
+      </FormSheet>
+
+      {/* Edit */}
+      <FormSheet
+        open={!!edittingInstitution}
+        onClose={() => setEdittingInstitution(null)}
+        title={i18next.t('edit_institution')}
+      >
+        {edittingInstitution && (
+          <EditInstitutionView
+            institution={edittingInstitution}
             onSuccessfullyDone={() => {
-              setCreatingInstitution(false);
+              setEdittingInstitution(null);
               mutate();
             }}
           />
-        </Modal.Body>
-      </Modal>
+        )}
+      </FormSheet>
 
-      <Modal show={!!edittingInstitution} onClose={() => setEdittingInstitution(null)} size="2xl">
-        <Modal.Header>{i18next.t('edit_institution')}</Modal.Header>
-        <Modal.Body>
-          {edittingInstitution && (
-            <EditInstitutionView
-              institution={edittingInstitution}
-              onSuccessfullyDone={() => {
-                setEdittingInstitution(null);
-                mutate();
-              }}
+      {/* Reject dialog */}
+      <Dialog
+        open={!!rejectingInstitution}
+        onOpenChange={(v) => !v && setRejectingInstitution(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{i18next.t('reject_institution')}</DialogTitle>
+            <DialogDescription>
+              {i18next.t('reject_institution_confirm')}{' '}
+              <span className="font-semibold">&quot;{rejectingInstitution?.name}&quot;</span>?
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="rejectionReason">{i18next.t('rejection_reason_label')}</Label>
+            <Textarea
+              id="rejectionReason"
+              value={rejectionReason}
+              onChange={(e) => setRejectionReason(e.target.value)}
+              placeholder={i18next.t('rejection_reason_placeholder')}
+              rows={3}
             />
-          )}
-        </Modal.Body>
-      </Modal>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setRejectingInstitution(null);
+                setRejectionReason('');
+              }}
+            >
+              {i18next.t('cancel')}
+            </Button>
+            <Button variant="destructive" onClick={confirmReject} disabled={isProcessing}>
+              {i18next.t('reject_institution')}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
-      {/* Reject Institution Modal */}
-      <Modal show={!!rejectingInstitution} onClose={() => setRejectingInstitution(null)}>
-        <Modal.Header>{i18next.t('reject_institution')}</Modal.Header>
-        <Modal.Body>
-          {rejectingInstitution && (
-            <div className="space-y-4">
-              <p className="text-gray-700 dark:text-gray-300">
-                {i18next.t('reject_institution_confirm')} <span className="font-semibold">&quot;{rejectingInstitution.name}&quot;</span>?
-              </p>
-              
-              <div>
-                <Label htmlFor="rejectionReason" value={i18next.t('rejection_reason_label')} />
-                <Textarea
-                  id="rejectionReason"
-                  value={rejectionReason}
-                  onChange={(e) => setRejectionReason(e.target.value)}
-                  placeholder={i18next.t('rejection_reason_placeholder')}
-                  rows={3}
-                  className="mt-1"
-                />
-              </div>
-            </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            color="failure"
-            onClick={confirmReject}
-            disabled={isProcessing}
-          >
-            {i18next.t('reject_institution')}
-          </Button>
-          <Button
-            color="gray"
-            onClick={() => {
-              setRejectingInstitution(null);
-              setRejectionReason('');
-            }}
-          >
-            {i18next.t('cancel')}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
-      {/* View Users Modal */}
-      <Modal show={!!viewingUsersFor} onClose={() => setViewingUsersFor(null)} size="4xl">
-        <Modal.Header>Users - {viewingUsersFor?.name}</Modal.Header>
-        <Modal.Body>
+      {/* View users dialog */}
+      <Dialog open={!!viewingUsersFor} onOpenChange={(v) => !v && setViewingUsersFor(null)}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Users — {viewingUsersFor?.name}</DialogTitle>
+          </DialogHeader>
           {viewingUsersFor && (
             <InstitutionUsersView
               institutionId={viewingUsersFor._id}
               institutionName={viewingUsersFor.name}
             />
           )}
-        </Modal.Body>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

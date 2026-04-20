@@ -1,7 +1,18 @@
 'use client';
 
 import useInstitution from '@hooks/useInstitution';
-import { Button, Spinner, Label, TextInput, Select, Textarea } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Loader2 } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_InstitutionFields, T_CreateInstitutionFields } from '@hooks/useInstitution/types';
@@ -16,6 +27,13 @@ const INSTITUTION_FORM_FIELDS = {
   contact_phone: { key: 'contact_phone', label: 'Contact Phone' },
 };
 
+const INSTITUTION_TYPES = [
+  { value: 'school', label: 'School' },
+  { value: 'college', label: 'College' },
+  { value: 'university', label: 'University' },
+  { value: 'organization', label: 'Organization' },
+];
+
 interface EditInstitutionViewProps {
   institution: T_InstitutionFields;
   onSuccessfullyDone?: () => void;
@@ -24,29 +42,35 @@ interface EditInstitutionViewProps {
 const EditInstitutionView = ({ institution, onSuccessfullyDone }: EditInstitutionViewProps) => {
   const { isLoading } = useInstitution();
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [selectedType, setSelectedType] = useState(institution.type ?? '');
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     setErrors({});
 
-    const keys = Object.keys(INSTITUTION_FORM_FIELDS).map(key => INSTITUTION_FORM_FIELDS[key as keyof typeof INSTITUTION_FORM_FIELDS].key);
-    let result = extractValuesFromFormEvent<T_CreateInstitutionFields>(e, keys);
+    const keys = Object.keys(INSTITUTION_FORM_FIELDS).map(
+      (key) => INSTITUTION_FORM_FIELDS[key as keyof typeof INSTITUTION_FORM_FIELDS].key,
+    );
+    const result = extractValuesFromFormEvent<T_CreateInstitutionFields>(e, keys);
+
+    // Inject the controlled select value
+    result.type = selectedType as T_CreateInstitutionFields['type'];
 
     // Basic validation
     const newErrors: Record<string, string> = {};
-    
+
     if (!result.name?.trim()) {
       newErrors.name = 'Institution name is required';
     }
-    
+
     if (!result.type) {
       newErrors.type = 'Institution type is required';
     }
-    
+
     if (result.website && !result.website.match(/^https?:\/\//)) {
       newErrors.website = 'Website must start with http:// or https://';
     }
-    
+
     if (result.contact_email && !result.contact_email.includes('@')) {
       newErrors.contact_email = 'Please enter a valid email address';
     }
@@ -61,7 +85,7 @@ const EditInstitutionView = ({ institution, onSuccessfullyDone }: EditInstitutio
     // if (success) {
     //   onSuccessfullyDone?.();
     // }
-    
+
     // For now, just call the callback
     onSuccessfullyDone?.();
   };
@@ -69,48 +93,45 @@ const EditInstitutionView = ({ institution, onSuccessfullyDone }: EditInstitutio
   return (
     <form className="flex flex-col items-start space-y-4" onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="name" value={INSTITUTION_FORM_FIELDS.name.label + ' *'} />
-          </div>
-          <TextInput
+        <div className="space-y-1.5">
+          <Label htmlFor="name">{INSTITUTION_FORM_FIELDS.name.label} *</Label>
+          <Input
             disabled={isLoading}
             name={INSTITUTION_FORM_FIELDS.name.key}
             id="name"
             placeholder="Enter institution name"
             defaultValue={institution.name}
             required
-            color={errors.name ? "failure" : undefined}
-            helperText={errors.name}
+            className={errors.name ? 'border-destructive' : ''}
           />
+          {errors.name && <p className="text-xs text-destructive">{errors.name}</p>}
         </div>
 
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="type" value={INSTITUTION_FORM_FIELDS.type.label + ' *'} />
-          </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="type">{INSTITUTION_FORM_FIELDS.type.label} *</Label>
           <Select
             disabled={isLoading}
-            name={INSTITUTION_FORM_FIELDS.type.key}
-            id="type"
-            defaultValue={institution.type}
+            value={selectedType}
+            onValueChange={setSelectedType}
             required
-            color={errors.type ? "failure" : undefined}
-            helperText={errors.type}
           >
-            <option value="">Select Type</option>
-            <option value="school">School</option>
-            <option value="college">College</option>
-            <option value="university">University</option>
-            <option value="organization">Organization</option>
+            <SelectTrigger id="type" className={errors.type ? 'border-destructive' : ''}>
+              <SelectValue placeholder="Select Type" />
+            </SelectTrigger>
+            <SelectContent>
+              {INSTITUTION_TYPES.map((t) => (
+                <SelectItem key={t.value} value={t.value}>
+                  {t.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
+          {errors.type && <p className="text-xs text-destructive">{errors.type}</p>}
         </div>
       </div>
 
-      <div className="w-full">
-        <div className="mb-2 block">
-          <Label htmlFor="description" value={INSTITUTION_FORM_FIELDS.description.label} />
-        </div>
+      <div className="w-full space-y-1.5">
+        <Label htmlFor="description">{INSTITUTION_FORM_FIELDS.description.label}</Label>
         <Textarea
           disabled={isLoading}
           name={INSTITUTION_FORM_FIELDS.description.key}
@@ -118,49 +139,46 @@ const EditInstitutionView = ({ institution, onSuccessfullyDone }: EditInstitutio
           placeholder="Brief description of the institution"
           defaultValue={institution.description || ''}
           rows={3}
+          className="resize-none"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="website" value={INSTITUTION_FORM_FIELDS.website.label} />
-          </div>
-          <TextInput
+        <div className="space-y-1.5">
+          <Label htmlFor="website">{INSTITUTION_FORM_FIELDS.website.label}</Label>
+          <Input
             disabled={isLoading}
             name={INSTITUTION_FORM_FIELDS.website.key}
             id="website"
             type="url"
             placeholder="https://example.com"
             defaultValue={institution.website || ''}
-            color={errors.website ? "failure" : undefined}
-            helperText={errors.website}
+            className={errors.website ? 'border-destructive' : ''}
           />
+          {errors.website && <p className="text-xs text-destructive">{errors.website}</p>}
         </div>
 
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="contact_email" value={INSTITUTION_FORM_FIELDS.contact_email.label} />
-          </div>
-          <TextInput
+        <div className="space-y-1.5">
+          <Label htmlFor="contact_email">{INSTITUTION_FORM_FIELDS.contact_email.label}</Label>
+          <Input
             disabled={isLoading}
             name={INSTITUTION_FORM_FIELDS.contact_email.key}
             id="contact_email"
             type="email"
             placeholder="contact@institution.com"
             defaultValue={institution.contact_email || ''}
-            color={errors.contact_email ? "failure" : undefined}
-            helperText={errors.contact_email}
+            className={errors.contact_email ? 'border-destructive' : ''}
           />
+          {errors.contact_email && (
+            <p className="text-xs text-destructive">{errors.contact_email}</p>
+          )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="contact_phone" value={INSTITUTION_FORM_FIELDS.contact_phone.label} />
-          </div>
-          <TextInput
+        <div className="space-y-1.5">
+          <Label htmlFor="contact_phone">{INSTITUTION_FORM_FIELDS.contact_phone.label}</Label>
+          <Input
             disabled={isLoading}
             name={INSTITUTION_FORM_FIELDS.contact_phone.key}
             id="contact_phone"
@@ -170,11 +188,9 @@ const EditInstitutionView = ({ institution, onSuccessfullyDone }: EditInstitutio
           />
         </div>
 
-        <div>
-          <div className="mb-2 block">
-            <Label htmlFor="address" value={INSTITUTION_FORM_FIELDS.address.label} />
-          </div>
-          <TextInput
+        <div className="space-y-1.5">
+          <Label htmlFor="address">{INSTITUTION_FORM_FIELDS.address.label}</Label>
+          <Input
             disabled={isLoading}
             name={INSTITUTION_FORM_FIELDS.address.key}
             id="address"
@@ -187,22 +203,22 @@ const EditInstitutionView = ({ institution, onSuccessfullyDone }: EditInstitutio
       <div className="flex items-center space-x-4">
         <div>
           <Label htmlFor="verification_status">Verification Status:</Label>
-          <span className={`ml-2 px-2 py-1 rounded text-xs font-medium ${
-            institution.is_verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-          }`}>
+          <span
+            className={`ml-2 px-2 py-1 rounded text-xs font-medium ${
+              institution.is_verified
+                ? 'bg-green-100 text-green-800'
+                : 'bg-yellow-100 text-yellow-800'
+            }`}
+          >
             {institution.is_verified ? 'Verified' : 'Pending Review'}
           </span>
         </div>
       </div>
 
-      <Button 
-        type="submit" 
-        disabled={isLoading} 
-        className="w-full md:w-auto"
-      >
+      <Button type="submit" disabled={isLoading} className="w-full md:w-auto">
         {isLoading ? (
           <>
-            <Spinner size="sm" className="mr-2" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Updating...
           </>
         ) : (
