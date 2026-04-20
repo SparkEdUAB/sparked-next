@@ -4,7 +4,6 @@ import './globals.css';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { getServerSession } from 'next-auth';
 import { ReactNode } from 'react';
-import { ThemeModeScript } from 'flowbite-react';
 import AppProviders from 'providers/AppProviders';
 import { authOptions } from './api/auth/authOptions';
 
@@ -14,11 +13,9 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
   const session = await getServerSession(authOptions);
 
   return (
-    <html lang="en">
-      <head>
-        <ThemeModeScript />
-      </head>
-      <body className={` custom-scrollbar dark:bg-gray-800 dark:text-white`}>
+    <html lang="en" suppressHydrationWarning>
+      <head />
+      <body className="custom-scrollbar dark:bg-gray-800 dark:text-white">
         <AppProviders session={session}>{children}</AppProviders>
       </body>
     </html>
