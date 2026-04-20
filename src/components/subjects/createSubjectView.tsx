@@ -1,6 +1,6 @@
 'use client';
 
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import SelectList from '@components/atom/SelectList/SelectList';
 import { AdminPageTitle } from '@components/layouts';
 import { T_GradeWithoutMetadata } from '@hooks/useGrade/types';
@@ -44,14 +44,14 @@ const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => 
       <AdminPageTitle title={i18next.t('create_subject')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SUBJECT_FORM_FIELDS.name.key}
           label={SUBJECT_FORM_FIELDS.name.label}
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SUBJECT_FORM_FIELDS.description.key}
           label={SUBJECT_FORM_FIELDS.description.label}

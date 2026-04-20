@@ -6,7 +6,7 @@ import i18next from 'i18next';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { SUBJECT_FORM_FIELDS } from './constants';
 import useSubject from '@hooks/useSubject';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_SubjectFields } from '@hooks/useSubject/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
@@ -65,7 +65,7 @@ const EditSubjectView = ({
       ) : (
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 max-w-xl w-full">
-            <AdminFormInput
+            <FormInput
               disabled={uploading}
               name={SUBJECT_FORM_FIELDS.name.key}
               label={SUBJECT_FORM_FIELDS.name.label}
@@ -73,7 +73,7 @@ const EditSubjectView = ({
               defaultValue={subject.name}
             />
 
-            <AdminFormInput
+            <FormInput
               disabled={uploading}
               name={SUBJECT_FORM_FIELDS.description.key}
               label={SUBJECT_FORM_FIELDS.description.label}
