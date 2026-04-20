@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import i18next from 'i18next';
 import { StatsCard } from './StatsCard';
 
 vi.mock('@/components/ui/card', () => ({
@@ -33,5 +34,13 @@ describe('StatsCard', () => {
   it('renders no badge when percentageTrend is absent', () => {
     render(<StatsCard name="users" value={42} />);
     expect(screen.queryByTestId('badge')).not.toBeInTheDocument();
+  });
+
+  it('translates entity name via i18next', () => {
+    const spy = vi.spyOn(i18next, 't').mockReturnValue('Translated');
+    render(<StatsCard name="users" value={42} />);
+    expect(spy).toHaveBeenCalledWith('users');
+    expect(screen.getByText('Translated')).toBeInTheDocument();
+    spy.mockRestore();
   });
 });
