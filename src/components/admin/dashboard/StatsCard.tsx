@@ -16,18 +16,18 @@ import i18next from 'i18next';
 type IconComponent = React.ComponentType<{ className?: string }>;
 
 const ENTITY_CONFIG: Record<string, { icon: IconComponent; bg: string }> = {
-  users: { icon: AiOutlineUser, bg: 'bg-teal-500' },
-  institutions: { icon: AiOutlineHdd, bg: 'bg-cyan-500' },
-  grades: { icon: AiOutlineBook, bg: 'bg-teal-600' },
-  subjects: { icon: AiOutlineHdd, bg: 'bg-cyan-600' },
-  units: { icon: AiOutlineBlock, bg: 'bg-teal-400' },
-  topics: { icon: AiOutlineBulb, bg: 'bg-cyan-400' },
-  media_content: { icon: AiOutlineContainer, bg: 'bg-teal-700' },
+  users: { icon: AiOutlineUser, bg: 'bg-blue-600' },
+  institutions: { icon: AiOutlineHdd, bg: 'bg-violet-500' },
+  grades: { icon: AiOutlineBook, bg: 'bg-orange-500' },
+  subjects: { icon: AiOutlineHdd, bg: 'bg-sky-500' },
+  units: { icon: AiOutlineBlock, bg: 'bg-indigo-500' },
+  topics: { icon: AiOutlineBulb, bg: 'bg-amber-500' },
+  media_content: { icon: AiOutlineContainer, bg: 'bg-emerald-600' },
 };
 
 const DEFAULT_CONFIG: { icon: IconComponent; bg: string } = {
   icon: AiOutlineDashboard,
-  bg: 'bg-teal-500',
+  bg: 'bg-blue-600',
 };
 
 export function StatsCard({
