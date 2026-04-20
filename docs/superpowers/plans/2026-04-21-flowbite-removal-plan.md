@@ -135,22 +135,38 @@
 ## Task 6: Content CRUD views (grades, subjects, topics, units, media-content, users, roles, pages, school, programs, courses, institution)
 
 **Files (create/edit views):**
-- `src/components/grades/createGradeView.tsx`, `editGradeView.tsx`
-- `src/components/subjects/createSubjectView.tsx`, `editSubjectView.tsx`
-- `src/components/topic/create-topic-view.tsx`, `edit-topic-view.tsx`
-- `src/components/units/create-unit-view.tsx`, `edit-unit-view.tsx`
-- `src/components/media-content/create-media-content-view.tsx`, `edit-media-content-view.tsx`
+- `src/components/grades/createGradeView.tsx`
+- `src/components/grades/editGradeView.tsx`
+- `src/components/subjects/createSubjectView.tsx`
+- `src/components/subjects/editSubjectView.tsx`
+- `src/components/topic/create-topic-view.tsx`
+- `src/components/topic/edit-topic-view.tsx`
+- `src/components/units/create-unit-view.tsx`
+- `src/components/units/edit-unit-view.tsx`
+- `src/components/media-content/create-media-content-view.tsx`
+- `src/components/media-content/edit-media-content-view.tsx`
 - `src/components/media-content/upload-multiple/DependencySelector.tsx`
 - `src/components/media-content/upload-multiple/EditResourceData.tsx`
 - `src/components/media-content/upload-multiple/FileSelector.tsx`
 - `src/components/media-content/upload-multiple/PreviewButton.tsx`
-- `src/components/users/create-user-view.tsx`, `edit-user-view.tsx`
-- `src/components/roles/create-role-view.tsx`, `edit-role-view.tsx`
-- `src/components/pages/create-page-view.tsx`, `edit-page-view.tsx`
-- `src/components/school/createSchoolView.tsx`, `editSchoolView.tsx`, `schoolsListView.tsx`
-- `src/components/programs/createProgramView.tsx`, `editProgramView.tsx`, `programListView.tsx`
-- `src/components/courses/createCourseView.tsx`, `editCourseView.tsx`, `courseListView.tsx`
-- `src/components/institution/index.tsx`, `InstitutionSelector.tsx`, `InstitutionUsersView.tsx`
+- `src/components/users/create-user-view.tsx`
+- `src/components/users/edit-user-view.tsx`
+- `src/components/roles/create-role-view.tsx`
+- `src/components/roles/edit-role-view.tsx`
+- `src/components/pages/create-page-view.tsx`
+- `src/components/pages/edit-page-view.tsx`
+- `src/components/school/createSchoolView.tsx`
+- `src/components/school/editSchoolView.tsx`
+- `src/components/school/schoolsListView.tsx`
+- `src/components/programs/createProgramView.tsx`
+- `src/components/programs/editProgramView.tsx`
+- `src/components/programs/programListView.tsx`
+- `src/components/courses/createCourseView.tsx`
+- `src/components/courses/editCourseView.tsx`
+- `src/components/courses/courseListView.tsx`
+- `src/components/institution/index.tsx`
+- `src/components/institution/InstitutionSelector.tsx`
+- `src/components/institution/InstitutionUsersView.tsx`
 - `src/app/admin/settings/page.tsx`
 - `src/components/molecules/DragAndDropFileInput/DragAndDropFileInput.tsx`
 - `src/components/ToastMessage/ToastMessage.tsx`
