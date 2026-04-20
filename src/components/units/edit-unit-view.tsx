@@ -6,7 +6,7 @@ import i18next from 'i18next';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { UNIT_FORM_FIELDS } from './constants';
 import useUnit from '@hooks/useUnit';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { T_UnitFields } from '@hooks/useUnit/types';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { API_LINKS } from 'app/links';
@@ -81,7 +81,7 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
       ) : (
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 md:max-w-xl w-full">
-            <AdminFormInput
+            <FormInput
               disabled={uploading}
               name={UNIT_FORM_FIELDS.name.key}
               label={UNIT_FORM_FIELDS.name.label}
@@ -89,7 +89,7 @@ const EditUnitView = ({ unit, onSuccessfullyDone }: { unit: T_UnitFields; onSucc
               defaultValue={unit.name}
             />
 
-            <AdminFormInput
+            <FormInput
               disabled={uploading}
               name={UNIT_FORM_FIELDS.description.key}
               label={UNIT_FORM_FIELDS.description.label}

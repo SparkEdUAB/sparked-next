@@ -8,7 +8,7 @@ import { UNIT_FORM_FIELDS } from './constants';
 import useUnit from '@hooks/useUnit';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateUnitFields } from '@hooks/useUnit/types';
-import { AdminFormInput } from '../admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { API_LINKS } from 'app/links';
 import SelectList from '@components/atom/SelectList/SelectList';
 import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
@@ -48,14 +48,14 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
       <AdminPageTitle title={i18next.t('create_unit')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={UNIT_FORM_FIELDS.name.key}
           label={UNIT_FORM_FIELDS.name.label}
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={UNIT_FORM_FIELDS.description.key}
           label={UNIT_FORM_FIELDS.description.label}
