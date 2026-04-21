@@ -2,7 +2,8 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useGrade from '@hooks/useGrade';
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler } from 'react';
 import { GRADE_FORM_FIELDS } from './constants';
@@ -70,7 +71,7 @@ const CreateGradeView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => vo
         /> */}
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
-          {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
           {i18next.t('submit')}
         </Button>
       </form>

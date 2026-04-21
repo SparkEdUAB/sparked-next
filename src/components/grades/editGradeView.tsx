@@ -1,7 +1,7 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { GRADE_FORM_FIELDS } from './constants';
@@ -41,7 +41,7 @@ const EditGradeView = ({ grade, onSuccessfullyDone }: { grade: T_GradeFields; on
 
       {grade === null ? (
         <div className="flex items-center justify-center h-[400px]">
-          <Spinner size="xl" />
+          <Loader2 className="h-12 w-12 animate-spin" />
         </div>
       ) : grade instanceof Error ? (
         <LibraryErrorMessage>{grade.message}</LibraryErrorMessage>

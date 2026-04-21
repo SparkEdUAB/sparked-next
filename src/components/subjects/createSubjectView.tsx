@@ -7,7 +7,8 @@ import { T_GradeWithoutMetadata } from '@hooks/useGrade/types';
 import useSubject from '@hooks/useSubject';
 import { T_CreateSubjectFields } from '@hooks/useSubject/types';
 import { API_LINKS } from 'app/links';
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import { FormEventHandler, useState } from 'react';
@@ -70,7 +71,7 @@ const CreateSubjectView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => 
         />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
-          {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
           {i18next.t('submit')}
         </Button>
       </form>

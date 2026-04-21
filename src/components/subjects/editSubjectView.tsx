@@ -1,7 +1,7 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { SUBJECT_FORM_FIELDS } from './constants';
@@ -58,7 +58,7 @@ const EditSubjectView = ({
 
       {subject === null ? (
         <div className="flex items-center justify-center h-[400px]">
-          <Spinner size="xl" />
+          <Loader2 className="h-12 w-12 animate-spin" />
         </div>
       ) : subject instanceof Error ? (
         <LibraryErrorMessage>{subject.message}</LibraryErrorMessage>
