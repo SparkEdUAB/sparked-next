@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
 import i18next from 'i18next';
 import React, { ReactNode } from 'react';
 import { IoMdAddCircleOutline } from 'react-icons/io';
@@ -21,7 +21,7 @@ export function AdminTableButtonGroup({
   const message = useToastMessage();
 
   return (
-    <Button.Group className="mb-5">
+    <div className="flex flex-row mb-5">
       <Button onClick={createNew} className={'table-action-buttons'}>
         <IoMdAddCircleOutline className="mr-3 h-4 w-4" />
         {i18next.t('new')}
@@ -39,6 +39,6 @@ export function AdminTableButtonGroup({
         <RiDeleteBin6Line className="mr-3 h-4 w-4" />
         {i18next.t('delete')}
       </Button>
-    </Button.Group>
+    </div>
   );
 }
