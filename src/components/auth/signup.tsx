@@ -4,11 +4,13 @@ import Link from 'next/link';
 import { SIGNUP_FORM_FIELDS } from './constants';
 import AppLogo from '@components/logo';
 import { T_SignupFields } from '@hooks/useAuth/types';
-import { Button, Label, Spinner, TextInput } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { AiOutlineLock } from 'react-icons/ai';
 import { LuCircleUser } from 'react-icons/lu';
-import { Select } from 'flowbite-react';
 import { validateSignupForm } from 'utils/helpers/validation';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import InstitutionSelector from '@components/institution/InstitutionSelector';
@@ -62,7 +64,7 @@ const Signup = () => {
   const handleInstitutionSelect = (institutionId: string | null, institutionName?: string) => {
     setSelectedInstitutionId(institutionId);
     setSelectedInstitutionName(institutionName || '');
-    
+
     // Clear institution error when an institution is selected
     if (institutionId) {
       setErrors(prev => ({
@@ -116,7 +118,7 @@ const Signup = () => {
   // Update the student radio button handling
   const handleStudentChange = (isStudentValue: boolean) => {
     setIsStudent(isStudentValue);
-    
+
     if (isStudentValue) {
       // Set default institution type when user becomes a student
       setInstitutionType('institution');
@@ -149,7 +151,7 @@ const Signup = () => {
     // Add student-related fields
     if (isStudent) {
       result.institutionType = institutionType || 'institution';
-      
+
       // Add institution data if selected
       if (selectedInstitutionId) {
         result.institutionId = selectedInstitutionId;
@@ -187,67 +189,70 @@ const Signup = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor={SIGNUP_FORM_FIELDS.firstName.key} value="First Name *" className="text-gray-700 dark:text-gray-300" />
+                    <Label htmlFor={SIGNUP_FORM_FIELDS.firstName.key} className="text-gray-700 dark:text-gray-300">First Name *</Label>
                   </div>
-                  <TextInput
-                    icon={LuCircleUser}
-                    disabled={loading}
-                    id={SIGNUP_FORM_FIELDS.firstName.key}
-                    name={SIGNUP_FORM_FIELDS.firstName.key}
-                    type="text"
-                    placeholder="John"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    color={errors.firstName ? "failure" : undefined}
-                    helperText={errors.firstName}
-                    className="rounded-lg"
-                  />
+                  <div className="relative">
+                    <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      disabled={loading}
+                      id={SIGNUP_FORM_FIELDS.firstName.key}
+                      name={SIGNUP_FORM_FIELDS.firstName.key}
+                      type="text"
+                      placeholder="John"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      className={`rounded-lg pl-9 ${errors.firstName ? 'border-red-500' : ''}`}
+                    />
+                  </div>
+                  {errors.firstName && <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>}
                 </div>
 
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor={SIGNUP_FORM_FIELDS.lastName.key} value="Last Name *" className="text-gray-700 dark:text-gray-300" />
+                    <Label htmlFor={SIGNUP_FORM_FIELDS.lastName.key} className="text-gray-700 dark:text-gray-300">Last Name *</Label>
                   </div>
-                  <TextInput
-                    icon={LuCircleUser}
+                  <div className="relative">
+                    <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      disabled={loading}
+                      id={SIGNUP_FORM_FIELDS.lastName.key}
+                      name={SIGNUP_FORM_FIELDS.lastName.key}
+                      type="text"
+                      placeholder="Doe"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      className={`rounded-lg pl-9 ${errors.lastName ? 'border-red-500' : ''}`}
+                    />
+                  </div>
+                  {errors.lastName && <p className="mt-1 text-sm text-red-500">{errors.lastName}</p>}
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-1.5 block">
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} className="text-gray-700 dark:text-gray-300">Your email *</Label>
+                </div>
+                <div className="relative">
+                  <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
                     disabled={loading}
-                    id={SIGNUP_FORM_FIELDS.lastName.key}
-                    name={SIGNUP_FORM_FIELDS.lastName.key}
-                    type="text"
-                    placeholder="Doe"
-                    value={formData.lastName}
+                    id={SIGNUP_FORM_FIELDS.email.key}
+                    name={SIGNUP_FORM_FIELDS.email.key}
+                    type="email"
+                    placeholder="name@example.com"
+                    value={formData.email}
                     onChange={handleInputChange}
-                    color={errors.lastName ? "failure" : undefined}
-                    helperText={errors.lastName}
-                    className="rounded-lg"
+                    className={`rounded-lg pl-9 ${errors.email ? 'border-red-500' : ''}`}
                   />
                 </div>
+                {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
               </div>
 
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email *" className="text-gray-700 dark:text-gray-300" />
+                  <Label htmlFor="phoneNumber" className="text-gray-700 dark:text-gray-300">Phone Number *</Label>
                 </div>
-                <TextInput
-                  icon={LuCircleUser}
-                  disabled={loading}
-                  id={SIGNUP_FORM_FIELDS.email.key}
-                  name={SIGNUP_FORM_FIELDS.email.key}
-                  type="email"
-                  placeholder="name@example.com"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  color={errors.email ? "failure" : undefined}
-                  helperText={errors.email}
-                  className="rounded-lg"
-                />
-              </div>
-
-              <div>
-                <div className="mb-1.5 block">
-                  <Label htmlFor="phoneNumber" value="Phone Number *" className="text-gray-700 dark:text-gray-300" />
-                </div>
-                <TextInput
+                <Input
                   id="phoneNumber"
                   name="phoneNumber"
                   type="tel"
@@ -255,15 +260,14 @@ const Signup = () => {
                   disabled={loading}
                   value={formData.phoneNumber}
                   onChange={handleInputChange}
-                  color={errors.phoneNumber ? "failure" : undefined}
-                  helperText={errors.phoneNumber}
-                  className="rounded-lg"
+                  className={`rounded-lg ${errors.phoneNumber ? 'border-red-500' : ''}`}
                 />
+                {errors.phoneNumber && <p className="mt-1 text-sm text-red-500">{errors.phoneNumber}</p>}
               </div>
 
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
                 <div className="mb-2 block">
-                  <Label value="Are you a student? *" className="text-gray-700 dark:text-gray-300" />
+                  <Label className="text-gray-700 dark:text-gray-300">Are you a student? *</Label>
                 </div>
                 <div className="flex gap-6">
                   <div className="flex items-center">
@@ -296,7 +300,7 @@ const Signup = () => {
                   <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
                     Institution Information
                   </h3>
-                  
+
                   <InstitutionSelector
                     selectedInstitutionId={selectedInstitutionId || undefined}
                     onInstitutionSelect={handleInstitutionSelect}
@@ -304,19 +308,17 @@ const Signup = () => {
                     disabled={loading}
                     isOptional={!isStudent}
                   />
-                  
+
                   <div>
                     <div className="mb-1.5 block">
-                      <Label htmlFor="grade" value="Grade (Optional)" className="text-gray-700 dark:text-gray-300" />
+                      <Label htmlFor="grade" className="text-gray-700 dark:text-gray-300">Grade (Optional)</Label>
                     </div>
-                    <Select
+                    <select
                       id="grade"
                       name="grade"
                       value={formData.grade}
                       onChange={handleInputChange}
-                      color={errors.grade ? "failure" : undefined}
-                      helperText={errors.grade}
-                      className="rounded-lg"
+                      className={`rounded-lg w-full border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${errors.grade ? 'border-red-500' : ''}`}
                       disabled={loading}
                     >
                       <option value="">Select Grade</option>
@@ -325,7 +327,8 @@ const Signup = () => {
                           Grade {i + 1}
                         </option>
                       ))}
-                    </Select>
+                    </select>
+                    {errors.grade && <p className="mt-1 text-sm text-red-500">{errors.grade}</p>}
                   </div>
                 </div>
               )}
@@ -333,76 +336,73 @@ const Signup = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor="password" value="Password *" className="text-gray-700 dark:text-gray-300" />
+                    <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">Password *</Label>
                   </div>
-                  <TextInput
-                    icon={AiOutlineLock}
-                    disabled={loading}
-                    id="password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    helperText={errors.password}
-                    color={errors.password ? "failure" : undefined}
-                    className="rounded-lg"
-                    rightIcon={() => (
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
-                      >
-                        {showPassword ? (
-                          <AiOutlineEyeInvisible className="h-5 w-5" />
-                        ) : (
-                          <AiOutlineEye className="h-5 w-5" />
-                        )}
-                      </button>
-                    )}
-                  />
+                  <div className="relative">
+                    <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      disabled={loading}
+                      id="password"
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className={`rounded-lg pl-9 pr-10 ${errors.password ? 'border-red-500' : ''}`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                    >
+                      {showPassword ? (
+                        <AiOutlineEyeInvisible className="h-5 w-5" />
+                      ) : (
+                        <AiOutlineEye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password}</p>}
                 </div>
 
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor="confirmPassword" value="Confirm Password *" className="text-gray-700 dark:text-gray-300" />
+                    <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300">Confirm Password *</Label>
                   </div>
-                  <TextInput
-                    icon={AiOutlineLock}
-                    disabled={loading}
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    color={errors.confirmPassword ? "failure" : undefined}
-                    helperText={errors.confirmPassword}
-                    className="rounded-lg"
-                    rightIcon={() => (
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
-                      >
-                        {showConfirmPassword ? (
-                          <AiOutlineEyeInvisible className="h-5 w-5" />
-                        ) : (
-                          <AiOutlineEye className="h-5 w-5" />
-                        )}
-                      </button>
-                    )}
-                  />
+                  <div className="relative">
+                    <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      disabled={loading}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      className={`rounded-lg pl-9 pr-10 ${errors.confirmPassword ? 'border-red-500' : ''}`}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                    >
+                      {showConfirmPassword ? (
+                        <AiOutlineEyeInvisible className="h-5 w-5" />
+                      ) : (
+                        <AiOutlineEye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
+                  {errors.confirmPassword && <p className="mt-1 text-sm text-red-500">{errors.confirmPassword}</p>}
                 </div>
               </div>
 
               <Button
                 type="submit"
                 disabled={loading}
-                size="xs"
                 className="w-full mt-4  hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 py-2.5 rounded-lg"
               >
                 {loading ? (
                   <>
-                    <Spinner size="sm" className="mr-3" />
+                    <Loader2 className="h-4 w-4 animate-spin mr-3" />
                     {i18next.t('loading')}
                   </>
                 ) : (

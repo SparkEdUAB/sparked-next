@@ -2,7 +2,9 @@ import { SIGNUP_FORM_FIELDS } from './constants';
 import useAuth from '@hooks/useAuth';
 import Link from 'next/link';
 import AppLogo from '@components/logo';
-import { Label, TextInput, Button, Spinner } from 'flowbite-react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { LuCircleUser } from 'react-icons/lu';
 import { AiOutlineLock } from 'react-icons/ai';
 import i18next from 'i18next';
@@ -11,6 +13,7 @@ import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormE
 import { T_LoginFields } from '@hooks/useAuth/types';
 import { useState } from 'react';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { Loader2 } from 'lucide-react';
 
 const Login: React.FC = () => {
   const { handleLogin, loading } = useAuth();
@@ -40,56 +43,57 @@ const Login: React.FC = () => {
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email" className="text-gray-700 dark:text-gray-300" />
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} className="text-gray-700 dark:text-gray-300">Your email</Label>
                 </div>
-                <TextInput
-                  icon={LuCircleUser}
-                  disabled={loading}
-                  id={SIGNUP_FORM_FIELDS.email.key}
-                  name={SIGNUP_FORM_FIELDS.email.key}
-                  type="email"
-                  placeholder="name@example.com"
-                  required
-                  className="rounded-lg"
-                />
+                <div className="relative">
+                  <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    disabled={loading}
+                    id={SIGNUP_FORM_FIELDS.email.key}
+                    name={SIGNUP_FORM_FIELDS.email.key}
+                    type="email"
+                    placeholder="name@example.com"
+                    required
+                    className="rounded-lg pl-9"
+                  />
+                </div>
               </div>
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor="password" value="Password" className="text-gray-700 dark:text-gray-300" />
+                  <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">Password</Label>
                 </div>
-                <TextInput
-                  icon={AiOutlineLock}
-                  disabled={loading}
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="••••••••"
-                  required
-                  className="rounded-lg"
-                  rightIcon={() => (
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
-                    >
-                      {showPassword ? (
-                        <AiOutlineEyeInvisible className="h-5 w-5" />
-                      ) : (
-                        <AiOutlineEye className="h-5 w-5" />
-                      )}
-                    </button>
-                  )}
-                />
+                <div className="relative">
+                  <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    disabled={loading}
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="••••••••"
+                    required
+                    className="rounded-lg pl-9 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                  >
+                    {showPassword ? (
+                      <AiOutlineEyeInvisible className="h-5 w-5" />
+                    ) : (
+                      <AiOutlineEye className="h-5 w-5" />
+                    )}
+                  </button>
+                </div>
               </div>
               <Button
                 disabled={loading}
                 type="submit"
-                size="xs"
                 className="w-full mt-4 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 py-2.5 rounded-lg text-base font-large"
               >
                 {loading ? (
                   <>
-                    <Spinner size="sm" className="mr-3" />
+                    <Loader2 className="h-4 w-4 animate-spin mr-3" />
                     {i18next.t('loading')}
                   </>
                 ) : (
