@@ -1,7 +1,7 @@
 'use client';
 
 import { useResizeObserver } from '@wojtekmaj/react-hooks';
-import { Button } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 import { Document, Page, pdfjs } from 'react-pdf';
@@ -148,8 +148,9 @@ export default function PdfReactPdf({ file }: { file: string }) {
           <Button
             onClick={handlePreviousPage}
             disabled={currentPage === 1}
-            className="!p-1 !h-7 min-w-[32px] !bg-gray-50 hover:!bg-gray-100 !border-gray-200 !text-gray-700"
-            size="xs"
+            variant="outline"
+            size="sm"
+            className="p-1 h-7 min-w-[32px] bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-700"
           >
             <FaArrowLeft className="text-xs" />
           </Button>
@@ -161,8 +162,9 @@ export default function PdfReactPdf({ file }: { file: string }) {
           <Button
             onClick={handleNextPage}
             disabled={currentPage === numPages || !numPages}
-            className="!p-1 !h-7 min-w-[32px] !bg-gray-50 hover:!bg-gray-100 !border-gray-200 !text-gray-700"
-            size="xs"
+            variant="outline"
+            size="sm"
+            className="p-1 h-7 min-w-[32px] bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-700"
           >
             <FaArrowRight className="text-xs" />
           </Button>
@@ -185,8 +187,9 @@ export default function PdfReactPdf({ file }: { file: string }) {
             />
             <Button
               onClick={handlePageJump}
-              className="!h-7 rounded-l-none rounded-r-md !py-0 !px-1 !text-xs !bg-gray-50 hover:!bg-gray-100 !border-gray-200 !text-gray-700"
-              size="xs"
+              variant="outline"
+              size="sm"
+              className="h-7 rounded-l-none rounded-r-md py-0 px-1 text-xs bg-gray-50 hover:bg-gray-100 border-gray-200 text-gray-700"
             >
               Go
             </Button>

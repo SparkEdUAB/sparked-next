@@ -1,6 +1,6 @@
-import { Sidebar } from 'flowbite-react';
 import Link from 'next/link';
 import styles from './Layout.module.css';
+import { cn } from '@/lib/utils';
 
 export const ShowAllOrNoItems = ({
   ItemName,
@@ -16,13 +16,20 @@ export const ShowAllOrNoItems = ({
   return (
     <>
       {items && items.length > 0 ? (
-        <Sidebar.Item active={!filterItemId} className={styles.item} as={Link} href={url}>
+        <Link
+          href={url}
+          className={cn(
+            styles.item,
+            'flex items-center px-3 py-2 text-sm rounded-lg text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700',
+            !filterItemId && 'bg-gray-100 dark:bg-gray-700 font-medium',
+          )}
+        >
           All
-        </Sidebar.Item>
+        </Link>
       ) : (
-        <Sidebar.Item as={Link} href="#" className={styles.item}>
+        <span className={cn(styles.item, 'flex items-center px-3 py-2 text-sm rounded-lg text-gray-400 dark:text-gray-500')}>
           No {ItemName}
-        </Sidebar.Item>
+        </span>
       )}
     </>
   );
