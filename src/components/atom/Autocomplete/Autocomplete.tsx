@@ -1,5 +1,6 @@
 import { ChangeEventHandler, useState } from 'react';
-import { Label, TextInput } from 'flowbite-react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { useFetch } from '@hooks/use-swr';
 import useDebounceValue from '@hooks/use-debounce';
 import { RedAsterisk } from '..';
@@ -73,7 +74,7 @@ const Autocomplete = <T extends ItemType>({
           {moduleName} {required && <RedAsterisk />}
         </Label>
       </div>
-      <TextInput
+      <Input
         id={moduleName}
         type="text"
         value={query}
