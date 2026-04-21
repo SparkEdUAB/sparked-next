@@ -9,7 +9,7 @@ import useUser from '@hooks/useUser';
 import { T_CreateUserFields } from '@hooks/useUser/types';
 import { API_LINKS } from 'app/links';
 import { Button } from '@/components/ui/button';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
@@ -69,7 +69,7 @@ const CreateUserView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
         />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
-          {isLoading ? <Spinner size="sm" className="mr-3" /> : null}
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : null}
           {i18next.t('submit')}
         </Button>
       </form>

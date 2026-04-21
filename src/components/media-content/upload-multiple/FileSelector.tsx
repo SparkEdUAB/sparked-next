@@ -5,7 +5,7 @@ import { AdminPageTitle } from '@components/layouts';
 import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
 import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
 import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
-import { Button } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
 import { Dispatch, SetStateAction } from 'react';
 import { DragAndDropFileInput } from '../../molecules/DragAndDropFileInput/DragAndDropFileInput';
 

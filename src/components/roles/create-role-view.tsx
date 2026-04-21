@@ -2,7 +2,7 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import { Button } from '@/components/ui/button';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { ROLE_FORM_FIELDS } from './constants';
@@ -67,7 +67,7 @@ const CreateRoleView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
         />
 
         <Button type="submit" className="mt-2" disabled={uploading}>
-          {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
           {i18next.t('submit')}
         </Button>
       </form>

@@ -2,7 +2,7 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useMediaContent from '@hooks/use-media-content';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 
 import { FormEventHandler, useEffect, useState } from 'react';
@@ -142,7 +142,7 @@ const EditMediaContentView = ({
 
       {!mediaContent ? (
         <div className="flex items-center justify-center h-[400px]">
-          <Spinner size="xl" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : mediaContent instanceof Error ? (
         <LibraryErrorMessage>{mediaContent.message}</LibraryErrorMessage>

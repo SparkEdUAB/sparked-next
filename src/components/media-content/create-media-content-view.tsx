@@ -3,7 +3,7 @@
 import { AdminPageTitle } from '@components/layouts';
 import useMediaContent from '@hooks/use-media-content';
 import { Button } from '@/components/ui/button';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { MEDIA_CONTENT_FORM_FIELDS } from './constants';
@@ -216,7 +216,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
         </div>
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
-          {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
           {i18next.t('submit')}
         </Button>
       </form>
