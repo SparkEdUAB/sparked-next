@@ -3,6 +3,7 @@
 import AppLogo from '@components/logo';
 import useAuth from '@hooks/useAuth';
 import { useMeStore } from '@stores/useMeStore';
+import { ThemeToggle } from '@/components/admin/layout/ThemeToggle';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,6 +69,8 @@ export function LibraryNavbar({
             />
           </div>
         </form>
+
+        <ThemeToggle />
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
