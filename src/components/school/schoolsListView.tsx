@@ -2,7 +2,7 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useSchool, { transformRawSchool } from '@hooks/useSchool';
-import { Modal } from 'flowbite-react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { schoolTableColumns } from '.';
@@ -61,20 +61,18 @@ const SchoolsListView: React.FC = () => {
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingSchool} onClose={() => setCreatingSchool(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
+      <Dialog open={creatingSchool} onOpenChange={setCreatingSchool}>
+        <DialogContent>
           <CreateSchoolView
             onSuccessfullyDone={() => {
               mutate();
               setCreatingSchool(false);
             }}
           />
-        </Modal.Body>
-      </Modal>
-      <Modal dismissible show={!!edittingSchool} onClose={() => setEdittingSchool(null)} popup>
-        <Modal.Header />
-        <Modal.Body>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!edittingSchool} onOpenChange={(open) => { if (!open) setEdittingSchool(null); }}>
+        <DialogContent>
           {edittingSchool ? (
             <EditSchoolView
               schoolId={edittingSchool._id}
@@ -84,8 +82,8 @@ const SchoolsListView: React.FC = () => {
               }}
             />
           ) : null}
-        </Modal.Body>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

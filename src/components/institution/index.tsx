@@ -1,7 +1,7 @@
 import i18next from 'i18next';
 import { T_ColumnData } from '@components/admin/AdminTable/types';
 import { T_InstitutionFields } from '@hooks/useInstitution/types';
-import { Button } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
 import { HiCheck, HiX, HiUsers } from 'react-icons/hi';
 
 export const institutionTableColumns: T_ColumnData<T_InstitutionFields>[] = [
@@ -84,8 +84,8 @@ export const institutionTableColumnsWithActions = (
       <div className="flex gap-2">
         {onViewUsers && (
           <Button
-            size="xs"
-            color="light"
+            size="sm"
+            variant="outline"
             onClick={(e: any) => {
               e.stopPropagation();
               onViewUsers(item);
@@ -98,21 +98,21 @@ export const institutionTableColumnsWithActions = (
         {!item.is_verified ? (
           <>
             <Button
-              size="xs"
-              color="success"
+              size="sm"
+              variant="default"
               onClick={(e: any) => {
                 e.stopPropagation();
                 onApprove(item);
               }}
               disabled={isProcessing}
-              className="flex items-center"
+              className="flex items-center bg-green-600 hover:bg-green-700"
             >
               <HiCheck className="w-3 h-3 mr-1" />
               {i18next.t('approve')}
             </Button>
             <Button
-              size="xs"
-              color="failure"
+              size="sm"
+              variant="destructive"
               onClick={(e: any) => {
                 e.stopPropagation();
                 onReject(item);

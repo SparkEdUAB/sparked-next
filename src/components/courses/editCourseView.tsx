@@ -1,7 +1,8 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { COURSE_FORM_FIELDS } from './constants';
@@ -64,7 +65,7 @@ const EditCourseView = ({ course, onSuccessfullyDone }: { course: T_CourseFields
 
       {course === null ? (
         <div className="flex items-center justify-center h-[400px]">
-          <Spinner size="xl" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : course instanceof Error ? (
         <LibraryErrorMessage>{course.message}</LibraryErrorMessage>
@@ -106,12 +107,12 @@ const EditCourseView = ({ course, onSuccessfullyDone }: { course: T_CourseFields
             /> */}
 
             <Button type="submit" className="mt-2" disabled={uploading}>
-              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+              {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
               {i18next.t('update')}
             </Button>
 
-            <Button color="red" onClick={toggleDeletionWarning} disabled={uploading}>
-              {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+            <Button variant="destructive" onClick={toggleDeletionWarning} disabled={uploading}>
+              {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
               {i18next.t('delete')}
             </Button>
           </div>

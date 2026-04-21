@@ -2,7 +2,8 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useProgram, { transformRawProgram } from '@hooks/useProgram';
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
 import { FormEventHandler } from 'react';
@@ -61,7 +62,7 @@ const EditProgramView = ({
 
       {program === null ? (
         <div className="flex items-center justify-center h-[400px]">
-          <Spinner size="xl" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : program instanceof Error ? (
         <LibraryErrorMessage>{program.message}</LibraryErrorMessage>
@@ -95,7 +96,7 @@ const EditProgramView = ({
             />
 
             <Button type="submit" className="mt-2" disabled={isLoading}>
-              {isLoading ? <Spinner size="sm" className="mr-3" /> : undefined}
+              {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
               {i18next.t('update')}
             </Button>
           </div>

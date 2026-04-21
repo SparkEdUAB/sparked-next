@@ -1,7 +1,8 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Drawer, Modal } from 'flowbite-react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import useCourse, { transformRawCourse } from '@hooks/useCourse';
@@ -61,25 +62,18 @@ const CourseListView: React.FC = () => {
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingCourse} onClose={() => setCreatingCourse(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
+      <Dialog open={creatingCourse} onOpenChange={setCreatingCourse}>
+        <DialogContent>
           <CreateCourseView
             onSuccessfullyDone={() => {
               mutate();
               setCreatingCourse(false);
             }}
           />
-        </Modal.Body>
-      </Modal>
-      <Drawer
-        className="w-[360px] sm:w-[460px] lg:w-[560px]"
-        open={!!edittingCourse}
-        onClose={() => setEdittingCourse(null)}
-        position="right"
-      >
-        <Drawer.Header titleIcon={() => <></>} />
-        <Drawer.Items>
+        </DialogContent>
+      </Dialog>
+      <Sheet open={!!edittingCourse} onOpenChange={(open) => { if (!open) setEdittingCourse(null); }}>
+        <SheetContent className="w-[360px] sm:w-[460px] lg:w-[560px]">
           {edittingCourse ? (
             <EditCourseView
               course={edittingCourse}
@@ -89,8 +83,8 @@ const CourseListView: React.FC = () => {
               }}
             />
           ) : null}
-        </Drawer.Items>
-      </Drawer>
+        </SheetContent>
+      </Sheet>
     </>
   );
 };

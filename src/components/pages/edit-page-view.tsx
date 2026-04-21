@@ -1,7 +1,7 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useMemo, useState } from 'react';
 import { PAGE_FORM_FIELDS } from './constants';
@@ -57,7 +57,7 @@ const EditPageView = ({ page, onSuccessfullyDone }: { page: T_PageLinkFields; on
 
       {page === null ? (
         <div className="flex items-center justify-center h-[400px]">
-          <Spinner size="xl" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : page instanceof Error ? (
         <LibraryErrorMessage>{page.message}</LibraryErrorMessage>

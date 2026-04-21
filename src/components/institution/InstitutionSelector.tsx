@@ -1,7 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Label, Select, TextInput, Button, Modal, Spinner } from 'flowbite-react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 import useInstitution from '@hooks/useInstitution';
 import useDebounceValue from '@hooks/use-debounce';
 import { HiPlus, HiSearch } from 'react-icons/hi';
@@ -51,7 +55,7 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
     if (debouncedSearchTerm === '' && searchTerm === '') {
       return;
     }
-    
+
     setIsFetchingInstitutions(true);
     fetchPublicInstitutions(debouncedSearchTerm || '').finally(() => setIsFetchingInstitutions(false));
   }, [debouncedSearchTerm, searchTerm, fetchPublicInstitutions]);
@@ -63,17 +67,17 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
 
   const handleInstitutionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    
+
     if (value === 'create_new') {
       setShowCreateModal(true);
       return;
     }
-    
+
     if (value === '') {
       onInstitutionSelect(null);
       return;
     }
-    
+
     const selectedInstitution = publicInstitutions.find(inst => inst._id === value);
     onInstitutionSelect(value, selectedInstitution?.name);
   };
@@ -93,7 +97,7 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
       if (result && result.institutionId) {
         // Select the newly created institution
         onInstitutionSelect(result.institutionId, newInstitutionData.name);
-        
+
         // Close modal and reset form
         setShowCreateModal(false);
         setNewInstitutionData({
@@ -104,7 +108,7 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
           address: '',
           contact_email: '',
         });
-        
+
         // Refresh the institutions list
         fetchPublicInstitutions();
       }
@@ -124,36 +128,36 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
     <div className="space-y-4">
       <div>
         <div className="mb-1.5 block">
-          <Label htmlFor="institution-search" value={i18next.t('search_institution')} className="text-gray-700 dark:text-gray-300" />
+          <Label htmlFor="institution-search" className="text-gray-700 dark:text-gray-300">{i18next.t('search_institution')}</Label>
         </div>
-        <TextInput
-          id="institution-search"
-          icon={HiSearch}
-          placeholder={i18next.t('search_institution_placeholder')}
-          value={searchTerm}
-          onChange={handleSearchChange}
-          disabled={disabled}
-          className="rounded-lg"
-        />
+        <div className="relative">
+          <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            id="institution-search"
+            className="pl-9 rounded-lg"
+            placeholder={i18next.t('search_institution_placeholder')}
+            value={searchTerm}
+            onChange={handleSearchChange}
+            disabled={disabled}
+          />
+        </div>
       </div>
 
       <div>
         <div className="mb-1.5 block">
-                  <Label htmlFor="institution-select" className="block mb-2 text-sm font-medium text-gray-900">
-          {i18next.t('institution_label')} {!isOptional && "*"}
-        </Label>
+          <Label htmlFor="institution-select" className="block mb-2 text-sm font-medium text-gray-900">
+            {i18next.t('institution_label')} {!isOptional && "*"}
+          </Label>
         </div>
-        <Select
+        <select
           id="institution-select"
           value={selectedInstitutionId || ''}
           onChange={handleInstitutionChange}
-          color={error ? "failure" : undefined}
-          helperText={error}
           disabled={disabled || isLoading || isFetchingInstitutions}
-          className="rounded-lg"
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           <option value="">
-            {isFetchingInstitutions 
+            {isFetchingInstitutions
               ? i18next.t('loading_institutions')
               : (isOptional ? i18next.t('select_institution_optional') : i18next.t('select_institution'))
             }
@@ -168,21 +172,24 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
               + {i18next.t('create_new_institution')}
             </option>
           )}
-        </Select>
+        </select>
+        {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
       </div>
 
       {/* Create New Institution Modal */}
-      <Modal show={showCreateModal} onClose={() => setShowCreateModal(false)} size="lg">
-        <Modal.Header>{i18next.t('create_new_institution')}</Modal.Header>
-        <Modal.Body>
+      <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>{i18next.t('create_new_institution')}</DialogTitle>
+          </DialogHeader>
           <div className="space-y-4">
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Can&apos;t find your institution? Create a new one. It will be reviewed by our team for verification.
             </p>
-            
+
             <div>
-              <Label htmlFor="new-institution-name" value="Institution Name *" />
-              <TextInput
+              <Label htmlFor="new-institution-name">Institution Name *</Label>
+              <Input
                 id="new-institution-name"
                 value={newInstitutionData.name}
                 onChange={(e) => handleNewInstitutionChange('name', e.target.value)}
@@ -192,22 +199,23 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="new-institution-type" value="Institution Type *" />
-              <Select
+              <Label htmlFor="new-institution-type">Institution Type *</Label>
+              <select
                 id="new-institution-type"
                 value={newInstitutionData.type}
                 onChange={(e) => handleNewInstitutionChange('type', e.target.value)}
+                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
                 <option value="school">School</option>
                 <option value="college">College</option>
                 <option value="university">University</option>
                 <option value="organization">Organization</option>
-              </Select>
+              </select>
             </div>
 
             <div>
-              <Label htmlFor="new-institution-description" value="Description" />
-              <TextInput
+              <Label htmlFor="new-institution-description">Description</Label>
+              <Input
                 id="new-institution-description"
                 value={newInstitutionData.description}
                 onChange={(e) => handleNewInstitutionChange('description', e.target.value)}
@@ -216,8 +224,8 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="new-institution-website" value="Website" />
-              <TextInput
+              <Label htmlFor="new-institution-website">Website</Label>
+              <Input
                 id="new-institution-website"
                 type="url"
                 value={newInstitutionData.website}
@@ -227,8 +235,8 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="new-institution-address" value="Address" />
-              <TextInput
+              <Label htmlFor="new-institution-address">Address</Label>
+              <Input
                 id="new-institution-address"
                 value={newInstitutionData.address}
                 onChange={(e) => handleNewInstitutionChange('address', e.target.value)}
@@ -237,8 +245,8 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
             </div>
 
             <div>
-              <Label htmlFor="new-institution-email" value="Contact Email" />
-              <TextInput
+              <Label htmlFor="new-institution-email">Contact Email</Label>
+              <Input
                 id="new-institution-email"
                 type="email"
                 value={newInstitutionData.contact_email}
@@ -247,30 +255,30 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
               />
             </div>
           </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={handleCreateInstitution}
-            disabled={!newInstitutionData.name.trim() || isCreatingInstitution}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
-            {isCreatingInstitution ? (
-              <>
-                <Spinner size="sm" className="mr-2" />
-                Creating...
-              </>
-            ) : (
-              <>
-                <HiPlus className="mr-2 h-4 w-4" />
-                Create Institution
-              </>
-            )}
-          </Button>
-          <Button color="gray" onClick={() => setShowCreateModal(false)}>
-            Cancel
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          <DialogFooter>
+            <Button
+              onClick={handleCreateInstitution}
+              disabled={!newInstitutionData.name.trim() || isCreatingInstitution}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              {isCreatingInstitution ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <HiPlus className="mr-2 h-4 w-4" />
+                  Create Institution
+                </>
+              )}
+            </Button>
+            <Button variant="outline" onClick={() => setShowCreateModal(false)}>
+              Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

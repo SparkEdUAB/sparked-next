@@ -2,7 +2,7 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import useProgram, { transformRawProgram } from '@hooks/useProgram';
-import { Modal } from 'flowbite-react';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { programTableColumns } from '.';
@@ -61,20 +61,18 @@ const ProgramsListView: React.FC = () => {
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingProgram} onClose={() => setCreatingProgram(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
+      <Dialog open={creatingProgram} onOpenChange={setCreatingProgram}>
+        <DialogContent>
           <CreateProgramView
             onSuccessfullyDone={() => {
               mutate();
               setCreatingProgram(false);
             }}
           />
-        </Modal.Body>
-      </Modal>
-      <Modal dismissible show={!!edittingProgram} onClose={() => setEdittingProgram(null)} popup>
-        <Modal.Header />
-        <Modal.Body>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!edittingProgram} onOpenChange={(open) => { if (!open) setEdittingProgram(null); }}>
+        <DialogContent>
           {edittingProgram ? (
             <EditProgramView
               programId={edittingProgram._id}
@@ -84,8 +82,8 @@ const ProgramsListView: React.FC = () => {
               }}
             />
           ) : null}
-        </Modal.Body>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

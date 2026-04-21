@@ -2,7 +2,7 @@
 
 import { AdminPageTitle } from '@components/layouts';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
-import { TextInput } from 'flowbite-react';
+import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { ReactNode, useState } from 'react';
 import { AiOutlineRight } from 'react-icons/ai';
@@ -43,17 +43,17 @@ export default function SettingsPage() {
           </SettingsItem>
           {uploadLocation === 'aws' && (
             <div className="my-4">
-              <TextInput className="my-2" name="AWS_ACCESS_KEY" placeholder="AWS Access Key" />
-              <TextInput className="my-2" name="AWS_SECRET_ACCESS_KEY" placeholder="AWS Secret Access Key" />
-              <TextInput className="my-2" name="S3_BUCKET" placeholder="S3 Bucket" />
-              <TextInput className="my-2" name="S3_MEDIA_CONTENT_FOLDER" placeholder="S3 Media Content Folder" />
-              <TextInput className="my-2" name="S3_BUCKET_NAME_URL" placeholder="S3 Bucket Name URL" />
+              <Input className="my-2" name="AWS_ACCESS_KEY" placeholder="AWS Access Key" />
+              <Input className="my-2" name="AWS_SECRET_ACCESS_KEY" placeholder="AWS Secret Access Key" />
+              <Input className="my-2" name="S3_BUCKET" placeholder="S3 Bucket" />
+              <Input className="my-2" name="S3_MEDIA_CONTENT_FOLDER" placeholder="S3 Media Content Folder" />
+              <Input className="my-2" name="S3_BUCKET_NAME_URL" placeholder="S3 Bucket Name URL" />
             </div>
           )}
         </div>
         <div className="py-4">
           <SettingsItem title="Institution Name" subtitle="Update the name of the institution for this website" />
-          <TextInput className="my-4" placeholder="Institution Name" />
+          <Input className="my-4" placeholder="Institution Name" />
         </div>
         <div className="py-4">
           <SettingsItem title="Setup" subtitle="Specify the nature of the organization">
