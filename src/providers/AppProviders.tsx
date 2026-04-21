@@ -1,6 +1,5 @@
 'use client';
 
-import { Flowbite } from 'flowbite-react';
 import { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { AppProgressBar } from 'next-nprogress-bar';
@@ -17,12 +16,10 @@ interface AppProvidersProps {
 const AppProviders: React.FC<AppProvidersProps> = ({ children, session }) => {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-      <Flowbite>
-        <SessionProvider session={session}>
-          <ToastMessageProvider>{children}</ToastMessageProvider>
-          <AppProgressBar color="#14b8a6" height="4px" options={{ showSpinner: false }} />
-        </SessionProvider>
-      </Flowbite>
+      <SessionProvider session={session}>
+        <ToastMessageProvider>{children}</ToastMessageProvider>
+        <AppProgressBar color="#14b8a6" height="4px" options={{ showSpinner: false }} />
+      </SessionProvider>
     </ThemeProvider>
   );
 };
