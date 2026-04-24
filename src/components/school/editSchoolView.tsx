@@ -9,7 +9,7 @@ import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useEffect } from 'react';
 import { SCHOOL_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { T_CreateSchoolFields } from '@hooks/useSchool/types';
 import { useToastMessage } from 'providers/ToastMessageContext';
 
@@ -47,7 +47,7 @@ const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; o
       ) : (
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 max-w-xl w-full">
-            <AdminFormInput
+            <FormInput
               disabled={isLoading}
               name={SCHOOL_FORM_FIELDS.name.key}
               label={SCHOOL_FORM_FIELDS.name.label}
@@ -55,7 +55,7 @@ const EditSchoolView = ({ schoolId, onSuccessfullyDone }: { schoolId?: string; o
               defaultValue={school.name}
             />
 
-            <AdminFormInput
+            <FormInput
               disabled={isLoading}
               name={SCHOOL_FORM_FIELDS.description.key}
               label={SCHOOL_FORM_FIELDS.description.label}

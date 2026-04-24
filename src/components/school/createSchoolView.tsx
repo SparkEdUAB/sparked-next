@@ -8,7 +8,7 @@ import { SCHOOL_FORM_FIELDS } from './constants';
 import { AdminPageTitle } from '@components/layouts';
 import { FormEventHandler } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { T_CreateSchoolFields } from '@hooks/useSchool/types';
 
 const CreateSchoolView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => void }) => {
@@ -28,14 +28,14 @@ const CreateSchoolView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => v
       <AdminPageTitle title={i18next.t('create_school')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SCHOOL_FORM_FIELDS.name.key}
           label={SCHOOL_FORM_FIELDS.name.label}
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SCHOOL_FORM_FIELDS.description.key}
           label={SCHOOL_FORM_FIELDS.description.label}
