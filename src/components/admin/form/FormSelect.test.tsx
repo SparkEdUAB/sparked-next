@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { FormSelect } from './FormSelect';
 
 vi.mock('@/components/ui/select', () => ({
-  Select: ({ children, onValueChange, value, disabled }: any) => (
+  Select: ({ children, onValueChange: _onValueChange, value, disabled }: any) => (
     <div data-testid="select" data-value={value} data-disabled={disabled}>{children}</div>
   ),
   SelectTrigger: ({ children }: any) => <button>{children}</button>,

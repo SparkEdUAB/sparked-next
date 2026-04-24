@@ -32,7 +32,7 @@ vi.mock('@/components/ui/checkbox', () => ({
 vi.mock('@/components/ui/tooltip', () => ({
   TooltipProvider: ({ children }: any) => <>{children}</>,
   Tooltip: ({ children }: any) => <>{children}</>,
-  TooltipTrigger: ({ children, asChild }: any) => <>{children}</>,
+  TooltipTrigger: ({ children, asChild: _asChild }: any) => <>{children}</>,
   TooltipContent: ({ children }: any) => <span>{children}</span>,
 }));
 vi.mock('@components/admin/AdminTable/DeletionWarningModal', () => ({

@@ -43,7 +43,7 @@ export function MediaViewer({ mediaContent }: { mediaContent: T_RawMediaContentF
 
       if (youtubeRegex.test(externalUrl)) {
         const videoId = externalUrl.match(
-          /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/,
+          /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/,
         )?.[1];
         const embedUrl = `https://www.youtube.com/embed/${videoId}`;
         return (

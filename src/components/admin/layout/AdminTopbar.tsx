@@ -7,7 +7,7 @@ import AppLogo from '@components/logo';
 import Link from 'next/link';
 
 export function AdminTopbar({
-  sidebarCollapsed,
+  sidebarCollapsed: _sidebarCollapsed,
   toggleSidebar,
 }: {
   sidebarCollapsed: boolean;
