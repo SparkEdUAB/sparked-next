@@ -7,7 +7,7 @@ import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { COURSE_FORM_FIELDS } from './constants';
 import useCourse from '@hooks/useCourse';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CourseFields } from '@hooks/useCourse/types';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
@@ -20,36 +20,12 @@ const EditCourseView = ({ course, onSuccessfullyDone }: { course: T_CourseFields
   const [showDeletionWarning, setShowDeletionWarning] = useState(false);
   const toggleDeletionWarning = () => setShowDeletionWarning((value) => !value);
 
-  // const { item: course, isLoading } = useAdminItemById(
-  //   API_LINKS.FETCH_COURSE_BY_ID,
-  //   courseId || (searchParams.get('courseId') as string),
-  //   'course',
-  //   transformRawCourse,
-  // );
-
-  // const { items: schools, isLoading: loadingSchools } = useAdminListViewData(
-  //   API_LINKS.FETCH_SCHOOLS,
-  //   'schools',
-  //   transformRawSchool,
-  // );
-
-  // const { items: programs, isLoading: loadingPrograms } = useAdminListViewData(
-  //   API_LINKS.FETCH_PROGRAMS,
-  //   'programs',
-  //   transformRawProgram,
-  // );
-
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
     try {
       setUploading(true);
       e.preventDefault();
 
-      const keys = [
-        COURSE_FORM_FIELDS.name.key,
-        COURSE_FORM_FIELDS.description.key,
-        // COURSE_FORM_FIELDS.school.key,
-        // COURSE_FORM_FIELDS.program.key,
-      ];
+      const keys = [COURSE_FORM_FIELDS.name.key, COURSE_FORM_FIELDS.description.key];
 
       let result = extractValuesFromFormEvent<T_NameAndDescription>(e, keys);
 
@@ -72,7 +48,7 @@ const EditCourseView = ({ course, onSuccessfullyDone }: { course: T_CourseFields
       ) : (
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 max-w-xl w-full">
-            <AdminFormInput
+            <FormInput
               disabled={uploading}
               name={COURSE_FORM_FIELDS.name.key}
               label={COURSE_FORM_FIELDS.name.label}
@@ -80,31 +56,13 @@ const EditCourseView = ({ course, onSuccessfullyDone }: { course: T_CourseFields
               defaultValue={course.name}
             />
 
-            <AdminFormInput
+            <FormInput
               disabled={uploading}
               name={COURSE_FORM_FIELDS.description.key}
               label={COURSE_FORM_FIELDS.description.label}
               required
               defaultValue={course.description}
             />
-
-            {/* <AdminFormSelector
-              loadingItems={loadingSchools}
-              disabled={uploading || loadingSchools}
-              options={schools}
-              label={COURSE_FORM_FIELDS.school.label}
-              name={COURSE_FORM_FIELDS.school.key}
-              defaultValue={course.schoolId}
-            />
-
-            <AdminFormSelector
-              loadingItems={loadingPrograms}
-              disabled={uploading || loadingPrograms}
-              options={programs}
-              label={COURSE_FORM_FIELDS.program.label}
-              name={COURSE_FORM_FIELDS.program.key}
-              defaultValue={course.programId}
-            /> */}
 
             <Button type="submit" className="mt-2" disabled={uploading}>
               {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
