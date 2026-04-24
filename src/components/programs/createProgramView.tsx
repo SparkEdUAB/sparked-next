@@ -10,8 +10,8 @@ import useProgram from '@hooks/useProgram';
 import { T_CreateProgramFields } from '@hooks/useProgram/types';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { PROGRAM_FORM_FIELDS } from './constants';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
+import { FormInput } from '@components/admin/form/FormInput';
+import { FormSelect } from '@components/admin/form/FormSelect';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
 
@@ -38,21 +38,21 @@ const CreateProgramView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => 
       <AdminPageTitle title={i18next.t('create_program')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={PROGRAM_FORM_FIELDS.name.key}
           label={PROGRAM_FORM_FIELDS.name.label}
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={PROGRAM_FORM_FIELDS.description.key}
           label={PROGRAM_FORM_FIELDS.description.label}
           required
         />
 
-        <AdminFormSelector
+        <FormSelect
           loadingItems={loadingSchools}
           disabled={isLoading || loadingSchools}
           options={schools}

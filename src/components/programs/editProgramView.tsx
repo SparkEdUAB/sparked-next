@@ -11,8 +11,8 @@ import { PROGRAM_FORM_FIELDS } from './constants';
 import { transformRawSchool } from '@hooks/useSchool';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 import { T_CreateProgramFields } from '@hooks/useProgram/types';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
+import { FormInput } from '@components/admin/form/FormInput';
+import { FormSelect } from '@components/admin/form/FormSelect';
 import { API_LINKS } from 'app/links';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { useAdminItemById } from '@hooks/useAdmin/useAdminItemById';
@@ -69,7 +69,7 @@ const EditProgramView = ({
       ) : (
         <form className="flex flex-col items-start" onSubmit={handleSubmit}>
           <div className="flex flex-col gap-4 max-w-xl w-full">
-            <AdminFormInput
+            <FormInput
               disabled={isLoading}
               name={PROGRAM_FORM_FIELDS.name.key}
               label={PROGRAM_FORM_FIELDS.name.label}
@@ -77,7 +77,7 @@ const EditProgramView = ({
               defaultValue={program.name}
             />
 
-            <AdminFormInput
+            <FormInput
               disabled={isLoading}
               name={PROGRAM_FORM_FIELDS.description.key}
               label={PROGRAM_FORM_FIELDS.description.label}
@@ -85,7 +85,7 @@ const EditProgramView = ({
               defaultValue={program.description}
             />
 
-            <AdminFormSelector
+            <FormSelect
               loadingItems={loadingSchools}
               disabled={isLoading || loadingSchools}
               options={schools}
