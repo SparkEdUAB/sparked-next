@@ -1,12 +1,11 @@
 'use client';
 
-import { AdminPageTitle } from '@components/layouts';
-import { Drawer, Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import useCourse, { transformRawCourse } from '@hooks/useCourse';
 import { T_CourseFields } from '@hooks/useCourse/types';
-import { AdminTable } from '../admin/AdminTable/AdminTable';
+import { DataTable } from '@components/admin/data-table/DataTable';
+import { FormSheet } from '@components/admin/form/FormSheet';
 import { courseTableColumns } from '.';
 import EditCourseView from './editCourseView';
 import CreateCourseView from './createCourseView';
@@ -42,9 +41,11 @@ const CourseListView: React.FC = () => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t('courses')} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{i18next.t('courses')}</h1>
+      </div>
 
-      <AdminTable<T_CourseFields>
+      <DataTable<T_CourseFields>
         deleteItems={async () => {
           const result = await deleteCourse();
           mutate();
@@ -61,36 +62,35 @@ const CourseListView: React.FC = () => {
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingCourse} onClose={() => setCreatingCourse(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          <CreateCourseView
-            onSuccessfullyDone={() => {
-              mutate();
-              setCreatingCourse(false);
-            }}
-          />
-        </Modal.Body>
-      </Modal>
-      <Drawer
-        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+
+      <FormSheet
+        open={creatingCourse}
+        onClose={() => setCreatingCourse(false)}
+        title={`Create ${i18next.t('courses')}`}
+      >
+        <CreateCourseView
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingCourse(false);
+          }}
+        />
+      </FormSheet>
+
+      <FormSheet
         open={!!edittingCourse}
         onClose={() => setEdittingCourse(null)}
-        position="right"
+        title={`Edit ${i18next.t('courses')}`}
       >
-        <Drawer.Header titleIcon={() => <></>} />
-        <Drawer.Items>
-          {edittingCourse ? (
-            <EditCourseView
-              course={edittingCourse}
-              onSuccessfullyDone={() => {
-                mutate();
-                setEdittingCourse(null);
-              }}
-            />
-          ) : null}
-        </Drawer.Items>
-      </Drawer>
+        {edittingCourse && (
+          <EditCourseView
+            course={edittingCourse}
+            onSuccessfullyDone={() => {
+              mutate();
+              setEdittingCourse(null);
+            }}
+          />
+        )}
+      </FormSheet>
     </>
   );
 };

@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Label, Spinner } from 'flowbite-react';
+import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 import { RedAsterisk } from '@components/atom';
 import { useFetch } from '@hooks/use-swr';
 
@@ -95,7 +96,7 @@ const SelectList = <T extends ItemType>({
         </select>
         {isLoading && (
           <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-            <Spinner size="sm" />
+            <Loader2 className="h-5 w-5 animate-spin text-primary" />
           </div>
         )}
       </div>

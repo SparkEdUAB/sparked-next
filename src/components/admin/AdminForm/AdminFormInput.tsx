@@ -1,6 +1,7 @@
 'use client';
 import { RedAsterisk } from '@components/atom';
-import { Label, TextInput } from 'flowbite-react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { ChangeEventHandler, FocusEventHandler, FormEventHandler } from 'react';
 
 export function AdminFormInput({
@@ -29,7 +30,7 @@ export function AdminFormInput({
           {label} {required ? <RedAsterisk /> : undefined}
         </Label>
       </div>
-      <TextInput
+      <Input
         defaultValue={defaultValue}
         id={name}
         name={name}

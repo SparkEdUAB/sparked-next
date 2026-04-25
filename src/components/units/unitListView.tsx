@@ -1,49 +1,44 @@
 'use client';
 
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { AdminPageTitle } from '@components/layouts';
-import useUnit, { transformRawUnit } from '@hooks/useUnit';
-import { Drawer, Modal } from 'flowbite-react';
-import i18next from 'i18next';
 import React, { useState } from 'react';
+import { DataTable } from '@components/admin/data-table/DataTable';
+import { FormSheet } from '@components/admin/form/FormSheet';
+import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
+import useUnit, { transformRawUnit } from '@hooks/useUnit';
+import { T_UnitFields } from '@hooks/useUnit/types';
 import { unitTableColumns } from '.';
 import CreateUnitView from './create-unit-view';
 import EditUnitView from './edit-unit-view';
-import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
-import { API_LINKS } from 'app/links';
-import { T_UnitFields } from '@hooks/useUnit/types';
+import i18next from 'i18next';
 
 const UnitListView: React.FC = () => {
-  const { selectedUnitIds, setSelectedProgramIds, searchQuery, onSearchQueryChange, deleteUnits } = useUnit();
+  const { selectedUnitIds, setSelectedProgramIds, searchQuery, onSearchQueryChange, deleteUnits } =
+    useUnit();
   const [creatingUnit, setCreatingUnit] = useState(false);
   const [edittingUnit, setEdittingUnit] = useState<T_UnitFields | null>(null);
 
-  const {
-    items: units,
-    isLoading,
-    mutate,
-    loadMore,
-    hasMore,
-    error,
-  } = useAdminListViewData(API_LINKS.FETCH_UNITS, 'units', transformRawUnit, API_LINKS.FIND_UNITS_BY_NAME, searchQuery);
+  const { items: units, isLoading, mutate, loadMore, hasMore, error } = useAdminListViewData(
+    API_LINKS.FETCH_UNITS,
+    'units',
+    transformRawUnit,
+    API_LINKS.FIND_UNITS_BY_NAME,
+    searchQuery,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedUnitIds,
-    onChange: (selectedRowKeys: React.Key[]) => {
-      setSelectedProgramIds(selectedRowKeys);
-    },
+    onChange: (selectedRowKeys: React.Key[]) => setSelectedProgramIds(selectedRowKeys),
   };
 
   return (
     <>
-      <AdminPageTitle title={i18next.t('units')} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{i18next.t('units')}</h1>
+      </div>
 
-      <AdminTable<T_UnitFields>
-        deleteItems={async () => {
-          const result = await deleteUnits();
-          mutate();
-          return result;
-        }}
+      <DataTable<T_UnitFields>
+        deleteItems={async () => { const r = await deleteUnits(); mutate(); return r; }}
         rowSelection={rowSelection}
         items={units}
         isLoading={isLoading}
@@ -55,36 +50,29 @@ const UnitListView: React.FC = () => {
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingUnit} onClose={() => setCreatingUnit(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          <CreateUnitView
-            onSuccessfullyDone={() => {
-              mutate();
-              setCreatingUnit(false);
-            }}
-          />
-        </Modal.Body>
-      </Modal>
-      <Drawer
-        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+
+      <FormSheet
+        open={creatingUnit}
+        onClose={() => setCreatingUnit(false)}
+        title={`Create ${i18next.t('units')}`}
+      >
+        <CreateUnitView
+          onSuccessfullyDone={() => { mutate(); setCreatingUnit(false); }}
+        />
+      </FormSheet>
+
+      <FormSheet
         open={!!edittingUnit}
         onClose={() => setEdittingUnit(null)}
-        position="right"
+        title={`Edit ${i18next.t('units')}`}
       >
-        <Drawer.Header titleIcon={() => <></>} />
-        <Drawer.Items>
-          {edittingUnit ? (
-            <EditUnitView
-              unit={edittingUnit}
-              onSuccessfullyDone={() => {
-                mutate();
-                setEdittingUnit(null);
-              }}
-            />
-          ) : null}
-        </Drawer.Items>
-      </Drawer>
+        {edittingUnit && (
+          <EditUnitView
+            unit={edittingUnit}
+            onSuccessfullyDone={() => { mutate(); setEdittingUnit(null); }}
+          />
+        )}
+      </FormSheet>
     </>
   );
 };

@@ -1,12 +1,12 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { ROLE_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
@@ -40,13 +40,13 @@ const EditRoleView = ({ role, onSuccessfullyDone }: { role: T_RoleFields; onSucc
 
       {role === null ? (
         <div className="flex items-center justify-center h-[400px]">
-          <Spinner size="xl" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : role instanceof Error ? (
         <LibraryErrorMessage>{role.message}</LibraryErrorMessage>
       ) : (
         <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-          <AdminFormInput
+          <FormInput
             disabled={uploading}
             name={ROLE_FORM_FIELDS.name.key}
             label={ROLE_FORM_FIELDS.name.label}
@@ -54,7 +54,7 @@ const EditRoleView = ({ role, onSuccessfullyDone }: { role: T_RoleFields; onSucc
             required
           />
 
-          <AdminFormInput
+          <FormInput
             disabled={uploading}
             name={ROLE_FORM_FIELDS.description.key}
             label={ROLE_FORM_FIELDS.description.label}

@@ -2,7 +2,9 @@
 import i18next from 'i18next';
 import { AdminPageTitle } from '@components/layouts';
 import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
-import { Accordion, Button, Spinner, Tooltip } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Dispatch, SetStateAction, useMemo } from 'react';
 import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
 import { AdminFormTextarea } from '@components/admin/AdminForm/AdminFormTextarea';
@@ -12,26 +14,6 @@ import { RedAsterisk } from '@components/atom';
 import { HiExclamation } from 'react-icons/hi';
 import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
 import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
-
-const accordionTheme = {
-  root: {
-    base: 'divide-y-2 border-2 divide-gray-200 border-gray-200 dark:divide-[#5a6372] dark:border-[#5a6372]',
-  },
-  content: {
-    base: 'p-5 first:rounded-t-lg last:rounded-b-lg dark:bg-gray-700',
-  },
-  title: {
-    base: 'flex w-full items-center justify-between p-5 text-left font-medium text-gray-600 first:rounded-t-lg last:rounded-b-lg dark:text-gray-400',
-    flush: {
-      off: 'hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:hover:bg-gray-600 dark:focus:ring-[#5a6372]',
-      on: 'bg-transparent dark:bg-transparent',
-    },
-    open: {
-      off: '',
-      on: 'bg-gray-100 text-gray-900 dark:bg-gray-600 dark:text-white',
-    },
-  },
-};
 
 export function EditResourceData({
   resourceData,
@@ -74,23 +56,27 @@ export function EditResourceData({
       </h3>
 
       <div className="flex flex-col gap-2">
-        <Accordion
-          className="border-2 divide-y-2 divide-gray-200 border-gray-200 dark:divide-[#5a6372] dark:border-[#5a6372]"
-          theme={accordionTheme}
-        >
+        <div className="border-2 divide-y-2 divide-gray-200 border-gray-200 dark:divide-[#5a6372] dark:border-[#5a6372] rounded-lg">
           {resourceData.map((resource) => (
-            <Accordion.Panel key={resource.file.name} theme={accordionTheme}>
-              <Accordion.Title theme={accordionTheme.title}>
+            <details key={resource.file.name} className="group">
+              <summary className="flex w-full items-center justify-between p-5 text-left font-medium text-gray-600 cursor-pointer hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-600 dark:focus:ring-[#5a6372] first:rounded-t-lg last:rounded-b-lg">
                 <div className="flex flex-row gap-2 items-center">
                   {resource.file.name}
                   {!isUploading && failedToUpload ? (
-                    <Tooltip content="This resource failed to upload">
-                      <HiExclamation color="#dd4338" size={22} />
-                    </Tooltip>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span>
+                            <HiExclamation color="#dd4338" size={22} />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>This resource failed to upload</TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                   ) : null}
                 </div>
-              </Accordion.Title>
-              <Accordion.Content theme={accordionTheme.content}>
+              </summary>
+              <div className="p-5 first:rounded-t-lg last:rounded-b-lg dark:bg-gray-700">
                 <PreviewButton file={resource.file} />
                 <AdminFormInput
                   disabled={false}
@@ -124,17 +110,17 @@ export function EditResourceData({
                     )
                   }
                 />
-              </Accordion.Content>
-            </Accordion.Panel>
+              </div>
+            </details>
           ))}
-        </Accordion>
+        </div>
 
         <p className="my-2">
           <RedAsterisk /> Make sure to provide a name and description for each resource
         </p>
 
         <Button className="mt-2" onClick={uploadData} disabled={!buttonEnabled || isUploading}>
-          {isUploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {isUploading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
           {uploadProgress ? `Uploading (${uploadProgress.successful} / ${uploadProgress.outOf})` : i18next.t('upload')}
         </Button>
       </div>

@@ -3,7 +3,10 @@
 import { SIGNUP_FORM_FIELDS } from '@components/auth/constants';
 import AppLogo from '@components/logo';
 import useAuth from '@hooks/useAuth';
-import { Button, Label, TextInput } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -33,28 +36,35 @@ const ForgotPassword = () => {
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} value="Your email" className="text-gray-700 dark:text-gray-300" />
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} className="text-gray-700 dark:text-gray-300">Your email</Label>
                 </div>
-                <TextInput
-                  icon={LuCircleUser}
-                  disabled={loading}
-                  id={SIGNUP_FORM_FIELDS.email.key}
-                  name={SIGNUP_FORM_FIELDS.email.key}
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  placeholder="name@example.com"
-                  required
-                  className="rounded-lg"
-                />
+                <div className="relative">
+                  <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input
+                    disabled={loading}
+                    id={SIGNUP_FORM_FIELDS.email.key}
+                    name={SIGNUP_FORM_FIELDS.email.key}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    placeholder="name@example.com"
+                    required
+                    className="rounded-lg pl-9"
+                  />
+                </div>
               </div>
               <Button
                 disabled={loading}
-                isProcessing={loading}
                 type="submit"
-                size="sm"
                 className="w-full mt-2 py-1.5 rounded-md text-sm font-medium"
               >
-                {i18next.t('Send Reset Link')}
+                {loading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    {i18next.t('loading')}
+                  </>
+                ) : (
+                  i18next.t('Send Reset Link')
+                )}
               </Button>
               <p className="text-md font-light text-center text-gray-600 dark:text-gray-400 mt-4">
                 Or {" "}

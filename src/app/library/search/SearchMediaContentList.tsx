@@ -4,7 +4,13 @@ import { LibraryInfiniteScrollList } from '@components/library/LibraryInfiniteSc
 import { useFetch } from '@hooks/use-swr';
 import { useSearchMediaSWR } from '@hooks/useLibrary/useSearchMediaSWR';
 import { API_LINKS } from 'app/links';
-import { Dropdown } from 'flowbite-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 import i18next from 'i18next';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -13,6 +19,7 @@ import { SearchSkeleton } from './SearchSkeleton';
 
 import Link from 'next/link';
 import { HiOutlineArrowLeft, HiOutlineSearch } from 'react-icons/hi';
+import { ChevronDown } from 'lucide-react';
 
 const GradePicker = ({
   grades,
@@ -22,29 +29,41 @@ const GradePicker = ({
   grades: any[];
   gradeId: string;
   setGradeId: (id: string) => void;
-}) => (
-  <Dropdown
-    label={
-      gradeId
-        ? (grades instanceof Array && grades.find((g) => g._id === gradeId)?.name) || i18next.t('Select Grade')
-        : i18next.t('Select Grade')
-    }
-    dismissOnClick={true}
-  >
-    {gradeId && <Dropdown.Item onClick={() => setGradeId('')}>{i18next.t('All Grades')}</Dropdown.Item>}
-    {grades instanceof Array &&
-      grades.map((grade) => (
-        <Dropdown.Item
-          key={grade._id}
-          onClick={() => {
-            setGradeId(grade._id);
-          }}
-        >
-          {grade.name}
-        </Dropdown.Item>
-      ))}
-  </Dropdown>
-);
+}) => {
+  const label =
+    gradeId
+      ? (grades instanceof Array && grades.find((g) => g._id === gradeId)?.name) || i18next.t('Select Grade')
+      : i18next.t('Select Grade');
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="flex items-center gap-1">
+          {label}
+          <ChevronDown className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {gradeId && (
+          <DropdownMenuItem onClick={() => setGradeId('')}>
+            {i18next.t('All Grades')}
+          </DropdownMenuItem>
+        )}
+        {grades instanceof Array &&
+          grades.map((grade) => (
+            <DropdownMenuItem
+              key={grade._id}
+              onClick={() => {
+                setGradeId(grade._id);
+              }}
+            >
+              {grade.name}
+            </DropdownMenuItem>
+          ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 export function SearchMediaContentList() {
   const params = useSearchParams();

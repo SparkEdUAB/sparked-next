@@ -1,10 +1,11 @@
 'use client';
 
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { AdminPageTitle } from '@components/layouts';
 import useUser from '@hooks/useUser';
 import { T_UserFields } from '@hooks/useUser/types';
-import { Button, Spinner, Select } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
@@ -52,7 +53,7 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
       <AdminPageTitle title={i18next.t('edit_user')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SIGNUP_FORM_FIELDS.firstName.key}
           label={SIGNUP_FORM_FIELDS.firstName.label}
@@ -60,7 +61,7 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SIGNUP_FORM_FIELDS.lastName.key}
           label={SIGNUP_FORM_FIELDS.lastName.label}
@@ -68,7 +69,7 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SIGNUP_FORM_FIELDS.email.key}
           label={SIGNUP_FORM_FIELDS.email.label}
@@ -76,12 +77,11 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name="phoneNumber"
           label="Phone Number"
           defaultValue={user.phoneNumber}
-        // Make sure it's not disabled and can be edited
         />
 
         {user.isStudent && (
@@ -89,8 +89,8 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
             {user.institutionType === 'general' && (
               <>
                 <div className="mb-3">
-                  <AdminFormInput
-                    disabled
+                  <FormInput
+                    disabled={true}
                     name="schoolName"
                     defaultValue={user.schoolName}
                     label='School Name'
@@ -101,11 +101,12 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
                   <label htmlFor="grade" className="block text-sm font-medium mb-1">
                     Grade
                   </label>
-                  <Select
+                  <select
                     id="grade"
                     name="grade"
                     defaultValue={user.grade?.toString()}
                     disabled
+                    className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
                   >
                     <option value="">Select Grade</option>
                     {Array.from({ length: 12 }, (_, i) => (
@@ -113,7 +114,7 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
                         Grade {i + 1}
                       </option>
                     ))}
-                  </Select>
+                  </select>
                 </div>
               </>
             )}
@@ -129,7 +130,7 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
         />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
-          {isLoading ? <Spinner size="sm" className="mr-3" /> : null}
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : null}
           {i18next.t('submit')}
         </Button>
       </form>

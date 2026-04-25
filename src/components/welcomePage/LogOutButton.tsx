@@ -2,7 +2,7 @@
 import { useFetch } from '@hooks/use-swr';
 import useAuth from '@hooks/useAuth';
 import { API_LINKS } from 'app/links';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import { useSession } from "next-auth/react";
 import Link from 'next/link';
 import { useMemo } from 'react';
@@ -33,7 +33,7 @@ export function LogOutButton() {
         </Link>
       )}
       <button onClick={handleUserLogout} className="text-sky-600 dark:text-sky-400 font-medium mr-2">
-        {loading ? <Spinner size="sm" className="mr-1" /> : undefined} Logout
+        {loading ? <Loader2 className="h-5 w-5 animate-spin text-primary mr-1 inline-block" /> : undefined} Logout
       </button>
     </div>
   ) : (

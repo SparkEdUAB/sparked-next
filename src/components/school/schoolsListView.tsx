@@ -1,12 +1,11 @@
 'use client';
 
-import { AdminPageTitle } from '@components/layouts';
 import useSchool, { transformRawSchool } from '@hooks/useSchool';
-import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { schoolTableColumns } from '.';
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
+import { DataTable } from '@components/admin/data-table/DataTable';
+import { FormSheet } from '@components/admin/form/FormSheet';
 import CreateSchoolView from './createSchoolView';
 import EditSchoolView from './editSchoolView';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
@@ -42,9 +41,11 @@ const SchoolsListView: React.FC = () => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t('schools')} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{i18next.t('schools')}</h1>
+      </div>
 
-      <AdminTable<T_SchoolFields>
+      <DataTable<T_SchoolFields>
         deleteItems={async () => {
           const result = await deleteSchools();
           mutate();
@@ -54,38 +55,42 @@ const SchoolsListView: React.FC = () => {
         items={schools}
         isLoading={isLoading}
         createNew={() => setCreatingSchool(true)}
-        editItem={(id) => setEdittingSchool(id)}
+        editItem={(item) => setEdittingSchool(item)}
         columns={schoolTableColumns}
         onSearchQueryChange={onSearchQueryChange}
         hasMore={hasMore}
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingSchool} onClose={() => setCreatingSchool(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          <CreateSchoolView
+
+      <FormSheet
+        open={creatingSchool}
+        onClose={() => setCreatingSchool(false)}
+        title={`Create ${i18next.t('schools')}`}
+      >
+        <CreateSchoolView
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingSchool(false);
+          }}
+        />
+      </FormSheet>
+
+      <FormSheet
+        open={!!edittingSchool}
+        onClose={() => setEdittingSchool(null)}
+        title={`Edit ${i18next.t('schools')}`}
+      >
+        {edittingSchool && (
+          <EditSchoolView
+            schoolId={edittingSchool._id}
             onSuccessfullyDone={() => {
               mutate();
-              setCreatingSchool(false);
+              setEdittingSchool(null);
             }}
           />
-        </Modal.Body>
-      </Modal>
-      <Modal dismissible show={!!edittingSchool} onClose={() => setEdittingSchool(null)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          {edittingSchool ? (
-            <EditSchoolView
-              schoolId={edittingSchool._id}
-              onSuccessfullyDone={() => {
-                mutate();
-                setEdittingSchool(null);
-              }}
-            />
-          ) : null}
-        </Modal.Body>
-      </Modal>
+        )}
+      </FormSheet>
     </>
   );
 };

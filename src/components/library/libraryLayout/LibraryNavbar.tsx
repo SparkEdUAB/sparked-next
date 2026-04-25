@@ -1,10 +1,18 @@
 'use client';
 
-
 import AppLogo from '@components/logo';
 import useAuth from '@hooks/useAuth';
 import { useMeStore } from '@stores/useMeStore';
-import { Avatar, DarkThemeToggle, Dropdown, Navbar, TextInput } from 'flowbite-react';
+import { ThemeToggle } from '@/components/admin/layout/ThemeToggle';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
 import { useRouter } from 'next-nprogress-bar';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -27,7 +35,7 @@ export function LibraryNavbar({
   const userEmail = useMeStore((state) => state.user?.email);
 
   return (
-    <Navbar fluid rounded className="sticky top-0 z-[60]  flex-nowrap">
+    <nav className="sticky top-0 z-[60] flex flex-nowrap items-center justify-between border-b border-border bg-white px-4 py-2 dark:bg-gray-800">
       <div className={`pl-2 flex flex-row sm:gap-2 md:gap-4 flex-nowrap ${searching ? 'hidden md:flex' : ''}`}>
         <button type="button" className="text-gray-500 -ml-3 mr-1 p-2 md:ml-0 md:mr-0 " onClick={toggleSidebar}>
           {sidebarIsCollapsed ? (
@@ -36,11 +44,11 @@ export function LibraryNavbar({
             <HiX aria-label="Close sidebar" className="h-6 w-6 cursor-pointer text-gray-500 dark:text-gray-400" />
           )}
         </button>
-        <Navbar.Brand className="sm: w-1/3 md:w-fit " as={Link} href="/library">
+        <Link href="/library" className="sm:w-1/3 md:w-fit flex items-center">
           <AppLogo />
-        </Navbar.Brand>
+        </Link>
       </div>
-      <div className={`flex flex-row gap-4 ${searching ? 'w-full md:w-fit' : ''}`}>
+      <div className={`flex flex-row gap-4 items-center ${searching ? 'w-full md:w-fit' : ''}`}>
         <form
           className="w-full md:w-64 md:focus-within:w-96 transition-all duration-300"
           action="/library/search"
@@ -51,53 +59,60 @@ export function LibraryNavbar({
             router.push(`/library/search?${new URLSearchParams({ q }).toString()}`);
           }}
         >
-          <TextInput
-            className={`w-full ${searching ? '' : 'hidden md:block'}`}
-            type="search"
-            placeholder="Search"
-            name="q"
-            icon={HiSearch}
-          />
+          <div className={`relative ${searching ? '' : 'hidden md:block'}`}>
+            <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              className="w-full pl-9"
+              type="search"
+              placeholder="Search"
+              name="q"
+            />
+          </div>
         </form>
 
-        <Dropdown
-          label="User"
-          renderTrigger={() => (
-            <Avatar
-              id="dropdownHoverButton"
-              data-dropdown-toggle="dropdownHover"
-              data-dropdown-trigger="hover"
-              // src="/avatar.png"
-              alt="User Avatar"
-              size="xs"
-              rounded
-            />
-          )}
-        >
-          {userEmail && <Dropdown.Item>{userEmail}</Dropdown.Item>}
-          {isAdmin && (
-            <Dropdown.Item>
-              <Link href={routes.admin} >
-                Dashboard
-              </Link>
-            </Dropdown.Item>
-          )}
-          <Dropdown.Divider />
-          <Dropdown.Item disabled={logoutLoading} className="hover:none"  onClick={handleLogout} aria-disabled={logoutLoading}>
-            <span  className={logoutLoading ? 'opacity-50 pointer-events-none' : ''}>
-              Logout
-            </span>
-          </Dropdown.Item>
-        </Dropdown>
+        <ThemeToggle />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button type="button" aria-label="User menu">
+              <Avatar className="h-8 w-8 cursor-pointer">
+                <AvatarFallback className="text-xs bg-gray-200 dark:bg-gray-700">
+                  {userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}
+                </AvatarFallback>
+              </Avatar>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {userEmail && (
+              <DropdownMenuItem disabled className="text-xs text-muted-foreground">
+                {userEmail}
+              </DropdownMenuItem>
+            )}
+            {isAdmin && (
+              <DropdownMenuItem asChild>
+                <Link href={routes.admin}>Dashboard</Link>
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              disabled={logoutLoading}
+              onClick={handleLogout}
+              aria-disabled={logoutLoading}
+            >
+              <span className={logoutLoading ? 'opacity-50 pointer-events-none' : ''}>
+                Logout
+              </span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         <button
           onClick={() => setSearching((value) => !value)}
-          className="rounded-lg md:hidden p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
+          className={`rounded-lg md:hidden p-2.5 text-sm text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-700`}
         >
           {searching ? <HiX size={22} /> : <HiSearch size={22} />}
         </button>
-        <DarkThemeToggle className={`${searching ? 'hidden md:flex' : ''}`} />
       </div>
-    </Navbar>
+    </nav>
   );
 }

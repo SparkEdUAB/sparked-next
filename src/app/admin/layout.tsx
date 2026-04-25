@@ -1,14 +1,11 @@
 'use client';
 
-import AdminLayout from '@components/layouts/adminLayout';
+import { AdminShell } from '@components/admin/layout/AdminShell';
 import { withAuthorization } from '@hocs/withAuthorization';
 import { ReactNode } from 'react';
 
 const RootLayout = ({ children }: { children: ReactNode | ReactNode[] }) => {
-
-  return <AdminLayout withBreadcrumb>{children}</AdminLayout>;
-}
-
-
+  return <AdminShell>{children}</AdminShell>;
+};
 
 export default withAuthorization(RootLayout, { requireAdmin: true });

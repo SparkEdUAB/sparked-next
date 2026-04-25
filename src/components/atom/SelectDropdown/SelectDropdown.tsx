@@ -1,5 +1,11 @@
 'use client';
-import { Dropdown } from 'flowbite-react';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
 
 export function SelectDropdown<ValueType extends string>({
   options,
@@ -16,22 +22,30 @@ export function SelectDropdown<ValueType extends string>({
     typeof value === 'string' ? value === selected : value.value === selected,
   );
 
+  const label = selected
+    ? typeof selectedOption === 'string'
+      ? selectedOption
+      : selectedOption?.label
+    : 'Select value';
+
   return (
-    <Dropdown
-      label={selected ? (typeof selectedOption === 'string' ? selectedOption : selectedOption?.label) : 'Select value'}
-      inline={inline}
-    >
-      {options.map((item) =>
-        typeof item === 'string' ? (
-          <Dropdown.Item key={item} value={item} onClick={() => setSelected(item)}>
-            {item}
-          </Dropdown.Item>
-        ) : (
-          <Dropdown.Item key={item.value} value={item.value} onClick={() => setSelected(item.value)}>
-            {item.label}
-          </Dropdown.Item>
-        ),
-      )}
-    </Dropdown>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant={inline ? 'ghost' : 'outline'}>{label}</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        {options.map((item) =>
+          typeof item === 'string' ? (
+            <DropdownMenuItem key={item} onClick={() => setSelected(item)}>
+              {item}
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem key={item.value} onClick={() => setSelected(item.value)}>
+              {item.label}
+            </DropdownMenuItem>
+          ),
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

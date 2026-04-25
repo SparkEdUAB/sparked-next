@@ -1,6 +1,6 @@
 'use client';
 
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import Autocomplete from '@components/atom/Autocomplete/Autocomplete';
 import { SIGNUP_FORM_FIELDS } from '@components/auth/constants';
 import { AdminPageTitle } from '@components/layouts';
@@ -8,7 +8,8 @@ import { T_RoleFields } from '@hooks/useRoles/types';
 import useUser from '@hooks/useUser';
 import { T_CreateUserFields } from '@hooks/useUser/types';
 import { API_LINKS } from 'app/links';
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
@@ -34,26 +35,26 @@ const CreateUserView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
       <AdminPageTitle title={i18next.t('create_user')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SIGNUP_FORM_FIELDS.firstName.key}
           label={SIGNUP_FORM_FIELDS.firstName.label}
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SIGNUP_FORM_FIELDS.lastName.key}
           label={SIGNUP_FORM_FIELDS.lastName.label}
           required
         />
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SIGNUP_FORM_FIELDS.email.key}
           label={SIGNUP_FORM_FIELDS.email.label}
           required
         />
-        <AdminFormInput
+        <FormInput
           disabled={isLoading}
           name={SIGNUP_FORM_FIELDS.password.key}
           label={SIGNUP_FORM_FIELDS.password.label}
@@ -68,7 +69,7 @@ const CreateUserView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
         />
 
         <Button type="submit" className="mt-2" disabled={isLoading}>
-          {isLoading ? <Spinner size="sm" className="mr-3" /> : null}
+          {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : null}
           {i18next.t('submit')}
         </Button>
       </form>

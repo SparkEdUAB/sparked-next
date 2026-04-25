@@ -1,5 +1,5 @@
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
-import { Card } from 'flowbite-react';
+import { Card, CardContent } from '@/components/ui/card';
 import i18next from 'i18next';
 import Link from 'next/link';
 
@@ -25,34 +25,36 @@ export const DashbordUsageCard = ({
 
   return (
     <>
-      <Card className="  text-center  max-w-sm mx-2 my-1 dark:bg-gray-700 h-full">
-        <h5 className="font-semibold text-gray-500 dark:text-gray-400">{i18next.t(name)}</h5>
-        <p
-          className={`text-3xl font-bold tracking-tight text-gray-900 dark:text-white ${percentageTrend === 'down' ? 'text-red-500' : percentageTrend === 'up' ? 'text-green-400' : null}`}
-        >
-          {value}
-          {isPercentage && <span>%</span>}
-        </p>
-
-        {!isPercentage && hasLink && value === 0 ? (
-          <Link
-            className=" text-sm  text-blue-400 hover:text-gray-700"
-            href={(ADMIN_LINKS as any)[name as string].link}
-          >
-            Add {i18next.t(name) + ' '}
-            &rarr;
-          </Link>
-        ) : (
-          <span></span>
-        )}
-        {discription && !isPercentage && <p className=" text-sm  text-gray-400 hover:text-gray-700">{discription}</p>}
-        {percentageTrend && (
+      <Card className="text-center max-w-sm mx-2 my-1 dark:bg-gray-700 h-full">
+        <CardContent className="pt-6">
+          <h5 className="font-semibold text-gray-500 dark:text-gray-400">{i18next.t(name)}</h5>
           <p
-            className={`text-sm  text-gray-400 hover:text-gray-700 ${percentageTrend === 'down' ? 'text-red-500' : 'text-green-500'}`}
+            className={`text-3xl font-bold tracking-tight text-gray-900 dark:text-white ${percentageTrend === 'down' ? 'text-red-500' : percentageTrend === 'up' ? 'text-green-400' : ''}`}
           >
-            {i18next.t(name)} are {percentageTrend === 'down' ? 'down ↓' : 'up ↑'}
+            {value}
+            {isPercentage && <span>%</span>}
           </p>
-        )}
+
+          {!isPercentage && hasLink && value === 0 ? (
+            <Link
+              className=" text-sm  text-blue-400 hover:text-gray-700"
+              href={(ADMIN_LINKS as any)[name as string].link}
+            >
+              Add {i18next.t(name) + ' '}
+              &rarr;
+            </Link>
+          ) : (
+            <span></span>
+          )}
+          {discription && !isPercentage && <p className=" text-sm  text-gray-400 hover:text-gray-700">{discription}</p>}
+          {percentageTrend && (
+            <p
+              className={`text-sm  text-gray-400 hover:text-gray-700 ${percentageTrend === 'down' ? 'text-red-500' : 'text-green-500'}`}
+            >
+              {i18next.t(name)} are {percentageTrend === 'down' ? 'down ↓' : 'up ↑'}
+            </p>
+          )}
+        </CardContent>
       </Card>
     </>
   );

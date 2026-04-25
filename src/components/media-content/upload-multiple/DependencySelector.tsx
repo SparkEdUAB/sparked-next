@@ -3,7 +3,7 @@ import i18next from 'i18next';
 import { AdminPageTitle } from '@components/layouts';
 import { T_TopicWithoutMetadata } from '@hooks/use-topic/types';
 import { API_LINKS } from 'app/links';
-import { Button } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
 import { T_UnitWithoutMetadata } from '@hooks/useUnit/types';
 import { T_SubjectWithoutMetadata } from '@hooks/useSubject/types';
 import SelectList from '@components/atom/SelectList/SelectList';

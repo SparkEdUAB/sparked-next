@@ -1,6 +1,8 @@
 'use client';
 
-import { Checkbox, Table, TextInput } from 'flowbite-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import { Input } from '@/components/ui/input';
 import React, { ReactNode, useState } from 'react';
 import { IoFileTrayOutline } from 'react-icons/io5';
 import { T_ColumnData, T_ItemTypeBase } from './types';
@@ -70,9 +72,8 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
     <>
       {onSearchQueryChange && (
         <div className="relative max-w-4xl mb-4">
-          <TextInput
-            icon={HiMagnifyingGlass}
-            className="table-search-box"
+          <Input
+            className="table-search-box pl-9"
             placeholder={i18next.t('search_items')}
             required
             type="text"
@@ -84,6 +85,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
               }
             }}
           />
+          <HiMagnifyingGlass className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
           <div className="absolute right-0 top-0 h-full flex items-center pr-2 gap-1">
             {searchQuery && (
               <button
@@ -132,55 +134,57 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
             }
           >
             <Table className="min-w-full">
-              <Table.Head>
-                <Table.HeadCell className="p-4 bg-gray-100">
-                  <Checkbox
-                    className="cursor-pointer"
-                    checked={rowSelection.selectedRowKeys.length === items?.length && items?.length !== 0}
-                    onChange={(event) =>
-                      event.target.checked
-                        ? rowSelection.onChange(items?.map((item) => item._id))
-                        : rowSelection.onChange([])
-                    }
-                  />
-                </Table.HeadCell>
-                {filteredColumns.map((column, i) => (
-                  <Table.HeadCell key={`${column.key}-${i}`} className="bg-gray-100">
-                    {column.title?.toString()}
-                  </Table.HeadCell>
-                ))}
-              </Table.Head>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="p-4 bg-gray-100">
+                    <Checkbox
+                      className="cursor-pointer"
+                      checked={rowSelection.selectedRowKeys.length === items?.length && items?.length !== 0}
+                      onCheckedChange={(checked) =>
+                        checked
+                          ? rowSelection.onChange(items?.map((item) => item._id))
+                          : rowSelection.onChange([])
+                      }
+                    />
+                  </TableHead>
+                  {filteredColumns.map((column, i) => (
+                    <TableHead key={`${column.key}-${i}`} className="bg-gray-100">
+                      {column.title?.toString()}
+                    </TableHead>
+                  ))}
+                </TableRow>
+              </TableHeader>
 
-              <Table.Body className="divide-y">
+              <TableBody className="divide-y">
                 {items?.map((item, index) => (
-                  <Table.Row
+                  <TableRow
                     key={`${item._id}-${index}`}
                     className="bg-white dark:border-gray-700 dark:bg-gray-800 hover:bg-gray-50 hover:dark:bg-gray-700 active:bg-gray-100 active:dark:bg-gray-600 cursor-pointer"
                     onClick={() => editItem(item)}
                   >
-                    <Table.Cell className="p-4">
+                    <TableCell className="p-4">
                       <Checkbox
                         className="cursor-pointer"
                         onClick={(e) => e.stopPropagation()}
                         checked={rowSelection.selectedRowKeys.includes(item._id)}
-                        onChange={(event) =>
-                          event.target.checked
+                        onCheckedChange={(checked) =>
+                          checked
                             ? rowSelection.onChange([...rowSelection.selectedRowKeys, item._id])
                             : rowSelection.onChange(rowSelection.selectedRowKeys.filter((id) => id !== item._id))
                         }
                       />
-                    </Table.Cell>
+                    </TableCell>
                     {filteredColumns.map((column, index) => {
                       const text = item[column.dataIndex as keyof ItemType] as string;
                       return (
-                        <Table.Cell key={`${column.title}-${index}`}>
+                        <TableCell key={`${column.title}-${index}`}>
                           {column.render ? column.render(text, item) : text}
-                        </Table.Cell>
+                        </TableCell>
                       );
                     })}
-                  </Table.Row>
+                  </TableRow>
                 ))}
-              </Table.Body>
+              </TableBody>
             </Table>
           </InfiniteScroll>
         )}
