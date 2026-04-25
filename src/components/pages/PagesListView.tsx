@@ -1,19 +1,16 @@
 'use client';
 
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { AdminPageTitle } from '@components/layouts';
+import React, { useState } from 'react';
+import { DataTable } from '@components/admin/data-table/DataTable';
+import { FormSheet } from '@components/admin/form/FormSheet';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
+import { API_LINKS } from 'app/links';
 import { transformRawPageLink, usePageLinks } from '@hooks/usePageLinks';
 import { T_PageLinkFields, T_RawPageLinkFields } from '@hooks/usePageLinks/types';
-import { API_LINKS } from 'app/links';
-import { Button, Drawer, Modal } from 'flowbite-react';
-import i18next from 'i18next';
-import { useState } from 'react';
-import { FaRegHandPointer } from 'react-icons/fa';
-import { RiFileList2Line } from 'react-icons/ri';
 import { pagesTableColumns } from '.';
 import CreatePageView from './create-page-view';
 import EditPageView from './edit-page-view';
+import i18next from 'i18next';
 
 export function PagesListView() {
   const { selectedPageLinkIds, setSelectedPageLinkIds, deletePageLinks } = usePageLinks();
@@ -42,66 +39,55 @@ export function PagesListView() {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t('pages')} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{i18next.t('pages')}</h1>
+      </div>
 
-      <AdminTable<T_PageLinkFields>
-        deleteItems={deletePageLinks}
+      <DataTable<T_PageLinkFields>
+        deleteItems={async () => {
+          const r = await deletePageLinks();
+          mutate();
+          return r;
+        }}
         rowSelection={rowSelection}
         items={pages}
         isLoading={isLoading}
         createNew={() => setCreatingPage(true)}
-        editItem={setEdittingPage}
+        editItem={(item) => setEdittingPage(item)}
         columns={pagesTableColumns}
         loadMore={loadMore}
         hasMore={hasMore}
         error={error}
-        additionalButtons={
-          <>
-            <Button className="rounded-none">
-              <FaRegHandPointer className="mr-3 h-4 w-4" />
-              Assign Actions
-            </Button>
-            <Button className="rounded-none">
-              <RiFileList2Line className="mr-3 h-4 w-4" />
-              New Actions
-            </Button>
-            <Button className="rounded-none">
-              <RiFileList2Line className="mr-3 h-4 w-4" />
-              Page Actions
-            </Button>
-          </>
-        }
       />
-      <Modal dismissible show={creatingPage} onClose={() => setCreatingPage(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          <CreatePageView
-            onSuccessfullyDone={() => {
-              mutate();
-              setCreatingPage(false);
-            }}
-          />
-        </Modal.Body>
-      </Modal>
-      <Drawer
-        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+
+      <FormSheet
+        open={creatingPage}
+        onClose={() => setCreatingPage(false)}
+        title={`Create ${i18next.t('pages')}`}
+      >
+        <CreatePageView
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingPage(false);
+          }}
+        />
+      </FormSheet>
+
+      <FormSheet
         open={!!edittingPage}
         onClose={() => setEdittingPage(null)}
-        position="right"
+        title={`Edit ${i18next.t('pages')}`}
       >
-        <Drawer.Header titleIcon={() => <></>} />
-        <Drawer.Items>
-          {edittingPage ? (
-            <EditPageView
-              page={edittingPage}
-              onSuccessfullyDone={() => {
-                mutate();
-                setEdittingPage(null);
-              }}
-            />
-          ) : null}
-        </Drawer.Items>
-      </Drawer>
+        {edittingPage && (
+          <EditPageView
+            page={edittingPage}
+            onSuccessfullyDone={() => {
+              mutate();
+              setEdittingPage(null);
+            }}
+          />
+        )}
+      </FormSheet>
     </>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, Modal } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useMemo, useState } from 'react';
 import { IoMdEye } from 'react-icons/io';
 import { determineFileType } from 'utils/helpers/determineFileType';
@@ -15,16 +16,17 @@ export default function PreviewButton({ file }: { file: File }) {
 
   return (
     <>
-      <Button className="mb-4 p-0" color="gray" onClick={() => setShowPreview(true)}>
+      <Button className="mb-4 p-0" variant="outline" onClick={() => setShowPreview(true)}>
         <IoMdEye size={24} className="mr-2" /> Preview File
       </Button>
-      <Modal show={showPreview} dismissible onClose={() => setShowPreview(false)} popup size="3xl">
-        <Modal.Header />
-        <Modal.Body className="custom-scrollbar">
-          <h1 className="text-xl font-semibold mb-2 text-gray-700 dark:text-gray-300">{file.name}</h1>
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="max-w-3xl custom-scrollbar">
+          <DialogHeader>
+            <DialogTitle>{file.name}</DialogTitle>
+          </DialogHeader>
           <FilePreview file={file} />
-        </Modal.Body>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -1,6 +1,10 @@
 import AppLogo from '@components/logo';
 import useAuth from '@hooks/useAuth';
-import { Alert, Button, Label, TextInput } from 'flowbite-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { FormEventHandler, useState } from 'react';
@@ -68,73 +72,78 @@ const ResetPassword = () => {
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor="password" value="New Password" className="text-gray-700 dark:text-gray-300" />
+                    <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">New Password</Label>
                   </div>
-                  <TextInput
-                    icon={AiOutlineLock}
-                    disabled={loading}
-                    id="password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    required
-                    className="rounded-lg"
-                    rightIcon={() => (
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
-                      >
-                        {showPassword ? (
-                          <AiOutlineEyeInvisible className="h-5 w-5" />
-                        ) : (
-                          <AiOutlineEye className="h-5 w-5" />
-                        )}
-                      </button>
-                    )}
-                  />
+                  <div className="relative">
+                    <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      disabled={loading}
+                      id="password"
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      required
+                      className="rounded-lg pl-9 pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                    >
+                      {showPassword ? (
+                        <AiOutlineEyeInvisible className="h-5 w-5" />
+                      ) : (
+                        <AiOutlineEye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor="confirmPassword" value="Confirm Password" className="text-gray-700 dark:text-gray-300" />
+                    <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300">Confirm Password</Label>
                   </div>
-                  <TextInput
-                    icon={AiOutlineLock}
-                    disabled={loading}
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="••••••••"
-                    required
-                    className="rounded-lg"
-                    rightIcon={() => (
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 pointer-events-auto"
-                      >
-                        {showConfirmPassword ? (
-                          <AiOutlineEyeInvisible className="h-5 w-5" />
-                        ) : (
-                          <AiOutlineEye className="h-5 w-5" />
-                        )}
-                      </button>
-                    )}
-                  />
+                  <div className="relative">
+                    <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      disabled={loading}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      placeholder="••••••••"
+                      required
+                      className="rounded-lg pl-9 pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                    >
+                      {showConfirmPassword ? (
+                        <AiOutlineEyeInvisible className="h-5 w-5" />
+                      ) : (
+                        <AiOutlineEye className="h-5 w-5" />
+                      )}
+                    </button>
+                  </div>
                 </div>
                 {error && (
-                  <Alert color="failure" className="mb-4">
-                    {error}
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertDescription>{error}</AlertDescription>
                   </Alert>
                 )}
                 <Button
                   disabled={loading}
-                  isProcessing={loading}
                   type="submit"
-                  size="xs"
                   className="w-full mt-4 hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 py-2.5 rounded-lg text-base font-large"
                 >
-                  Reset Password
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      Loading...
+                    </>
+                  ) : (
+                    'Reset Password'
+                  )}
                 </Button>
               </form>
             )}

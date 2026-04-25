@@ -1,6 +1,6 @@
 "use client"
 import AppLogo from '@components/logo';
-import { DarkThemeToggle } from 'flowbite-react';
+import { ThemeToggle } from '@/components/admin/layout/ThemeToggle';
 import { useSession } from 'next-auth/react';
 import { LogOutButton } from './LogOutButton';
 import { LoginSignupLinks } from './LoginSignupLinks';
@@ -18,7 +18,7 @@ const HeaderSection = () => {
           <div className="flex items-center lg:order-2">
             <div className="flex flex-row gap-2 flex-wrap items-center">
               {status === "authenticated" ? <LogOutButton /> : <LoginSignupLinks />}
-              <DarkThemeToggle color="" className="text-sky-600 dark:text-sky-400 theme-toggle" />
+              <ThemeToggle />
             </div>
           </div>
         </div>

@@ -3,7 +3,8 @@
 import { transformRawUser } from '@hooks/useUser';
 import { T_UserFields } from '@hooks/useUser/types';
 import { API_LINKS } from 'app/links';
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import React, { useCallback, useEffect, useState } from 'react';
 
 interface InstitutionUsersViewProps {
@@ -74,7 +75,7 @@ const InstitutionUsersView: React.FC<InstitutionUsersViewProps> = ({ institution
 
       {isLoading && users.length === 0 ? (
         <div className="flex justify-center py-8">
-          <Spinner size="lg" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : users.length === 0 ? (
         <div className="text-center py-8 text-gray-500 dark:text-gray-400">
@@ -119,7 +120,7 @@ const InstitutionUsersView: React.FC<InstitutionUsersViewProps> = ({ institution
           </div>
           {hasMore && (
             <div className="flex justify-center py-4">
-              <Button onClick={loadMore} isProcessing={isLoading}>
+              <Button onClick={loadMore} disabled={isLoading}>
                 Load More
               </Button>
             </div>

@@ -1,7 +1,8 @@
 'use client';
 
 import { RedAsterisk } from '@components/atom';
-import { Label, Select, Spinner } from 'flowbite-react';
+import { Label } from '@/components/ui/label';
+import { Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 export function AdminFormSelector({
@@ -38,23 +39,28 @@ export function AdminFormSelector({
           {label} {required ? <RedAsterisk /> : undefined}
         </Label>
       </div>
-      {
-        <Select
-          icon={loadingItems ? () => <Spinner size="sm" /> : undefined}
+      <div className="relative">
+        {loadingItems && (
+          <span className="absolute right-8 top-1/2 -translate-y-1/2 pointer-events-none">
+            <Loader2 className="animate-spin h-4 w-4 text-muted-foreground" />
+          </span>
+        )}
+        <select
           id={name}
           name={name}
           disabled={disabled}
           required={required}
-          defaultValue={defaultValue}
+          value={selected}
           onChange={(e) => setSelected(e.target.value)}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
         >
           {options.map((item) => (
-            <option key={item._id} value={item._id} selected={selected === item._id}>
+            <option key={item._id} value={item._id}>
               {item.name}
             </option>
           ))}
-        </Select>
-      }
+        </select>
+      </div>
     </div>
   );
 }

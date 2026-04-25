@@ -1,12 +1,11 @@
 'use client';
 
-import { AdminPageTitle } from '@components/layouts';
 import useProgram, { transformRawProgram } from '@hooks/useProgram';
-import { Modal } from 'flowbite-react';
 import i18next from 'i18next';
 import React, { useState } from 'react';
 import { programTableColumns } from '.';
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
+import { DataTable } from '@components/admin/data-table/DataTable';
+import { FormSheet } from '@components/admin/form/FormSheet';
 import CreateProgramView from './createProgramView';
 import EditProgramView from './editProgramView';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
@@ -42,9 +41,11 @@ const ProgramsListView: React.FC = () => {
 
   return (
     <>
-      <AdminPageTitle title={i18next.t('programs')} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{i18next.t('programs')}</h1>
+      </div>
 
-      <AdminTable<T_ProgramFields>
+      <DataTable<T_ProgramFields>
         deleteItems={async () => {
           const result = await deletePrograms();
           mutate();
@@ -61,31 +62,35 @@ const ProgramsListView: React.FC = () => {
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingProgram} onClose={() => setCreatingProgram(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          <CreateProgramView
+
+      <FormSheet
+        open={creatingProgram}
+        onClose={() => setCreatingProgram(false)}
+        title={`Create ${i18next.t('programs')}`}
+      >
+        <CreateProgramView
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingProgram(false);
+          }}
+        />
+      </FormSheet>
+
+      <FormSheet
+        open={!!edittingProgram}
+        onClose={() => setEdittingProgram(null)}
+        title={`Edit ${i18next.t('programs')}`}
+      >
+        {edittingProgram && (
+          <EditProgramView
+            programId={edittingProgram._id}
             onSuccessfullyDone={() => {
               mutate();
-              setCreatingProgram(false);
+              setEdittingProgram(null);
             }}
           />
-        </Modal.Body>
-      </Modal>
-      <Modal dismissible show={!!edittingProgram} onClose={() => setEdittingProgram(null)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          {edittingProgram ? (
-            <EditProgramView
-              programId={edittingProgram._id}
-              onSuccessfullyDone={() => {
-                mutate();
-                setEdittingProgram(null);
-              }}
-            />
-          ) : null}
-        </Modal.Body>
-      </Modal>
+        )}
+      </FormSheet>
     </>
   );
 };

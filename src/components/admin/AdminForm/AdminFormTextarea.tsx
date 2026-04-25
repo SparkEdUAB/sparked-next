@@ -1,6 +1,7 @@
 'use client';
 import { RedAsterisk } from '@components/atom';
-import { Label, Textarea } from 'flowbite-react';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { ChangeEventHandler, FocusEventHandler, FormEventHandler } from 'react';
 
 export function AdminFormTextarea({

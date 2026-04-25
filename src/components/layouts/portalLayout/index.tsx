@@ -1,27 +1,23 @@
 'use client';
 
 import { ReactNode, FC } from 'react';
-import { Navbar } from 'flowbite-react';
 import AppLogo from '@components/logo';
 
 const PortalLayout: FC<{ children: ReactNode }> = ({ children }) => {
   return (
     <main className="">
-      <Navbar className="nav-bar " fluid={true} rounded={true}>
-        <Navbar.Brand href="#">
+      <nav className="nav-bar flex flex-wrap items-center justify-between rounded px-4 py-2.5">
+        <a href="#">
           <AppLogo />
-        </Navbar.Brand>
-        <Navbar.Toggle />
-        <Navbar.Collapse>
-          <Navbar.Link href="/navbars" active={true}>
-            Home
-          </Navbar.Link>
-          <Navbar.Link href="/navbars">About</Navbar.Link>
-          <Navbar.Link href="/navbars">Services</Navbar.Link>
-          <Navbar.Link href="/navbars">Pricing</Navbar.Link>
-          <Navbar.Link href="/navbars">Contact</Navbar.Link>
-        </Navbar.Collapse>
-      </Navbar>
+        </a>
+        <ul className="flex flex-wrap items-center gap-4 text-sm font-medium">
+          <li><a href="/navbars" className="text-blue-700 dark:text-blue-400">Home</a></li>
+          <li><a href="/navbars">About</a></li>
+          <li><a href="/navbars">Services</a></li>
+          <li><a href="/navbars">Pricing</a></li>
+          <li><a href="/navbars">Contact</a></li>
+        </ul>
+      </nav>
       {children}
     </main>
   );

@@ -1,37 +1,24 @@
 'use client';
 
-import { AdminPageTitle } from '@components/layouts';
-import useTopic, { transformRawTopic } from '@hooks/use-topic';
-import { Drawer, Modal } from 'flowbite-react';
-import i18next from 'i18next';
 import React, { useState } from 'react';
-import { topicTableColumns } from '.';
-import { AdminTable } from '@components/admin/AdminTable/AdminTable';
-import { T_TopicFields } from '@hooks/use-topic/types';
-import CreateTopicView from './create-topic-view';
-import EditTopicView from './edit-topic-view';
+import { DataTable } from '@components/admin/data-table/DataTable';
+import { FormSheet } from '@components/admin/form/FormSheet';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
+import useTopic, { transformRawTopic } from '@hooks/use-topic';
+import { T_TopicFields } from '@hooks/use-topic/types';
+import { topicTableColumns } from '.';
+import CreateTopicView from './create-topic-view';
+import EditTopicView from './edit-topic-view';
+import i18next from 'i18next';
 
 const TopicsListView: React.FC = () => {
-  const {
-    selectedTopicIds,
-    setSelectedTopicIds,
-    onSearchQueryChange,
-    deleteTopics,
-    searchQuery,
-  } = useTopic();
+  const { selectedTopicIds, setSelectedTopicIds, onSearchQueryChange, deleteTopics, searchQuery } =
+    useTopic();
   const [creatingTopic, setCreatingTopic] = useState(false);
   const [edittingTopic, setEdittingTopic] = useState<T_TopicFields | null>(null);
 
-  const {
-    items: topics,
-    isLoading,
-    mutate,
-    loadMore,
-    hasMore,
-    error,
-  } = useAdminListViewData(
+  const { items: topics, isLoading, mutate, loadMore, hasMore, error } = useAdminListViewData(
     API_LINKS.FETCH_TOPICS,
     'topics',
     transformRawTopic,
@@ -41,21 +28,17 @@ const TopicsListView: React.FC = () => {
 
   const rowSelection = {
     selectedRowKeys: selectedTopicIds,
-    onChange: (selectedRowKeys: React.Key[]) => {
-      setSelectedTopicIds(selectedRowKeys);
-    },
+    onChange: (selectedRowKeys: React.Key[]) => setSelectedTopicIds(selectedRowKeys),
   };
 
   return (
     <>
-      <AdminPageTitle title={i18next.t('topics')} />
+      <div className="mb-6">
+        <h1 className="text-2xl font-bold text-foreground">{i18next.t('topics')}</h1>
+      </div>
 
-      <AdminTable<T_TopicFields>
-        deleteItems={async () => {
-          const result = await deleteTopics();
-          mutate();
-          return result;
-        }}
+      <DataTable<T_TopicFields>
+        deleteItems={async () => { const r = await deleteTopics(); mutate(); return r; }}
         rowSelection={rowSelection}
         items={topics || []}
         isLoading={isLoading}
@@ -67,36 +50,29 @@ const TopicsListView: React.FC = () => {
         loadMore={loadMore}
         error={error}
       />
-      <Modal dismissible show={creatingTopic} onClose={() => setCreatingTopic(false)} popup>
-        <Modal.Header />
-        <Modal.Body>
-          <CreateTopicView
-            onSuccessfullyDone={() => {
-              mutate();
-              setCreatingTopic(false);
-            }}
-          />
-        </Modal.Body>
-      </Modal>
-      <Drawer
-        className="w-[360px] sm:w-[460px] lg:w-[560px]"
+
+      <FormSheet
+        open={creatingTopic}
+        onClose={() => setCreatingTopic(false)}
+        title={`Create ${i18next.t('topics')}`}
+      >
+        <CreateTopicView
+          onSuccessfullyDone={() => { mutate(); setCreatingTopic(false); }}
+        />
+      </FormSheet>
+
+      <FormSheet
         open={!!edittingTopic}
         onClose={() => setEdittingTopic(null)}
-        position="right"
+        title={`Edit ${i18next.t('topics')}`}
       >
-        <Drawer.Header titleIcon={() => <></>} />
-        <Drawer.Items>
-          {edittingTopic ? (
-            <EditTopicView
-              topic={edittingTopic}
-              onSuccessfullyDone={() => {
-                mutate();
-                setEdittingTopic(null);
-              }}
-            />
-          ) : null}
-        </Drawer.Items>
-      </Drawer>
+        {edittingTopic && (
+          <EditTopicView
+            topic={edittingTopic}
+            onSuccessfullyDone={() => { mutate(); setEdittingTopic(null); }}
+          />
+        )}
+      </FormSheet>
     </>
   );
 };

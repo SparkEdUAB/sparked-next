@@ -1,8 +1,15 @@
 'use client';
-import { Button, Modal } from 'flowbite-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { AlertTriangle } from 'lucide-react';
 import i18next from 'i18next';
-import React from 'react';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 export function DeletionWarningModal({
   showDeletionWarning,
@@ -16,30 +23,36 @@ export function DeletionWarningModal({
   deleteItems: () => void;
 }) {
   return (
-    <Modal show={showDeletionWarning} size="md" onClose={toggleDeletionWarning} popup>
-      <Modal.Header />
-      <Modal.Body>
-        <div className="text-center">
-          <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
-          <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-            {i18next.t(numberOfElements === 1 ? 'deletion_confirmation_singular' : 'deletion_confirmation_plural')}
-          </h3>
-          <div className="flex justify-center gap-4">
-            <Button
-              color="failure"
-              onClick={() => {
-                toggleDeletionWarning();
-                deleteItems();
-              }}
-            >
-              {i18next.t('yes_im_sure')}
-            </Button>
-            <Button color="gray" onClick={toggleDeletionWarning}>
-              {i18next.t('no_cancel')}
-            </Button>
-          </div>
-        </div>
-      </Modal.Body>
-    </Modal>
+    <Dialog open={showDeletionWarning} onOpenChange={toggleDeletionWarning}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-destructive" />
+            Confirm Deletion
+          </DialogTitle>
+          <DialogDescription>
+            {i18next.t(
+              numberOfElements === 1
+                ? 'deletion_confirmation_singular'
+                : 'deletion_confirmation_plural',
+            )}
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="gap-2 sm:gap-0">
+          <Button variant="outline" onClick={toggleDeletionWarning}>
+            {i18next.t('no_cancel')}
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              toggleDeletionWarning();
+              deleteItems();
+            }}
+          >
+            {i18next.t('yes_im_sure')}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }

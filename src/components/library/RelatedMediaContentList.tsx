@@ -1,6 +1,5 @@
 'use client';
 
-import { List } from 'flowbite-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
@@ -45,18 +44,18 @@ const RelatedMediaItem = memo(
 
     if (onSelect) {
       return (
-        <List.Item key={item._id}>
+        <li key={item._id}>
           <button className="w-full text-left" onClick={() => onSelect(item)}>
             {content}
           </button>
-        </List.Item>
+        </li>
       );
     }
 
     return (
-      <List.Item key={item._id}>
+      <li key={item._id}>
         <Link href={`/library/media/${item._id}`}>{content}</Link>
-      </List.Item>
+      </li>
     );
   },
 );
@@ -77,7 +76,7 @@ export function RelatedMediaContentList({
       {relatedMediaContent && relatedMediaContent.length > 0 && (
         <>
           <h3 className="my-4 font-semibold text-xl">Related Media</h3>
-          <List unstyled>
+          <ul className="list-none p-0">
             {relatedMediaContent.map((item) => (
               <RelatedMediaItem
                 key={item._id}
@@ -86,7 +85,7 @@ export function RelatedMediaContentList({
                 onSelect={onSelect}
               />
             ))}
-          </List>
+          </ul>
         </>
       )}
     </section>

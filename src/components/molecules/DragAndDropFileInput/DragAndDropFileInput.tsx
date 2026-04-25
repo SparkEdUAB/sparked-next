@@ -1,7 +1,7 @@
 'use client';
 
 import { RedAsterisk } from '@components/atom';
-import { FileInput, Label } from 'flowbite-react';
+import { Label } from '@/components/ui/label';
 import { useCallback } from 'react';
 import { VscCloudUpload } from 'react-icons/vsc';
 import { AcceptableFileTypes } from 'utils/helpers/determineFileType';
@@ -54,7 +54,7 @@ export function DragAndDropFileInput({
       <div className={'w-full mb-4 ' + (classNames?.wrapper || '')}>
         {label && (
           <div className="mb-2 block">
-            <Label className={'cursor-pointer ' + (classNames?.label || '')} htmlFor={id} value={label} />{' '}
+            <Label className={'cursor-pointer ' + (classNames?.label || '')} htmlFor={id}>{label}</Label>{' '}
             {required ? <RedAsterisk /> : null}
           </div>
         )}
@@ -97,7 +97,8 @@ export function DragAndDropFileInput({
             </div>
           </div>
 
-          <FileInput
+          <input
+            type="file"
             {...getInputProps({
               id: id,
               onChange: (e) => {
@@ -112,7 +113,7 @@ export function DragAndDropFileInput({
               name: id,
               required,
             })}
-            className="opacity-0"
+            className="opacity-0 flex w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm file:border-0 file:bg-transparent file:text-sm file:font-medium"
           />
         </Label>
       </div>

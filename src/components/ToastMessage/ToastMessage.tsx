@@ -1,5 +1,4 @@
 import React from 'react';
-import { Toast } from 'flowbite-react';
 import { HiCheck, HiExclamation, HiX } from 'react-icons/hi';
 import { IoInformation } from 'react-icons/io5';
 
@@ -11,10 +10,7 @@ interface ToastMessageProps {
 
 const ToastMessage: React.FC<ToastMessageProps> = ({ content, type }) => {
   return (
-    <Toast 
-      color={type} 
-      className="animate-appear bg-white dark:bg-[#202020] p-3 flex items-start max-w-[300px] mx-auto"
-    >
+    <div className="animate-appear bg-white dark:bg-[#202020] p-3 flex items-start max-w-[300px] mx-auto rounded-lg shadow-md border border-gray-100 dark:border-gray-800">
       <div className="flex items-start w-full">
         <div
           className={
@@ -41,9 +37,8 @@ const ToastMessage: React.FC<ToastMessageProps> = ({ content, type }) => {
         <div className="ml-3 text-sm text-gray-800 dark:text-gray-200 font-normal max-w-[240px] break-words line-clamp-2">
           {content}
         </div>
-        <Toast.Toggle className="dark:bg-[#202020] dark:text-gray-600 dark:hover:bg-gray-900 dark:hover:text-gray-100 dark:focus:ring-gray-700 mt-1" />
       </div>
-    </Toast>
+    </div>
   );
 };
 

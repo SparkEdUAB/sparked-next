@@ -1,11 +1,12 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Button, Spinner } from 'flowbite-react';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useState } from 'react';
 import { ROLE_FORM_FIELDS } from './constants';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
 // import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
 // import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
@@ -51,14 +52,14 @@ const CreateRoleView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
       <AdminPageTitle title={i18next.t('create_role')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <AdminFormInput
+        <FormInput
           disabled={uploading}
           name={ROLE_FORM_FIELDS.name.key}
           label={ROLE_FORM_FIELDS.name.label}
           required
         />
 
-        <AdminFormInput
+        <FormInput
           disabled={uploading}
           name={ROLE_FORM_FIELDS.description.key}
           label={ROLE_FORM_FIELDS.description.label}
@@ -66,7 +67,7 @@ const CreateRoleView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
         />
 
         <Button type="submit" className="mt-2" disabled={uploading}>
-          {uploading ? <Spinner size="sm" className="mr-3" /> : undefined}
+          {uploading ? <Loader2 className="h-4 w-4 animate-spin mr-3" /> : undefined}
           {i18next.t('submit')}
         </Button>
       </form>

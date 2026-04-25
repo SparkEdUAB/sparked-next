@@ -22,6 +22,7 @@ export default defineConfig({
       providers: path.resolve(__dirname, './src/providers'),
       hocs: path.resolve(__dirname, './src/hocs'),
       state: path.resolve(__dirname, './src/state'),
+      app: path.resolve(__dirname, './src/app'),
     },
   },
   test: {

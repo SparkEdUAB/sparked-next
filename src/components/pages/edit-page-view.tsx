@@ -1,18 +1,18 @@
 'use client';
 
 import { AdminPageTitle } from '@components/layouts';
-import { Spinner } from 'flowbite-react';
+import { Loader2 } from 'lucide-react';
 import i18next from 'i18next';
 import { FormEventHandler, useMemo, useState } from 'react';
 import { PAGE_FORM_FIELDS } from './constants';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
-import { AdminFormInput } from '@components/admin/AdminForm/AdminFormInput';
+import { FormInput } from '@components/admin/form/FormInput';
 import { LibraryErrorMessage } from '@components/library/LibraryErrorMessage/LibraryErrorMessage';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import { UpdateButtons } from '@components/atom/UpdateButtons/UpdateButtons';
 import { usePageLinks } from '@hooks/usePageLinks';
 import { T_CreatePageLinkFields, T_PageLinkFields } from '@hooks/usePageLinks/types';
-import { AdminFormSelector } from '@components/admin/AdminForm/AdminFormSelector';
+import { FormSelect } from '@components/admin/form/FormSelect';
 import { ADMIN_LINKS } from '@components/layouts/adminLayout/links';
 
 const EditPageView = ({ page, onSuccessfullyDone }: { page: T_PageLinkFields; onSuccessfullyDone: () => void }) => {
@@ -57,13 +57,13 @@ const EditPageView = ({ page, onSuccessfullyDone }: { page: T_PageLinkFields; on
 
       {page === null ? (
         <div className="flex items-center justify-center h-[400px]">
-          <Spinner size="xl" />
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       ) : page instanceof Error ? (
         <LibraryErrorMessage>{page.message}</LibraryErrorMessage>
       ) : (
         <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-          <AdminFormInput
+          <FormInput
             disabled={uploading}
             name={PAGE_FORM_FIELDS.name.key}
             label={PAGE_FORM_FIELDS.name.label}
@@ -71,7 +71,7 @@ const EditPageView = ({ page, onSuccessfullyDone }: { page: T_PageLinkFields; on
             required
           />
 
-          <AdminFormInput
+          <FormInput
             disabled={uploading}
             name={PAGE_FORM_FIELDS.description.key}
             label={PAGE_FORM_FIELDS.description.label}
@@ -79,7 +79,7 @@ const EditPageView = ({ page, onSuccessfullyDone }: { page: T_PageLinkFields; on
             required
           />
 
-          <AdminFormSelector
+          <FormSelect
             name={PAGE_FORM_FIELDS.pageLink.key}
             label={PAGE_FORM_FIELDS.pageLink.label}
             disabled={uploading}
