@@ -3,8 +3,11 @@ import { Session } from 'next-auth';
 import { useFetch } from './use-swr';
 
 export function useMediaInteractions(mediaId: string) {
-  const [hasRecordedView, setHasRecordedView] = useState(false);
+  // Track which mediaId has been viewed so the flag resets on media switch
+  const [recordedMediaId, setRecordedMediaId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const hasRecordedView = recordedMediaId === mediaId;
 
   const { data: viewCountData } = useFetch(`/api/media-actions/getViewCount?mediaId=${mediaId}`);
 
@@ -30,7 +33,7 @@ export function useMediaInteractions(mediaId: string) {
         }),
       });
 
-      setHasRecordedView(true);
+      setRecordedMediaId(mediaId);
     } catch (error) {
       console.error('Error recording view:', error);
     } finally {

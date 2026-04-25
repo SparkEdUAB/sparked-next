@@ -12,12 +12,16 @@ const isValidImage = (url: string) => {
 const RelatedMediaItem = memo(
   ({
     item,
+    index,
     isActive,
     onSelect,
+    onPrefetch,
   }: {
     item: T_RawMediaContentFields;
+    index: number;
     isActive: boolean;
     onSelect?: (item: T_RawMediaContentFields) => void;
+    onPrefetch?: (item: T_RawMediaContentFields) => void;
   }) => {
     const domainName = item.external_url ? new URL(item.external_url).hostname : '';
     const placeholderImage = `https://placehold.co/120x100?text=${domainName || item.name}`;
@@ -31,7 +35,7 @@ const RelatedMediaItem = memo(
           width={120}
           height={90}
           className="object-cover rounded"
-          loading="eager"
+          loading={index < 3 ? 'eager' : 'lazy'}
         />
         <div className="flex flex-col">
           <h4 className={`font-semibold line-clamp-2 overflow-ellipsis ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-black dark:text-white'}`}>
@@ -45,7 +49,11 @@ const RelatedMediaItem = memo(
     if (onSelect) {
       return (
         <li key={item._id}>
-          <button className="w-full text-left" onClick={() => onSelect(item)}>
+          <button
+            className="w-full text-left"
+            onClick={() => onSelect(item)}
+            onMouseEnter={() => onPrefetch?.(item)}
+          >
             {content}
           </button>
         </li>
@@ -66,10 +74,12 @@ export function RelatedMediaContentList({
   relatedMediaContent,
   activeMediaId,
   onSelect,
+  onPrefetch,
 }: {
   relatedMediaContent: T_RawMediaContentFields[] | null;
   activeMediaId?: string;
   onSelect?: (item: T_RawMediaContentFields) => void;
+  onPrefetch?: (item: T_RawMediaContentFields) => void;
 }) {
   return (
     <section className="xl:pl-4">
@@ -77,12 +87,14 @@ export function RelatedMediaContentList({
         <>
           <h3 className="my-4 font-semibold text-xl">Related Media</h3>
           <ul className="list-none p-0">
-            {relatedMediaContent.map((item) => (
+            {relatedMediaContent.map((item, index) => (
               <RelatedMediaItem
                 key={item._id}
                 item={item}
+                index={index}
                 isActive={item._id === activeMediaId}
                 onSelect={onSelect}
+                onPrefetch={onPrefetch}
               />
             ))}
           </ul>
