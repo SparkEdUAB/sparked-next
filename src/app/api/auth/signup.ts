@@ -87,7 +87,20 @@ export default async function signup_(request: Request) {
       userDoc.grade = grade;
     }
 
-    await db.collection(dbCollections.users.name).insertOne(userDoc);
+    const studentRole = await db.collection(dbCollections.user_roles.name).findOne({ name: 'student' });
+    if (!studentRole) {
+      return new Response(JSON.stringify({ isError: true, code: SPARKED_PROCESS_CODES.DB_CONNECTION_FAILED }), {
+        status: HttpStatusCode.InternalServerError,
+      });
+    }
+
+    const insertResult = await db.collection(dbCollections.users.name).insertOne(userDoc);
+
+    await db.collection(dbCollections.user_role_mappings.name).insertOne({
+      user_id: insertResult.insertedId,
+      role_id: studentRole._id,
+      created_at: new Date(),
+    });
 
     await resend.emails.send({
       from: 'Sparked Support <support@sparkednext.app>',

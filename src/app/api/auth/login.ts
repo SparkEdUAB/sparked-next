@@ -42,6 +42,10 @@ export default async function login_(request: Request) {
           role: 1,
           is_verified: 1,
           password: 1,
+          firstName: 1,
+          lastName: 1,
+          phoneNumber: 1,
+          avatar: 1,
         },
       },
     );
@@ -67,17 +71,33 @@ export default async function login_(request: Request) {
       });
     }
 
-    const userRole = await db
+    let userRoleResult = await db
       .collection(dbCollections.user_role_mappings.name)
       .aggregate(p_fetchUserRoleDetails({ userId: `${user._id}` }))
       .toArray();
 
+    if (!userRoleResult[0]) {
+      const defaultRole = await db
+        .collection(dbCollections.user_roles.name)
+        .findOne({ name: 'student' });
+
+      if (defaultRole) {
+        await db.collection(dbCollections.user_role_mappings.name).insertOne({
+          user_id: user._id,
+          role_id: defaultRole._id,
+          created_at: new Date(),
+        });
+
+        userRoleResult = [{ role_details: defaultRole }];
+      }
+    }
+
     let role: null | T_RECORD = null;
 
-    if (userRole[0]) {
+    if (userRoleResult[0]) {
       role = {
-        id: userRole[0].role_details._id,
-        name: userRole[0].role_details.name,
+        id: userRoleResult[0].role_details._id,
+        name: userRoleResult[0].role_details.name,
       };
     }
 
@@ -92,6 +112,10 @@ export default async function login_(request: Request) {
         id: user._id.toString(),
         email: user.email,
         role: role?.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+        avatar: user.avatar,
       },
       jwtToken: token,
     };

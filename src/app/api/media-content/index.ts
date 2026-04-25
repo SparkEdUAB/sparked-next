@@ -156,6 +156,7 @@ export async function fetchMediaContentById_(request: any) {
             query: {
               _id: new BSON.ObjectId(mediaContentId),
             },
+            limit: 1,
           }),
         )
         .toArray();

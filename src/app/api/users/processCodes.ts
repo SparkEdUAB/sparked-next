@@ -8,6 +8,7 @@ const USER_PROCESS_CODES = {
   USER_CREATED: 6503,
   USER_DELETED: 6504,
   INVALID_ROLE: 7005,
+  INVALID_INPUT: 6505,
 } satisfies TProcessCode;
 
 export default USER_PROCESS_CODES;
