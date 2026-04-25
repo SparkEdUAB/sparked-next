@@ -112,7 +112,7 @@ const EditInstitutionView = ({ institution, onSuccessfullyDone }: EditInstitutio
           <Select
             disabled={isLoading}
             value={selectedType}
-            onValueChange={setSelectedType}
+            onValueChange={(value) => setSelectedType(value as typeof selectedType)}
             required
           >
             <SelectTrigger id="type" className={errors.type ? 'border-destructive' : ''}>

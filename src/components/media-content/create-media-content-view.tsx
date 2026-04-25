@@ -124,7 +124,7 @@ const CreateMediaContentView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: (
         {isExternalResource ? (
           <div>
             <div className="mb-1.5 block">
-              <Label htmlFor="externalUrl" value="External URL" className="text-gray-700 dark:text-gray-300" />
+              <Label htmlFor="externalUrl" className="text-gray-700 dark:text-gray-300">External URL</Label>
             </div>
             <Input
               disabled={isLoading}
