@@ -34,5 +34,9 @@ declare module 'next-auth/jwt' {
     id?: string;
     role?: string;
     sub?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    avatar?: string;
   }
 }

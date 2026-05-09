@@ -11,6 +11,7 @@ const AppLogo = ({ scale = 1 }: { scale?: number }) => {
       src="/alternate-logo.svg"
       alt="SparkEd Logo"
       className="admin-logo"
+      priority
     />
   );
 };

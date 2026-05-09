@@ -72,4 +72,12 @@ export type T_dbCollection = {
     name: string;
     label: string;
   };
+  institution_memberships: {
+    name: string;
+    label: string;
+  };
+  institution_invites: {
+    name: string;
+    label: string;
+  };
 };

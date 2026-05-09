@@ -184,7 +184,7 @@ export const p_fetchRandomMediaContent = ({
     },
   },
   {
-    $unwind: '$user',
+    $unwind: { path: '$user', preserveNullAndEmptyArrays: true },
   },
   {
     $lookup: {

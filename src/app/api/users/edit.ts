@@ -1,24 +1,31 @@
 import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { BSON } from 'mongodb';
 import { Session } from 'next-auth';
-import { zfd } from 'zod-form-data';
+import { z } from 'zod';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as USER_PROCESS_CODES } from './processCodes';
 import { HttpStatusCode } from 'axios';
 
 export default async function editUser_(request: Request, session?: Session) {
-  const schema = zfd.formData({
-    _id: zfd.text(),
-    email: zfd.text(),
-    firstName: zfd.text(),
-    lastName: zfd.text(),
-    phoneNumber: zfd.text(),
-    role: zfd.text().optional(),
+  const schema = z.object({
+    _id: z.string(),
+    email: z.string(),
+    firstName: z.string(),
+    lastName: z.string(),
+    phoneNumber: z.string(),
+    role: z.string().optional(),
   });
 
   const formBody = await request.json();
-  const { _id, email, firstName, lastName, role, phoneNumber } = schema.parse(formBody);
+  const parsed = schema.safeParse(formBody);
+  if (!parsed.success) {
+    return new Response(
+      JSON.stringify({ isError: true, code: USER_PROCESS_CODES.INVALID_INPUT }),
+      { status: HttpStatusCode.BadRequest },
+    );
+  }
+  const { _id, email, firstName, lastName, role, phoneNumber } = parsed.data;
 
   try {
     const db = await dbClient();

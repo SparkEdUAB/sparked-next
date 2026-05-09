@@ -90,26 +90,32 @@ const useAuth = () => {
         const decodedToken: { role?: { name: string } } = jwtDecode(jwtToken);
         const userRole: typeof decodedToken.role = decodedToken.role || { name: 'student' };
 
+        const { user: loginUser } = responseData;
+
         const singInResp = await signIn('credentials', {
           redirect: false,
           jwtToken,
+          id: loginUser?.id ?? '',
           email: fields.email,
           role: (userRole?.name ?? 'user') as 'student' | 'user' | 'admin',
+          firstName: loginUser?.firstName ?? '',
+          lastName: loginUser?.lastName ?? '',
+          phoneNumber: loginUser?.phoneNumber ?? '',
+          avatar: loginUser?.avatar ?? '',
         });
-        
+
         const isUserAdmin = userRole?.name?.toLowerCase() === 'admin';
 
         if (singInResp?.ok && !singInResp?.error) {
-          
           const userData = {
             email: fields.email,
-            firstName: responseData.firstName,
-            lastName: responseData.lastName,
-            phone: responseData.phoneNumber,
+            firstName: loginUser?.firstName,
+            lastName: loginUser?.lastName,
+            phone: loginUser?.phoneNumber,
             role: userRole?.name as 'student' | 'user' | 'admin',
             isAdmin: isUserAdmin,
           };
-          
+
           setUser(userData);
         }
 

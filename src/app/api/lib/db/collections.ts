@@ -35,7 +35,7 @@ export const dbCollections: T_dbCollection = {
   },
   page_links: {
     name: 'page-links',
-    label: 'Media Content',
+    label: 'Page Links',
   },
   grades: {
     name: 'grades',
@@ -72,5 +72,13 @@ export const dbCollections: T_dbCollection = {
   media_reactions: {
     name: 'media_reactions',
     label: 'Media Reactions',
+  },
+  institution_memberships: {
+    name: 'institution_memberships',
+    label: 'Institution Memberships',
+  },
+  institution_invites: {
+    name: 'institution_invites',
+    label: 'Institution Invites',
   },
 } as const;

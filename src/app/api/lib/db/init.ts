@@ -1,5 +1,8 @@
-import { addDefaultRoles } from './migrations/addDefaultRoles';
+import { dbClient } from '.';
+import { runMigrations } from './migrate';
 
 export async function initializeDatabase() {
-  await addDefaultRoles();
+  const db = await dbClient();
+  if (!db) return;
+  await runMigrations(db);
 }
