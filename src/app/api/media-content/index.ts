@@ -10,13 +10,15 @@ import { getDbFieldNamesConfigStatus } from '../config';
 import { NextRequest, NextResponse } from 'next/server';
 import { HttpStatusCode } from 'axios';
 import { sortByNumericValue } from '../utils/sorting';
+import { buildScopedQuery } from '../lib/organization';
+import { Session } from 'next-auth';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
 
 const cache: Record<string, { data: any; timestamp: number }> = {};
 const CACHE_TTL = 300000;
 
-export default async function fetchMediaContent_(request: any) {
+export default async function fetchMediaContent_(request: any, session?: Session) {
   const schema = zfd.formData({
     limit: zfd.text(),
     skip: zfd.text(),
@@ -91,6 +93,10 @@ export default async function fetchMediaContent_(request: any) {
       query.external_url = { $ne: null };
     }
 
+    query = await buildScopedQuery(db, session, query, {
+      includeLegacyUnscopedForDefault: true,
+    });
+
     if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
@@ -121,7 +127,7 @@ export default async function fetchMediaContent_(request: any) {
   }
 }
 
-export async function fetchMediaContentById_(request: any) {
+export async function fetchMediaContentById_(request: any, session?: Session) {
   const schema = zfd.formData({
     mediaContentId: zfd.text(),
     withMetaData: zfd.text().optional(),
@@ -144,6 +150,13 @@ export async function fetchMediaContentById_(request: any) {
       });
     }
 
+    const query = await buildScopedQuery(
+      db,
+      session,
+      { _id: new BSON.ObjectId(mediaContentId) },
+      { includeLegacyUnscopedForDefault: true },
+    );
+
     let mediaContent: { [key: string]: string } | null;
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
@@ -153,18 +166,14 @@ export async function fetchMediaContentById_(request: any) {
         .aggregate(
           p_fetchMediaContentWithMetaData({
             project,
-            query: {
-              _id: new BSON.ObjectId(mediaContentId),
-            },
+            query,
           }),
         )
         .toArray();
 
       mediaContent = mediaContentList.length ? mediaContentList[0] : {};
     } else {
-      mediaContent = await db
-        .collection(dbCollections.media_content.name)
-        .findOne({ _id: new BSON.ObjectId(mediaContentId) });
+      mediaContent = await db.collection(dbCollections.media_content.name).findOne(query);
     }
 
     const response = {
@@ -234,7 +243,7 @@ export async function deleteMediaContentByIds_(request: Request) {
   }
 }
 
-export async function findMediaContentByName_(request: any) {
+export async function findMediaContentByName_(request: any, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
@@ -270,7 +279,7 @@ export async function findMediaContentByName_(request: any) {
 
     let mediaContent = null;
 
-    let query: { [key: string]: BSON.ObjectId } = {};
+    let query: { [key: string]: any } = {};
 
     if (school_id) query.school_id = new BSON.ObjectId(school_id);
     if (program_id) query.program_id = new BSON.ObjectId(program_id);
@@ -278,6 +287,15 @@ export async function findMediaContentByName_(request: any) {
     if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
     if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
     if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
+    query = await buildScopedQuery(
+      db,
+      session,
+      {
+        name: { $regex: regexPattern },
+        ...query,
+      },
+      { includeLegacyUnscopedForDefault: true },
+    );
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     if (isWithMetaData) {
@@ -286,26 +304,14 @@ export async function findMediaContentByName_(request: any) {
         .aggregate(
           p_fetchMediaContentWithMetaData({
             project,
-            query: {
-              name: { $regex: regexPattern },
-              ...query,
-            },
+            query,
             limit,
             skip,
           }),
         )
         .toArray();
     } else {
-      mediaContent = await db
-        .collection(dbCollections.media_content.name)
-        .find(
-          {
-            name: { $regex: regexPattern },
-            ...query,
-          },
-          { limit, skip },
-        )
-        .toArray();
+      mediaContent = await db.collection(dbCollections.media_content.name).find(query, { limit, skip }).toArray();
     }
 
     const response = {
@@ -456,4 +462,3 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
     });
   }
 }
-

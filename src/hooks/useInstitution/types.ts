@@ -11,6 +11,9 @@ export interface I_InstitutionDetails extends I_BaseInstitution {
   address?: string;
   contact_email?: string;
   contact_phone?: string;
+  slug?: string;
+  status?: 'active' | 'inactive';
+  is_default?: boolean;
 }
 
 export interface I_CreateInstitutionFields extends I_InstitutionDetails {
@@ -56,6 +59,9 @@ export interface I_PublicInstitution {
   type: string;
   logo?: string;
   is_verified?: boolean;
+  slug?: string;
+  status?: 'active' | 'inactive';
+  is_default?: boolean;
 }
 
 // Type aliases for easier use

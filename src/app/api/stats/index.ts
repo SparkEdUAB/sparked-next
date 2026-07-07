@@ -2,8 +2,10 @@ import SPARKED_PROCESS_CODES from 'app/shared/processCodes';
 import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { HttpStatusCode } from 'axios';
+import { buildScopedQuery } from '../lib/organization';
+import { Session } from 'next-auth';
 
-export default async function fetchCounts_() {
+export default async function fetchCounts_(_request?: Request, session?: Session) {
   try {
     const db = await dbClient();
 
@@ -17,21 +19,27 @@ export default async function fetchCounts_() {
       });
     }
 
-    const units = await db.collection(dbCollections.units.name).countDocuments();
-    const grades = await db.collection(dbCollections.grades.name).countDocuments();
-    const subjects = await db.collection(dbCollections.subjects.name).countDocuments();
-    const topics = await db.collection(dbCollections.topics.name).countDocuments();
-    const users = await db.collection(dbCollections.users.name).countDocuments();
-    const pageViews = await db.collection(dbCollections.page_views.name).countDocuments();
-    const mediaContent = await db.collection(dbCollections.media_content.name).countDocuments();
-    const searches = await db.collection(dbCollections.searches.name).countDocuments();
-    const institutions = await db.collection(dbCollections.institutions.name).countDocuments();
+    const unitQuery = await buildScopedQuery(db, session, {}, { includeLegacyUnscopedForDefault: true });
+    const userQuery = await buildScopedQuery(db, session, {}, { includeLegacyUnscopedForDefault: true });
+    const institutionQuery = await buildScopedQuery(db, session, {}, { includeLegacyUnscopedForDefault: true });
+
+    const units = await db.collection(dbCollections.units.name).countDocuments(unitQuery);
+    const grades = await db.collection(dbCollections.grades.name).countDocuments(unitQuery);
+    const subjects = await db.collection(dbCollections.subjects.name).countDocuments(unitQuery);
+    const topics = await db.collection(dbCollections.topics.name).countDocuments(unitQuery);
+    const users = await db.collection(dbCollections.users.name).countDocuments(userQuery);
+    const pageViews = await db.collection(dbCollections.page_views.name).countDocuments(unitQuery);
+    const mediaContent = await db.collection(dbCollections.media_content.name).countDocuments(unitQuery);
+    const searches = await db.collection(dbCollections.searches.name).countDocuments(unitQuery);
+    const institutions = await db.collection(dbCollections.institutions.name).countDocuments(institutionQuery);
     const verifiedInstitutions = await db.collection(dbCollections.institutions.name).countDocuments({ is_verified: true });
     const unassignedUsers = await db.collection(dbCollections.users.name).countDocuments({
-      $or: [
-        { institution_id: { $exists: false } },
-        { institution_id: null }
-      ]
+      $and: [
+        userQuery,
+        {
+          $or: [{ organization_id: { $exists: false } }, { organization_id: null }],
+        },
+      ],
     });
 
     const stats = [

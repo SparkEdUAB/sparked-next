@@ -6,6 +6,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import UNIT_PROCESS_CODES from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function editUnit_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -17,10 +18,13 @@ export default async function editUnit_(request: Request, session?: Session) {
     subjectId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
     unitId: zfd.text(),
+    organizationId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId, subjectId, gradeId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, unitId, subjectId, gradeId, organizationId, institutionId } =
+    schema.parse(formBody);
   try {
     const db = await dbClient();
 
@@ -156,6 +160,11 @@ export default async function editUnit_(request: Request, session?: Session) {
       _id: new BSON.ObjectId(unitId),
     };
 
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
+    });
+
     // Create update object with only defined fields
     const updateQuery: any = {
       name,
@@ -163,6 +172,7 @@ export default async function editUnit_(request: Request, session?: Session) {
       updated_at: new Date(),
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
+      organization_id: organizationPayload.organization_id,
     };
 
     // Only add optional fields if they exist

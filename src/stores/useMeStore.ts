@@ -10,8 +10,12 @@ export type User = {
   phone?: string;
   avatar?: string;
   role: 'student' | 'user' | 'admin';
-  
   isAdmin: boolean;
+  organizationId?: string;
+  organizationSlug?: string;
+  organizationType?: string;
+  isDefaultOrganization?: boolean;
+  isPlatformAdmin?: boolean;
 };
 
 interface MeStore {

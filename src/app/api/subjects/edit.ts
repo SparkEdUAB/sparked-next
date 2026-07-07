@@ -6,6 +6,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as SUBJECT_PROCESS_CODES } from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function editSubject_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -13,11 +14,13 @@ export default async function editSubject_(request: Request, session?: Session) 
     gradeId: zfd.text(),
     subjectId: zfd.text(),
     description: zfd.text(),
+    organizationId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
   });
 
   const formBody = await request.json();
 
-  const { name, description, gradeId, subjectId } = schema.parse(formBody);
+  const { name, description, gradeId, subjectId, organizationId, institutionId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -61,6 +64,11 @@ export default async function editSubject_(request: Request, session?: Session) 
       _id: new BSON.ObjectId(subjectId),
     };
 
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
+    });
+
     const updateQuery = {
       name,
       description,
@@ -68,6 +76,7 @@ export default async function editSubject_(request: Request, session?: Session) 
       grade_id: new BSON.ObjectId(gradeId),
       //@ts-ignore
       updated_by_id: new BSON.ObjectId(session?.user?.id),
+      organization_id: organizationPayload.organization_id,
     };
 
     await db.collection(dbCollections.subjects.name).updateOne(query, {

@@ -7,10 +7,12 @@ import { p_fetchCoursesWithMetaData } from './pipelines';
 import { getDbFieldNamesConfigStatus } from '../config';
 import { COURSE_FIELD_NAMES_CONFIG } from './constants';
 import { HttpStatusCode } from 'axios';
+import { buildScopedQuery } from '../lib/organization';
+import { Session } from 'next-auth';
 
 const dbConfigData = COURSE_FIELD_NAMES_CONFIG;
 
-export default async function fetchCourses_(request: any) {
+export default async function fetchCourses_(request: any, session?: Session) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
@@ -35,25 +37,17 @@ export default async function fetchCourses_(request: any) {
     }
 
     let courses = [];
+    const query = await buildScopedQuery(db, session, {}, { includeLegacyUnscopedForDefault: true });
 
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     if (isWithMetaData) {
       courses = await db
-        .collection(dbCollections.courses.name)
-        .aggregate(p_fetchCoursesWithMetaData({ query: {}, project }))
+          .collection(dbCollections.courses.name)
+        .aggregate(p_fetchCoursesWithMetaData({ query, project }))
         .toArray();
     } else {
-      courses = await db
-        .collection(dbCollections.courses.name)
-        .find(
-          {},
-          {
-            limit,
-            skip,
-          },
-        )
-        .toArray();
+      courses = await db.collection(dbCollections.courses.name).find(query, { limit, skip }).toArray();
     }
 
     const response = {
@@ -76,7 +70,7 @@ export default async function fetchCourses_(request: any) {
   }
 }
 
-export async function fetchCourseById_(request: any) {
+export async function fetchCourseById_(request: any, session?: Session) {
   const schema = zfd.formData({
     courseId: zfd.text(),
     withMetaData: zfd.text(),
@@ -100,6 +94,13 @@ export async function fetchCourseById_(request: any) {
       });
     }
 
+    const query = await buildScopedQuery(
+      db,
+      session,
+      { _id: new BSON.ObjectId(courseId) },
+      { includeLegacyUnscopedForDefault: true },
+    );
+
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
 
     let course;
@@ -110,16 +111,14 @@ export async function fetchCourseById_(request: any) {
         .aggregate(
           p_fetchCoursesWithMetaData({
             project,
-            query: {
-              _id: new BSON.ObjectId(courseId),
-            },
+            query,
           }),
         )
         .toArray();
 
       course = course.length ? course[0] : null;
     } else {
-      course = await db.collection(dbCollections.courses.name).findOne({ _id: new BSON.ObjectId(courseId) });
+      course = await db.collection(dbCollections.courses.name).findOne(query);
     }
 
     const response = {
@@ -189,7 +188,7 @@ export async function deleteCourse_(request: Request) {
   }
 }
 
-export async function findCourseByName_(request: any) {
+export async function findCourseByName_(request: any, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric().optional(),
@@ -215,6 +214,14 @@ export async function findCourseByName_(request: any) {
     }
     const regexPattern = new RegExp(name, 'i');
     const project = await getDbFieldNamesConfigStatus({ dbConfigData });
+    const query = await buildScopedQuery(
+      db,
+      session,
+      {
+        name: { $regex: regexPattern },
+      },
+      { includeLegacyUnscopedForDefault: true },
+    );
 
     let courses = null;
 
@@ -224,24 +231,14 @@ export async function findCourseByName_(request: any) {
         .aggregate(
           p_fetchCoursesWithMetaData({
             project,
-            query: {
-              name: { $regex: regexPattern },
-            },
+            query,
             limit,
             skip,
           }),
         )
         .toArray();
     } else {
-      courses = await db
-        .collection(dbCollections.courses.name)
-        .find(
-          {
-            name: { $regex: regexPattern },
-          },
-          { limit, skip },
-        )
-        .toArray();
+      courses = await db.collection(dbCollections.courses.name).find(query, { limit, skip }).toArray();
     }
 
     const response = {

@@ -6,6 +6,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as UNIT_PROCESS_CODES } from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function createUnit_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -16,10 +17,13 @@ export default async function createUnit_(request: Request, session?: Session) {
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
+    organizationId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, subjectId, gradeId } = schema.parse(formBody);
+  const { name, description, schoolId, programId, courseId, subjectId, gradeId, organizationId, institutionId } =
+    schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -154,6 +158,11 @@ export default async function createUnit_(request: Request, session?: Session) {
     }
 
     // Create unit document with required and optional fields
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
+    });
+
     const unitDocument = {
       name,
       description,
@@ -162,6 +171,7 @@ export default async function createUnit_(request: Request, session?: Session) {
       // @ts-ignore
       created_by_id: new BSON.ObjectId(session?.user?.id),
       subject_id: new BSON.ObjectId(subjectId),
+      organization_id: organizationPayload.organization_id,
     };
 
     // Add optional fields if they exist

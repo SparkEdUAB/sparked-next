@@ -6,17 +6,20 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import SUBJECT_PROCESS_CODES from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function createSubject_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
     gradeId: zfd.text(),
+    organizationId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
   });
 
   const formBody = await request.json();
 
-  const { name, description, gradeId } = schema.parse(formBody);
+  const { name, description, gradeId, organizationId, institutionId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -54,6 +57,11 @@ export default async function createSubject_(request: Request, session?: Session
       });
     }
 
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
+    });
+
     await db.collection(dbCollections.subjects.name).insertOne({
       name,
       description,
@@ -62,6 +70,7 @@ export default async function createSubject_(request: Request, session?: Session
       grade_id: new BSON.ObjectId(gradeId),
       //@ts-ignore
       created_by_id: new BSON.ObjectId(session?.user?.id),
+      organization_id: organizationPayload.organization_id,
     });
 
     const response = {

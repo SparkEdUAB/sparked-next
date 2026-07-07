@@ -8,6 +8,7 @@ import bcrypt from 'bcryptjs';
 import { Resend } from 'resend';
 import { WelcomeEmail } from 'emails/WelcomeEmail';
 import { BSON } from 'mongodb';
+import { listActiveOrganizations, normalizeOrganizationPayload } from '../lib/organization';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -22,12 +23,25 @@ export default async function signup_(request: Request) {
     institutionType: z.string().optional(),
     schoolName: z.string().optional().default(''),
     grade: z.any().optional().default(0),
+    organizationId: z.string().optional(),
     institutionId: z.string().optional(),
     institutionName: z.string().optional(),
   });
 
   const formBody = await request.json();
-  const { email, password, firstName, lastName, phoneNumber, isStudent, institutionType, schoolName, grade, institutionId } =
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    phoneNumber,
+    isStudent,
+    institutionType,
+    schoolName,
+    grade,
+    institutionId,
+    organizationId,
+  } =
     schema.parse(formBody);
 
   try {
@@ -57,6 +71,27 @@ export default async function signup_(request: Request) {
       });
     }
 
+    const activeOrganizations = await listActiveOrganizations(db);
+    const requestedOrganizationId = organizationId || institutionId || (activeOrganizations.length === 1 ? activeOrganizations[0]?._id.toString() : undefined);
+
+    if (!requestedOrganizationId && activeOrganizations.length > 1) {
+      return new Response(
+        JSON.stringify({
+          isError: true,
+          code: AUTH_PROCESS_CODES.UNKNOWN_ERROR,
+          message: 'organization selection is required',
+        }),
+        {
+          status: HttpStatusCode.BadRequest,
+        },
+      );
+    }
+
+    const organizationPayload = await normalizeOrganizationPayload(db, null, {
+      organizationId: requestedOrganizationId,
+      institutionId,
+    });
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const userDoc: any = {
@@ -69,12 +104,10 @@ export default async function signup_(request: Request) {
       created_at: new Date(),
       role: isStudent ? 'student' : 'user',
       password: hashedPassword,
+      organization_id: organizationPayload.organization_id,
     };
 
-    // Add institution data if provided (for both students and non-students)
-    if (institutionId) {
-      userDoc.institution_id = new BSON.ObjectId(institutionId);
-    }
+    userDoc.institution_id = organizationPayload.institution_id;
 
     // Keep legacy fields for backward compatibility
     if (institutionType) {

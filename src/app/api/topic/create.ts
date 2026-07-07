@@ -6,6 +6,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as TOPIC_PROCESS_CODES } from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function createTopic_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -17,10 +18,23 @@ export default async function createTopic_(request: Request, session?: Session) 
     programId: zfd.text().optional(),
     courseId: zfd.text().optional(),
     gradeId: zfd.text().optional(),
+    organizationId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId, gradeId, subjectId } = schema.parse(formBody);
+  const {
+    name,
+    description,
+    schoolId,
+    programId,
+    courseId,
+    unitId,
+    gradeId,
+    subjectId,
+    organizationId,
+    institutionId,
+  } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -177,6 +191,11 @@ export default async function createTopic_(request: Request, session?: Session) 
     }
 
     // Create topic document with required and optional fields
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
+    });
+
     const topicDocument = {
       name,
       description,
@@ -186,6 +205,7 @@ export default async function createTopic_(request: Request, session?: Session) 
       created_by_id: new BSON.ObjectId(session?.user?.id),
       subject_id: new BSON.ObjectId(subjectId),
       grade_id: new BSON.ObjectId(gradeId),
+      organization_id: organizationPayload.organization_id,
     };
 
     // Add optional fields if they exist
