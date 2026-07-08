@@ -7,7 +7,6 @@ import { HttpStatusCode } from 'axios';
 import bcrypt from 'bcryptjs';
 import { Resend } from 'resend';
 import { WelcomeEmail } from 'emails/WelcomeEmail';
-import { BSON } from 'mongodb';
 import { listActiveOrganizations, normalizeOrganizationPayload } from '../lib/organization';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
