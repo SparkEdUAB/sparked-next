@@ -13,8 +13,18 @@ declare module 'next-auth' {
       phone?: string;
       avatar?: string;
       role?: string;
+      organizationId?: string;
+      organizationSlug?: string;
+      organizationType?: string;
+      isDefaultOrganization?: boolean;
+      isPlatformAdmin?: boolean;
     };
     role?: string;
+    organizationId?: string;
+    organizationSlug?: string;
+    organizationType?: string;
+    isDefaultOrganization?: boolean;
+    isPlatformAdmin?: boolean;
   }
 
   interface User {
@@ -26,6 +36,11 @@ declare module 'next-auth' {
     phone?: string;
     avatar?: string;
     role?: string;
+    organizationId?: string;
+    organizationSlug?: string;
+    organizationType?: string;
+    isDefaultOrganization?: boolean;
+    isPlatformAdmin?: boolean;
   }
 }
 
@@ -34,5 +49,13 @@ declare module 'next-auth/jwt' {
     id?: string;
     role?: string;
     sub?: string;
+    firstName?: string;
+    lastName?: string;
+    phone?: string;
+    organizationId?: string;
+    organizationSlug?: string;
+    organizationType?: string;
+    isDefaultOrganization?: boolean;
+    isPlatformAdmin?: boolean;
   }
 }

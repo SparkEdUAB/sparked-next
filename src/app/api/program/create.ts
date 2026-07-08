@@ -6,16 +6,19 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as PROGRAM_PROCESS_CODES } from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function createProgram_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     description: zfd.text(),
     schoolId: zfd.text(),
+    organizationId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId } = schema.parse(formBody);
+  const { name, description, schoolId, organizationId, institutionId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -64,6 +67,11 @@ export default async function createProgram_(request: Request, session?: Session
       });
     }
 
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
+    });
+
     await db.collection(dbCollections.programs.name).insertOne({
       name,
       description,
@@ -72,6 +80,7 @@ export default async function createProgram_(request: Request, session?: Session
       //@ts-ignore
       created_by_id: new BSON.ObjectId(session?.user?.id),
       school_id: new BSON.ObjectId(schoolId),
+      organization_id: organizationPayload.organization_id,
     });
 
     const response = {

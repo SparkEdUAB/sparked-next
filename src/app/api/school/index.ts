@@ -5,8 +5,10 @@ import { dbCollections } from '../lib/db/collections';
 import { p_fetchSchoolsWithCreator } from './pipelines';
 import { BSON } from 'mongodb';
 import { HttpStatusCode } from 'axios';
+import { buildScopedQuery } from '../lib/organization';
+import { Session } from 'next-auth';
 
-export default async function fetchSchools_(request: Request) {
+export default async function fetchSchools_(request: Request, session?: Session) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
@@ -28,9 +30,18 @@ export default async function fetchSchools_(request: Request) {
       });
     }
 
+    const query = await buildScopedQuery(
+      db,
+      session,
+      {},
+      {
+        includeLegacyUnscopedForDefault: true,
+      },
+    );
+
     const schools = await db
       .collection(dbCollections.schools.name)
-      .aggregate(p_fetchSchoolsWithCreator(limit, skip))
+      .aggregate([{ $match: query }, ...p_fetchSchoolsWithCreator(limit, skip)])
       .toArray();
 
     const response = {
@@ -53,7 +64,7 @@ export default async function fetchSchools_(request: Request) {
   }
 }
 
-export async function fetchSchool_(request: Request) {
+export async function fetchSchool_(request: Request, session?: Session) {
   const schema = zfd.formData({
     schoolId: zfd.text(),
   });
@@ -74,7 +85,14 @@ export async function fetchSchool_(request: Request) {
       });
     }
 
-    const school = await db.collection(dbCollections.schools.name).findOne({ _id: new BSON.ObjectId(schoolId) });
+    const query = await buildScopedQuery(
+      db,
+      session,
+      { _id: new BSON.ObjectId(schoolId) },
+      { includeLegacyUnscopedForDefault: true },
+    );
+
+    const school = await db.collection(dbCollections.schools.name).findOne(query);
 
     const response = {
       isError: false,
@@ -143,7 +161,7 @@ export async function deleteSchools_(request: Request) {
   }
 }
 
-export async function findSchoolsByName_(request: Request) {
+export async function findSchoolsByName_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
@@ -167,14 +185,18 @@ export async function findSchoolsByName_(request: Request) {
     }
     const regexPattern = new RegExp(name, 'i');
 
+    const query = await buildScopedQuery(
+      db,
+      session,
+      {
+        name: { $regex: regexPattern },
+      },
+      { includeLegacyUnscopedForDefault: true },
+    );
+
     const schools = await db
       .collection(dbCollections.schools.name)
-      .find(
-        {
-          name: { $regex: regexPattern },
-        },
-        { limit, skip },
-      )
+      .find(query, { limit, skip })
       .toArray();
 
     const response = {

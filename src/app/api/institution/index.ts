@@ -5,8 +5,10 @@ import { dbCollections } from '../lib/db/collections';
 import { p_fetchInstitutionsWithCreator } from './pipelines';
 import { BSON } from 'mongodb';
 import { HttpStatusCode } from 'axios';
+import { buildScopedQuery } from '../lib/organization';
+import { Session } from 'next-auth';
 
-export default async function fetchInstitutions_(request: Request) {
+export default async function fetchInstitutions_(request: Request, session?: Session) {
   const url = new URL(request.url);
   const limitParam = url.searchParams.get('limit');
   const skipParam = url.searchParams.get('skip');
@@ -49,9 +51,18 @@ export default async function fetchInstitutions_(request: Request) {
       });
     }
 
+    const query = await buildScopedQuery(
+      db,
+      session,
+      {},
+      {
+        includeLegacyUnscopedForDefault: true,
+      },
+    );
+
     const institutions = await db
       .collection(dbCollections.institutions.name)
-      .aggregate(p_fetchInstitutionsWithCreator(limit, skip))
+      .aggregate([{ $match: query }, ...p_fetchInstitutionsWithCreator(limit, skip)])
       .toArray();
     
 
@@ -75,7 +86,7 @@ export default async function fetchInstitutions_(request: Request) {
   }
 }
 
-export async function fetchInstitution_(request: Request) {
+export async function fetchInstitution_(request: Request, session?: Session) {
   const schema = z.object({
     institutionId: z.string(),
   });
@@ -106,9 +117,14 @@ export async function fetchInstitution_(request: Request) {
       });
     }
 
-    const institution = await db.collection(dbCollections.institutions.name).findOne({ 
-      _id: new BSON.ObjectId(institutionId) 
-    });
+    const query = await buildScopedQuery(
+      db,
+      session,
+      { _id: new BSON.ObjectId(institutionId) },
+      { includeLegacyUnscopedForDefault: true },
+    );
+
+    const institution = await db.collection(dbCollections.institutions.name).findOne(query);
 
     const response = {
       isError: false,
@@ -152,7 +168,10 @@ export async function fetchPublicInstitutions_(request: Request) {
     }
 
     // Build search filter
-    const searchFilter: any = { is_verified: true };
+    const searchFilter: any = {
+      status: 'active',
+      $or: [{ is_verified: true }, { is_default: true }],
+    };
     if (search) {
       searchFilter.$or = [
         { name: { $regex: search, $options: 'i' } },

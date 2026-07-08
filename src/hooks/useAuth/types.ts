@@ -11,6 +11,7 @@ export type T_SignupFields = {
   grade?: number | string;
   institutionId?: string;
   institutionName?: string;
+  organizationId?: string;
 };
 
 export type T_LoginFields = {

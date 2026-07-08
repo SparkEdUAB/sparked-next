@@ -93,8 +93,17 @@ const useAuth = () => {
         const singInResp = await signIn('credentials', {
           redirect: false,
           jwtToken,
+          id: responseData.user?.id,
           email: fields.email,
           role: (userRole?.name ?? 'user') as 'student' | 'user' | 'admin',
+          firstName: responseData.user?.firstName,
+          lastName: responseData.user?.lastName,
+          phone: responseData.user?.phoneNumber,
+          organizationId: responseData.user?.organizationId,
+          organizationSlug: responseData.user?.organizationSlug,
+          organizationType: responseData.user?.organizationType,
+          isDefaultOrganization: responseData.user?.isDefaultOrganization,
+          isPlatformAdmin: responseData.user?.isPlatformAdmin,
         });
         
         const isUserAdmin = userRole?.name?.toLowerCase() === 'admin';
@@ -105,9 +114,14 @@ const useAuth = () => {
             email: fields.email,
             firstName: responseData.firstName,
             lastName: responseData.lastName,
-            phone: responseData.phoneNumber,
+            phone: responseData.user?.phoneNumber,
             role: userRole?.name as 'student' | 'user' | 'admin',
             isAdmin: isUserAdmin,
+            organizationId: responseData.user?.organizationId,
+            organizationSlug: responseData.user?.organizationSlug,
+            organizationType: responseData.user?.organizationType,
+            isDefaultOrganization: responseData.user?.isDefaultOrganization,
+            isPlatformAdmin: responseData.user?.isPlatformAdmin,
           };
           
           setUser(userData);

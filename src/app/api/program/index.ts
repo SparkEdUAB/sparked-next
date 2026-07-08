@@ -6,8 +6,10 @@ import { p_fetchProgramWithMetaData, p_fetchProgramsWithCreator } from './pipeli
 import { BSON } from 'mongodb';
 import { z } from 'zod';
 import { HttpStatusCode } from 'axios';
+import { buildScopedQuery } from '../lib/organization';
+import { Session } from 'next-auth';
 
-export default async function fetchPrograms_(request: Request) {
+export default async function fetchPrograms_(request: Request, session?: Session) {
   const schema = zfd.formData({
     limit: zfd.numeric(),
     skip: zfd.numeric(),
@@ -29,9 +31,16 @@ export default async function fetchPrograms_(request: Request) {
       });
     }
 
+    const query = await buildScopedQuery(
+      db,
+      session,
+      {},
+      { includeLegacyUnscopedForDefault: true },
+    );
+
     const programs = await db
       .collection(dbCollections.programs.name)
-      .aggregate(p_fetchProgramsWithCreator(limit, skip))
+      .aggregate([{ $match: query }, ...p_fetchProgramsWithCreator(limit, skip)])
       .toArray();
 
     const response = {
@@ -54,7 +63,7 @@ export default async function fetchPrograms_(request: Request) {
   }
 }
 
-export async function fetchProgramById_(request: Request) {
+export async function fetchProgramById_(request: Request, session?: Session) {
   const schema = zfd.formData({
     programId: zfd.text(),
     withMetaData: z.boolean(),
@@ -76,6 +85,13 @@ export async function fetchProgramById_(request: Request) {
       });
     }
 
+    const query = await buildScopedQuery(
+      db,
+      session,
+      { _id: new BSON.ObjectId(programId) },
+      { includeLegacyUnscopedForDefault: true },
+    );
+
     let program;
 
     if (withMetaData) {
@@ -83,9 +99,7 @@ export async function fetchProgramById_(request: Request) {
         .collection(dbCollections.programs.name)
         .aggregate(
           p_fetchProgramWithMetaData({
-            query: {
-              _id: new BSON.ObjectId(programId),
-            },
+            query,
             limit: 1,
             skip: 0,
           }),
@@ -94,7 +108,7 @@ export async function fetchProgramById_(request: Request) {
 
       program = program.length ? program[0] : null;
     } else {
-      program = await db.collection(dbCollections.programs.name).findOne({ _id: new BSON.ObjectId(programId) });
+      program = await db.collection(dbCollections.programs.name).findOne(query);
     }
 
     const response = {
@@ -164,7 +178,7 @@ export async function deletePrograms_(request: Request) {
   }
 }
 
-export async function findProgramsByName_(request: Request) {
+export async function findProgramsByName_(request: Request, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric(),
@@ -189,6 +203,15 @@ export async function findProgramsByName_(request: Request) {
     }
     const regexPattern = new RegExp(name, 'i');
 
+    const query = await buildScopedQuery(
+      db,
+      session,
+      {
+        name: { $regex: regexPattern },
+      },
+      { includeLegacyUnscopedForDefault: true },
+    );
+
     let programs = null;
 
     if (withMetaData) {
@@ -196,24 +219,14 @@ export async function findProgramsByName_(request: Request) {
         .collection(dbCollections.programs.name)
         .aggregate(
           p_fetchProgramWithMetaData({
-            query: {
-              name: { $regex: regexPattern },
-            },
+            query,
             skip: skip || 0,
             limit: limit || 20,
           }),
         )
         .toArray();
     } else {
-      programs = await db
-        .collection(dbCollections.programs.name)
-        .find(
-          {
-            name: { $regex: regexPattern },
-          },
-          { skip, limit },
-        )
-        .toArray();
+      programs = await db.collection(dbCollections.programs.name).find(query, { skip, limit }).toArray();
     }
 
     const response = {

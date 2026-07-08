@@ -6,6 +6,7 @@ import { HttpStatusCode } from 'axios';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
 import { BSON } from 'mongodb';
+import { slugifyOrganizationName } from '../../lib/organization';
 
 export async function PUT(request: NextRequest) {
   const schema = zfd.formData({
@@ -74,6 +75,7 @@ export async function PUT(request: NextRequest) {
 
     const updateDoc: any = {
       name,
+      slug: existingInstitution.slug || slugifyOrganizationName(name),
       type,
       updated_at: new Date(),
     };

@@ -42,6 +42,8 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
 
   // Debounce the search term with a 500ms delay
   const debouncedSearchTerm = useDebounceValue(searchTerm, 500);
+  const activeInstitutions = publicInstitutions.filter((institution) => institution.status !== 'inactive');
+  const shouldAutoSelectSingleInstitution = !isOptional && activeInstitutions.length === 1;
 
   useEffect(() => {
     // Load public institutions on component mount
@@ -59,6 +61,15 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
     setIsFetchingInstitutions(true);
     fetchPublicInstitutions(debouncedSearchTerm || '').finally(() => setIsFetchingInstitutions(false));
   }, [debouncedSearchTerm, searchTerm, fetchPublicInstitutions]);
+
+  useEffect(() => {
+    if (!shouldAutoSelectSingleInstitution) return;
+
+    const singleInstitution = activeInstitutions[0];
+    if (selectedInstitutionId === singleInstitution?._id) return;
+
+    onInstitutionSelect(singleInstitution._id, singleInstitution.name);
+  }, [activeInstitutions, onInstitutionSelect, selectedInstitutionId, shouldAutoSelectSingleInstitution]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -146,33 +157,39 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
       <div>
         <div className="mb-1.5 block">
           <Label htmlFor="institution-select" className="block mb-2 text-sm font-medium text-gray-900">
-            {i18next.t('institution_label')} {!isOptional && "*"}
+            {i18next.t('institution_label')} {!isOptional && '*'}
           </Label>
         </div>
-        <select
-          id="institution-select"
-          value={selectedInstitutionId || ''}
-          onChange={handleInstitutionChange}
-          disabled={disabled || isLoading || isFetchingInstitutions}
-          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-        >
-          <option value="">
-            {isFetchingInstitutions
-              ? i18next.t('loading_institutions')
-              : (isOptional ? i18next.t('select_institution_optional') : i18next.t('select_institution'))
-            }
-          </option>
-          {!isFetchingInstitutions && publicInstitutions.map((institution) => (
-            <option key={institution._id} value={institution._id}>
-              {institution.name} ({institution.type})
+        {shouldAutoSelectSingleInstitution ? (
+          <div className="rounded-md border border-input bg-muted/40 px-3 py-2 text-sm">
+            {activeInstitutions[0]?.name} ({activeInstitutions[0]?.type})
+          </div>
+        ) : (
+          <select
+            id="institution-select"
+            value={selectedInstitutionId || ''}
+            onChange={handleInstitutionChange}
+            disabled={disabled || isLoading || isFetchingInstitutions}
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          >
+            <option value="">
+              {isFetchingInstitutions
+                ? i18next.t('loading_institutions')
+                : (isOptional ? i18next.t('select_institution_optional') : i18next.t('select_institution'))
+              }
             </option>
-          ))}
-          {!isFetchingInstitutions && (
-            <option value="create_new" className="font-semibold text-blue-600">
-              + {i18next.t('create_new_institution')}
-            </option>
-          )}
-        </select>
+            {!isFetchingInstitutions && activeInstitutions.map((institution) => (
+              <option key={institution._id} value={institution._id}>
+                {institution.name} ({institution.type})
+              </option>
+            ))}
+            {!isFetchingInstitutions && (
+              <option value="create_new" className="font-semibold text-blue-600">
+                + {i18next.t('create_new_institution')}
+              </option>
+            )}
+          </select>
+        )}
         {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
       </div>
 

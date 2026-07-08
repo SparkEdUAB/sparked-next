@@ -7,6 +7,7 @@ import { dbCollections } from '../lib/db/collections';
 import RESOURCE_PROCESS_CODES from './processCodes';
 import MEDIA_CONTENT_PROCESS_CODES from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function createMediaContent_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -22,6 +23,8 @@ export default async function createMediaContent_(request: Request, session?: Se
     fileUrl: zfd.text().optional().nullable(),
     thumbnailUrl: zfd.text().optional(),
     externalUrl: zfd.text().optional().nullable(),
+    organizationId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
@@ -38,6 +41,8 @@ export default async function createMediaContent_(request: Request, session?: Se
     subjectId,
     thumbnailUrl,
     externalUrl,
+    organizationId,
+    institutionId,
   } = schema.parse(formBody);
 
   try {
@@ -190,6 +195,11 @@ export default async function createMediaContent_(request: Request, session?: Se
       });
     }
 
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
+    });
+
     await db.collection(dbCollections.media_content.name).insertOne({
       name,
       description,
@@ -204,6 +214,7 @@ export default async function createMediaContent_(request: Request, session?: Se
       topic_id: new BSON.ObjectId(topicId),
       grade_id: new BSON.ObjectId(gradeId),
       subject_id: new BSON.ObjectId(subjectId),
+      organization_id: organizationPayload.organization_id,
       file_url: fileUrl,
       thumbnail_url: thumbnailUrl,
       external_url: externalUrl,

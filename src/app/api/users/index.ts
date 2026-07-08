@@ -4,8 +4,10 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { BSON } from 'mongodb';
 import { HttpStatusCode } from 'axios';
+import { buildScopedQuery } from '../lib/organization';
+import { Session } from 'next-auth';
 
-export default async function fetchUsers_(request: any) {
+export default async function fetchUsers_(request: any, session?: Session) {
   const schema = zfd.formData({
     limit: zfd.numeric().optional(),
     skip: zfd.numeric().optional(),
@@ -28,9 +30,21 @@ export default async function fetchUsers_(request: any) {
       );
     }
 
+    const match = await buildScopedQuery(
+      db,
+      session,
+      {},
+      {
+        includeLegacyUnscopedForDefault: true,
+      },
+    );
+
     const users = await db
       .collection(dbCollections.users.name)
       .aggregate([
+        {
+          $match: match,
+        },
         {
           $lookup: {
             from: dbCollections.user_role_mappings.name,
@@ -88,6 +102,7 @@ export default async function fetchUsers_(request: any) {
             schoolName: 1,
             grade: 1,
             institution_id: 1,
+            organization_id: 1,
             institutionName: '$institution.name',
           },
         },
@@ -118,7 +133,7 @@ export default async function fetchUsers_(request: any) {
   }
 }
 
-export async function findUserByName_(request: any) {
+export async function findUserByName_(request: any, session?: Session) {
   const schema = zfd.formData({
     name: zfd.text(),
     skip: zfd.numeric().optional(),
@@ -143,18 +158,26 @@ export async function findUserByName_(request: any) {
     const regexPattern = new RegExp(name, 'i');
 
     // Fixed query: Use aggregate directly instead of chaining after find
+    const scopedMatch = await buildScopedQuery(
+      db,
+      session,
+      {
+        $or: [
+          { firstName: { $regex: regexPattern } },
+          { lastName: { $regex: regexPattern } },
+          { email: { $regex: regexPattern } },
+        ],
+      },
+      {
+        includeLegacyUnscopedForDefault: true,
+      },
+    );
+
     const users = await db
       .collection(dbCollections.users.name)
       .aggregate([
         {
-          // First stage: match documents based on search criteria
-          $match: {
-            $or: [
-              { firstName: { $regex: regexPattern } },
-              { lastName: { $regex: regexPattern } },
-              { email: { $regex: regexPattern } },
-            ],
-          },
+          $match: scopedMatch,
         },
         {
           $lookup: {
@@ -213,6 +236,7 @@ export async function findUserByName_(request: any) {
             schoolName: 1,
             grade: 1,
             institution_id: 1,
+            organization_id: 1,
             institutionName: '$institution.name',
           },
         },

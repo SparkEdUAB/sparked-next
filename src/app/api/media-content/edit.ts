@@ -6,6 +6,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import MEDIA_CONTENT_PROCESS_CODES from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function editMediaContent_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -22,6 +23,8 @@ export default async function editMediaContent_(request: Request, session?: Sess
     fileUrl: zfd.text().optional().nullable(),
     thumbnailUrl: zfd.text().optional(),
     externalUrl: zfd.text().optional().nullable(),
+    organizationId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
   });
   const formBody = await request.json();
 
@@ -39,6 +42,8 @@ export default async function editMediaContent_(request: Request, session?: Sess
     gradeId,
     subjectId,
     externalUrl,
+    organizationId,
+    institutionId,
   } = schema.parse(formBody);
 
   try {
@@ -212,6 +217,11 @@ export default async function editMediaContent_(request: Request, session?: Sess
       });
     }
 
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
+    });
+
     const query = {
       _id: new BSON.ObjectId(mediaContentId),
     };
@@ -229,6 +239,7 @@ export default async function editMediaContent_(request: Request, session?: Sess
       topic_id: new BSON.ObjectId(topicId),
       grade_id: new BSON.ObjectId(gradeId),
       subject_id: new BSON.ObjectId(subjectId),
+      organization_id: organizationPayload.organization_id,
       file_url: fileUrl,
       thumbnail_url: thumbnailUrl,
       external_url: externalUrl,

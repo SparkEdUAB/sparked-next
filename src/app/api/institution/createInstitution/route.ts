@@ -4,6 +4,7 @@ import { dbCollections } from '../../lib/db/collections';
 import { HttpStatusCode } from 'axios';
 import { NextRequest } from 'next/server';
 import { z } from 'zod';
+import { slugifyOrganizationName } from '../../lib/organization';
 
 export async function POST(request: NextRequest) {
   const schema = z.object({
@@ -54,6 +55,9 @@ export async function POST(request: NextRequest) {
       name,
       description,
       type,
+      slug: slugifyOrganizationName(name),
+      status: 'active',
+      is_default: false,
       website,
       address,
       contact_email,

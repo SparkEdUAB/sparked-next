@@ -7,6 +7,8 @@ import { p_fetchUserRoleDetails } from './pipelines';
 import { T_RECORD } from 'types';
 import { HttpStatusCode } from 'axios';
 import bcrypt from 'bcryptjs';
+import { resolveOrganizationContext } from '../lib/organization';
+import { Session } from 'next-auth';
 
 export default async function login_(request: Request) {
   const schema = zfd.formData({
@@ -42,6 +44,11 @@ export default async function login_(request: Request) {
           role: 1,
           is_verified: 1,
           password: 1,
+          firstName: 1,
+          lastName: 1,
+          phoneNumber: 1,
+          organization_id: 1,
+          institution_id: 1,
         },
       },
     );
@@ -81,9 +88,36 @@ export default async function login_(request: Request) {
       };
     }
 
-    const token = jwt.sign({ id: user._id, email: user.email, role }, process.env.JWT_SECRET as string, {
-      expiresIn: '72h',
+    const organizationContext = await resolveOrganizationContext(db, {
+      session: {
+        expires: new Date(Date.now() + 60_000).toISOString(),
+        user: {
+          id: user._id.toString(),
+          role: typeof role?.name === 'string' ? role.name : undefined,
+        },
+      } as Session,
+      organizationId: user.organization_id?.toString?.() || user.institution_id?.toString?.(),
     });
+
+    const token = jwt.sign(
+      {
+        id: user._id,
+        email: user.email,
+        role,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phone: user.phoneNumber,
+        organizationId: organizationContext.organizationId,
+        organizationSlug: organizationContext.organizationSlug,
+        organizationType: organizationContext.organizationType,
+        isDefaultOrganization: organizationContext.isDefaultOrganization,
+        isPlatformAdmin: organizationContext.isPlatformAdmin,
+      },
+      process.env.JWT_SECRET as string,
+      {
+      expiresIn: '72h',
+      },
+    );
 
     const response = {
       isError: false,
@@ -92,6 +126,14 @@ export default async function login_(request: Request) {
         id: user._id.toString(),
         email: user.email,
         role: role?.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+        organizationId: organizationContext.organizationId,
+        organizationSlug: organizationContext.organizationSlug,
+        organizationType: organizationContext.organizationType,
+        isDefaultOrganization: organizationContext.isDefaultOrganization,
+        isPlatformAdmin: organizationContext.isPlatformAdmin,
       },
       jwtToken: token,
     };

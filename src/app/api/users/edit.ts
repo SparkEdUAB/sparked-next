@@ -6,6 +6,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as USER_PROCESS_CODES } from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function editUser_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -15,10 +16,12 @@ export default async function editUser_(request: Request, session?: Session) {
     lastName: zfd.text(),
     phoneNumber: zfd.text(),
     role: zfd.text().optional(),
+    organizationId: zfd.text().optional(),
+    institutionId: zfd.text().optional(),
   });
 
   const formBody = await request.json();
-  const { _id, email, firstName, lastName, role, phoneNumber } = schema.parse(formBody);
+  const { _id, email, firstName, lastName, role, phoneNumber, organizationId, institutionId } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -48,6 +51,11 @@ export default async function editUser_(request: Request, session?: Session) {
         { status: HttpStatusCode.BadRequest },
       );
     }
+
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
+    });
 
     // Only verify and update role if one is provided
     if (role) {
@@ -88,6 +96,8 @@ export default async function editUser_(request: Request, session?: Session) {
           phoneNumber,
           updatedAt: new Date(),
           updatedById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,
+          organization_id: organizationPayload.organization_id,
+          institution_id: organizationPayload.institution_id,
         },
       },
     );
@@ -109,4 +119,3 @@ export default async function editUser_(request: Request, session?: Session) {
     );
   }
 }
-
