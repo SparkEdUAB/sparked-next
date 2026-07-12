@@ -13,7 +13,7 @@
     "pm2": "pm2 start pnpm --name \"sparked-next\" -- start"
   },
   "engines": {
-    "node": ">=22.14.0 <23",
+    "node": "^22.13.0 || >=24.0.0",
     "pnpm": ">=9 <10"
   },
   "dependencies": {
