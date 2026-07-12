@@ -30,7 +30,7 @@ test.describe('Home Page', () => {
     await logoLink.click();
     await expect(page).toHaveURL('/');
 
-    const themeToggle = page.locator('.theme-toggle');
+    const themeToggle = page.getByRole('button', { name: 'Toggle theme' });
     await expect(themeToggle).toBeVisible();
     await themeToggle.click();
     await expect(page.locator('html')).toHaveClass(/dark/);
