@@ -35,6 +35,7 @@ jobs:
             cd /var/www/sparked-next
             git pull origin main
             corepack enable
+            corepack prepare pnpm@9.15.4 --activate
             pnpm install --frozen-lockfile
             pnpm build
             if pm2 list | grep -q sparked-next; then

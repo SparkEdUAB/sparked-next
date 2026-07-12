@@ -8,6 +8,7 @@ git pull origin main
 
 # Install updated dependencies
 corepack enable
+corepack prepare pnpm@9.15.4 --activate
 pnpm install --frozen-lockfile
 
 # Build the Next.js app
