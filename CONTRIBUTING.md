@@ -60,11 +60,11 @@ Then create a Pull Request from here, we will take a look at it and merge it as 
 
 ### Testing
 
-`npm run test` or `yarn run test`
+`pnpm test`
 
 ### linting
 
-`npm run lint` or `yarn run lint`
+`pnpm lint`
 
 Before you make commit, make sure that the linting are passing, check with the eslintrc.yml to check the rules.
 

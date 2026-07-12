@@ -7,10 +7,11 @@ cd /var/www/sparked-next || exit
 git pull origin main
 
 # Install updated dependencies
-yarn install
+corepack enable
+pnpm install --frozen-lockfile
 
 # Build the Next.js app
-yarn build
+pnpm build
 
 # Restart the app with PM2
 pm2 stop sparked-next

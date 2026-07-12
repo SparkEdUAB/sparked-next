@@ -25,7 +25,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '22'
+          node-version: '22.14.0'
 
       - name: Deploy with PM2
         env:
@@ -34,12 +34,13 @@ jobs:
           sshpass -p "$SERVER_PASSWORD" ssh -o StrictHostKeyChecking=no root@95.111.229.11 << 'EOF'
             cd /var/www/sparked-next
             git pull origin main
-            yarn install
-            yarn build
+            corepack enable
+            pnpm install --frozen-lockfile
+            pnpm build
             if pm2 list | grep -q sparked-next; then
               pm2 restart sparked-next
             else
-              pm2 start yarn --name sparked-next -- start
+              pm2 start pnpm --name sparked-next -- start
             fi
             pm2 save
 
