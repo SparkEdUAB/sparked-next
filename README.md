@@ -9,7 +9,7 @@ You can check out the deployed version below using one the following links.
 Production: [sparkednext.app](https://sparkednext.app )  
 Staging: [sparked-app.onrender.com](https://sparked-app.onrender.com/)
 
-**Note**: We only support Node^18
+**Note**: This project is pinned to Node `22.14.0` and `pnpm` `9.x`.
 
 # For Contributors
 
@@ -32,11 +32,11 @@ Clone the repo
 
 Install dependencies
 
-`yarn`
+`corepack enable && pnpm install`
 
 Run the application
 
-`yarn run dev`
+`pnpm dev`
 
 # Using Docker
 
@@ -67,7 +67,7 @@ Before pushing anything to your fork, always
 
 ### linting
 
-`yarn run lint`
+`pnpm lint`
 
 Before you make commit, make sure that lint is passing, check with the eslintrc.yml to check the rules.
 

@@ -2,6 +2,7 @@
 const nextConfig = {
   env: {},
   turbopack: {
+    root: __dirname,
     resolveAlias: {
       // Exclude canvas module (needed for react-pdf)
       canvas: '',
