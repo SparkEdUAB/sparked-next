@@ -11,7 +11,6 @@ RUN apt-get update && apt-get install -y \
 RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 
 COPY package.json pnpm-lock.yaml ./
-COPY .env .env
 
 # Install dependencies and rebuild native modules
 RUN pnpm install --frozen-lockfile
@@ -31,7 +30,6 @@ COPY --from=base /app/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=base /app/.next ./.next
 COPY --from=base /app/public ./public
 COPY --from=base /app/node_modules ./node_modules
-COPY --from=base /app/.env ./.env
 
 ENV NODE_ENV=production
 
