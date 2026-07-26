@@ -41,7 +41,7 @@ const ContentDetailsCardView = ({
             unoptimized={hasExternalUrl || !isValidImage(image)}
             fill
           />
-           <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded-bl-xl">
+          <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded-bl-xl">
             {mediaType}
           </div>
         </div>

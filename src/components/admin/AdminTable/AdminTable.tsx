@@ -141,9 +141,7 @@ export function AdminTable<ItemType extends T_ItemTypeBase>({
                       className="cursor-pointer"
                       checked={rowSelection.selectedRowKeys.length === items?.length && items?.length !== 0}
                       onCheckedChange={(checked) =>
-                        checked
-                          ? rowSelection.onChange(items?.map((item) => item._id))
-                          : rowSelection.onChange([])
+                        checked ? rowSelection.onChange(items?.map((item) => item._id)) : rowSelection.onChange([])
                       }
                     />
                   </TableHead>

@@ -60,11 +60,7 @@ export function PagesListView() {
         error={error}
       />
 
-      <FormSheet
-        open={creatingPage}
-        onClose={() => setCreatingPage(false)}
-        title={`Create ${i18next.t('pages')}`}
-      >
+      <FormSheet open={creatingPage} onClose={() => setCreatingPage(false)} title={`Create ${i18next.t('pages')}`}>
         <CreatePageView
           onSuccessfullyDone={() => {
             mutate();
@@ -73,11 +69,7 @@ export function PagesListView() {
         />
       </FormSheet>
 
-      <FormSheet
-        open={!!edittingPage}
-        onClose={() => setEdittingPage(null)}
-        title={`Edit ${i18next.t('pages')}`}
-      >
+      <FormSheet open={!!edittingPage} onClose={() => setEdittingPage(null)} title={`Edit ${i18next.t('pages')}`}>
         {edittingPage && (
           <EditPageView
             page={edittingPage}

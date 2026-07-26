@@ -31,11 +31,7 @@ export function DeletionWarningModal({
             Confirm Deletion
           </DialogTitle>
           <DialogDescription>
-            {i18next.t(
-              numberOfElements === 1
-                ? 'deletion_confirmation_singular'
-                : 'deletion_confirmation_plural',
-            )}
+            {i18next.t(numberOfElements === 1 ? 'deletion_confirmation_singular' : 'deletion_confirmation_plural')}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2 sm:gap-0">

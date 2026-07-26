@@ -3,12 +3,7 @@
 import React, { useState } from 'react';
 import { DataTable } from '@components/admin/data-table/DataTable';
 import { FormSheet } from '@components/admin/form/FormSheet';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
@@ -22,25 +17,26 @@ import { LuFiles } from 'react-icons/lu';
 import i18next from 'i18next';
 
 const MediaContentListView: React.FC = () => {
-  const {
-    selectedMediaContentIds,
-    setSelectedMediaContentIds,
-    onSearchQueryChange,
-    deleteMediaContent,
-    searchQuery,
-  } = useMediaContent();
+  const { selectedMediaContentIds, setSelectedMediaContentIds, onSearchQueryChange, deleteMediaContent, searchQuery } =
+    useMediaContent();
   const [creatingResource, setCreatingResource] = useState(false);
   const [uploadingMultiple, setUploadingMultiple] = useState(false);
   const [edittingResource, setEdittingResource] = useState<T_MediaContentFields | null>(null);
 
-  const { items: mediaContent, isLoading, mutate, loadMore, hasMore, error } =
-    useAdminListViewData(
-      API_LINKS.FETCH_MEDIA_CONTENT,
-      'mediaContent',
-      transformRawMediaContent,
-      API_LINKS.FIND_MEDIA_CONTENT_BY_NAME,
-      searchQuery,
-    );
+  const {
+    items: mediaContent,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(
+    API_LINKS.FETCH_MEDIA_CONTENT,
+    'mediaContent',
+    transformRawMediaContent,
+    API_LINKS.FIND_MEDIA_CONTENT_BY_NAME,
+    searchQuery,
+  );
 
   const rowSelection = {
     selectedRowKeys: selectedMediaContentIds,
@@ -54,7 +50,11 @@ const MediaContentListView: React.FC = () => {
       </div>
 
       <DataTable<T_MediaContentFields>
-        deleteItems={async () => { const r = await deleteMediaContent(); mutate(); return r; }}
+        deleteItems={async () => {
+          const r = await deleteMediaContent();
+          mutate();
+          return r;
+        }}
         rowSelection={rowSelection}
         items={mediaContent}
         isLoading={isLoading}
@@ -73,25 +73,23 @@ const MediaContentListView: React.FC = () => {
         }
       />
 
-      <FormSheet
-        open={creatingResource}
-        onClose={() => setCreatingResource(false)}
-        title="Create Media Content"
-      >
+      <FormSheet open={creatingResource} onClose={() => setCreatingResource(false)} title="Create Media Content">
         <CreateMediaContentView
-          onSuccessfullyDone={() => { mutate(); setCreatingResource(false); }}
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingResource(false);
+          }}
         />
       </FormSheet>
 
-      <FormSheet
-        open={!!edittingResource}
-        onClose={() => setEdittingResource(null)}
-        title="Edit Media Content"
-      >
+      <FormSheet open={!!edittingResource} onClose={() => setEdittingResource(null)} title="Edit Media Content">
         {edittingResource && (
           <EditMediaContentView
             mediaContent={edittingResource}
-            onSuccessfullyDone={() => { mutate(); setEdittingResource(null); }}
+            onSuccessfullyDone={() => {
+              mutate();
+              setEdittingResource(null);
+            }}
           />
         )}
       </FormSheet>
@@ -103,7 +101,10 @@ const MediaContentListView: React.FC = () => {
             <DialogTitle>{i18next.t('upload_multiple')}</DialogTitle>
           </DialogHeader>
           <UploadMultipleResources
-            onSuccessfullyDone={() => { mutate(); setUploadingMultiple(false); }}
+            onSuccessfullyDone={() => {
+              mutate();
+              setUploadingMultiple(false);
+            }}
           />
         </DialogContent>
       </Dialog>

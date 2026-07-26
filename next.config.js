@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {},
+  experimental: {
+    webpackBuildWorker: false,
+  },
   turbopack: {
     root: __dirname,
     resolveAlias: {

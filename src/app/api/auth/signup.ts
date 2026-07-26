@@ -9,8 +9,6 @@ import { Resend } from 'resend';
 import { WelcomeEmail } from 'emails/WelcomeEmail';
 import { listActiveOrganizations, normalizeOrganizationPayload } from '../lib/organization';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export default async function signup_(request: Request) {
   const schema = z.object({
     email: z.string(),
@@ -40,10 +38,10 @@ export default async function signup_(request: Request) {
     grade,
     institutionId,
     organizationId,
-  } =
-    schema.parse(formBody);
+  } = schema.parse(formBody);
 
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const db = await dbClient();
 
     if (!db) {
@@ -71,7 +69,10 @@ export default async function signup_(request: Request) {
     }
 
     const activeOrganizations = await listActiveOrganizations(db);
-    const requestedOrganizationId = organizationId || institutionId || (activeOrganizations.length === 1 ? activeOrganizations[0]?._id.toString() : undefined);
+    const requestedOrganizationId =
+      organizationId ||
+      institutionId ||
+      (activeOrganizations.length === 1 ? activeOrganizations[0]?._id.toString() : undefined);
 
     if (!requestedOrganizationId && activeOrganizations.length > 1) {
       return new Response(

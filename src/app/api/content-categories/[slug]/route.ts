@@ -8,10 +8,7 @@ import editContentCategory_ from '../edit';
 import { deleteContentCategoriesById_ } from '../delete';
 import { NextRequest } from 'next/server';
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const session = await getServerSession(authOptions);
 
   const { slug } = await params;
@@ -36,10 +33,7 @@ export async function POST(
   }
 }
 
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const session = await getServerSession(authOptions);
 
   const { slug } = await params;
@@ -64,10 +58,7 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const session = await getServerSession(authOptions);
 
   const { slug } = await params;
@@ -92,10 +83,7 @@ export async function DELETE(
   }
 }
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   const contentCategoryFunctions: {

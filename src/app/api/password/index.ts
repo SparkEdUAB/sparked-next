@@ -7,12 +7,11 @@ import { Resend } from 'resend';
 import AUTH_PROCESS_CODES from '../auth/processCodes';
 import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export default async function forgotPassword_(request: Request) {
   const { email } = await request.json();
 
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const db = await dbClient();
 
     if (!db) {

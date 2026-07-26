@@ -56,7 +56,7 @@ const useAuth = () => {
         setLoading(false);
       }
     },
-    [message, router]
+    [message, router],
   );
 
   const handleLogin = useCallback(
@@ -105,11 +105,10 @@ const useAuth = () => {
           isDefaultOrganization: responseData.user?.isDefaultOrganization,
           isPlatformAdmin: responseData.user?.isPlatformAdmin,
         });
-        
+
         const isUserAdmin = userRole?.name?.toLowerCase() === 'admin';
 
         if (singInResp?.ok && !singInResp?.error) {
-          
           const userData = {
             email: fields.email,
             firstName: responseData.firstName,
@@ -123,7 +122,7 @@ const useAuth = () => {
             isDefaultOrganization: responseData.user?.isDefaultOrganization,
             isPlatformAdmin: responseData.user?.isPlatformAdmin,
           };
-          
+
           setUser(userData);
         }
 
@@ -135,7 +134,7 @@ const useAuth = () => {
         setLoading(false);
       }
     },
-    [message, setUser]
+    [message, setUser],
   );
 
   const handleLogout = useCallback(async () => {

@@ -15,7 +15,12 @@ export const isValidPassword = (password: string): boolean => {
   return passwordRegex.test(password);
 };
 
-export const validateSignupForm = (formData: any, isStudent: boolean, institutionType: string, selectedInstitutionId?: string | null) => {
+export const validateSignupForm = (
+  formData: any,
+  isStudent: boolean,
+  institutionType: string,
+  selectedInstitutionId?: string | null,
+) => {
   const errors: Record<string, string> = {};
 
   // Validate required fields

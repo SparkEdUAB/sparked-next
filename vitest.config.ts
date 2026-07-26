@@ -23,12 +23,13 @@ export default defineConfig({
       hocs: path.resolve(__dirname, './src/hocs'),
       state: path.resolve(__dirname, './src/state'),
       app: path.resolve(__dirname, './src/app'),
+      'server-only': path.resolve(__dirname, './tests/mocks/server-only.ts'),
     },
   },
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.tsx'],
-    include: ['src/**/*.test.{ts,tsx}'],
+    include: ['src/**/*.test.{ts,tsx}', 'tests/contracts/**/*.test.{ts,tsx}'],
   },
 });

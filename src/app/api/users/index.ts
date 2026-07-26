@@ -289,7 +289,7 @@ export async function findUserByEmail_(request: any) {
         status: HttpStatusCode.InternalServerError,
       });
     }
-    
+
     // Create case-insensitive regex pattern for email
     const regexPattern = new RegExp(`^${email.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i');
 
@@ -299,7 +299,7 @@ export async function findUserByEmail_(request: any) {
         {
           // Match the exact email (case insensitive)
           $match: {
-            email: { $regex: regexPattern }
+            email: { $regex: regexPattern },
           },
         },
         {
@@ -343,7 +343,7 @@ export async function findUserByEmail_(request: any) {
             isStudent: 1,
             institutionType: 1,
             schoolName: 1,
-            grade: 1
+            grade: 1,
           },
         },
         {

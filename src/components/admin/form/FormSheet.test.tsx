@@ -4,7 +4,11 @@ import { FormSheet } from './FormSheet';
 
 vi.mock('@/components/ui/sheet', () => ({
   Sheet: ({ open, onOpenChange, children }: any) =>
-    open ? <div data-testid="sheet" onClick={() => onOpenChange(false)}>{children}</div> : null,
+    open ? (
+      <div data-testid="sheet" onClick={() => onOpenChange(false)}>
+        {children}
+      </div>
+    ) : null,
   SheetContent: ({ children }: any) => <div data-testid="sheet-content">{children}</div>,
   SheetHeader: ({ children }: any) => <div>{children}</div>,
   SheetTitle: ({ children }: any) => <h2>{children}</h2>,

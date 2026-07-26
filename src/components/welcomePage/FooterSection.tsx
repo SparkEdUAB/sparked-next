@@ -1,6 +1,5 @@
 import AppLogo from '@components/logo';
 
-
 import Link from 'next/link';
 
 const FooterSection = () => {

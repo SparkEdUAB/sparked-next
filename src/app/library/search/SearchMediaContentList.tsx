@@ -30,10 +30,9 @@ const GradePicker = ({
   gradeId: string;
   setGradeId: (id: string) => void;
 }) => {
-  const label =
-    gradeId
-      ? (grades instanceof Array && grades.find((g) => g._id === gradeId)?.name) || i18next.t('Select Grade')
-      : i18next.t('Select Grade');
+  const label = gradeId
+    ? (grades instanceof Array && grades.find((g) => g._id === gradeId)?.name) || i18next.t('Select Grade')
+    : i18next.t('Select Grade');
 
   return (
     <DropdownMenu>
@@ -44,11 +43,7 @@ const GradePicker = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {gradeId && (
-          <DropdownMenuItem onClick={() => setGradeId('')}>
-            {i18next.t('All Grades')}
-          </DropdownMenuItem>
-        )}
+        {gradeId && <DropdownMenuItem onClick={() => setGradeId('')}>{i18next.t('All Grades')}</DropdownMenuItem>}
         {grades instanceof Array &&
           grades.map((grade) => (
             <DropdownMenuItem

@@ -34,7 +34,9 @@ const RelatedMediaItem = memo(
           loading="eager"
         />
         <div className="flex flex-col">
-          <h4 className={`font-semibold line-clamp-2 overflow-ellipsis ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-black dark:text-white'}`}>
+          <h4
+            className={`font-semibold line-clamp-2 overflow-ellipsis ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-black dark:text-white'}`}
+          >
             {item.name}
           </h4>
           <div className="line-clamp-2 overflow-ellipsis text-sm text-gray-500">{item.description}</div>
@@ -78,12 +80,7 @@ export function RelatedMediaContentList({
           <h3 className="my-4 font-semibold text-xl">Related Media</h3>
           <ul className="list-none p-0">
             {relatedMediaContent.map((item) => (
-              <RelatedMediaItem
-                key={item._id}
-                item={item}
-                isActive={item._id === activeMediaId}
-                onSelect={onSelect}
-              />
+              <RelatedMediaItem key={item._id} item={item} isActive={item._id === activeMediaId} onSelect={onSelect} />
             ))}
           </ul>
         </>

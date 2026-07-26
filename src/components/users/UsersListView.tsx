@@ -12,13 +12,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
@@ -46,12 +40,14 @@ const UsersListView = () => {
     if (showAssignModal && publicInstitutions.length === 0) fetchPublicInstitutions();
   }, [showAssignModal, publicInstitutions.length, fetchPublicInstitutions]);
 
-  const { items: users, isLoading, mutate, loadMore, hasMore, error } = useAdminListViewData(
-    API_LINKS.FETCH_USERS,
-    'users',
-    transformRawUser,
-    API_LINKS.FIND_USERS_BY_NAME,
-  );
+  const {
+    items: users,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(API_LINKS.FETCH_USERS, 'users', transformRawUser, API_LINKS.FIND_USERS_BY_NAME);
 
   const rowSelection = {
     selectedRowKeys: selectedUserIds,
@@ -76,7 +72,11 @@ const UsersListView = () => {
       </div>
 
       <DataTable<any>
-        deleteItems={async () => { const r = await deleteUsers(); mutate(); return r; }}
+        deleteItems={async () => {
+          const r = await deleteUsers();
+          mutate();
+          return r;
+        }}
         rowSelection={rowSelection}
         items={users}
         isLoading={isLoading}
@@ -123,19 +123,21 @@ const UsersListView = () => {
 
       <FormSheet open={creatingUser} onClose={() => setCreatingUser(false)} title="Create User">
         <CreateUserView
-          onSuccessfullyDone={() => { mutate(); setCreatingUser(false); }}
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingUser(false);
+          }}
         />
       </FormSheet>
 
-      <FormSheet
-        open={!!edittingUser}
-        onClose={() => setEdittingUser(null)}
-        title="Edit User"
-      >
+      <FormSheet open={!!edittingUser} onClose={() => setEdittingUser(null)} title="Edit User">
         {edittingUser && (
           <EditUserView
             user={edittingUser}
-            onSuccessfullyDone={() => { mutate(); setEdittingUser(null); }}
+            onSuccessfullyDone={() => {
+              mutate();
+              setEdittingUser(null);
+            }}
           />
         )}
       </FormSheet>
@@ -145,9 +147,7 @@ const UsersListView = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Assign Users to Institution</DialogTitle>
-            <DialogDescription>
-              Assign {selectedUserIds.length} selected user(s) to an institution.
-            </DialogDescription>
+            <DialogDescription>Assign {selectedUserIds.length} selected user(s) to an institution.</DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
             <Label htmlFor="institution-select">Select Institution</Label>

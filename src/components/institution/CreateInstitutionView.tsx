@@ -5,13 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
@@ -102,12 +96,7 @@ const CreateInstitutionView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: ()
 
         <div className="space-y-1.5">
           <Label htmlFor="type">{INSTITUTION_FORM_FIELDS.type.label} *</Label>
-          <Select
-            disabled={isLoading}
-            value={selectedType}
-            onValueChange={setSelectedType}
-            required
-          >
+          <Select disabled={isLoading} value={selectedType} onValueChange={setSelectedType} required>
             <SelectTrigger id="type" className={errors.type ? 'border-destructive' : ''}>
               <SelectValue placeholder="Select Type" />
             </SelectTrigger>
@@ -159,9 +148,7 @@ const CreateInstitutionView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: ()
             placeholder="contact@institution.com"
             className={errors.contact_email ? 'border-destructive' : ''}
           />
-          {errors.contact_email && (
-            <p className="text-xs text-destructive">{errors.contact_email}</p>
-          )}
+          {errors.contact_email && <p className="text-xs text-destructive">{errors.contact_email}</p>}
         </div>
       </div>
 

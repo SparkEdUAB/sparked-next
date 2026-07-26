@@ -56,9 +56,9 @@ export async function getDbFieldNamesConfigStatus({ dbConfigData }: { dbConfigDa
     //@ts-ignore
     const entry = configData[key] as T_CONFIG_VARIABLE;
 
-    if (configKeys.includes(entry.key) && entry.value  === 'true') {
+    if (configKeys.includes(entry.key) && entry.value === 'true') {
       configItems.push({
-        value: entry.value  === 'true' ? 1 : 0,
+        value: entry.value === 'true' ? 1 : 0,
         fieldName: dbConfigData[configKeys.indexOf(entry.key)]?.fieldName,
       });
     }
@@ -66,5 +66,5 @@ export async function getDbFieldNamesConfigStatus({ dbConfigData }: { dbConfigDa
     // arrIndex++;
   }
 
-  return configItems.map((i) => ({ [i.fieldName]: i.value } as T_RECORD)).reduce((a, c) => ({ ...a, ...c }));
+  return configItems.map((i) => ({ [i.fieldName]: i.value }) as T_RECORD).reduce((a, c) => ({ ...a, ...c }));
 }

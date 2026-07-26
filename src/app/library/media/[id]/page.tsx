@@ -22,8 +22,8 @@ type T_MediaContentPageProps = {
 const getMediaContent = cache(async (id: string) => {
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
     BASE_URL +
-    API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
-    NETWORK_UTILS.formatGetParams({ mediaContentId: id, withMetaData: 'true' }),
+      API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+      NETWORK_UTILS.formatGetParams({ mediaContentId: id, withMetaData: 'true' }),
   );
   return result;
 });

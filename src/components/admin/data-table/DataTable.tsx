@@ -1,22 +1,10 @@
 'use client';
 import React, { ReactNode, useState } from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import { DeletionWarningModal } from '@components/admin/AdminTable/DeletionWarningModal';
 import { T_ColumnData, T_ItemTypeBase } from '@components/admin/AdminTable/types';
@@ -64,8 +52,7 @@ export function DataTable<ItemType extends T_ItemTypeBase>({
   const disabledConfigItems: string[] = configs ? getDisabledConfigItems({ configs }) : [];
   const filteredColumns = columns.filter((c) => !disabledConfigItems.includes(c.key));
 
-  const allSelected =
-    items.length > 0 && rowSelection.selectedRowKeys.length === items.length;
+  const allSelected = items.length > 0 && rowSelection.selectedRowKeys.length === items.length;
   const someSelected = rowSelection.selectedRowKeys.length > 0;
 
   const handleSearch = () => onSearchQueryChange?.(searchQuery);
@@ -89,12 +76,7 @@ export function DataTable<ItemType extends T_ItemTypeBase>({
             {i18next.t('new')}
           </Button>
           {someSelected && (
-            <Button
-              variant="destructive"
-              size="sm"
-              className="gap-1.5"
-              onClick={() => setShowDeletionWarning(true)}
-            >
+            <Button variant="destructive" size="sm" className="gap-1.5" onClick={() => setShowDeletionWarning(true)}>
               <Trash2 className="h-4 w-4" />
               {i18next.t('delete')} ({rowSelection.selectedRowKeys.length})
             </Button>
@@ -138,11 +120,7 @@ export function DataTable<ItemType extends T_ItemTypeBase>({
                   <TableHead className="w-10">
                     <Checkbox
                       checked={allSelected}
-                      onCheckedChange={(checked) =>
-                        rowSelection.onChange(
-                          checked ? items.map((i) => i._id) : [],
-                        )
-                      }
+                      onCheckedChange={(checked) => rowSelection.onChange(checked ? items.map((i) => i._id) : [])}
                     />
                   </TableHead>
                   {filteredColumns.map((col, i) => (
@@ -165,9 +143,7 @@ export function DataTable<ItemType extends T_ItemTypeBase>({
                           rowSelection.onChange(
                             checked
                               ? [...rowSelection.selectedRowKeys, item._id]
-                              : rowSelection.selectedRowKeys.filter(
-                                  (id) => id !== item._id,
-                                ),
+                              : rowSelection.selectedRowKeys.filter((id) => id !== item._id),
                           )
                         }
                       />
@@ -175,24 +151,14 @@ export function DataTable<ItemType extends T_ItemTypeBase>({
                     {filteredColumns.map((col, colIdx) => {
                       const text = item[col.dataIndex as keyof ItemType] as string;
                       return (
-                        <TableCell key={`${col.key}-${colIdx}`}>
-                          {col.render ? col.render(text, item) : text}
-                        </TableCell>
+                        <TableCell key={`${col.key}-${colIdx}`}>{col.render ? col.render(text, item) : text}</TableCell>
                       );
                     })}
-                    <TableCell
-                      className="text-right"
-                      onClick={(e) => e.stopPropagation()}
-                    >
+                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-end gap-1">
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-7 w-7"
-                              onClick={() => editItem(item)}
-                            >
+                            <Button variant="ghost" size="icon" className="h-7 w-7" onClick={() => editItem(item)}>
                               <Pencil className="h-3.5 w-3.5" />
                             </Button>
                           </TooltipTrigger>
@@ -221,9 +187,7 @@ export function DataTable<ItemType extends T_ItemTypeBase>({
         )}
       </div>
 
-      {!isLoading && (hasMore || error) && (
-        <DataTableLoadMore loadMore={loadMore} error={error} />
-      )}
+      {!isLoading && (hasMore || error) && <DataTableLoadMore loadMore={loadMore} error={error} />}
 
       <DeletionWarningModal
         showDeletionWarning={showDeletionWarning}

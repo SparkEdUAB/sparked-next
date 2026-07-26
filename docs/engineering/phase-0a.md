@@ -69,7 +69,7 @@ Recorded on 2026-07-26:
 - Playwright was intentionally not run for this handoff at the requester’s
   direction. The current suite has four active homepage tests and one skipped
   library suite.
-Dependabot remains the only automated dependency updater.
+  Dependabot remains the only automated dependency updater.
 
 ## Rollback
 

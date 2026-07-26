@@ -63,13 +63,13 @@ export interface I_UserFields extends I_BaseUser, I_PersonalInfo, I_StudentInfo,
   key: string;
   name: string;
   _id?: string;
-  
+
   created_by?: string;
   created_at: string;
-  
+
   institution_id?: string;
   institutionName?: string;
-  
+
   user?: {
     name: string;
     email: string;

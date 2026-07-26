@@ -5,13 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { FormEventHandler, useState } from 'react';
 import { extractValuesFromFormEvent } from 'utils/helpers/extractValuesFromFormEvent';
@@ -169,9 +163,7 @@ const EditInstitutionView = ({ institution, onSuccessfullyDone }: EditInstitutio
             defaultValue={institution.contact_email || ''}
             className={errors.contact_email ? 'border-destructive' : ''}
           />
-          {errors.contact_email && (
-            <p className="text-xs text-destructive">{errors.contact_email}</p>
-          )}
+          {errors.contact_email && <p className="text-xs text-destructive">{errors.contact_email}</p>}
         </div>
       </div>
 
@@ -205,9 +197,7 @@ const EditInstitutionView = ({ institution, onSuccessfullyDone }: EditInstitutio
           <Label htmlFor="verification_status">Verification Status:</Label>
           <span
             className={`ml-2 px-2 py-1 rounded text-xs font-medium ${
-              institution.is_verified
-                ? 'bg-green-100 text-green-800'
-                : 'bg-yellow-100 text-yellow-800'
+              institution.is_verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
             }`}
           >
             {institution.is_verified ? 'Verified' : 'Pending Review'}

@@ -81,4 +81,3 @@ export default async function createContentCategory_(request: Request, session?:
     });
   }
 }
-

@@ -10,7 +10,16 @@ vi.mock('@hooks/useSchool', () => ({
   default: () => ({
     editSchool: vi.fn(),
     fetchSchool: vi.fn(),
-    school: { _id: '1', name: 'Test School', description: 'Desc', index: 0, key: '1', created_by: '', created_at: '', user: { name: '', email: '' } },
+    school: {
+      _id: '1',
+      name: 'Test School',
+      description: 'Desc',
+      index: 0,
+      key: '1',
+      created_by: '',
+      created_at: '',
+      user: { name: '', email: '' },
+    },
     isLoading: false,
   }),
 }));

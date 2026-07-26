@@ -29,7 +29,8 @@ export function MediaContentPlayer({ initialMediaContent, initialRelatedMedia }:
 
       // Background: fetch full metadata
       const fullResult = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
-        API_LINKS.FETCH_MEDIA_CONTENT_BY_ID + NETWORK_UTILS.formatGetParams({ mediaContentId: item._id, withMetaData: 'true' }),
+        API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
+          NETWORK_UTILS.formatGetParams({ mediaContentId: item._id, withMetaData: 'true' }),
       );
       if (!(fullResult instanceof Error)) {
         setActiveMedia(fullResult.mediaContent);

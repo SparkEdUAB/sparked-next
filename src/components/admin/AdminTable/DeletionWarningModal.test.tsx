@@ -3,8 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { DeletionWarningModal } from './DeletionWarningModal';
 
 vi.mock('@/components/ui/dialog', () => ({
-  Dialog: ({ open, children }: any) =>
-    open ? <div data-testid="dialog">{children}</div> : null,
+  Dialog: ({ open, children }: any) => (open ? <div data-testid="dialog">{children}</div> : null),
   DialogContent: ({ children }: any) => <div>{children}</div>,
   DialogHeader: ({ children }: any) => <div>{children}</div>,
   DialogTitle: ({ children }: any) => <h2>{children}</h2>,
@@ -14,7 +13,9 @@ vi.mock('@/components/ui/dialog', () => ({
 
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, variant }: any) => (
-    <button onClick={onClick} data-variant={variant}>{children}</button>
+    <button onClick={onClick} data-variant={variant}>
+      {children}
+    </button>
   ),
 }));
 

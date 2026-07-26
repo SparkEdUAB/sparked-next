@@ -7,7 +7,7 @@ on:
     branches: ['main']
 
 jobs:
-  build:
+  checks:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -35,26 +35,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Set up environment variables
+      - name: Restore Next build cache
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-next-${{ hashFiles('pnpm-lock.yaml', 'next.config.js', 'tsconfig.json') }}
+          restore-keys: |
+            ${{ runner.os }}-next-
+
+      - name: Run required checks in parallel
         run: |
-          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
-          echo "MONGODB_DB=sparked-next" >> .env
-
-      - name: Run linting
-        run: npx --yes oxlint@latest --deny-warnings
-
-      - name: Type check
-        run: pnpm type-check
-
-      - name: Build
-        id: build
-        run: pnpm build
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-          EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
-          MONGODB_DB: ${{ secrets.MONGODB_DB }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          BASE_URL: ${{ secrets.BASE_URL }}
+          pnpm lint &
+          pnpm format:check &
+          pnpm type-check &
+          pnpm test &
+          pnpm build &
+          wait
