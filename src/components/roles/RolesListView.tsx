@@ -24,11 +24,7 @@ export function RolesListView() {
     loadMore,
     hasMore,
     error,
-  } = useAdminListViewData<T_RoleFields, T_RawRoleFields>(
-    API_LINKS.FETCH_USER_ROLES,
-    'userRoles',
-    transformRawRole,
-  );
+  } = useAdminListViewData<T_RoleFields, T_RawRoleFields>(API_LINKS.FETCH_USER_ROLES, 'userRoles', transformRawRole);
 
   const rowSelection = {
     selectedRowKeys: selectedRoleIds,
@@ -60,11 +56,7 @@ export function RolesListView() {
         error={error}
       />
 
-      <FormSheet
-        open={creatingRole}
-        onClose={() => setCreatingRole(false)}
-        title={`Create ${i18next.t('roles')}`}
-      >
+      <FormSheet open={creatingRole} onClose={() => setCreatingRole(false)} title={`Create ${i18next.t('roles')}`}>
         <CreateRoleView
           onSuccessfullyDone={() => {
             mutate();
@@ -73,11 +65,7 @@ export function RolesListView() {
         />
       </FormSheet>
 
-      <FormSheet
-        open={!!edittingRole}
-        onClose={() => setEdittingRole(null)}
-        title={`Edit ${i18next.t('roles')}`}
-      >
+      <FormSheet open={!!edittingRole} onClose={() => setEdittingRole(null)} title={`Edit ${i18next.t('roles')}`}>
         {edittingRole && (
           <EditRoleView
             role={edittingRole}

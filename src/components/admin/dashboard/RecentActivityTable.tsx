@@ -1,13 +1,6 @@
 'use client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { T_StatFields } from '@hooks/useAdmin/types';
 
@@ -38,9 +31,7 @@ export function RecentActivityTable({ stats }: { stats: T_StatFields[] }) {
             ) : (
               entityStats.map((stat) => (
                 <TableRow key={stat.name}>
-                  <TableCell className="font-medium capitalize">
-                    {stat.name.replaceAll('_', ' ')}
-                  </TableCell>
+                  <TableCell className="font-medium capitalize">{stat.name.replaceAll('_', ' ')}</TableCell>
                   <TableCell className="text-right font-semibold">{stat.value}</TableCell>
                   <TableCell>
                     {(stat.value as number) > 0 ? (

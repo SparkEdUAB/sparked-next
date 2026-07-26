@@ -28,11 +28,11 @@ export default async function uploadFile_(request: Request) {
       await writeFile(savePath, buffer);
       url = `/uploads/${sanitizedFilename}`;
     } else {
-      url = await s3Upload({
+      url = (await s3Upload({
         file: buffer,
         fileName: file.name.substring(0, file.name.lastIndexOf('.')),
         ext,
-      }) as string;
+      })) as string;
     }
 
     const response = {

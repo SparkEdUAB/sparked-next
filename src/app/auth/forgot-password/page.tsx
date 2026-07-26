@@ -5,10 +5,9 @@ import { withAuthorization } from '@hocs/withAuthorization';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
 
 const ForgotPasswordPage = () => {
-    useDocumentTitle('Forgot Password');
+  useDocumentTitle('Forgot Password');
 
-    return <ForgotPassword />;
+  return <ForgotPassword />;
 };
 
-
-export default  withAuthorization(ForgotPasswordPage, { requireGuest: true });
+export default withAuthorization(ForgotPasswordPage, { requireGuest: true });

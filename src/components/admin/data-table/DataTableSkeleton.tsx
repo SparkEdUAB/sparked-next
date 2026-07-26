@@ -1,20 +1,7 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function DataTableSkeleton({
-  columnCount = 4,
-  rowCount = 5,
-}: {
-  columnCount?: number;
-  rowCount?: number;
-}) {
+export function DataTableSkeleton({ columnCount = 4, rowCount = 5 }: { columnCount?: number; rowCount?: number }) {
   return (
     <Table>
       <TableHeader>

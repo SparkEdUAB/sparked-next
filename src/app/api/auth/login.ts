@@ -115,7 +115,7 @@ export default async function login_(request: Request) {
       },
       process.env.JWT_SECRET as string,
       {
-      expiresIn: '72h',
+        expiresIn: '72h',
       },
     );
 

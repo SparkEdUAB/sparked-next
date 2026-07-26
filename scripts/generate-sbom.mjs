@@ -28,7 +28,9 @@ function addPackage(name, node) {
     });
   }
 
-  const childRefs = Object.entries(node.dependencies ?? {}).map(([childName, childNode]) => addPackage(childName, childNode));
+  const childRefs = Object.entries(node.dependencies ?? {}).map(([childName, childNode]) =>
+    addPackage(childName, childNode),
+  );
   dependencies.set(ref, new Set([...(dependencies.get(ref) ?? []), ...childRefs]));
   return ref;
 }

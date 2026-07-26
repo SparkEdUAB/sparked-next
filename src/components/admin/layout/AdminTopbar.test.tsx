@@ -7,7 +7,9 @@ vi.mock('./UserDropdown', () => ({ UserDropdown: () => <div>user</div> }));
 vi.mock('@components/logo', () => ({ default: () => <span>Logo</span> }));
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, ...props }: any) => (
-    <button onClick={onClick} {...props}>{children}</button>
+    <button onClick={onClick} {...props}>
+      {children}
+    </button>
   ),
 }));
 

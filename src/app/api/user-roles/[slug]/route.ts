@@ -94,7 +94,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ slug
   } = {
     fetchUserRoles: fetchUserRoles_,
     fetchUserRoleById: fetchUserRoleById_,
-    
   };
 
   if (userRoleFunctions[slug] && session) {

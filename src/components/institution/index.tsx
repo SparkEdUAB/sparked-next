@@ -21,12 +21,17 @@ export const institutionTableColumns: T_ColumnData<T_InstitutionFields>[] = [
     dataIndex: 'type',
     key: 'type',
     render: (type: string) => (
-      <span className={`px-2 py-1 rounded text-xs font-medium ${
-        type === 'school' ? 'bg-blue-100 text-blue-800' :
-        type === 'college' ? 'bg-green-100 text-green-800' :
-        type === 'university' ? 'bg-purple-100 text-purple-800' :
-        'bg-orange-100 text-orange-800'
-      }`}>
+      <span
+        className={`px-2 py-1 rounded text-xs font-medium ${
+          type === 'school'
+            ? 'bg-blue-100 text-blue-800'
+            : type === 'college'
+              ? 'bg-green-100 text-green-800'
+              : type === 'university'
+                ? 'bg-purple-100 text-purple-800'
+                : 'bg-orange-100 text-orange-800'
+        }`}
+      >
         {type.charAt(0).toUpperCase() + type.slice(1)}
       </span>
     ),
@@ -36,9 +41,11 @@ export const institutionTableColumns: T_ColumnData<T_InstitutionFields>[] = [
     dataIndex: 'is_verified',
     key: 'is_verified',
     render: (verified: string, item: T_InstitutionFields) => (
-      <span className={`px-2 py-1 rounded text-xs font-medium ${
-        item.is_verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-      }`}>
+      <span
+        className={`px-2 py-1 rounded text-xs font-medium ${
+          item.is_verified ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+        }`}
+      >
         {item.is_verified ? 'Verified' : 'Pending'}
       </span>
     ),
@@ -47,7 +54,7 @@ export const institutionTableColumns: T_ColumnData<T_InstitutionFields>[] = [
     title: 'Website',
     dataIndex: 'website',
     key: 'website',
-    render: (website: string) => 
+    render: (website: string) =>
       website ? (
         <a href={website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
           Visit
@@ -73,7 +80,7 @@ export const institutionTableColumnsWithActions = (
   onApprove: (institution: T_InstitutionFields) => void,
   onReject: (institution: T_InstitutionFields) => void,
   isProcessing: boolean,
-  onViewUsers?: (institution: T_InstitutionFields) => void
+  onViewUsers?: (institution: T_InstitutionFields) => void,
 ): T_ColumnData<T_InstitutionFields>[] => [
   ...institutionTableColumns,
   {

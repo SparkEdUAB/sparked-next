@@ -1,11 +1,6 @@
-import { MongoClient } from 'mongodb';
+import { Db, MongoClient } from 'mongodb';
 import { initializeDatabase } from './init';
 
-if (!process.env.MONGODB_URI) {
-  console.error('Invalid/Missing environment variable: "MONGODB_URI"');
-}
-
-const uri = process.env.MONGODB_URI || "mongodb://...."; // Just to allow the build to pass
 const options = {};
 
 declare global {
@@ -15,15 +10,22 @@ declare global {
   var _mongoInitPromise: Promise<void> | undefined;
 }
 
-if (!global._mongoClientPromise) {
-  const client = new MongoClient(uri, options);
-  global._mongoClientPromise = client.connect();
+function getMongoClientPromise() {
+  if (!global._mongoClientPromise) {
+    const uri = process.env.MONGODB_URI;
+
+    if (!uri) {
+      throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
+    }
+
+    global._mongoClientPromise = new MongoClient(uri, options).connect();
+  }
+
+  return global._mongoClientPromise;
 }
 
-const mongoClientPromise = global._mongoClientPromise;
-
-export const dbClient = async () => {
-  const client = await mongoClientPromise;
+export const dbClient = async (): Promise<Db> => {
+  const client = await getMongoClientPromise();
   const db = client.db(process.env.MONGODB_DB);
 
   if (!global._mongoInitPromise) {
@@ -35,4 +37,4 @@ export const dbClient = async () => {
   return db;
 };
 
-export default mongoClientPromise;
+export default dbClient;

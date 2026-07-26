@@ -8,7 +8,8 @@ import { MEDIA_CONTENT_LIMIT } from '@components/library/constants';
 type SORT_BY = string;
 
 export function getSearchMediaUrl(skip: number, searchText: string, sort_by: SORT_BY = '', grade_id: string = '') {
-  return (BASE_URL || '') +
+  return (
+    (BASE_URL || '') +
     API_LINKS.FIND_MEDIA_CONTENT_BY_NAME +
     NETWORK_UTILS.formatGetParams({
       name: searchText,
@@ -16,8 +17,9 @@ export function getSearchMediaUrl(skip: number, searchText: string, sort_by: SOR
       limit: MEDIA_CONTENT_LIMIT.toString(),
       withMetaData: 'false',
       sort_by: sort_by,
-      grade_id
-    });
+      grade_id,
+    })
+  );
 }
 
 export async function searchMedia(skip: number, searchText: string, sort_by: SORT_BY = '', grade_id: string = '') {

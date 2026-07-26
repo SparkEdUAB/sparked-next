@@ -76,7 +76,7 @@ export default async function assignUsersToInstitution_(request: Request) {
           institution_id: new BSON.ObjectId(institutionId),
           updated_at: new Date(),
         },
-      }
+      },
     );
 
     const response = {

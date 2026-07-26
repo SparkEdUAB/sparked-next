@@ -6,7 +6,8 @@ interface ResetPasswordEmailProps {
 
 const main = {
   backgroundColor: '#ffffff',
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
 };
 
 const container = {
@@ -74,13 +75,7 @@ export const ResetPasswordEmail = ({ resetLink }: ResetPasswordEmailProps) => (
     <Head />
     <Body style={main}>
       <Container style={container}>
-        <Img
-          src="https://sparkednext.app/email-logo.png"
-          width="160"
-          height="30"
-          alt="Sparked"
-          style={logo}
-        />
+        <Img src="https://sparkednext.app/email-logo.png" width="160" height="30" alt="Sparked" style={logo} />
         <Text style={heading}>Reset Your Password</Text>
         <Text style={paragraph}>
           You recently requested to reset your password for your Sparked account. Click the button below to reset it.
@@ -109,15 +104,4 @@ export const ResetPasswordEmail = ({ resetLink }: ResetPasswordEmailProps) => (
   </Html>
 );
 
-export {
-  main,
-  container,
-  logo,
-  heading,
-  paragraph,
-  buttonContainer,
-  button,
-  hr,
-  footer,
-  footerLink
-};
+export { main, container, logo, heading, paragraph, buttonContainer, button, hr, footer, footerLink };

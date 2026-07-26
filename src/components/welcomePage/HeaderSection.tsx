@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import AppLogo from '@components/logo';
 import { ThemeToggle } from '@/components/admin/layout/ThemeToggle';
 import { useSession } from 'next-auth/react';
@@ -17,7 +17,7 @@ const HeaderSection = () => {
           </a>
           <div className="flex items-center lg:order-2">
             <div className="flex flex-row gap-2 flex-wrap items-center">
-              {status === "authenticated" ? <LogOutButton /> : <LoginSignupLinks />}
+              {status === 'authenticated' ? <LogOutButton /> : <LoginSignupLinks />}
               <ThemeToggle />
             </div>
           </div>

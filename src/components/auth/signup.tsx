@@ -15,7 +15,6 @@ import { validateSignupForm } from 'utils/helpers/validation';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import InstitutionSelector from '@components/institution/InstitutionSelector';
 
-
 const Signup = () => {
   const { handleSignup, loading } = useAuth();
   const [isStudent, setIsStudent] = useState(false);
@@ -34,7 +33,7 @@ const Signup = () => {
     password: '',
     confirmPassword: '',
     schoolName: '',
-    grade: ''
+    grade: '',
   });
 
   // Errors state
@@ -54,9 +53,9 @@ const Signup = () => {
   // Handle input changes
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -67,9 +66,9 @@ const Signup = () => {
 
     // Clear institution error when an institution is selected
     if (institutionId) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        institution: undefined
+        institution: undefined,
       }));
     }
   };
@@ -79,18 +78,18 @@ const Signup = () => {
     // Create a temporary object with current form values
     const dataToValidate = {
       ...formData,
-      institutionType
+      institutionType,
     };
 
     // Run validation
     const validation = validateSignupForm(dataToValidate, isStudent, institutionType);
 
     // Update errors - only clear errors for fields that are now valid
-    setErrors(prevErrors => {
+    setErrors((prevErrors) => {
       const newErrors = { ...prevErrors };
 
       // Check each field that has a value
-      Object.keys(dataToValidate).forEach(key => {
+      Object.keys(dataToValidate).forEach((key) => {
         const fieldKey = key as keyof typeof dataToValidate;
         const value = dataToValidate[fieldKey];
 
@@ -128,18 +127,19 @@ const Signup = () => {
       setSelectedInstitutionId(null);
       setSelectedInstitutionName('');
       // Also reset school-related fields
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         schoolName: '',
-        grade: ''
+        grade: '',
       }));
       // Clear institution error
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        institution: undefined
+        institution: undefined,
       }));
     }
-  };  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  };
+  const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
 
     // Create a complete result object that includes all form data
@@ -178,9 +178,7 @@ const Signup = () => {
         </Link>
         <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
           <div className="p-8 space-y-4">
-            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">
-              Join Our Community
-            </h1>
+            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">Join Our Community</h1>
             <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
               Create an account and start your learning journey
             </p>
@@ -189,7 +187,9 @@ const Signup = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor={SIGNUP_FORM_FIELDS.firstName.key} className="text-gray-700 dark:text-gray-300">First Name *</Label>
+                    <Label htmlFor={SIGNUP_FORM_FIELDS.firstName.key} className="text-gray-700 dark:text-gray-300">
+                      First Name *
+                    </Label>
                   </div>
                   <div className="relative">
                     <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -209,7 +209,9 @@ const Signup = () => {
 
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor={SIGNUP_FORM_FIELDS.lastName.key} className="text-gray-700 dark:text-gray-300">Last Name *</Label>
+                    <Label htmlFor={SIGNUP_FORM_FIELDS.lastName.key} className="text-gray-700 dark:text-gray-300">
+                      Last Name *
+                    </Label>
                   </div>
                   <div className="relative">
                     <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -230,7 +232,9 @@ const Signup = () => {
 
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} className="text-gray-700 dark:text-gray-300">Your email *</Label>
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} className="text-gray-700 dark:text-gray-300">
+                    Your email *
+                  </Label>
                 </div>
                 <div className="relative">
                   <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -250,7 +254,9 @@ const Signup = () => {
 
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor="phoneNumber" className="text-gray-700 dark:text-gray-300">Phone Number *</Label>
+                  <Label htmlFor="phoneNumber" className="text-gray-700 dark:text-gray-300">
+                    Phone Number *
+                  </Label>
                 </div>
                 <Input
                   id="phoneNumber"
@@ -297,9 +303,7 @@ const Signup = () => {
 
               {isStudent && (
                 <div className="animate-fadeIn space-y-4 bg-blue-50 dark:bg-gray-700/50 p-4 rounded-lg dark:border-blue-400">
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">
-                    Institution Information
-                  </h3>
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Institution Information</h3>
 
                   <InstitutionSelector
                     selectedInstitutionId={selectedInstitutionId || undefined}
@@ -311,7 +315,9 @@ const Signup = () => {
 
                   <div>
                     <div className="mb-1.5 block">
-                      <Label htmlFor="grade" className="text-gray-700 dark:text-gray-300">Grade (Optional)</Label>
+                      <Label htmlFor="grade" className="text-gray-700 dark:text-gray-300">
+                        Grade (Optional)
+                      </Label>
                     </div>
                     <select
                       id="grade"
@@ -336,7 +342,9 @@ const Signup = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">Password *</Label>
+                    <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">
+                      Password *
+                    </Label>
                   </div>
                   <div className="relative">
                     <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -366,7 +374,9 @@ const Signup = () => {
 
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300">Confirm Password *</Label>
+                    <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300">
+                      Confirm Password *
+                    </Label>
                   </div>
                   <div className="relative">
                     <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -411,7 +421,7 @@ const Signup = () => {
               </Button>
 
               <p className="text-md font-light text-center text-gray-600 dark:text-gray-400 mt-4">
-                Already have an account?{" "}
+                Already have an account?{' '}
                 <Link
                   href="/auth/login"
                   className="font-medium  hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"

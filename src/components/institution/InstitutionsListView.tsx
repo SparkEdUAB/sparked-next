@@ -14,13 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useAdminListViewData } from '@hooks/useAdmin/useAdminListViewData';
 import { API_LINKS } from 'app/links';
 import useInstitution, { transformRawInstitution } from '@hooks/useInstitution';
@@ -45,13 +39,9 @@ const InstitutionsListView: React.FC = () => {
 
   const [creatingInstitution, setCreatingInstitution] = useState(false);
   const [edittingInstitution, setEdittingInstitution] = useState<T_InstitutionFields | null>(null);
-  const [rejectingInstitution, setRejectingInstitution] = useState<T_InstitutionFields | null>(
-    null,
-  );
+  const [rejectingInstitution, setRejectingInstitution] = useState<T_InstitutionFields | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
-  const [verificationFilter, setVerificationFilter] = useState<'all' | 'verified' | 'pending'>(
-    'all',
-  );
+  const [verificationFilter, setVerificationFilter] = useState<'all' | 'verified' | 'pending'>('all');
   const [viewingUsersFor, setViewingUsersFor] = useState<T_InstitutionFields | null>(null);
 
   const handleApprove = async (institution: T_InstitutionFields) => {
@@ -74,14 +64,20 @@ const InstitutionsListView: React.FC = () => {
     }
   };
 
-  const { items: allInstitutions, isLoading, mutate, loadMore, hasMore, error } =
-    useAdminListViewData(
-      API_LINKS.FETCH_INSTITUTIONS,
-      'institutions',
-      transformRawInstitution,
-      API_LINKS.FIND_INSTITUTIONS_BY_NAME,
-      searchQuery,
-    );
+  const {
+    items: allInstitutions,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(
+    API_LINKS.FETCH_INSTITUTIONS,
+    'institutions',
+    transformRawInstitution,
+    API_LINKS.FIND_INSTITUTIONS_BY_NAME,
+    searchQuery,
+  );
 
   const institutions = useMemo(() => {
     if (verificationFilter === 'verified') return allInstitutions.filter((i) => i.is_verified);
@@ -111,12 +107,8 @@ const InstitutionsListView: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All ({allInstitutions.length})</SelectItem>
-              <SelectItem value="pending">
-                Pending ({allInstitutions.filter((i) => !i.is_verified).length})
-              </SelectItem>
-              <SelectItem value="verified">
-                Verified ({allInstitutions.filter((i) => i.is_verified).length})
-              </SelectItem>
+              <SelectItem value="pending">Pending ({allInstitutions.filter((i) => !i.is_verified).length})</SelectItem>
+              <SelectItem value="verified">Verified ({allInstitutions.filter((i) => i.is_verified).length})</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -133,12 +125,7 @@ const InstitutionsListView: React.FC = () => {
         isLoading={isLoading}
         createNew={() => setCreatingInstitution(true)}
         editItem={(item) => setEdittingInstitution(item)}
-        columns={institutionTableColumnsWithActions(
-          handleApprove,
-          handleReject,
-          isProcessing,
-          setViewingUsersFor,
-        )}
+        columns={institutionTableColumnsWithActions(handleApprove, handleReject, isProcessing, setViewingUsersFor)}
         onSearchQueryChange={onSearchQueryChange}
         hasMore={hasMore}
         loadMore={loadMore}
@@ -177,10 +164,7 @@ const InstitutionsListView: React.FC = () => {
       </FormSheet>
 
       {/* Reject dialog */}
-      <Dialog
-        open={!!rejectingInstitution}
-        onOpenChange={(v) => !v && setRejectingInstitution(null)}
-      >
+      <Dialog open={!!rejectingInstitution} onOpenChange={(v) => !v && setRejectingInstitution(null)}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>{i18next.t('reject_institution')}</DialogTitle>
@@ -223,10 +207,7 @@ const InstitutionsListView: React.FC = () => {
             <DialogTitle>Users — {viewingUsersFor?.name}</DialogTitle>
           </DialogHeader>
           {viewingUsersFor && (
-            <InstitutionUsersView
-              institutionId={viewingUsersFor._id}
-              institutionName={viewingUsersFor.name}
-            />
+            <InstitutionUsersView institutionId={viewingUsersFor._id} institutionName={viewingUsersFor.name} />
           )}
         </DialogContent>
       </Dialog>

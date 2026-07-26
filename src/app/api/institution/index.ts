@@ -12,12 +12,12 @@ export default async function fetchInstitutions_(request: Request, session?: Ses
   const url = new URL(request.url);
   const limitParam = url.searchParams.get('limit');
   const skipParam = url.searchParams.get('skip');
-  
+
   const schema = z.object({
     limit: z.number(),
     skip: z.number(),
   });
-  
+
   try {
     let limit: number;
     let skip: number;
@@ -27,7 +27,7 @@ export default async function fetchInstitutions_(request: Request, session?: Ses
       // GET request with query parameters
       const result = schema.parse({
         limit: parseInt(limitParam),
-        skip: parseInt(skipParam)
+        skip: parseInt(skipParam),
       });
       limit = result.limit;
       skip = result.skip;
@@ -64,7 +64,6 @@ export default async function fetchInstitutions_(request: Request, session?: Ses
       .collection(dbCollections.institutions.name)
       .aggregate([{ $match: query }, ...p_fetchInstitutionsWithCreator(limit, skip)])
       .toArray();
-    
 
     const response = {
       isError: false,
@@ -74,7 +73,7 @@ export default async function fetchInstitutions_(request: Request, session?: Ses
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -90,7 +89,7 @@ export async function fetchInstitution_(request: Request, session?: Session) {
   const schema = z.object({
     institutionId: z.string(),
   });
-  
+
   try {
     const formBody = await request.json();
     const { institutionId } = schema.parse(formBody);
@@ -134,7 +133,7 @@ export async function fetchInstitution_(request: Request, session?: Session) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -151,7 +150,7 @@ export async function fetchPublicInstitutions_(request: Request) {
     limit: z.number().optional(),
     search: z.string().optional(),
   });
-  
+
   try {
     const formBody = await request.json();
     const { limit = 50, search } = schema.parse(formBody);
@@ -175,7 +174,7 @@ export async function fetchPublicInstitutions_(request: Request) {
     if (search) {
       searchFilter.$or = [
         { name: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } }
+        { description: { $regex: search, $options: 'i' } },
       ];
     }
 
@@ -194,7 +193,7 @@ export async function fetchPublicInstitutions_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -210,13 +209,13 @@ export async function deleteInstitutions_(request: Request) {
   const schema = z.object({
     institutionIds: z.array(z.string()),
   });
-  
+
   try {
     const formBody = await request.json();
     const { institutionIds } = schema.parse(formBody);
 
     // Validate all ObjectIds
-    const invalidIds = institutionIds.filter(id => !BSON.ObjectId.isValid(id));
+    const invalidIds = institutionIds.filter((id) => !BSON.ObjectId.isValid(id));
     if (invalidIds.length > 0) {
       const response = {
         isError: true,
@@ -251,7 +250,7 @@ export async function deleteInstitutions_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -267,12 +266,12 @@ export async function findInstitutionsByName_(request: Request) {
   const url = new URL(request.url);
   const nameParam = url.searchParams.get('name');
   const limitParam = url.searchParams.get('limit');
-  
+
   const schema = z.object({
     searchQuery: z.string(),
     limit: z.number().optional(),
   });
-  
+
   try {
     let searchQuery: string;
     let limit: number;
@@ -317,7 +316,7 @@ export async function findInstitutionsByName_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

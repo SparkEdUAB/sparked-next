@@ -13,7 +13,16 @@ vi.mock('@hooks/useProgram', () => ({
 
 vi.mock('@hooks/useAdmin/useAdminItemById', () => ({
   useAdminItemById: () => ({
-    item: { _id: 'p1', name: 'Test Program', description: 'Desc', schoolId: 's1', schoolName: 'School', index: 0, key: 'p1', created_at: '' },
+    item: {
+      _id: 'p1',
+      name: 'Test Program',
+      description: 'Desc',
+      schoolId: 's1',
+      schoolName: 'School',
+      index: 0,
+      key: 'p1',
+      created_at: '',
+    },
     isLoading: false,
   }),
 }));

@@ -15,28 +15,25 @@ const useConfig = () => {
 
   const [configs, setConfigs] = useState<T_CONFIG_VARIABLES | null>(null);
 
-  const loadConfigFile = useCallback(
-    async () => {
-      const url = API_LINKS.READ_CONFIG_FILE;
+  const loadConfigFile = useCallback(async () => {
+    const url = API_LINKS.READ_CONFIG_FILE;
 
-      try {
-        const resp = await fetch(url);
+    try {
+      const resp = await fetch(url);
 
-        const responseData = await resp.json();
+      const responseData = await resp.json();
 
-        if (!resp.ok || responseData.isError) {
-          message.warning(getProcessCodeMeaning(responseData.code));
-          return false;
-        }
-
-        setConfigs(responseData.configData);
-      } catch (err: any) {
-        message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      if (!resp.ok || responseData.isError) {
+        message.warning(getProcessCodeMeaning(responseData.code));
         return false;
       }
-    },
-    [message],
-  );
+
+      setConfigs(responseData.configData);
+    } catch (err: any) {
+      message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);
+      return false;
+    }
+  }, [message]);
 
   // TODO: Disable until we figure out a better way to do things
   // https://github.com/SparkEdUAB/sparked-next/issues/172

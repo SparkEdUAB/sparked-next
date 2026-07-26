@@ -34,16 +34,14 @@ const Login: React.FC = () => {
         </Link>
         <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
           <div className="p-8 space-y-4">
-            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">
-              Welcome Back
-            </h1>
-            <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
-              Sign in to your account to continue
-            </p>
+            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">Welcome Back</h1>
+            <p className="text-center text-gray-600 dark:text-gray-300 mb-6">Sign in to your account to continue</p>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} className="text-gray-700 dark:text-gray-300">Your email</Label>
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} className="text-gray-700 dark:text-gray-300">
+                    Your email
+                  </Label>
                 </div>
                 <div className="relative">
                   <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -60,7 +58,9 @@ const Login: React.FC = () => {
               </div>
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">Password</Label>
+                  <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">
+                    Password
+                  </Label>
                 </div>
                 <div className="relative">
                   <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />

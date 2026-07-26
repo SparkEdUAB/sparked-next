@@ -2,11 +2,11 @@
 
 # Sparked-next
 
-This is an actively maintained new version of SparkEd, Your feedback & contributions are greatly appreciated. 
+This is an actively maintained new version of SparkEd, Your feedback & contributions are greatly appreciated.
 
-You can check out the deployed version below using one the following links.    
+You can check out the deployed version below using one the following links.
 
-Production: [sparkednext.app](https://sparkednext.app )  
+Production: [sparkednext.app](https://sparkednext.app)  
 Staging: [sparked-app.onrender.com](https://sparked-app.onrender.com/)
 
 **Note**: This project is pinned to Node `22.14.0` and `pnpm` `9.x`.

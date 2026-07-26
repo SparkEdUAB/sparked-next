@@ -19,9 +19,9 @@ type Props = {
   fileTypes: AcceptableFileTypes[];
   classNames?: { wrapper?: string; label?: string; main?: string };
 } & (
-    | { multiple: true; files: File[] | null; onChange: (files: File[] | null) => void }
-    | { multiple?: false; files: File | null; onChange: (file: File | null) => void }
-  );
+  | { multiple: true; files: File[] | null; onChange: (files: File[] | null) => void }
+  | { multiple?: false; files: File | null; onChange: (file: File | null) => void }
+);
 
 export function DragAndDropFileInput({
   id,
@@ -54,7 +54,9 @@ export function DragAndDropFileInput({
       <div className={'w-full mb-4 ' + (classNames?.wrapper || '')}>
         {label && (
           <div className="mb-2 block">
-            <Label className={'cursor-pointer ' + (classNames?.label || '')} htmlFor={id}>{label}</Label>{' '}
+            <Label className={'cursor-pointer ' + (classNames?.label || '')} htmlFor={id}>
+              {label}
+            </Label>{' '}
             {required ? <RedAsterisk /> : null}
           </div>
         )}
