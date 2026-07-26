@@ -66,7 +66,8 @@ Then create a Pull Request from here, we will take a look at it and merge it as 
 
 `pnpm lint`
 
-Before you make commit, make sure that the linting are passing, check with the eslintrc.yml to check the rules.
+Before you make a commit, make sure `pnpm lint` passes. The repository's
+`.oxlintrc.json` contains the lint rules.
 
 ### Report bugs using Github's issues
 
