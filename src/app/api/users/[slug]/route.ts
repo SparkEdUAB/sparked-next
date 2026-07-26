@@ -9,14 +9,18 @@ import { AuthorizationContext, requireAuth, requireRole } from '../../lib/auth';
 
 async function requireUsersAdmin(): Promise<AuthorizationContext | Response> {
   const authorization = await requireAuth();
-  if (authorization instanceof Response) return authorization;
+  if (authorization instanceof Response) {
+    return authorization;
+  }
 
   return requireRole(authorization, ['Admin']) || authorization;
 }
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const authorization = await requireUsersAdmin();
-  if (authorization instanceof Response) return authorization;
+  if (authorization instanceof Response) {
+    return authorization;
+  }
   const { slug } = await params;
 
   const userApiFunctions: {
@@ -40,7 +44,9 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ slu
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const authorization = await requireUsersAdmin();
-  if (authorization instanceof Response) return authorization;
+  if (authorization instanceof Response) {
+    return authorization;
+  }
   const { slug } = await params;
 
   const userApiFunctions: {
@@ -62,7 +68,9 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ slug
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const authorization = await requireUsersAdmin();
-  if (authorization instanceof Response) return authorization;
+  if (authorization instanceof Response) {
+    return authorization;
+  }
   const { slug } = await params;
 
   const userApiFunctions: {
@@ -84,7 +92,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ s
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   const authorization = await requireUsersAdmin();
-  if (authorization instanceof Response) return authorization;
+  if (authorization instanceof Response) {
+    return authorization;
+  }
   const { slug } = await params;
 
   const userApiFunctions: {

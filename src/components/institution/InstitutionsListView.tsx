@@ -46,7 +46,9 @@ const InstitutionsListView: React.FC = () => {
 
   const handleApprove = async (institution: T_InstitutionFields) => {
     const success = await approveInstitution(institution._id);
-    if (success) mutate();
+    if (success) {
+      mutate();
+    }
   };
 
   const handleReject = (institution: T_InstitutionFields) => {
@@ -80,8 +82,12 @@ const InstitutionsListView: React.FC = () => {
   );
 
   const institutions = useMemo(() => {
-    if (verificationFilter === 'verified') return allInstitutions.filter((i) => i.is_verified);
-    if (verificationFilter === 'pending') return allInstitutions.filter((i) => !i.is_verified);
+    if (verificationFilter === 'verified') {
+      return allInstitutions.filter((i) => i.is_verified);
+    }
+    if (verificationFilter === 'pending') {
+      return allInstitutions.filter((i) => !i.is_verified);
+    }
     return allInstitutions;
   }, [allInstitutions, verificationFilter]);
 

@@ -186,11 +186,21 @@ export default async function editUnit_(request: Request, session?: Session) {
     };
 
     // Only add optional fields if they exist
-    if (schoolId) updateQuery.school_id = new BSON.ObjectId(schoolId);
-    if (courseId) updateQuery.course_id = new BSON.ObjectId(courseId);
-    if (programId) updateQuery.program_id = new BSON.ObjectId(programId);
-    if (subjectId) updateQuery.subject_id = new BSON.ObjectId(subjectId);
-    if (gradeId) updateQuery.grade_id = new BSON.ObjectId(gradeId);
+    if (schoolId) {
+      updateQuery.school_id = new BSON.ObjectId(schoolId);
+    }
+    if (courseId) {
+      updateQuery.course_id = new BSON.ObjectId(courseId);
+    }
+    if (programId) {
+      updateQuery.program_id = new BSON.ObjectId(programId);
+    }
+    if (subjectId) {
+      updateQuery.subject_id = new BSON.ObjectId(subjectId);
+    }
+    if (gradeId) {
+      updateQuery.grade_id = new BSON.ObjectId(gradeId);
+    }
 
     await db.collection(dbCollections.units.name).updateOne(query, {
       $set: updateQuery,

@@ -61,7 +61,9 @@ export function AdminSidebar({ collapsed, toggleSidebar }: { collapsed: boolean;
   const pathname = usePathname();
 
   const isActive = (href: string) => {
-    if (href === '/admin') return pathname === '/admin';
+    if (href === '/admin') {
+      return pathname === '/admin';
+    }
     return pathname.startsWith(href);
   };
 

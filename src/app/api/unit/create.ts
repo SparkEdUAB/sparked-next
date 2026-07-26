@@ -178,8 +178,10 @@ export default async function createUnit_(request: Request, session?: Session) {
     // if (schoolId) unitDocument.school_id = new BSON.ObjectId(schoolId);
     // if (programId) unitDocument.program_id = new BSON.ObjectId(programId);
     // if (courseId) unitDocument.course_id = new BSON.ObjectId(courseId);
-    // @ts-ignore
-    if (gradeId) unitDocument.grade_id = new BSON.ObjectId(gradeId);
+    if (gradeId) {
+      // @ts-ignore
+      unitDocument.grade_id = new BSON.ObjectId(gradeId);
+    }
 
     await db.collection(dbCollections.units.name).insertOne(unitDocument);
 

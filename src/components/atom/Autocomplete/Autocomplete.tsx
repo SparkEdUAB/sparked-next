@@ -65,7 +65,9 @@ const Autocomplete = <T extends ItemType>({
 
   const loading = isLoading || isValidating;
 
-  if (!url && !moduleName) return null;
+  if (!url && !moduleName) {
+    return null;
+  }
 
   return (
     <div className="relative w-full">

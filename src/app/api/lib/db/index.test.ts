@@ -14,7 +14,6 @@ describe('database client', () => {
     vi.resetModules();
     vi.clearAllMocks();
     delete global._mongoClientPromise;
-    delete global._mongoInitPromise;
     mongoClient.mockImplementation(() => ({ connect }));
   });
 

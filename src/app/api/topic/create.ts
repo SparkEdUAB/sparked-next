@@ -209,8 +209,10 @@ export default async function createTopic_(request: Request, session?: Session) 
     };
 
     // Add optional fields if they exist
-    // @ts-ignore
-    if (unitId) topicDocument.unit_id = new BSON.ObjectId(unitId);
+    if (unitId) {
+      // @ts-ignore
+      topicDocument.unit_id = new BSON.ObjectId(unitId);
+    }
     //  if (schoolId) topicDocument.school_id = new BSON.ObjectId(schoolId);
     //  if (programId) topicDocument.program_id = new BSON.ObjectId(programId);
     //  if (courseId) topicDocument.course_id = new BSON.ObjectId(courseId);

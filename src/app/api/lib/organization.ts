@@ -46,9 +46,15 @@ export function slugifyOrganizationName(name: string) {
 }
 
 export function toObjectId(value?: string | ObjectId | null) {
-  if (!value) return undefined;
-  if (value instanceof ObjectId) return value;
-  if (!ObjectId.isValid(value)) return undefined;
+  if (!value) {
+    return undefined;
+  }
+  if (value instanceof ObjectId) {
+    return value;
+  }
+  if (!ObjectId.isValid(value)) {
+    return undefined;
+  }
   return new ObjectId(value);
 }
 
@@ -118,9 +124,17 @@ export async function ensureDefaultOrganization(db: Db) {
   return defaultOrganization;
 }
 
+export async function findDefaultOrganization(db: Db) {
+  return db.collection<OrganizationDocument>(dbCollections.institutions.name).findOne({
+    $or: [{ is_default: true }, { slug: DEFAULT_ORGANIZATION_SLUG }],
+  });
+}
+
 async function findOrganizationById(db: Db, organizationId?: string | ObjectId | null) {
   const _id = toObjectId(organizationId);
-  if (!_id) return null;
+  if (!_id) {
+    return null;
+  }
 
   return db.collection<OrganizationDocument>(dbCollections.institutions.name).findOne({ _id });
 }
@@ -144,7 +158,10 @@ export async function resolveOrganizationContext(
     institutionId?: string | ObjectId | null;
   } = {},
 ): Promise<OrganizationContext> {
-  const defaultOrganization = await ensureDefaultOrganization(db);
+  const defaultOrganization = await findDefaultOrganization(db);
+  if (!defaultOrganization) {
+    throw new Error('The default organization is missing. Run `pnpm migrate:apply -- --confirm-backup`.');
+  }
   const sessionWithOrganization = options.session as SessionWithOrganization | undefined;
   const isPlatformAdmin = isPlatformAdminSession(options.session);
   const explicitOrganizationId = options.organizationId || options.institutionId;

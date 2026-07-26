@@ -40,7 +40,9 @@ const useNavigation = () => {
   const generateBreadcrumbItems = useCallback((menuItems: T_MenuItemLink, targetLink: string) => {
     const breadcrumbItems: T_BreadcrumbItems = [];
 
-    if (!targetLink) return breadcrumbItems;
+    if (!targetLink) {
+      return breadcrumbItems;
+    }
     const linkSegments = targetLink.split('/');
 
     linkSegments.map((_, index) => {

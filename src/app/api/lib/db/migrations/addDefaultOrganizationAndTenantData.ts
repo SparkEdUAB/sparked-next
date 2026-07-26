@@ -30,6 +30,32 @@ export async function addDefaultOrganizationAndTenantData(db: Db) {
   }
 }
 
+export async function previewDefaultOrganizationAndTenantData(db: Db) {
+  const [defaultOrganization, institutionsWithoutSlug, usersWithoutOrganization, ...tenantCounts] = await Promise.all([
+    db.collection(dbCollections.institutions.name).findOne({
+      $or: [{ is_default: true }, { slug: DEFAULT_ORGANIZATION_SLUG }],
+    }),
+    db.collection(dbCollections.institutions.name).countDocuments({
+      $or: [{ slug: { $exists: false } }, { slug: null }, { status: { $exists: false } }],
+    }),
+    db.collection(dbCollections.users.name).countDocuments({
+      $or: [{ organization_id: { $exists: false } }, { organization_id: null }],
+    }),
+    ...TENANT_SCOPED_COLLECTIONS.map((collectionName) =>
+      db.collection(collectionName).countDocuments({
+        $or: [{ organization_id: { $exists: false } }, { organization_id: null }],
+      }),
+    ),
+  ]);
+
+  return {
+    defaultOrganizationMissing: !defaultOrganization,
+    institutionsNeedingNormalization: institutionsWithoutSlug,
+    usersNeedingOrganization: usersWithoutOrganization,
+    tenantDocumentsNeedingOrganization: tenantCounts.reduce((total, count) => total + count, 0),
+  };
+}
+
 async function normalizeInstitutions(db: Db, defaultOrganizationId: ObjectId) {
   const institutions = db.collection(dbCollections.institutions.name);
   const cursor = institutions.find({});
@@ -108,7 +134,9 @@ async function backfillTenantScopedCollection(db: Db, collectionName: string, de
 
 async function deriveOrganizationId(db: Db, doc: WithId<Document>, defaultOrganizationId: ObjectId) {
   const directOrganizationId = asObjectId(doc.organization_id) || asObjectId(doc.institution_id);
-  if (directOrganizationId) return directOrganizationId;
+  if (directOrganizationId) {
+    return directOrganizationId;
+  }
 
   const lookups: Array<[string, string]> = [
     ['school_id', dbCollections.schools.name],
@@ -128,7 +156,9 @@ async function deriveOrganizationId(db: Db, doc: WithId<Document>, defaultOrgani
 
   for (const [fieldName, collectionName] of lookups) {
     const relatedId = asObjectId(doc[fieldName]);
-    if (!relatedId) continue;
+    if (!relatedId) {
+      continue;
+    }
 
     const relatedDoc = await db.collection(collectionName).findOne(
       { _id: relatedId },
@@ -142,14 +172,20 @@ async function deriveOrganizationId(db: Db, doc: WithId<Document>, defaultOrgani
 
     const relatedOrganizationId = asObjectId(relatedDoc?.organization_id) || asObjectId(relatedDoc?.institution_id);
 
-    if (relatedOrganizationId) return relatedOrganizationId;
+    if (relatedOrganizationId) {
+      return relatedOrganizationId;
+    }
   }
 
   return defaultOrganizationId;
 }
 
 function asObjectId(value: unknown) {
-  if (value instanceof ObjectId) return value;
-  if (typeof value === 'string' && ObjectId.isValid(value)) return new ObjectId(value);
+  if (value instanceof ObjectId) {
+    return value;
+  }
+  if (typeof value === 'string' && ObjectId.isValid(value)) {
+    return new ObjectId(value);
+  }
   return undefined;
 }

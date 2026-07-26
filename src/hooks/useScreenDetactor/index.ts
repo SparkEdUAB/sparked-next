@@ -10,7 +10,9 @@ export const useScreenDetector = () => {
   }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined') {
+      return;
+    }
     let resizeTimer: NodeJS.Timeout;
     const debouncedResizeHandler = () => {
       clearTimeout(resizeTimer);

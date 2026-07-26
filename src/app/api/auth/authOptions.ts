@@ -119,7 +119,9 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      if (token.authSessionVersion !== authSessionVersion) return {};
+      if (token.authSessionVersion !== authSessionVersion) {
+        return {};
+      }
 
       return token;
     },

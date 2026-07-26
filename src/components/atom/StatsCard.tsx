@@ -19,7 +19,9 @@ export const DashbordUsageCard = ({
   hasLink?: boolean;
   percentageTrend?: 'down' | 'up';
 }) => {
-  if (isPercentage && value === 0) return null;
+  if (isPercentage && value === 0) {
+    return null;
+  }
 
   const hasLink = Boolean((ADMIN_LINKS as any)[name as string]);
 

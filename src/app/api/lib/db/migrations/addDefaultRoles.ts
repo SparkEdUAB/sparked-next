@@ -20,15 +20,31 @@ const DEFAULT_ROLES = [
   },
 ];
 
+export async function countMissingDefaultRoles(db: Db) {
+  const existingRoles = await db
+    .collection(dbCollections.user_roles.name)
+    .find({ name: { $in: DEFAULT_ROLES.map((role) => role.name) } }, { projection: { name: 1 } })
+    .toArray();
+  const existingNames = new Set(existingRoles.map((role) => role.name));
+
+  return DEFAULT_ROLES.filter((role) => !existingNames.has(role.name)).length;
+}
+
 export async function addDefaultRoles(db: Db) {
-  for (const role of DEFAULT_ROLES) {
-    const exists = await db.collection(dbCollections.user_roles.name).findOne({ name: role.name });
-    if (!exists) {
-      await db.collection(dbCollections.user_roles.name).insertOne({
-        ...role,
-        created_at: new Date(),
-        updated_at: new Date(),
-      });
-    }
+  const existingRoles = await db
+    .collection(dbCollections.user_roles.name)
+    .find({ name: { $in: DEFAULT_ROLES.map((role) => role.name) } }, { projection: { name: 1 } })
+    .toArray();
+  const existingNames = new Set(existingRoles.map((role) => role.name));
+  const missingRoles = DEFAULT_ROLES.filter((role) => !existingNames.has(role.name));
+
+  if (missingRoles.length) {
+    const now = new Date();
+    await db.collection(dbCollections.user_roles.name).insertMany(
+      missingRoles.map((role) => ({ ...role, created_at: now, updated_at: now })),
+      { ordered: false },
+    );
   }
+
+  return { insertedRoles: missingRoles.length };
 }

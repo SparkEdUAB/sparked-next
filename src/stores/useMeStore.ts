@@ -68,7 +68,9 @@ export const useMeStore = create<MeStore>()(
         // Computed values
         getFullName: () => {
           const { user } = get();
-          if (!user) return '';
+          if (!user) {
+            return '';
+          }
           return `${user.firstName || ''} ${user.lastName || ''}`.trim();
         },
 

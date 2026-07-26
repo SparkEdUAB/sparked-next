@@ -37,7 +37,9 @@ const UsersListView = () => {
   const { publicInstitutions, fetchPublicInstitutions } = useInstitution();
 
   React.useEffect(() => {
-    if (showAssignModal && publicInstitutions.length === 0) fetchPublicInstitutions();
+    if (showAssignModal && publicInstitutions.length === 0) {
+      fetchPublicInstitutions();
+    }
   }, [showAssignModal, publicInstitutions.length, fetchPublicInstitutions]);
 
   const {
@@ -55,7 +57,9 @@ const UsersListView = () => {
   };
 
   const handleAssignToInstitution = async () => {
-    if (!selectedInstitutionId) return;
+    if (!selectedInstitutionId) {
+      return;
+    }
     const success = await assignUsersToInstitution(selectedUserIds as string[], selectedInstitutionId);
     if (success) {
       setShowAssignModal(false);

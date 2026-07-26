@@ -15,7 +15,9 @@ export function useMediaInteractions(mediaId: string) {
   } = useFetch(`/api/media-actions/getMediaReactionCounts?mediaId=${mediaId}`);
 
   const recordView = async () => {
-    if (hasRecordedView) return;
+    if (hasRecordedView) {
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -39,7 +41,9 @@ export function useMediaInteractions(mediaId: string) {
   };
 
   const handleReaction = async (type: 'like' | 'dislike', session: Session | null) => {
-    if (!session) return;
+    if (!session) {
+      return;
+    }
 
     setIsLoading(true);
     try {
@@ -54,7 +58,9 @@ export function useMediaInteractions(mediaId: string) {
           userEmail: session.user?.email,
         }),
       });
-      if (!response.ok) throw new Error('Failed to process reaction');
+      if (!response.ok) {
+        throw new Error('Failed to process reaction');
+      }
     } catch (error) {
       console.error('Error processing reaction:', error);
     } finally {
