@@ -63,10 +63,14 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
   }, [debouncedSearchTerm, searchTerm, fetchPublicInstitutions]);
 
   useEffect(() => {
-    if (!shouldAutoSelectSingleInstitution) return;
+    if (!shouldAutoSelectSingleInstitution) {
+      return;
+    }
 
     const singleInstitution = activeInstitutions[0];
-    if (selectedInstitutionId === singleInstitution?._id) return;
+    if (selectedInstitutionId === singleInstitution?._id) {
+      return;
+    }
 
     onInstitutionSelect(singleInstitution._id, singleInstitution.name);
   }, [activeInstitutions, onInstitutionSelect, selectedInstitutionId, shouldAutoSelectSingleInstitution]);

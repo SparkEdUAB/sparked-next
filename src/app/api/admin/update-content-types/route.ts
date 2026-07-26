@@ -8,7 +8,9 @@ export async function POST() {
     let errors = 0;
 
     for (const key of files) {
-      if (!key) continue;
+      if (!key) {
+        continue;
+      }
       try {
         await updateContentType(key);
         updatedCount++;

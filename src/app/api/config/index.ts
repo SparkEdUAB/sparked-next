@@ -48,7 +48,9 @@ export async function getDbFieldNamesConfigStatus({ dbConfigData }: { dbConfigDa
   const enabledKeys = new Set<string>();
   for (const entry of Object.values(configData)) {
     const key = entry.key;
-    if (typeof key === 'string' && key && entry.value === 'true') enabledKeys.add(key);
+    if (typeof key === 'string' && key && entry.value === 'true') {
+      enabledKeys.add(key);
+    }
   }
 
   return dbConfigData.reduce(

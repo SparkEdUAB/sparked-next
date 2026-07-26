@@ -17,6 +17,10 @@
     "audit": "pnpm audit --audit-level=low",
     "audit:prod": "pnpm audit --prod --audit-level=low",
     "sbom": "node scripts/generate-sbom.mjs",
+    "migrate": "ts-node --files --compilerOptions '{\"module\":\"commonjs\"}' scripts/migrate.ts",
+    "migrate:status": "pnpm migrate status",
+    "migrate:dry-run": "pnpm migrate dry-run",
+    "migrate:apply": "pnpm migrate apply",
     "pm2": "pm2 start pnpm --name \"sparked-next\" -- start"
   },
   "dependencies": {

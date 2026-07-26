@@ -9,6 +9,7 @@
   },
   "settings": {},
   "rules": {
+    "curly": ["error", "all"],
     "eqeqeq": "error",
     "import/no-cycle": "error",
     "react/self-closing-comp": [

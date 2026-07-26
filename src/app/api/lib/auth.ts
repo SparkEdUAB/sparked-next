@@ -26,7 +26,9 @@ export async function getAuthorizationContext(): Promise<AuthorizationContext | 
   const role = session?.user?.role;
   const organizationId = session?.user?.organizationId;
 
-  if (!userId || !role || !organizationId) return null;
+  if (!userId || !role || !organizationId) {
+    return null;
+  }
 
   return {
     userId,
@@ -53,7 +55,9 @@ export function requireOrganizationAccess(
   context: AuthorizationContext,
   organizationId: string | undefined,
 ): Response | null {
-  if (context.isPlatformAdmin || (organizationId && context.organizationId === organizationId)) return null;
+  if (context.isPlatformAdmin || (organizationId && context.organizationId === organizationId)) {
+    return null;
+  }
 
   return errorResponse(403);
 }

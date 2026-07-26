@@ -82,7 +82,9 @@ export function withAuthorization<P extends object>(
     }, [status, user?.id]); // Reset when status or user identity changes
 
     useEffect(() => {
-      if (status === 'loading' || !hasHydrated || hasRedirected.current) return;
+      if (status === 'loading' || !hasHydrated || hasRedirected.current) {
+        return;
+      }
 
       const isAuthenticated = !!user;
       const isAdmin = user?.role?.toLowerCase() === 'admin' || user?.isAdmin;
@@ -114,19 +116,27 @@ export function withAuthorization<P extends object>(
     }, [status, user, router, message, hasHydrated, pathname]);
 
     // Prevent render until we know the auth state
-    if (status === 'loading' || !hasHydrated) return <LoadingSpinner />;
+    if (status === 'loading' || !hasHydrated) {
+      return <LoadingSpinner />;
+    }
 
     // For guest-only routes (auth pages)
     if (requireGuest) {
-      if (user) return null; // Already authenticated, will redirect
+      if (user) {
+        return null;
+      } // Already authenticated, will redirect
       return <WrappedComponent {...props} />;
     }
 
     // For protected routes
-    if (!user) return null;
+    if (!user) {
+      return null;
+    }
 
     const isAdmin = user.role?.toLowerCase() === 'admin' || user.isAdmin;
-    if (requireAdmin && !isAdmin) return null;
+    if (requireAdmin && !isAdmin) {
+      return null;
+    }
 
     return <WrappedComponent {...props} />;
   };

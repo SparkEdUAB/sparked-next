@@ -18,9 +18,13 @@ export async function POST(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const authorization = await requireAuth();
-  if (authorization instanceof Response) return authorization;
+  if (authorization instanceof Response) {
+    return authorization;
+  }
   const roleError = requireRole(authorization, ['Admin', 'Content Manager']);
-  if (roleError) return roleError;
+  if (roleError) {
+    return roleError;
+  }
 
   const { slug } = await params;
 
@@ -52,7 +56,9 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const authorization = await requireAuth();
-  if (authorization instanceof Response) return authorization;
+  if (authorization instanceof Response) {
+    return authorization;
+  }
   const { slug } = await params;
 
   const schoolFunctions: {

@@ -65,13 +65,27 @@ export default async function fetchMediaContent_(request: any, session?: Session
 
     let query: { [key: string]: any } = {};
 
-    if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
-    if (subject_id) query.subject_id = new BSON.ObjectId(subject_id);
-    if (school_id) query.school_id = new BSON.ObjectId(school_id);
-    if (program_id) query.program_id = new BSON.ObjectId(program_id);
-    if (course_id) query.course_id = new BSON.ObjectId(course_id);
-    if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
-    if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+    if (grade_id) {
+      query.grade_id = new BSON.ObjectId(grade_id);
+    }
+    if (subject_id) {
+      query.subject_id = new BSON.ObjectId(subject_id);
+    }
+    if (school_id) {
+      query.school_id = new BSON.ObjectId(school_id);
+    }
+    if (program_id) {
+      query.program_id = new BSON.ObjectId(program_id);
+    }
+    if (course_id) {
+      query.course_id = new BSON.ObjectId(course_id);
+    }
+    if (unit_id) {
+      query.unit_id = new BSON.ObjectId(unit_id);
+    }
+    if (topic_id) {
+      query.topic_id = new BSON.ObjectId(topic_id);
+    }
 
     if (externalUrl === 'true' || externalContent === 'true') {
       query.external_url = { $ne: null };
@@ -263,12 +277,24 @@ export async function findMediaContentByName_(request: any, session?: Session) {
 
     let query: { [key: string]: any } = {};
 
-    if (school_id) query.school_id = new BSON.ObjectId(school_id);
-    if (program_id) query.program_id = new BSON.ObjectId(program_id);
-    if (course_id) query.course_id = new BSON.ObjectId(course_id);
-    if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
-    if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
-    if (grade_id) query.grade_id = new BSON.ObjectId(grade_id);
+    if (school_id) {
+      query.school_id = new BSON.ObjectId(school_id);
+    }
+    if (program_id) {
+      query.program_id = new BSON.ObjectId(program_id);
+    }
+    if (course_id) {
+      query.course_id = new BSON.ObjectId(course_id);
+    }
+    if (unit_id) {
+      query.unit_id = new BSON.ObjectId(unit_id);
+    }
+    if (topic_id) {
+      query.topic_id = new BSON.ObjectId(topic_id);
+    }
+    if (grade_id) {
+      query.grade_id = new BSON.ObjectId(grade_id);
+    }
     query = await buildScopedQuery(
       db,
       session,
@@ -349,11 +375,21 @@ export async function fetchRandomMediaContent_(request: any) {
 
     let query: { [key: string]: BSON.ObjectId } = {};
 
-    if (school_id) query.school_id = new BSON.ObjectId(school_id);
-    if (program_id) query.program_id = new BSON.ObjectId(program_id);
-    if (course_id) query.course_id = new BSON.ObjectId(course_id);
-    if (unit_id) query.unit_id = new BSON.ObjectId(unit_id);
-    if (topic_id) query.topic_id = new BSON.ObjectId(topic_id);
+    if (school_id) {
+      query.school_id = new BSON.ObjectId(school_id);
+    }
+    if (program_id) {
+      query.program_id = new BSON.ObjectId(program_id);
+    }
+    if (course_id) {
+      query.course_id = new BSON.ObjectId(course_id);
+    }
+    if (unit_id) {
+      query.unit_id = new BSON.ObjectId(unit_id);
+    }
+    if (topic_id) {
+      query.topic_id = new BSON.ObjectId(topic_id);
+    }
 
     mediaContent = await db
       .collection(dbCollections.media_content.name)

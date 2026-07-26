@@ -39,12 +39,16 @@ export async function fetchRelatedMediaClient(
     skip: '0',
     withMetaData: 'false',
   };
-  if (grade?._id) params.grade_id = grade._id;
+  if (grade?._id) {
+    params.grade_id = grade._id;
+  }
 
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
     API_LINKS.FETCH_RELATED_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams(params),
   );
 
-  if (result instanceof Error) return null;
+  if (result instanceof Error) {
+    return null;
+  }
   return result.mediaContent;
 }

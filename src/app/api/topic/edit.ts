@@ -210,12 +210,24 @@ export default async function editTopic_(request: Request, session?: Session) {
     };
 
     // Only add optional fields if they exist
-    if (schoolId) updateQuery.school_id = new BSON.ObjectId(schoolId);
-    if (courseId) updateQuery.course_id = new BSON.ObjectId(courseId);
-    if (programId) updateQuery.program_id = new BSON.ObjectId(programId);
-    if (unitId) updateQuery.unit_id = new BSON.ObjectId(unitId);
-    if (gradeId) updateQuery.grade_id = new BSON.ObjectId(gradeId);
-    if (subjectId) updateQuery.subject_id = new BSON.ObjectId(subjectId);
+    if (schoolId) {
+      updateQuery.school_id = new BSON.ObjectId(schoolId);
+    }
+    if (courseId) {
+      updateQuery.course_id = new BSON.ObjectId(courseId);
+    }
+    if (programId) {
+      updateQuery.program_id = new BSON.ObjectId(programId);
+    }
+    if (unitId) {
+      updateQuery.unit_id = new BSON.ObjectId(unitId);
+    }
+    if (gradeId) {
+      updateQuery.grade_id = new BSON.ObjectId(gradeId);
+    }
+    if (subjectId) {
+      updateQuery.subject_id = new BSON.ObjectId(subjectId);
+    }
 
     await db.collection(dbCollections.topics.name).updateOne(query, {
       $set: updateQuery,

@@ -78,12 +78,24 @@ export async function PUT(request: NextRequest) {
       updated_at: new Date(),
     };
 
-    if (description !== undefined) updateDoc.description = description;
-    if (website !== undefined) updateDoc.website = website;
-    if (address !== undefined) updateDoc.address = address;
-    if (contact_email !== undefined) updateDoc.contact_email = contact_email;
-    if (contact_phone !== undefined) updateDoc.contact_phone = contact_phone;
-    if (is_verified !== undefined) updateDoc.is_verified = is_verified;
+    if (description !== undefined) {
+      updateDoc.description = description;
+    }
+    if (website !== undefined) {
+      updateDoc.website = website;
+    }
+    if (address !== undefined) {
+      updateDoc.address = address;
+    }
+    if (contact_email !== undefined) {
+      updateDoc.contact_email = contact_email;
+    }
+    if (contact_phone !== undefined) {
+      updateDoc.contact_phone = contact_phone;
+    }
+    if (is_verified !== undefined) {
+      updateDoc.is_verified = is_verified;
+    }
 
     await db
       .collection(dbCollections.institutions.name)

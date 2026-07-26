@@ -1,13 +1,10 @@
 import { Db, MongoClient } from 'mongodb';
-import { initializeDatabase } from './init';
 
 const options = {};
 
 declare global {
   // eslint-disable-next-line no-var
   var _mongoClientPromise: Promise<MongoClient> | undefined;
-  // eslint-disable-next-line no-var
-  var _mongoInitPromise: Promise<void> | undefined;
 }
 
 function getMongoClientPromise() {
@@ -26,15 +23,7 @@ function getMongoClientPromise() {
 
 export const dbClient = async (): Promise<Db> => {
   const client = await getMongoClientPromise();
-  const db = client.db(process.env.MONGODB_DB);
-
-  if (!global._mongoInitPromise) {
-    global._mongoInitPromise = initializeDatabase(db);
-  }
-
-  await global._mongoInitPromise;
-
-  return db;
+  return client.db(process.env.MONGODB_DB);
 };
 
 export default dbClient;

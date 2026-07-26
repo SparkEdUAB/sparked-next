@@ -6,7 +6,9 @@ import { getSearchMediaUrl } from 'fetchers/library/searchMedia';
 export function useSearchMediaSWR(searchText: string, sort_by: string = '', grade_id: string = '') {
   const getKey = (pageIndex: number, previousPageData: any) => {
     // Reached the end
-    if (previousPageData && !previousPageData.mediaContent?.length) return null;
+    if (previousPageData && !previousPageData.mediaContent?.length) {
+      return null;
+    }
 
     return getSearchMediaUrl(pageIndex * MEDIA_CONTENT_LIMIT, searchText, sort_by, grade_id);
   };

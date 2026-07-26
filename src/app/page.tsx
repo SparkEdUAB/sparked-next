@@ -27,8 +27,11 @@ const Home = async () => {
 
   if (session?.user) {
     const role = session?.user.role?.name || 'student';
-    if (role === 'student') redirect(routes.library);
-    else redirect(routes.admin);
+    if (role === 'student') {
+      redirect(routes.library);
+    } else {
+      redirect(routes.admin);
+    }
   }
   return <WelcomePage />;
 };

@@ -1,5 +1,7 @@
 export const toTitleCase = (text: string) => {
-  if (!text) return '';
+  if (!text) {
+    return '';
+  }
 
   return text
     .toLowerCase()

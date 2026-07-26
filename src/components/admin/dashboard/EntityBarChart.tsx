@@ -8,7 +8,9 @@ export function EntityBarChart({ stats }: { stats: T_StatFields[] }) {
     .filter((s) => !s.isPercentage && typeof s.value === 'number' && (s.value as number) > 0)
     .map((s) => ({ name: s.name, count: s.value as number }));
 
-  if (data.length === 0) return null;
+  if (data.length === 0) {
+    return null;
+  }
 
   return (
     <Card>
