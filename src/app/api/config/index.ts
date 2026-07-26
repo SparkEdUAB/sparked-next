@@ -5,7 +5,7 @@ const fsPromises = fs.promises;
 
 import { T_RECORD } from 'types';
 import CONFIG_PROCESS_CODES from './processCodes';
-import { T_CONFIG_DB_VARIABLE, T_CONFIG_VARIABLE, T_CONFIG_VARIABLES } from 'types/config';
+import { T_CONFIG_DB_VARIABLE, T_CONFIG_VARIABLES } from 'types/config';
 import { HttpStatusCode } from 'axios';
 
 export default async function readConfigFile_() {
@@ -45,26 +45,15 @@ const getConfigFile = async () => {
  */
 export async function getDbFieldNamesConfigStatus({ dbConfigData }: { dbConfigData: T_CONFIG_DB_VARIABLE[] }) {
   const configData = JSON.parse(await getConfigFile()) as T_CONFIG_VARIABLES;
-
-  const configItems: T_CONFIG_DB_VARIABLE[] = [];
-
-  const configKeys = dbConfigData.map((i) => i.key);
-
-  // let arrIndex = 0;
-
-  for (const key in configData) {
-    //@ts-ignore
-    const entry = configData[key] as T_CONFIG_VARIABLE;
-
-    if (configKeys.includes(entry.key) && entry.value === 'true') {
-      configItems.push({
-        value: entry.value === 'true' ? 1 : 0,
-        fieldName: dbConfigData[configKeys.indexOf(entry.key)]?.fieldName,
-      });
-    }
-
-    // arrIndex++;
+  const enabledKeys = new Set<string>();
+  for (const entry of Object.values(configData)) {
+    const key = entry.key;
+    if (typeof key === 'string' && key && entry.value === 'true') enabledKeys.add(key);
   }
 
-  return configItems.map((i) => ({ [i.fieldName]: i.value }) as T_RECORD).reduce((a, c) => ({ ...a, ...c }));
+  return dbConfigData.reduce(
+    (projection, { fieldName, key }) =>
+      key && enabledKeys.has(key) ? ({ ...projection, [fieldName]: 1 } as T_RECORD) : projection,
+    {} as T_RECORD,
+  );
 }

@@ -6,7 +6,7 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as USER_PROCESS_CODES } from './processCodes';
 import { HttpStatusCode } from 'axios';
-import { normalizeOrganizationPayload } from '../lib/organization';
+import { buildScopedQuery, normalizeOrganizationPayload } from '../lib/organization';
 
 export default async function editUser_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -35,12 +35,31 @@ export default async function editUser_(request: Request, session?: Session) {
       );
     }
 
-    // Check if email exists for other users
-    const regexPattern = new RegExp(`^\\s*${email}\\s*$`, 'i');
-    const existingUser = await db.collection(dbCollections.users.name).findOne({
-      email: { $regex: regexPattern },
-      _id: { $ne: new BSON.ObjectId(_id) },
+    const scopedUser = await db
+      .collection(dbCollections.users.name)
+      .findOne(
+        await buildScopedQuery(db, session, { _id: new BSON.ObjectId(_id) }, { includeLegacyUnscopedForDefault: true }),
+      );
+
+    if (!scopedUser) {
+      return new Response(JSON.stringify({ isError: true, code: 403 }), { status: HttpStatusCode.Forbidden });
+    }
+
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
     });
+    const regexPattern = new RegExp(`^\\s*${email}\\s*$`, 'i');
+    const existingUser = await db
+      .collection(dbCollections.users.name)
+      .findOne(
+        await buildScopedQuery(
+          db,
+          session,
+          { email: { $regex: regexPattern }, _id: { $ne: new BSON.ObjectId(_id) } },
+          { includeLegacyUnscopedForDefault: true },
+        ),
+      );
 
     if (existingUser) {
       return new Response(
@@ -51,11 +70,6 @@ export default async function editUser_(request: Request, session?: Session) {
         { status: HttpStatusCode.BadRequest },
       );
     }
-
-    const organizationPayload = await normalizeOrganizationPayload(db, session, {
-      organizationId,
-      institutionId,
-    });
 
     // Only verify and update role if one is provided
     if (role) {

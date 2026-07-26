@@ -6,6 +6,7 @@ import { Metadata, ResolvingMetadata } from 'next';
 import { T_LibraryPageProps } from '@components/library/types';
 import LibraryMediaContentList from './LibraryMediaContentList';
 import { fetchMedia } from 'fetchers/library/fetchMedia';
+import { headers } from 'next/headers';
 
 export async function generateMetadata(props: {}, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
@@ -15,7 +16,8 @@ export async function generateMetadata(props: {}, parent: ResolvingMetadata): Pr
 
 const LibraryPage = async ({ searchParams: searchParamsPromise }: T_LibraryPageProps) => {
   const searchParams = await searchParamsPromise;
-  const mediaResult = await fetchMedia(0, searchParams);
+  const cookie = (await headers()).get('cookie') || undefined;
+  const mediaResult = await fetchMedia(0, searchParams, cookie);
 
   return (
     <main id="scrollableDiv" className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] min-w-full mt-3">

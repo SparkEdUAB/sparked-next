@@ -2,9 +2,9 @@ name: Dependency Security
 
 on:
   push:
-    branches: ['main']
+    branches: ['main', 'release-**', 'hotfix/**']
   pull_request:
-    branches: ['main']
+    branches: ['main', 'release-**', 'hotfix/**']
   release:
     types: [published]
 
