@@ -19,7 +19,7 @@ The project uses the following stack
 
 - **Nextjs** as the overall framework
 - **React** as the User Interface library
-- **eslint** to lint files
+- **Oxlint** to lint files
 - **MongoDB** as a noSql Database
 - **TailwindCSS** for styling
 
@@ -69,7 +69,8 @@ Before pushing anything to your fork, always
 
 `pnpm lint`
 
-Before you make commit, make sure that lint is passing, check with the eslintrc.yml to check the rules.
+Before you make a commit, make sure `pnpm lint` passes. The repository's
+`.oxlintrc.json` contains the lint rules.
 
 ### Issues
 
