@@ -6,7 +6,8 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as USER_PROCESS_CODES } from './processCodes';
 import { HttpStatusCode } from 'axios';
-import { normalizeOrganizationPayload } from '../lib/organization';
+import { buildScopedQuery, normalizeOrganizationPayload } from '../lib/organization';
+import bcrypt from 'bcryptjs';
 
 export default async function createUser_(request: Request, session?: Session) {
   const schema = zfd.formData({
@@ -34,11 +35,22 @@ export default async function createUser_(request: Request, session?: Session) {
       );
     }
 
-    // Check if user exists
-    const regexPattern = new RegExp(`^\\s*${email}\\s*$`, 'i');
-    const existingUser = await db.collection(dbCollections.users.name).findOne({
-      email: { $regex: regexPattern },
+    const organizationPayload = await normalizeOrganizationPayload(db, session, {
+      organizationId,
+      institutionId,
     });
+
+    const regexPattern = new RegExp(`^\\s*${email}\\s*$`, 'i');
+    const existingUser = await db
+      .collection(dbCollections.users.name)
+      .findOne(
+        await buildScopedQuery(
+          db,
+          session,
+          { email: { $regex: regexPattern } },
+          { includeLegacyUnscopedForDefault: true },
+        ),
+      );
 
     if (existingUser) {
       return new Response(
@@ -62,17 +74,12 @@ export default async function createUser_(request: Request, session?: Session) {
       );
     }
 
-    const organizationPayload = await normalizeOrganizationPayload(db, session, {
-      organizationId,
-      institutionId,
-    });
-
     // Create user
     const result = await db.collection(dbCollections.users.name).insertOne({
       email,
       firstName,
       lastName,
-      password, // Note: In production, ensure password is hashed
+      password: await bcrypt.hash(password, 12),
       createdAt: new Date(),
       updatedAt: new Date(),
       createdById: session?.user?.id ? new BSON.ObjectId(session.user.id) : null,

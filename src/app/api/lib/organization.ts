@@ -225,6 +225,19 @@ export async function normalizeOrganizationPayload(
     institutionId?: string | null;
   } = {},
 ) {
+  const requestedOrganizationId = payload.organizationId || payload.institutionId;
+  const sessionOrganizationId = (session as SessionWithOrganization | null)?.user?.organizationId;
+
+  if (
+    session?.user?.id &&
+    !isPlatformAdminSession(session) &&
+    requestedOrganizationId &&
+    sessionOrganizationId &&
+    requestedOrganizationId !== sessionOrganizationId
+  ) {
+    throw new Error('Organization access denied');
+  }
+
   const context = await resolveOrganizationContext(db, {
     session,
     organizationId: payload.organizationId,

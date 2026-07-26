@@ -4,6 +4,7 @@ import { API_LINKS } from 'app/links';
 import { BASE_URL } from 'app/shared/constants';
 import { Metadata, ResolvingMetadata } from 'next';
 import { cache } from 'react';
+import { headers } from 'next/headers';
 import { T_RawMediaContentFields } from 'types/media-content';
 import { determineFileType } from 'utils/helpers/determineFileType';
 import { getMetadataGenerator } from 'utils/helpers/getMetadataGenerator';
@@ -11,19 +12,20 @@ import NETWORK_UTILS from 'utils/network';
 import { MediaContentPlayer } from '../../../../components/library/MediaContentPlayer';
 import { fetchRelatedMedia } from '../../../../fetchers/library/fetchRelatedMedia';
 
-// Route-level revalidation replaces per-fetch unstable_cache wrappers removed during Next.js 16 upgrade
-export const revalidate = 360;
-
 type T_MediaContentPageProps = {
   params: Promise<{ id: string }>;
 };
 
 // cache() deduplicates calls within a single render (generateMetadata + page body both call this)
-const getMediaContent = cache(async (id: string) => {
+const getMediaContent = cache(async (id: string, cookie?: string) => {
   const result = await fetcher<{ mediaContent: T_RawMediaContentFields }>(
     BASE_URL +
       API_LINKS.FETCH_MEDIA_CONTENT_BY_ID +
       NETWORK_UTILS.formatGetParams({ mediaContentId: id, withMetaData: 'true' }),
+    {
+      cache: 'no-store',
+      headers: cookie ? { cookie } : undefined,
+    },
   );
   return result;
 });
@@ -31,7 +33,8 @@ const getMediaContent = cache(async (id: string) => {
 export async function generateMetadata(props: T_MediaContentPageProps, parent: ResolvingMetadata): Promise<Metadata> {
   const getMetadata = await getMetadataGenerator(parent);
   const { id } = await props.params;
-  const result = await getMediaContent(id);
+  const cookie = (await headers()).get('cookie') || undefined;
+  const result = await getMediaContent(id, cookie);
 
   if (result instanceof Error) {
     return getMetadata('Media Content View', 'Shows details about the selected media content file');
@@ -49,8 +52,9 @@ export async function generateMetadata(props: T_MediaContentPageProps, parent: R
 
 export default async function MediaContentPage({ params: paramsPromise }: T_MediaContentPageProps) {
   const { id } = await paramsPromise;
-  const result = await getMediaContent(id);
-  const relatedMediaContent = result instanceof Error ? null : await fetchRelatedMedia(result.mediaContent);
+  const cookie = (await headers()).get('cookie') || undefined;
+  const result = await getMediaContent(id, cookie);
+  const relatedMediaContent = result instanceof Error ? null : await fetchRelatedMedia(result.mediaContent, cookie);
 
   return (
     <main className="overflow-y-scroll custom-scrollbar h-[calc(100vh_-_62px)] py-6 ">

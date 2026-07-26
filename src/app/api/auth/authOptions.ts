@@ -4,20 +4,21 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { BSON } from 'mongodb';
 import { resolveOrganizationContext } from '../lib/organization';
+import { authenticateCredentials } from './credentials';
+
+const authSessionVersion = process.env.AUTH_SESSION_VERSION || '2';
 
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: 'Credentials',
-      credentials: {},
-      // @ts-expect-error
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
       async authorize(credentials) {
-        // @ts-expect-error
-        const { jwtToken } = credentials;
-
         try {
-          const user = { ...credentials }; // Extract user details from credentials
-          return { ...user, token: jwtToken };
+          return await authenticateCredentials(credentials?.email, credentials?.password);
         } catch {
           return null;
         }
@@ -29,6 +30,10 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async session({ session, token }) {
+      if (token.authSessionVersion !== authSessionVersion) {
+        return { ...session, user: {} };
+      }
+
       if (token.sub && session.user) {
         session.user.id = token.sub;
         session.user.role = token.role as string;
@@ -51,6 +56,7 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
+        token.authSessionVersion = authSessionVersion;
         token.id = user.id;
         token.email = user.email;
         token.role = user.role ?? token.role;
@@ -112,6 +118,8 @@ export const authOptions: NextAuthOptions = {
           token.isPlatformAdmin = organizationContext.isPlatformAdmin;
         }
       }
+
+      if (token.authSessionVersion !== authSessionVersion) return {};
 
       return token;
     },

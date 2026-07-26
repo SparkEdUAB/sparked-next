@@ -2,8 +2,9 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-const ADMIN_ROLES = ['Admin', 'Content Manager'];
-const PUBLIC_PATHS = [
+const MUTATION_ROLES = ['Admin', 'Content Manager'];
+const AUTH_SESSION_VERSION = process.env.AUTH_SESSION_VERSION || '2';
+const PUBLIC_PATHS = new Set([
   '/api/authentication/login',
   '/api/authentication/signup',
   '/api/authentication/logout',
@@ -14,29 +15,52 @@ const PUBLIC_PATHS = [
   '/api/password/resetPassword',
   '/api/institution/createInstitution',
   '/api/institution/fetchPublicInstitutions',
-];
+  '/api/config/readConfigFile',
+]);
+
+const publicApiPath = (pathname: string) => pathname.startsWith('/api/auth/') || PUBLIC_PATHS.has(pathname);
+
+const authorizationError = (status: 401 | 403) =>
+  new NextResponse(
+    JSON.stringify({
+      isError: true,
+      code: status,
+      message: status === 401 ? 'Authentication required' : 'Permission denied',
+    }),
+    {
+      status,
+      headers: { 'Content-Type': 'application/json' },
+    },
+  );
+
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const method = request.method;
 
-  if (PUBLIC_PATHS.includes(pathname)) {
+  if (!pathname.startsWith('/api') || publicApiPath(pathname)) {
     return NextResponse.next();
   }
 
-  // Check for POST requests to API routes
-  if (pathname.startsWith('/api') && method === 'POST') {
-    // Get session token using NextAuth.js helper
-    const session = await getToken({
-      req: request,
-      secret: process.env.NEXTAUTH_SECRET,
-    });
+  const session = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
 
-    if (!session || !session.role || !ADMIN_ROLES.includes(session.role)) {
-      return new NextResponse(JSON.stringify({ success: false, message: 'Permission Denied', code: 401 }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
+  if (
+    !session?.sub ||
+    !session.role ||
+    !session.organizationId ||
+    session.authSessionVersion !== AUTH_SESSION_VERSION
+  ) {
+    return authorizationError(401);
+  }
+
+  if (
+    ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method) &&
+    !session.isPlatformAdmin &&
+    !MUTATION_ROLES.includes(session.role as string)
+  ) {
+    return authorizationError(403);
   }
 
   return NextResponse.next();

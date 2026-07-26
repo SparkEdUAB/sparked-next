@@ -4,7 +4,7 @@ import { BASE_URL } from 'app/shared/constants';
 import { T_RawMediaContentFields } from 'types/media-content';
 import NETWORK_UTILS from 'utils/network';
 
-export async function fetchRelatedMedia(mediaContent: T_RawMediaContentFields) {
+export async function fetchRelatedMedia(mediaContent: T_RawMediaContentFields, cookie?: string) {
   const { _id, grade } = mediaContent;
 
   const optionalParams = {
@@ -21,7 +21,10 @@ export async function fetchRelatedMedia(mediaContent: T_RawMediaContentFields) {
 
   return fetcher<{ mediaContent: T_RawMediaContentFields[] }>(
     BASE_URL + API_LINKS.FETCH_RELATED_MEDIA_CONTENT + NETWORK_UTILS.formatGetParams(params),
-    { next: { revalidate: 60 } },
+    {
+      cache: 'no-store',
+      headers: cookie ? { cookie } : undefined,
+    },
   );
 }
 

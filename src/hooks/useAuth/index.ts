@@ -4,13 +4,12 @@ import { API_LINKS } from 'app/links';
 import { useSession } from 'next-auth/react';
 import { T_LoginFields, T_SignupFields } from './types';
 import i18next from 'i18next';
-import { signIn, signOut } from 'next-auth/react';
+import { getSession, signIn, signOut } from 'next-auth/react';
 import AUTH_PROCESS_CODES from '@app/api/auth/processCodes';
 import { useCallback, useState } from 'react';
 import { useRouter } from 'next-nprogress-bar';
 import { useToastMessage } from 'providers/ToastMessageContext';
 import getProcessCodeMeaning from 'utils/helpers/getProcessCodeMeaning';
-import { jwtDecode } from 'jwt-decode';
 import { routes } from 'routes';
 import { useMeStore } from 'stores/useMeStore';
 
@@ -61,71 +60,35 @@ const useAuth = () => {
 
   const handleLogin = useCallback(
     async (fields: T_LoginFields) => {
-      const url = API_LINKS.LOGIN;
-      const formData = {
-        body: JSON.stringify({ ...fields }),
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      };
       setLoading(true);
       try {
-        const resp = await fetch(url, formData);
-
-        let responseData;
-        try {
-          responseData = await resp.json();
-        } catch {
-          message.error(i18next.t('invalid_server_response'));
-          return false;
-        }
-
-        if (!resp.ok || responseData.isError) {
-          message.warning(getProcessCodeMeaning(responseData.code));
-          return false;
-        }
-
-        const { jwtToken } = responseData;
-        const decodedToken: { role?: { name: string } } = jwtDecode(jwtToken);
-        const userRole: typeof decodedToken.role = decodedToken.role || { name: 'student' };
-
-        const singInResp = await signIn('credentials', {
+        const signInResponse = await signIn('credentials', {
           redirect: false,
-          jwtToken,
-          id: responseData.user?.id,
           email: fields.email,
-          role: (userRole?.name ?? 'user') as 'student' | 'user' | 'admin',
-          firstName: responseData.user?.firstName,
-          lastName: responseData.user?.lastName,
-          phone: responseData.user?.phoneNumber,
-          organizationId: responseData.user?.organizationId,
-          organizationSlug: responseData.user?.organizationSlug,
-          organizationType: responseData.user?.organizationType,
-          isDefaultOrganization: responseData.user?.isDefaultOrganization,
-          isPlatformAdmin: responseData.user?.isPlatformAdmin,
+          password: fields.password,
         });
 
-        const isUserAdmin = userRole?.name?.toLowerCase() === 'admin';
-
-        if (singInResp?.ok && !singInResp?.error) {
-          const userData = {
-            email: fields.email,
-            firstName: responseData.firstName,
-            lastName: responseData.lastName,
-            phone: responseData.user?.phoneNumber,
-            role: userRole?.name as 'student' | 'user' | 'admin',
-            isAdmin: isUserAdmin,
-            organizationId: responseData.user?.organizationId,
-            organizationSlug: responseData.user?.organizationSlug,
-            organizationType: responseData.user?.organizationType,
-            isDefaultOrganization: responseData.user?.isDefaultOrganization,
-            isPlatformAdmin: responseData.user?.isPlatformAdmin,
-          };
-
-          setUser(userData);
+        if (!signInResponse?.ok || signInResponse.error) {
+          message.warning(getProcessCodeMeaning(AUTH_PROCESS_CODES.INVALID_CREDENTIALS));
+          return false;
         }
 
+        const session = await getSession();
+        const role = session?.user?.role || 'student';
+        setUser({
+          id: session?.user?.id,
+          email: session?.user?.email || fields.email,
+          firstName: session?.user?.firstName,
+          lastName: session?.user?.lastName,
+          phone: session?.user?.phone,
+          role,
+          isAdmin: role.toLowerCase() === 'admin',
+          organizationId: session?.user?.organizationId,
+          organizationSlug: session?.user?.organizationSlug,
+          organizationType: session?.user?.organizationType,
+          isDefaultOrganization: session?.user?.isDefaultOrganization,
+          isPlatformAdmin: session?.user?.isPlatformAdmin,
+        });
         message.success(i18next.t('logged_in'));
       } catch (err: any) {
         message.error(`${i18next.t('unknown_error')}. ${err.msg ? err.msg : ''}`);

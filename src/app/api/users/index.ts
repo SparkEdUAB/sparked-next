@@ -269,7 +269,7 @@ export async function findUserByName_(request: any, session?: Session) {
   }
 }
 
-export async function findUserByEmail_(request: any) {
+export async function findUserByEmail_(request: any, session?: Session) {
   const schema = zfd.formData({
     email: zfd.text(),
   });
@@ -293,14 +293,18 @@ export async function findUserByEmail_(request: any) {
     // Create case-insensitive regex pattern for email
     const regexPattern = new RegExp(`^${email.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i');
 
+    const scopedMatch = await buildScopedQuery(
+      db,
+      session,
+      { email: { $regex: regexPattern } },
+      { includeLegacyUnscopedForDefault: true },
+    );
+
     const user = await db
       .collection(dbCollections.users.name)
       .aggregate([
         {
-          // Match the exact email (case insensitive)
-          $match: {
-            email: { $regex: regexPattern },
-          },
+          $match: scopedMatch,
         },
         {
           $lookup: {
@@ -373,7 +377,7 @@ export async function findUserByEmail_(request: any) {
   }
 }
 
-export async function deleteUsers_(request: Request) {
+export async function deleteUsers_(request: Request, session?: Session) {
   const schema = zfd.formData({
     userIds: zfd.repeatableOfType(zfd.text()),
   });
@@ -394,11 +398,19 @@ export async function deleteUsers_(request: Request) {
       });
     }
 
-    const results = await db.collection(dbCollections.users.name).deleteMany({
-      _id: {
-        $in: userIds.map((i) => new BSON.ObjectId(i)),
-      },
-    });
+    const scopedQuery = await buildScopedQuery(
+      db,
+      session,
+      { _id: { $in: userIds.map((id) => new BSON.ObjectId(id)) } },
+      { includeLegacyUnscopedForDefault: true },
+    );
+    const scopedUsers = await db
+      .collection(dbCollections.users.name)
+      .find(scopedQuery, { projection: { _id: 1 } })
+      .toArray();
+    const scopedUserIds = scopedUsers.map((user) => user._id);
+    const results = await db.collection(dbCollections.users.name).deleteMany({ _id: { $in: scopedUserIds } });
+    await db.collection(dbCollections.user_role_mappings.name).deleteMany({ user_id: { $in: scopedUserIds } });
 
     const response = {
       isError: false,

@@ -9,7 +9,7 @@ export type User = {
   email?: string;
   phone?: string;
   avatar?: string;
-  role: 'student' | 'user' | 'admin';
+  role: string;
   isAdmin: boolean;
   organizationId?: string;
   organizationSlug?: string;

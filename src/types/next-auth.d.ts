@@ -41,6 +41,7 @@ declare module 'next-auth' {
     organizationType?: string;
     isDefaultOrganization?: boolean;
     isPlatformAdmin?: boolean;
+    authSessionVersion?: string;
   }
 }
 

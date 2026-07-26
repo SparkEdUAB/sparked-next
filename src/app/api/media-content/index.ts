@@ -15,9 +15,6 @@ import { Session } from 'next-auth';
 
 const dbConfigData = MEDIAL_CONTENT_FIELD_NAMES_CONFIG;
 
-const cache: Record<string, { data: any; timestamp: number }> = {};
-const CACHE_TTL = 300000;
-
 export default async function fetchMediaContent_(request: any, session?: Session) {
   const schema = zfd.formData({
     limit: zfd.text(),
@@ -35,19 +32,6 @@ export default async function fetchMediaContent_(request: any, session?: Session
   });
 
   const params = request.nextUrl.searchParams;
-  const queryKey = params.toString();
-
-  // Check if data is cached and still valid
-  if (cache[queryKey] && Date.now() - cache[queryKey].timestamp < CACHE_TTL) {
-    return new NextResponse(JSON.stringify({ isError: false, mediaContent: cache[queryKey].data }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
-      },
-    });
-  }
-
   const {
     limit,
     skip,
@@ -110,14 +94,12 @@ export default async function fetchMediaContent_(request: any, session?: Session
     }
 
     const data = sortByNumericValue(mediaContent, 'name');
-    // Store in cache
-    cache[queryKey] = { data, timestamp: Date.now() };
 
     return new NextResponse(JSON.stringify({ isError: false, mediaContent: data }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=300, stale-while-revalidate=600',
+        'Cache-Control': 'private, no-store',
       },
     });
   } catch {
@@ -403,7 +385,7 @@ export async function fetchRandomMediaContent_(request: any) {
   }
 }
 
-export async function fetchRelatedMediaContent_(request: NextRequest) {
+export async function fetchRelatedMediaContent_(request: NextRequest, session?: Session) {
   const schema = zfd.formData({
     grade_id: zfd.text().optional(),
     media_content_id: zfd.text(), // Add media_content_id to exclude current content
@@ -429,18 +411,21 @@ export async function fetchRelatedMediaContent_(request: NextRequest) {
       });
     }
 
+    const query = await buildScopedQuery(
+      db,
+      session,
+      {
+        grade_id: new BSON.ObjectId(grade_id),
+        _id: { $ne: new BSON.ObjectId(media_content_id) },
+      },
+      { includeLegacyUnscopedForDefault: true },
+    );
     const relatedMediaContent = await db
       .collection(dbCollections.media_content.name)
-      .find(
-        {
-          grade_id: new BSON.ObjectId(grade_id),
-          _id: { $ne: new BSON.ObjectId(media_content_id) }, // Exclude current media
-        },
-        {
-          limit: _limit,
-          skip: _skip,
-        },
-      )
+      .find(query, {
+        limit: _limit,
+        skip: _skip,
+      })
       .toArray();
 
     const response = {

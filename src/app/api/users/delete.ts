@@ -5,16 +5,16 @@ import { dbClient } from '../lib/db';
 import { dbCollections } from '../lib/db/collections';
 import { default as USER_PROCESS_CODES } from './processCodes';
 import { HttpStatusCode } from 'axios';
+import { Session } from 'next-auth';
+import { buildScopedQuery } from '../lib/organization';
 
-export default async function deleteUsers_(request: Request) {
+export default async function deleteUsers_(request: Request, session?: Session) {
   const schema = zfd.formData({
     userIds: zfd.repeatableOfType(zfd.text()),
   });
 
   const formBody = await request.json();
   const { userIds } = schema.parse(formBody);
-  const objectIds = userIds.map((id) => new BSON.ObjectId(id));
-
   try {
     const db = await dbClient();
 
@@ -28,17 +28,21 @@ export default async function deleteUsers_(request: Request) {
       );
     }
 
-    // Delete both users and their role mappings
-    await Promise.all([
-      // Delete users
-      db.collection(dbCollections.users.name).deleteMany({
-        _id: { $in: objectIds },
-      }),
+    const scopedQuery = await buildScopedQuery(
+      db,
+      session,
+      { _id: { $in: userIds.map((id) => new BSON.ObjectId(id)) } },
+      { includeLegacyUnscopedForDefault: true },
+    );
+    const scopedUsers = await db
+      .collection(dbCollections.users.name)
+      .find(scopedQuery, { projection: { _id: 1 } })
+      .toArray();
+    const scopedUserIds = scopedUsers.map((user) => user._id);
 
-      // Delete role mappings
-      db.collection(dbCollections.user_role_mappings.name).deleteMany({
-        user_id: { $in: objectIds },
-      }),
+    await Promise.all([
+      db.collection(dbCollections.users.name).deleteMany({ _id: { $in: scopedUserIds } }),
+      db.collection(dbCollections.user_role_mappings.name).deleteMany({ user_id: { $in: scopedUserIds } }),
     ]);
 
     return new Response(
