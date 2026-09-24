@@ -1,57 +1,28 @@
 import AppLogo from '@components/logo';
-
-
 import Link from 'next/link';
 
 const FooterSection = () => {
   return (
-    <>
-      <footer className="bg-sky-50 dark:bg-gray-800">
-        <div className="mx-auto max-w-screen-lg p-6">
-          <div className="md:flex md:justify-between">
-            <div className="mb-6 md:mb-0">
-              <Link href="/" className="flex items-center">
-                <span className="self-center text-2xl font-semibold text-sky-900 whitespace-nowrap dark:text-white">
-                  <AppLogo scale={0.8} />
-                </span>
-              </Link>
-            </div>
-            <div className="grid grid-cols-2 gap-8 sm:gap-6">
-              <div>
-                <h2 className="mb-3 text-sm font-semibold text-sky-900 uppercase dark:text-white">Follow us</h2>
-                <ul className="text-sky-700 dark:text-sky-300">
-                  <li className="mb-3">
-                    <a href="https://github.com/sparkeduab/sparked-next" className="hover:underline ">
-                      Github
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h2 className="mb-3 text-sm font-semibold text-sky-900 uppercase dark:text-white">Legal</h2>
-                <ul className="text-sky-700 dark:text-sky-300">
-                  <li className="mb-3">
-                    <a href="#" className="hover:underline">
-                      Privacy Policy
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
+    <footer className="bg-[#eaf4f8] text-[#35677e] dark:bg-[#102735] dark:text-sky-100/80">
+      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 lg:px-10">
+        <div className="flex flex-col justify-between gap-8 border-b border-[#c7dce5] pb-10 dark:border-white/15 sm:flex-row sm:items-center">
+          <div>
+            <Link href="/" className="inline-flex focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3]">
+              <AppLogo scale={0.9} />
+            </Link>
           </div>
-          <hr className="my-6 border-sky-200 md:mx-auto dark:border-gray-700 lg:my-8" />
-          <div className="md:flex md:items-center md:justify-center">
-            <span className="text-sm text-sky-700 md:text-center dark:text-sky-300">
-              © 2025{' '}
-              <a href="" className="hover:underline">
-                SparkEd™
-              </a>
-              . All Rights Reserved.
-            </span>
-          </div>
+          <nav aria-label="Footer navigation" className="flex flex-wrap items-start gap-x-8 gap-y-4 text-sm font-semibold">
+            <Link href="/library" className="hover:text-[#174f6b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3] dark:hover:text-white">
+              Library
+            </Link>
+            <a href="https://github.com/sparkeduab/sparked-next" className="hover:text-[#174f6b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3] dark:hover:text-white">
+              GitHub
+            </a>
+          </nav>
         </div>
-      </footer>
-    </>
+        <p className="pt-7 text-sm">© {new Date().getFullYear()} SparkEd. All rights reserved.</p>
+      </div>
+    </footer>
   );
 };
 

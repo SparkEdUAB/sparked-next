@@ -1,149 +1,131 @@
-"use client"
+'use client';
 
-import { useSession } from 'next-auth/react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import {
-  FaBookOpen,
-  FaUsers,
-  FaGraduationCap,
-  FaClock
-} from 'react-icons/fa';
+import { useSession } from 'next-auth/react';
 
 const HeroSection = () => {
-
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const { status } = useSession()
-
-  const backgroundImages = [
-    '/hero1.jpg',
-    '/hero2.jpg',
-    '/hero3.jpg'
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) =>
-        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
-      );
-    }, 10000);
-
-    return () => clearInterval(interval);
-
-  }, [backgroundImages.length]);
+  const { status } = useSession();
+  const libraryHref = status === 'authenticated' ? '/library' : '/auth/login';
 
   return (
-    <>
-      <section className="bg-sky-50 dark:bg-gray-900">
-        <div className="relative min-h-[600px] flex items-center">
-          {backgroundImages.map((image, index) => (
-            <div
-              key={image}
-              className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out"
-              style={{
-                opacity: currentImageIndex === index ? 1 : 0,
-                backgroundImage: `url(${image})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            />
-          ))}
-
-          {/* Overlay to ensure text readability */}
-          <div className="absolute inset-0 bg-black/30" />
-
-          {/* Content */}
-          <div className="relative w-full px-6 mx-auto max-w-screen-lg"> {/* Removed py-16 and added w-full */}
-            <div className="place-self-center mr-auto md:w-[60%]">
-              <h1 className="mb-6 max-w-2xl font-medium leading-none text-white text-7xl">
-                Your digital library
-              </h1>
-              <h3 className="max-w-2xl font-medium mb-10 text-3xl text-white">
-                Easily manage your school educational materials
-              </h3>
+    <main>
+      <section className="bg-[#eaf4f8] dark:bg-[#102735]">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 pb-14 pt-10 sm:px-8 sm:pt-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-16 lg:px-10 lg:py-20">
+          <div className="max-w-xl">
+            <h1 className="text-5xl font-semibold leading-[1.08] tracking-tight text-[#173f59] dark:text-white sm:text-6xl lg:text-[4.4rem]">
+              A library for the whole school.
+            </h1>
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-[#42687c] dark:text-sky-100/80 sm:text-xl">
+              Keep books, videos, and lessons together. Teachers can share what they need, and students can find it whenever they are ready to learn.
+            </p>
+            <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
               <Link
-                prefetch
-                href={status === "authenticated" ? "/library" : "/auth/login"}
-                className="inline-block text-white bg-sky-600 hover:bg-sky-700 focus:ring-4 focus:ring-sky-300 font-semibold rounded-lg px-5 py-3 me-2 mb-2 dark:bg-sky-600 dark:hover:bg-sky-700 focus:outline-none dark:focus:ring-sky-800"
+                href={libraryHref}
+                className="inline-flex min-h-12 items-center justify-center rounded-md bg-[#287fa3] px-6 font-semibold text-white transition-colors hover:bg-[#1e6888] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3]"
               >
-                Get Started
+                Get started
               </Link>
+              <a
+                href="#why-sparked"
+                className="font-semibold text-[#236f91] underline decoration-[#8bb9cb] underline-offset-4 hover:text-[#174f6b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3] dark:text-sky-200"
+              >
+                See how it works
+              </a>
+            </div>
+          </div>
+          <div className="relative aspect-[3/2] overflow-hidden rounded-md bg-[#b9dce8]">
+            <Image
+              src="/hero3.jpg"
+              alt="Students learning together with tablets in a classroom"
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 52vw"
+              className="object-cover object-center"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section id="why-sparked" className="bg-white py-20 dark:bg-gray-900 sm:py-28">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
+            <div>
+              <h2 className="max-w-md text-4xl font-semibold leading-tight tracking-tight text-[#173f59] dark:text-white sm:text-5xl">
+                Make good resources easier to find.
+              </h2>
+              <p className="mt-5 max-w-md text-lg leading-relaxed text-slate-600 dark:text-slate-300">
+                SparkEd gives learning materials a clear place in your school, so they stay useful beyond a single lesson.
+              </p>
+            </div>
+            <div className="border-t border-[#c7dce5] dark:border-gray-700">
+              <div className="grid gap-3 border-b border-[#c7dce5] py-6 dark:border-gray-700 sm:grid-cols-[12rem_1fr] sm:gap-8">
+                <h3 className="text-lg font-semibold text-[#176782] dark:text-sky-200">Keep things organized</h3>
+                <p className="leading-relaxed text-slate-600 dark:text-slate-300">Browse resources by grade, subject, unit, and topic.</p>
+              </div>
+              <div className="grid gap-3 border-b border-[#c7dce5] py-6 dark:border-gray-700 sm:grid-cols-[12rem_1fr] sm:gap-8">
+                <h3 className="text-lg font-semibold text-[#176782] dark:text-sky-200">Use different formats</h3>
+                <p className="leading-relaxed text-slate-600 dark:text-slate-300">Bring PDFs, videos, and web resources into the same library.</p>
+              </div>
+              <div className="grid gap-3 border-b border-[#c7dce5] py-6 dark:border-gray-700 sm:grid-cols-[12rem_1fr] sm:gap-8">
+                <h3 className="text-lg font-semibold text-[#176782] dark:text-sky-200">Learn beyond class</h3>
+                <p className="leading-relaxed text-slate-600 dark:text-slate-300">Students can return to the materials they need from wherever they study.</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="bg-gradient-to-b from-sky-50 to-white dark:from-gray-900 dark:to-gray-800">
-        <div className="mx-auto max-w-screen-lg sm:py-16 lg:px-6">
-          <div className="mb-8 max-w-screen-md lg:mb-16 mx-auto text-center">
-            <h2 className="mb-4 text-4xl font-bold text-sky-900 dark:text-white lg:text-4xl">
-              Designed for modern schools
+      <section id="for-schools" className="bg-[#f1f7f9] py-20 dark:bg-[#162f3e] sm:py-28">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-10">
+          <div className="relative aspect-[3/2] overflow-hidden rounded-md bg-[#c7dce5]">
+            <Image
+              src="/hero2.jpg"
+              alt="Students with tablets and books during a classroom lesson"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover object-center"
+            />
+          </div>
+          <div className="max-w-lg">
+            <h2 className="text-4xl font-semibold leading-tight tracking-tight text-[#173f59] dark:text-white sm:text-5xl">
+              Made for the way schools teach.
             </h2>
-            <p className="sm:text-xl">
-              SparkEd is a digital library created for schools, offering a platform where educators can easily upload learning materials and students can access them anytime, anywhere. With SparkEd, users can read books, watch educational videos, making learning more flexible and accessible for everyone.
+            <p className="mt-6 text-lg leading-relaxed text-slate-600 dark:text-slate-300">
+              Teachers can put a lesson in students&apos; hands without sending files from one place to another. One organized library makes it easier to pick up where class left off.
+            </p>
+            <Link
+              href={libraryHref}
+              className="mt-8 inline-flex font-semibold text-[#236f91] underline decoration-[#8bb9cb] underline-offset-4 hover:text-[#174f6b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3] dark:text-sky-200"
+            >
+              Explore SparkEd
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-20 dark:bg-gray-900 sm:py-28">
+        <div className="mx-auto grid max-w-7xl items-center gap-10 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20 lg:px-10">
+          <div className="max-w-lg">
+            <h2 className="text-4xl font-semibold leading-tight tracking-tight text-[#173f59] dark:text-white sm:text-5xl">
+              Learning doesn&apos;t end at the classroom door.
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-slate-600 dark:text-slate-300">
+              Whether students are working together at school or studying later on their own, the same materials are ready when they need them.
             </p>
           </div>
-        </div>
-        {/* Hero Title Area */}
-        <div className="pt-2 pb-8 px-4 mx-auto max-w-screen-xl text-center pt-1">
-          <h2 className="mb-4 text-4xl font-bold tracking-tight text-sky-900 dark:text-white lg:text-4xl">
-            Your School&apos;s Digital Future
-          </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-            Transform your educational institution with a modern digital library that brings together students, educators, and resources in one platform.
-          </p>
-        </div>
-
-        {/* Features Grid */}
-        <div className="px-4 mx-auto max-w-screen-xl lg:px-6">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-2 mb-16 justify-items-center max-w-4xl mx-auto">
-            {/* Digital Content Hub */}
-            <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800 hover:transform hover:scale-105 transition-transform duration-300 text-center">
-              <div className="flex justify-center items-center w-12 h-12 mb-4 bg-sky-100 rounded-lg dark:bg-sky-900 mx-auto">
-                <FaBookOpen className="w-6 h-6 text-sky-600 dark:text-sky-300" />
-              </div>
-              <h3 className="text-xl font-bold text-sky-900 dark:text-white mb-3">Digital Content Hub</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Access textbooks, and educational materials anytime, anywhere. Support for multiple formats including PDFs, videos, and interactive content.
-              </p>
-            </div>
-
-            {/* Collaborative Learning */}
-            <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800 hover:transform hover:scale-105 transition-transform duration-300 text-center">
-              <div className="flex justify-center items-center w-12 h-12 mb-4 bg-sky-100 rounded-lg dark:bg-sky-900 mx-auto">
-                <FaUsers className="w-6 h-6 text-sky-600 dark:text-sky-300" />
-              </div>
-              <h3 className="text-xl font-bold text-sky-900 dark:text-white mb-3">Collaborative Learning</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Foster collaboration between students and teachers with shared resources, discussion boards, and group study materials.
-              </p>
-            </div>
-
-            {/* Course Management */}
-            <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800 hover:transform hover:scale-105 transition-transform duration-300 text-center">
-              <div className="flex justify-center items-center w-12 h-12 mb-4 bg-sky-100 rounded-lg dark:bg-sky-900 mx-auto">
-                <FaGraduationCap className="w-6 h-6 text-sky-600 dark:text-sky-300" />
-              </div>
-              <h3 className="text-xl font-bold text-sky-900 dark:text-white mb-3">Course Management</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Organize content by subjects, topics or grade levels for different educational needs.
-              </p>
-            </div>
-
-            {/* 24/7 Access */}
-            <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-800 hover:transform hover:scale-105 transition-transform duration-300 text-center">
-              <div className="flex justify-center items-center w-12 h-12 mb-4 bg-sky-100 rounded-lg dark:bg-sky-900 mx-auto">
-                <FaClock className="w-6 h-6 text-sky-600 dark:text-sky-300" />
-              </div>
-              <h3 className="text-xl font-bold text-sky-900 dark:text-white mb-3">24/7 Access</h3>
-              <p className="text-gray-600 dark:text-gray-300">
-                Provide round-the-clock access to educational resources. Support remote learning and flexible study schedules.
-              </p>
-            </div>
+          <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-[#c7dce5]">
+            <Image
+              src="/hero1.jpg"
+              alt="A group using phones and tablets together outside a school"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover object-center"
+            />
           </div>
         </div>
       </section>
-    </>
+    </main>
   );
 };
 

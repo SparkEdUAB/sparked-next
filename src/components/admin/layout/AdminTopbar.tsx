@@ -14,7 +14,7 @@ export function AdminTopbar({
   toggleSidebar: () => void;
 }) {
   return (
-    <header className="fixed left-0 right-0 top-0 z-30 flex h-[62px] items-center gap-3 border-b border-border bg-white px-4 shadow-sm dark:bg-gray-900">
+    <header className="fixed left-0 right-0 top-0 z-30 flex h-[62px] items-center gap-3 border-b border-border bg-card px-4 shadow-sm dark:shadow-black/20">
       <button
         onClick={toggleSidebar}
         aria-label="Toggle sidebar"

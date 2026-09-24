@@ -10,7 +10,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const toggleSidebar = useCallback(() => setCollapsed((v) => !v), []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="admin-shell min-h-screen bg-background text-foreground">
       <AdminTopbar sidebarCollapsed={collapsed} toggleSidebar={toggleSidebar} />
       <AdminSidebar collapsed={collapsed} toggleSidebar={toggleSidebar} />
       <main

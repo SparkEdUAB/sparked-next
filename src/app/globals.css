@@ -47,4 +47,18 @@
     --input: 217.2 32.6% 17.5%;
     --ring: 232 100% 70%;
   }
+
+  .dark .admin-shell {
+    --background: 222 47% 8%;
+    --foreground: 210 40% 96%;
+    --card: 219 42% 13%;
+    --card-foreground: 210 40% 96%;
+    --popover: 219 42% 13%;
+    --popover-foreground: 210 40% 96%;
+    --muted: 217 32% 19%;
+    --muted-foreground: 214 18% 72%;
+    --accent: 220 45% 22%;
+    --accent-foreground: 210 40% 96%;
+    --border: 216 30% 25%;
+  }
 }

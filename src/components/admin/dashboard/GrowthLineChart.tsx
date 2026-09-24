@@ -1,52 +1,21 @@
-'use client';
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { ChartNoAxesCombined } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-const STUB_DATA = [
-  { month: 'Jan', count: 0 },
-  { month: 'Feb', count: 0 },
-  { month: 'Mar', count: 0 },
-  { month: 'Apr', count: 0 },
-  { month: 'May', count: 0 },
-  { month: 'Jun', count: 0 },
-];
 
 export function GrowthLineChart() {
   return (
-    <Card>
+    <Card className="border-border">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">Growth Over Time</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="relative">
-          <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={STUB_DATA} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
-              <XAxis dataKey="month" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="count"
-                stroke="hsl(var(--primary))"
-                strokeWidth={2}
-                dot={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-          <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-background/80">
-            <p className="max-w-xs px-4 text-center text-sm text-muted-foreground">
-              Time-series data not available — requires a dedicated API endpoint
-            </p>
+        <div className="flex h-[280px] flex-col items-center justify-center rounded-lg border border-dashed border-border bg-muted/20 px-6 text-center">
+          <div className="mb-4 rounded-full bg-primary/10 p-3 text-primary">
+            <ChartNoAxesCombined className="h-6 w-6" aria-hidden="true" />
           </div>
+          <p className="font-medium text-card-foreground">Growth data is not available yet</p>
+          <p className="mt-2 max-w-xs text-sm leading-relaxed text-muted-foreground">
+            Trends will appear when historical statistics are available.
+          </p>
         </div>
       </CardContent>
     </Card>
