@@ -14,10 +14,6 @@ export async function fetchMedia(skip: number, filters: T_Filters) {
         ...filters,
         skip: skip.toString(),
         limit: MEDIA_CONTENT_LIMIT.toString(),
-        // @ts-expect-error
-        externalContent: filters.externalContent || undefined,
-        // @ts-expect-error
-        externalUrl: filters.externalUrl || undefined,
       }),
     { next: { revalidate: 360 } },
   );

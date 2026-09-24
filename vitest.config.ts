@@ -23,6 +23,8 @@ export default defineConfig({
       hocs: path.resolve(__dirname, './src/hocs'),
       state: path.resolve(__dirname, './src/state'),
       app: path.resolve(__dirname, './src/app'),
+      fetchers: path.resolve(__dirname, './src/fetchers'),
+      'server-only': path.resolve(__dirname, './src/test/server-only.ts'),
     },
   },
   test: {

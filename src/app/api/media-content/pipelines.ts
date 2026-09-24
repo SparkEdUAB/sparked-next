@@ -16,6 +16,8 @@ export const p_fetchMediaContentWithMetaData = ({
   {
     $match: query,
   },
+  { $skip: skip },
+  { $limit: limit },
 
   // {
   //   $lookup: {
@@ -151,12 +153,6 @@ export const p_fetchMediaContentWithMetaData = ({
       external_url: 1,
       ...project,
     },
-  },
-  {
-    $skip: skip,
-  },
-  {
-    $limit: limit,
   },
 ];
 

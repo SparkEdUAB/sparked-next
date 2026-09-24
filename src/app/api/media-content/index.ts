@@ -100,7 +100,7 @@ export default async function fetchMediaContent_(request: any, session?: Session
     if (isWithMetaData) {
       mediaContent = await db
         .collection(dbCollections.media_content.name)
-        .aggregate(p_fetchMediaContentWithMetaData({ query, project }))
+        .aggregate(p_fetchMediaContentWithMetaData({ query, project, limit: _limit, skip: _skip }))
         .toArray();
     } else {
       mediaContent = await db

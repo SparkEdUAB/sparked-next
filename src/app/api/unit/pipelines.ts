@@ -16,6 +16,8 @@ export const p_fetchUnitsWithMetaData = ({
   {
     $match: query,
   },
+  { $skip: skip },
+  { $limit: limit },
   // Join with users collection for creator info
   {
     $lookup: {
@@ -60,12 +62,6 @@ export const p_fetchUnitsWithMetaData = ({
       path: '$grade',
       preserveNullAndEmptyArrays: true,
     },
-  },
-  {
-    $skip: skip,
-  },
-  {
-    $limit: limit,
   },
   {
     $project: {
