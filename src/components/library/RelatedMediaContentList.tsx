@@ -4,9 +4,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
 import { T_RawMediaContentFields } from 'types/media-content';
+import { getImageSrc } from 'utils/helpers/getImageSrc';
 
 const isValidImage = (url: string) => {
-  return url && url.match(/\.(jpeg|jpg|gif|png)$/) !== null;
+  return url && url.match(/\.(jpeg|jpg|gif|png|webp)$/) !== null;
 };
 
 const RelatedMediaItem = memo(
@@ -21,7 +22,8 @@ const RelatedMediaItem = memo(
   }) => {
     const domainName = item.external_url ? new URL(item.external_url).hostname : '';
     const placeholderImage = `https://placehold.co/120x100?text=${domainName || item.name}`;
-    const thumbnailUrl = isValidImage(item.thumbnail_url as string) ? item.thumbnail_url : placeholderImage;
+    const imageSrc = getImageSrc(item);
+    const thumbnailUrl = isValidImage(imageSrc) ? imageSrc : placeholderImage;
 
     const content = (
       <div className={`flex flex-row gap-2 mb-2 rounded-lg p-1 ${isActive ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
