@@ -2,16 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { GrowthLineChart } from './GrowthLineChart';
 
-vi.mock('recharts', () => ({
-  LineChart: ({ children }: any) => <div data-testid="line-chart">{children}</div>,
-  Line: () => null,
-  XAxis: () => null,
-  YAxis: () => null,
-  CartesianGrid: () => null,
-  Tooltip: () => null,
-  ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
-}));
-
 vi.mock('@/components/ui/card', () => ({
   Card: ({ children }: any) => <div>{children}</div>,
   CardContent: ({ children }: any) => <div>{children}</div>,
@@ -25,13 +15,9 @@ describe('GrowthLineChart', () => {
     expect(screen.getByText('Growth Over Time')).toBeInTheDocument();
   });
 
-  it('renders the stub overlay message', () => {
+  it('explains why growth data is unavailable', () => {
     render(<GrowthLineChart />);
-    expect(screen.getByText(/time-series data not available/i)).toBeInTheDocument();
-  });
-
-  it('renders the line chart element', () => {
-    render(<GrowthLineChart />);
-    expect(screen.getByTestId('line-chart')).toBeInTheDocument();
+    expect(screen.getByText(/growth data is not available yet/i)).toBeInTheDocument();
+    expect(screen.getByText(/historical statistics/i)).toBeInTheDocument();
   });
 });

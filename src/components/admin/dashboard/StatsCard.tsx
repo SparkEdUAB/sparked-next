@@ -45,7 +45,7 @@ export function StatsCard({
   const Icon = config.icon;
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="border-border transition-colors hover:border-primary/40 dark:shadow-lg dark:shadow-black/10">
       <CardContent className="p-5">
         <div className="flex items-start gap-4">
           <div className={cn('shrink-0 rounded-xl p-3', config.bg)}>
@@ -62,10 +62,10 @@ export function StatsCard({
             {percentageTrend && (
               <Badge
                 className={cn(
-                  'mt-1.5 gap-1 text-xs border-0',
-                  percentageTrend === 'up'
-                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                    : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+              'mt-1.5 gap-1 border-0 text-xs',
+              percentageTrend === 'up'
+                    ? 'bg-green-100 text-green-700 dark:bg-emerald-400/15 dark:text-emerald-300'
+                    : 'bg-red-100 text-red-700 dark:bg-rose-400/15 dark:text-rose-300',
                 )}
               >
                 {percentageTrend === 'up' ? (

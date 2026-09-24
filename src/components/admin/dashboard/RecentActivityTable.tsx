@@ -15,14 +15,14 @@ export function RecentActivityTable({ stats }: { stats: T_StatFields[] }) {
   const entityStats = stats.filter((s) => !s.isPercentage);
 
   return (
-    <Card>
+    <Card className="border-border">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold">Entity Summary</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50">
+            <TableRow className="border-border bg-muted/50">
               <TableHead>Entity</TableHead>
               <TableHead className="text-right">Count</TableHead>
               <TableHead>Status</TableHead>
@@ -30,21 +30,21 @@ export function RecentActivityTable({ stats }: { stats: T_StatFields[] }) {
           </TableHeader>
           <TableBody>
             {entityStats.length === 0 ? (
-              <TableRow>
+              <TableRow className="border-border">
                 <TableCell colSpan={3} className="py-8 text-center text-muted-foreground">
                   No data available
                 </TableCell>
               </TableRow>
             ) : (
               entityStats.map((stat) => (
-                <TableRow key={stat.name}>
+                <TableRow key={stat.name} className="border-border">
                   <TableCell className="font-medium capitalize">
                     {stat.name.replaceAll('_', ' ')}
                   </TableCell>
                   <TableCell className="text-right font-semibold">{stat.value}</TableCell>
                   <TableCell>
                     {(stat.value as number) > 0 ? (
-                      <Badge className="border-0 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                      <Badge className="border-0 bg-green-100 text-green-700 dark:bg-emerald-400/15 dark:text-emerald-300">
                         Active
                       </Badge>
                     ) : (
