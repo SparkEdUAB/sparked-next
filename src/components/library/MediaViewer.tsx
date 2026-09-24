@@ -19,6 +19,9 @@ const PdfViewer = dynamic(() => import('@components/layouts/library/PdfViewer/Pd
   loading: () => <div className="animate-pulse bg-gray-200 h-[400px] w-full rounded-lg"></div>,
 });
 
+// Remove this notice once access to the media bucket is restored.
+const unavailableMediaOrigin = 'https://sparked-next.s3.eu-north-1.amazonaws.com/';
+
 export function MediaViewer({ mediaContent }: { mediaContent: T_RawMediaContentFields }) {
   const { isDeviceMobile } = useScreenDetector();
   const fileType = useMemo(() => determineFileType(mediaContent?.file_url || ''), [mediaContent?.file_url]);
@@ -86,6 +89,17 @@ export function MediaViewer({ mediaContent }: { mediaContent: T_RawMediaContentF
             style={{ width: '100%', height: '80vh' }}
             title="External Content"
           ></iframe>
+        </div>
+      );
+    }
+
+    if (fileUrl.startsWith(unavailableMediaOrigin)) {
+      return (
+        <div role="status" className="flex min-h-[400px] flex-col items-center justify-center rounded-lg bg-gray-100 px-6 text-center dark:bg-gray-700">
+          <h2 className="text-xl font-semibold">Media temporarily unavailable</h2>
+          <p className="mt-3 max-w-lg text-gray-600 dark:text-gray-300">
+            We’re working to restore access to this file. Please try again later.
+          </p>
         </div>
       );
     }

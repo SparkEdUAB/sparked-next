@@ -3,9 +3,8 @@ import { CONFIG_CORE_PATH } from '@hooks/use-config/constants';
 import fs from 'fs';
 const fsPromises = fs.promises;
 
-import { T_RECORD } from 'types';
 import CONFIG_PROCESS_CODES from './processCodes';
-import { T_CONFIG_DB_VARIABLE, T_CONFIG_VARIABLE, T_CONFIG_VARIABLES } from 'types/config';
+import { T_CONFIG_DB_VARIABLE, T_CONFIG_VARIABLES } from 'types/config';
 import { HttpStatusCode } from 'axios';
 
 export default async function readConfigFile_() {
@@ -46,25 +45,13 @@ const getConfigFile = async () => {
 export async function getDbFieldNamesConfigStatus({ dbConfigData }: { dbConfigData: T_CONFIG_DB_VARIABLE[] }) {
   const configData = JSON.parse(await getConfigFile()) as T_CONFIG_VARIABLES;
 
-  const configItems: T_CONFIG_DB_VARIABLE[] = [];
+  const enabledKeys = new Set(
+    Object.values(configData)
+      .filter((entry) => entry.value === 'true')
+      .map((entry) => entry.key),
+  );
 
-  const configKeys = dbConfigData.map((i) => i.key);
-
-  // let arrIndex = 0;
-
-  for (const key in configData) {
-    //@ts-ignore
-    const entry = configData[key] as T_CONFIG_VARIABLE;
-
-    if (configKeys.includes(entry.key) && entry.value  === 'true') {
-      configItems.push({
-        value: entry.value  === 'true' ? 1 : 0,
-        fieldName: dbConfigData[configKeys.indexOf(entry.key)]?.fieldName,
-      });
-    }
-
-    // arrIndex++;
-  }
-
-  return configItems.map((i) => ({ [i.fieldName]: i.value } as T_RECORD)).reduce((a, c) => ({ ...a, ...c }));
+  return Object.fromEntries(
+    dbConfigData.filter((field) => field.key && enabledKeys.has(field.key)).map((field) => [field.fieldName, 1]),
+  );
 }

@@ -1,7 +1,9 @@
-import type { T_Record } from 'types/navigation';
-
 const NETWORK_UTILS = {
-  formatGetParams: (params: T_Record) => '?' + new URLSearchParams(params).toString(),
+  formatGetParams: (params: Record<string, string | null | undefined>) =>
+    '?' +
+    new URLSearchParams(
+      Object.entries(params).filter(([, value]) => value !== null && value !== undefined) as [string, string][],
+    ).toString(),
 };
 
 export default NETWORK_UTILS;

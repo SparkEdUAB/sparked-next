@@ -15,7 +15,7 @@ const RootLayout = async ({ children }: { children: ReactNode }) => {
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className="custom-scrollbar dark:bg-gray-800 dark:text-white">
+      <body className="custom-scrollbar dark:bg-gray-800 dark:text-white" suppressHydrationWarning>
         <AppProviders session={session}>{children}</AppProviders>
       </body>
     </html>
