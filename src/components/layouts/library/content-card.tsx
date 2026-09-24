@@ -27,7 +27,7 @@ const ContentDetailsCardView = ({
   const placeholderImage = `https://placehold.co/600x400?text=${domainName || truncateText(title, 12)}`;
 
   const isValidImage = useCallback((url: string) => {
-    return url && url.match(/\.(jpeg|jpg|gif|png)$/) !== null;
+    return url && url.match(/\.(jpeg|jpg|gif|png|webp)$/) !== null;
   }, []);
 
   return (
