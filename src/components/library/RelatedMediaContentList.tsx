@@ -27,14 +27,16 @@ const RelatedMediaItem = memo(
 
     const content = (
       <div className={`flex flex-row gap-2 mb-2 rounded-lg p-1 ${isActive ? 'bg-gray-100 dark:bg-gray-700' : ''}`}>
-        <Image
-          src={thumbnailUrl as string}
-          alt={item.name}
-          width={120}
-          height={90}
-          className="object-cover rounded"
-          loading="eager"
-        />
+        <div className="relative h-[90px] w-[120px] shrink-0 overflow-hidden rounded">
+          <Image
+            src={thumbnailUrl as string}
+            alt={item.name}
+            fill
+            sizes="120px"
+            className="object-cover"
+            loading="lazy"
+          />
+        </div>
         <div className="flex flex-col">
           <h4 className={`font-semibold line-clamp-2 overflow-ellipsis ${isActive ? 'text-blue-600 dark:text-blue-400' : 'text-black dark:text-white'}`}>
             {item.name}

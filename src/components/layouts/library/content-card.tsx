@@ -11,6 +11,7 @@ const ContentDetailsCardView = ({
   description,
   fileUrl,
   externalUrl,
+  priority = false,
 }: {
   url: string;
   image: string;
@@ -18,6 +19,7 @@ const ContentDetailsCardView = ({
   description: string;
   fileUrl?: string;
   externalUrl?: string;
+  priority?: boolean;
 }) => {
   const fileType = determineFileType(fileUrl || '') as string;
   const hasExternalUrl = Boolean(externalUrl);
@@ -40,6 +42,8 @@ const ContentDetailsCardView = ({
             src={hasExternalUrl || !isValidImage(image) ? placeholderImage.trimEnd() : image?.trimEnd()}
             unoptimized={hasExternalUrl || !isValidImage(image)}
             fill
+            sizes="(max-width: 639px) 100vw, (max-width: 767px) 50vw, (max-width: 1023px) 33vw, (max-width: 1279px) 25vw, (max-width: 1535px) 20vw, 17vw"
+            loading={priority ? 'eager' : 'lazy'}
           />
            <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded-bl-xl">
             {mediaType}
