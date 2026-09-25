@@ -8,7 +8,7 @@ import { memo, useCallback } from 'react';
 import { MEDIA_CONTENT_LIMIT } from './constants';
 import BouncingLoader from '@components/atom/BouncingLoader/BouncingLoader';
 
-const ContentCard = memo(({ item }: { item: T_RawMediaContentFields }) => {
+const ContentCard = memo(({ item, priority }: { item: T_RawMediaContentFields; priority: boolean }) => {
   if (!item.file_url && !item.external_url) {
     return null;
   }
@@ -21,6 +21,7 @@ const ContentCard = memo(({ item }: { item: T_RawMediaContentFields }) => {
         description={item.description}
         fileUrl={item.file_url as string}
         externalUrl={item.external_url as string}
+        priority={priority}
       />
     </div>
   );
@@ -66,12 +67,12 @@ export function LibraryInfiniteScrollList({
       <div className="px-4 sm:px-6 md:px-8 mt-5">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6 media-content-list">
           {mediaContent.slice(0, initialItemsToRender).map((item, i) => (
-            <ContentCard key={`content-card-${i}-${item._id}`} item={item} />
+            <ContentCard key={`content-card-${i}-${item._id}`} item={item} priority={i === 0} />
           ))}
           {mediaContent.length > initialItemsToRender &&
             mediaContent
               .slice(initialItemsToRender)
-              .map((item, i) => <ContentCard key={`content-card-${i}-${item._id}`} item={item} />)}
+              .map((item, i) => <ContentCard key={`content-card-${i}-${item._id}`} item={item} priority={false} />)}
         </div>
       </div>
     </InfiniteScroll>

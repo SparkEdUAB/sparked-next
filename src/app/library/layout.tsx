@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, useRef } from 'react';
 import LibraryLayout from '@components/library/libraryLayout/LibraryLayout';
 import { useSearchParams } from 'next/navigation';
 import useUnit from '@hooks/useUnit';
@@ -19,31 +19,60 @@ function LibraryLayoutWrapper({ children }: { children: ReactNode }) {
   const filteredGradeId = searchParams.get('grade_id');
   const filteredSubjectId = searchParams.get('subject_id');
   const filteredUnitId = searchParams.get('unit_id');
+  const hasFetchedGrades = useRef(false);
+  const fetchedSubjectsForGrade = useRef<string | null | undefined>(undefined);
+  const fetchedUnitsForSubject = useRef<string | null | undefined>(undefined);
+  const fetchedTopicsForUnit = useRef<string | null | undefined>(undefined);
 
-  // Data fetching
   useEffect(() => {
+    if (hasFetchedGrades.current) {
+      return;
+    }
+
+    hasFetchedGrades.current = true;
     fetchGrades({ limit: 20, skip: 0 });
   }, [fetchGrades]);
 
   useEffect(() => {
-    if (filteredGradeId) {
-      fetchSubjectsByGradeId({ gradeId: filteredGradeId, withMetaData: true });
+    if (fetchedSubjectsForGrade.current === filteredGradeId) {
+      return;
     }
-    return () => setSubjects([]);
+
+    fetchedSubjectsForGrade.current = filteredGradeId;
+    if (!filteredGradeId) {
+      setSubjects([]);
+      return;
+    }
+
+    fetchSubjectsByGradeId({ gradeId: filteredGradeId, withMetaData: true });
   }, [fetchSubjectsByGradeId, filteredGradeId, setSubjects]);
 
   useEffect(() => {
-    if (filteredSubjectId) {
-      fetchUnitsBySubjectId({ subjectId: filteredSubjectId, withMetaData: true });
+    if (fetchedUnitsForSubject.current === filteredSubjectId) {
+      return;
     }
-    return () => setUnits([]);
+
+    fetchedUnitsForSubject.current = filteredSubjectId;
+    if (!filteredSubjectId) {
+      setUnits([]);
+      return;
+    }
+
+    fetchUnitsBySubjectId({ subjectId: filteredSubjectId, withMetaData: true });
   }, [fetchUnitsBySubjectId, filteredSubjectId, setUnits]);
 
   useEffect(() => {
-    if (filteredUnitId) {
-      fetchTopicsByUnitId({ unitId: filteredUnitId, withMetaData: true });
+    if (fetchedTopicsForUnit.current === filteredUnitId) {
+      return;
     }
-    return () => setTopics([]);
+
+    fetchedTopicsForUnit.current = filteredUnitId;
+    if (!filteredUnitId) {
+      setTopics([]);
+      return;
+    }
+
+    fetchTopicsByUnitId({ unitId: filteredUnitId, withMetaData: true });
   }, [fetchTopicsByUnitId, filteredUnitId, setTopics]);
 
   return (
