@@ -18,6 +18,14 @@ const FooterSection = () => {
             <a href="https://github.com/sparkeduab/sparked-next" className="hover:text-[#174f6b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3] dark:hover:text-white">
               GitHub
             </a>
+            <a
+              href="https://sparked.instatus.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-[#174f6b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3] dark:hover:text-white"
+            >
+              System status
+            </a>
           </nav>
         </div>
         <p className="pt-7 text-sm">© {new Date().getFullYear()} SparkEd. All rights reserved.</p>
