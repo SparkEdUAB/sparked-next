@@ -137,7 +137,7 @@ export async function deleteSchools_(request: Request) {
 
     const results = await db.collection(dbCollections.schools.name).deleteMany({
       _id: {
-        $in: schoolIds.map((i) => new BSON.ObjectId(i)),
+        $in: schoolIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

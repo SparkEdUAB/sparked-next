@@ -396,7 +396,7 @@ export async function deleteUsers_(request: Request) {
 
     const results = await db.collection(dbCollections.users.name).deleteMany({
       _id: {
-        $in: userIds.map((i) => new BSON.ObjectId(i)),
+        $in: userIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

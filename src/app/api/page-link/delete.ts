@@ -30,7 +30,7 @@ export default async function deletePageLink_(request: Request) {
 
     await db.collection(dbCollections.page_links.name).deleteMany({
       _id: {
-        $in: pageLinkIds.map((i) => new BSON.ObjectId(i)),
+        $in: pageLinkIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

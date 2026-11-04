@@ -164,7 +164,7 @@ export async function deleteCourse_(request: Request) {
 
     const results = await db.collection(dbCollections.courses.name).deleteMany({
       _id: {
-        $in: courseIds.map((i) => new BSON.ObjectId(i)),
+        $in: courseIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

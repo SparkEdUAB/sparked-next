@@ -163,7 +163,7 @@ export async function deleteTopics_(request: Request) {
 
     const results = await db.collection(dbCollections.topics.name).deleteMany({
       _id: {
-        $in: topicIds.map((i) => new BSON.ObjectId(i)),
+        $in: topicIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

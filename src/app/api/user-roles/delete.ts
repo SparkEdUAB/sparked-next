@@ -30,7 +30,7 @@ export default async function deleteUserRoles_(request: Request) {
 
     const results = await db.collection(dbCollections.user_roles.name).deleteMany({
       _id: {
-        $in: userRoleIds.map((i) => new BSON.ObjectId(i)),
+        $in: userRoleIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 
