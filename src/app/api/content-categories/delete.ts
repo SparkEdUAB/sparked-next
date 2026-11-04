@@ -26,7 +26,7 @@ export async function deleteContentCategoriesById_(request: Request) {
 
     const results = await db.collection(dbCollections.content_categories.name).deleteMany({
       _id: {
-        $in: contentCategoryIds.map((i) => new BSON.ObjectId(i)),
+        $in: contentCategoryIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

@@ -165,7 +165,7 @@ export async function deleteUnits_(request: Request) {
 
     const results = await db.collection(dbCollections.units.name).deleteMany({
       _id: {
-        $in: unitIds.map((i) => new BSON.ObjectId(i)),
+        $in: unitIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

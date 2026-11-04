@@ -13,7 +13,7 @@ export default async function deleteUsers_(request: Request) {
 
   const formBody = await request.json();
   const { userIds } = schema.parse(formBody);
-  const objectIds = userIds.map((id) => new BSON.ObjectId(id));
+  const objectIds = userIds.map((id: string) => new BSON.ObjectId(id));
 
   try {
     const db = await dbClient();
