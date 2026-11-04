@@ -30,7 +30,7 @@ export default async function deletePageActions_(request: Request) {
 
     const results = await db.collection(dbCollections.page_actions.name).deleteMany({
       _id: {
-        $in: pageActionIds.map((i) => new BSON.ObjectId(i)),
+        $in: pageActionIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

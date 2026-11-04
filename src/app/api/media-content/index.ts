@@ -219,7 +219,7 @@ export async function deleteMediaContentByIds_(request: Request) {
 
     const results = await db.collection(dbCollections.media_content.name).deleteMany({
       _id: {
-        $in: mediaContentIds.map((i) => new BSON.ObjectId(i)),
+        $in: mediaContentIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

@@ -30,7 +30,7 @@ export default async function deleteGrades_(request: Request) {
 
     await db.collection(dbCollections.grades.name).deleteMany({
       _id: {
-        $in: gradeIds.map((i) => new BSON.ObjectId(i)),
+        $in: gradeIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 

@@ -154,7 +154,7 @@ export async function deletePrograms_(request: Request) {
 
     const results = await db.collection(dbCollections.programs.name).deleteMany({
       _id: {
-        $in: programIds.map((i) => new BSON.ObjectId(i)),
+        $in: programIds.map((i: string) => new BSON.ObjectId(i)),
       },
     });
 
