@@ -11,7 +11,7 @@ git pull origin main
 node -v | grep -q '^v22\.' || { echo "Node 22 required"; exit 1; }
 
 # Install Bun if missing, then install dependencies from bun.lock
-command -v bun >/dev/null 2>&1 || npm install -g bun@1.4.5
+[ "$(bun --version 2>/dev/null)" = "1.4.5" ] || npm install -g bun@1.4.5
 bun ci
 
 # Build the Next.js app

@@ -36,7 +36,7 @@ jobs:
             cd /var/www/sparked-next
             git pull origin main
             node -v | grep -q '^v22\.' || { echo "Node 22 required"; exit 1; }
-            command -v bun >/dev/null 2>&1 || npm install -g bun@1.4.5
+            [ "$(bun --version 2>/dev/null)" = "1.4.5" ] || npm install -g bun@1.4.5
             bun ci
             bun run build
             pm2 delete sparked-next >/dev/null 2>&1 || true
