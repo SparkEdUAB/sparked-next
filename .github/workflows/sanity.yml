@@ -19,36 +19,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 9.15.4
-          run_install: false
+          bun-version-file: package.json
 
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun ci
 
       - name: Set up environment variables
         run: |
           echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
           echo "MONGODB_DB=sparked-next" >> .env
 
+      - name: Check formatting
+        run: bun run format:check
+
       - name: Run linting
-        run: npx --yes oxlint@latest --deny-warnings
+        run: bun run lint
 
       - name: Type check
-        run: pnpm type-check
+        run: bun run type-check
 
       - name: Build
         id: build
-        run: pnpm build
+        run: bun run build
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
