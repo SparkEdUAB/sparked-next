@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # Navigate to your project directory
 cd /var/www/sparked-next || exit
@@ -6,17 +7,19 @@ cd /var/www/sparked-next || exit
 # Pull the latest changes from the main branch
 git pull origin main
 
-# Install updated dependencies
-corepack enable
-corepack prepare pnpm@9.15.4 --activate
-pnpm install --frozen-lockfile
+# The app runs on Node 22; Bun is only the package manager
+node -v | grep -q '^v22\.' || { echo "Node 22 required"; exit 1; }
+
+# Install Bun if missing, then install dependencies from bun.lock
+command -v bun >/dev/null 2>&1 || npm install -g bun@1.4.5
+bun ci
 
 # Build the Next.js app
-pnpm build
+bun run build
 
-# Restart the app with PM2
-pm2 stop sparked-next
-pm2 start sparked-next
+# (Re)start the app with PM2 on the Node runtime
+pm2 delete sparked-next >/dev/null 2>&1 || true
+pm2 start node_modules/next/dist/bin/next --name sparked-next --interpreter node -- start
 
-# Optional: Save the PM2 process list
+# Save the PM2 process list
 pm2 save
