@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -e
+bun fmt --no-script --staged
+bun run lint

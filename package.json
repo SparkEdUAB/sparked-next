@@ -13,6 +13,7 @@
     "format:check": "bun fmt --no-script --check",
     "lint": "oxlint --deny-warnings",
     "lint:fix": "oxlint --fix",
+    "prepare": "git config core.hooksPath .githooks || true",
     "pm2": "pm2 start bun --name \"sparked-next\" -- run start"
   },
   "engines": {
@@ -85,7 +86,6 @@
     "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.4.15",
     "jsdom": "^25.0.0",
-    "lint-staged": "^15.0.0",
     "oxlint": "1.94.0",
     "postcss": "^8.4.28",
     "tailwindcss": "^3.3.3",
