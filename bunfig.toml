@@ -1,0 +1,7 @@
+[fmt]
+printWidth = 120
+tabWidth = 2
+semi = true
+singleQuote = true
+trailingComma = "all"
+ignorePatterns = [".next/", "coverage/", "playwright-report/", "test-results/", "public/", "docs/", "bun.lock"]

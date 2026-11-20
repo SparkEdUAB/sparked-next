@@ -9,6 +9,8 @@
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
+    "format": "bun fmt --no-script",
+    "format:check": "bun fmt --no-script --check",
     "lint": "oxlint --deny-warnings",
     "lint:fix": "oxlint --fix",
     "pm2": "pm2 start bun --name \"sparked-next\" -- run start"
