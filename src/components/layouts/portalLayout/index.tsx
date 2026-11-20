@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @next/next/no-html-link-for-pages -- placeholder nav links; switching to next/link would change navigation behavior */
 
 import { ReactNode, FC } from 'react';
 import AppLogo from '@components/logo';

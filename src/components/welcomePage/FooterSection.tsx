@@ -28,6 +28,7 @@ const FooterSection = () => {
             </a>
           </nav>
         </div>
+        {/* eslint-disable-next-line react/purity -- copyright year only; intentional current-year render */}
         <p className="pt-7 text-sm">© {new Date().getFullYear()} SparkEd. All rights reserved.</p>
       </div>
     </footer>
