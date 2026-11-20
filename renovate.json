@@ -6,7 +6,7 @@
   "schedule": ["before 4am on the first day of the month"],
   "packageRules": [
     {
-      "description": "brace-expansion is only pinned via pnpm overrides; the <2 override must stay on v1 because minimatch@3 requires its CommonJS default export",
+      "description": "brace-expansion is only pinned via package.json overrides; the <2 override must stay on v1 because minimatch@3 requires its CommonJS default export",
       "matchPackageNames": ["brace-expansion"],
       "matchUpdateTypes": ["major"],
       "enabled": false

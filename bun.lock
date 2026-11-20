@@ -94,7 +94,7 @@
     "brace-expansion@<2": {
       ".": "^1.1.21",
     },
-    "brace-expansion@>=4 <6": {
+    "brace-expansion@>=4": {
       ".": "^5.0.12",
     },
     "follow-redirects": "^1.16.2",
