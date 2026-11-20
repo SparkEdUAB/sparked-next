@@ -61,12 +61,7 @@ export function LibraryNavbar({
         >
           <div className={`relative ${searching ? '' : 'hidden md:block'}`}>
             <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              className="w-full pl-9"
-              type="search"
-              placeholder="Search"
-              name="q"
-            />
+            <Input className="w-full pl-9" type="search" placeholder="Search" name="q" />
           </div>
         </form>
 
@@ -94,14 +89,8 @@ export function LibraryNavbar({
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              disabled={logoutLoading}
-              onClick={handleLogout}
-              aria-disabled={logoutLoading}
-            >
-              <span className={logoutLoading ? 'opacity-50 pointer-events-none' : ''}>
-                Logout
-              </span>
+            <DropdownMenuItem disabled={logoutLoading} onClick={handleLogout} aria-disabled={logoutLoading}>
+              <span className={logoutLoading ? 'opacity-50 pointer-events-none' : ''}>Logout</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

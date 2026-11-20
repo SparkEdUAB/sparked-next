@@ -23,8 +23,18 @@ export default async function editUnit_(request: Request, session?: Session) {
   });
   const formBody = await request.json();
 
-  const { name, description, schoolId, programId, courseId, unitId, subjectId, gradeId, organizationId, institutionId } =
-    schema.parse(formBody);
+  const {
+    name,
+    description,
+    schoolId,
+    programId,
+    courseId,
+    unitId,
+    subjectId,
+    gradeId,
+    organizationId,
+    institutionId,
+  } = schema.parse(formBody);
   try {
     const db = await dbClient();
 

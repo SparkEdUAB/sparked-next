@@ -12,11 +12,7 @@ import { transformRawStats, useAdminStatsData } from '@hooks/useAdmin/useAdminSt
 
 export default function AdminHomePage() {
   useDocumentTitle('Admin Dashboard');
-  const { items: stats, isLoading } = useAdminStatsData(
-    API_LINKS.FETCH_ALL_STATS,
-    'stats',
-    transformRawStats,
-  );
+  const { items: stats, isLoading } = useAdminStatsData(API_LINKS.FETCH_ALL_STATS, 'stats', transformRawStats);
 
   if (isLoading) {
     return (

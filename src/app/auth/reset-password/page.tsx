@@ -4,9 +4,9 @@ import ResetPassword from '@components/auth/reset-password';
 import { useDocumentTitle } from '@hooks/useDocumentTitle/useDocumentTitle';
 
 const ResetPasswordPage = () => {
-    useDocumentTitle('Reset Password');
+  useDocumentTitle('Reset Password');
 
-    return <ResetPassword />;
+  return <ResetPassword />;
 };
 
 export default ResetPasswordPage;

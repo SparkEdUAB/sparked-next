@@ -14,10 +14,7 @@ import React from 'react';
 
 export function AdminBreadcrumb() {
   const { generateBreadcrumbItems, activeMenuItem } = useNavigation();
-  const breadcrumbItems = generateBreadcrumbItems(
-    ADMIN_LINKS,
-    activeMenuItem?.link as string,
-  );
+  const breadcrumbItems = generateBreadcrumbItems(ADMIN_LINKS, activeMenuItem?.link as string);
 
   return (
     <Breadcrumb>

@@ -24,7 +24,7 @@ const InstitutionUsersView: React.FC<InstitutionUsersViewProps> = ({ institution
       setIsLoading(true);
       try {
         const response = await fetch(
-          `${API_LINKS.FETCH_INSTITUTION_USERS}?institutionId=${institutionId}&limit=${limit}&skip=${skipValue}`
+          `${API_LINKS.FETCH_INSTITUTION_USERS}?institutionId=${institutionId}&limit=${limit}&skip=${skipValue}`,
         );
         const data = await response.json();
 
@@ -49,7 +49,7 @@ const InstitutionUsersView: React.FC<InstitutionUsersViewProps> = ({ institution
         setIsLoading(false);
       }
     },
-    [institutionId]
+    [institutionId],
   ); // Only recreate if institutionId changes
 
   useEffect(() => {
@@ -65,12 +65,8 @@ const InstitutionUsersView: React.FC<InstitutionUsersViewProps> = ({ institution
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Users assigned to {institutionName}
-        </h3>
-        <span className="text-sm text-gray-500 dark:text-gray-400">
-          Total: {users.length} user(s)
-        </span>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Users assigned to {institutionName}</h3>
+        <span className="text-sm text-gray-500 dark:text-gray-400">Total: {users.length} user(s)</span>
       </div>
 
       {isLoading && users.length === 0 ? (
@@ -103,10 +99,7 @@ const InstitutionUsersView: React.FC<InstitutionUsersViewProps> = ({ institution
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr
-                    key={user._id}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                  >
+                  <tr key={user._id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                     <td className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       {user.firstName} {user.lastName}
                     </td>

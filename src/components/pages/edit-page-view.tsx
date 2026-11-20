@@ -43,10 +43,10 @@ const EditPageView = ({ page, onSuccessfullyDone }: { page: T_PageLinkFields; on
         .reduce((previous, current) => [...previous, ...current], [])
         .map(
           (value) =>
-            ({ _id: value, name: value } satisfies {
+            ({ _id: value, name: value }) satisfies {
               _id: string;
               name: string;
-            }),
+            },
         ),
     [],
   );

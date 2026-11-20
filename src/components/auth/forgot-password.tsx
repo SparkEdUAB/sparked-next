@@ -18,11 +18,10 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    handleForgotPassword(email)
+    handleForgotPassword(email);
   };
 
   return (
-
     <section className="bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 min-h-screen flex items-center justify-center overflow-auto py-12">
       <div className="flex flex-col items-center justify-center px-6 w-full max-w-xl mx-auto">
         <Link href="/" className="flex items-center mb-6 transform hover:scale-105 transition-transform">
@@ -30,13 +29,13 @@ const ForgotPassword = () => {
         </Link>
         <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
           <div className="p-8 space-y-4">
-            <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
-              Forgot Password
-            </p>
+            <p className="text-center text-gray-600 dark:text-gray-300 mb-6">Forgot Password</p>
             <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <div className="mb-1.5 block">
-                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} className="text-gray-700 dark:text-gray-300">Your email</Label>
+                  <Label htmlFor={SIGNUP_FORM_FIELDS.email.key} className="text-gray-700 dark:text-gray-300">
+                    Your email
+                  </Label>
                 </div>
                 <div className="relative">
                   <LuCircleUser className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -52,11 +51,7 @@ const ForgotPassword = () => {
                   />
                 </div>
               </div>
-              <Button
-                disabled={loading}
-                type="submit"
-                className="w-full mt-2 py-1.5 rounded-md text-sm font-medium"
-              >
+              <Button disabled={loading} type="submit" className="w-full mt-2 py-1.5 rounded-md text-sm font-medium">
                 {loading ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -67,7 +62,7 @@ const ForgotPassword = () => {
                 )}
               </Button>
               <p className="text-md font-light text-center text-gray-600 dark:text-gray-400 mt-4">
-                Or {" "}
+                Or{' '}
                 <Link
                   href="/auth/login"
                   className="font-medium  hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 hover:underline transition-colors"

@@ -13,12 +13,18 @@ import CreateSubjectView from './createSubjectView';
 import i18next from 'i18next';
 
 const SubjectListView: React.FC = () => {
-  const { selectedSubjectIds, setSelectedSubjectIds, onSearchQueryChange, deleteSubject, searchQuery } =
-    useSubject();
+  const { selectedSubjectIds, setSelectedSubjectIds, onSearchQueryChange, deleteSubject, searchQuery } = useSubject();
   const [creatingSubject, setCreatingSubject] = useState(false);
   const [edittingSubject, setEdittingSubject] = useState<T_SubjectFields | null>(null);
 
-  const { items: subjects, isLoading, mutate, loadMore, hasMore, error } = useAdminListViewData(
+  const {
+    items: subjects,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(
     API_LINKS.FETCH_SUBJECTS,
     'subjects',
     transformRawSubject,
@@ -38,7 +44,11 @@ const SubjectListView: React.FC = () => {
       </div>
 
       <DataTable<T_SubjectFields>
-        deleteItems={async () => { const r = await deleteSubject(); mutate(); return r; }}
+        deleteItems={async () => {
+          const r = await deleteSubject();
+          mutate();
+          return r;
+        }}
         rowSelection={rowSelection}
         items={subjects}
         isLoading={isLoading}
@@ -57,7 +67,10 @@ const SubjectListView: React.FC = () => {
         title={`Create ${i18next.t('subjects')}`}
       >
         <CreateSubjectView
-          onSuccessfullyDone={() => { mutate(); setCreatingSubject(false); }}
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingSubject(false);
+          }}
         />
       </FormSheet>
 
@@ -69,7 +82,10 @@ const SubjectListView: React.FC = () => {
         {edittingSubject && (
           <EditSubjectView
             subject={edittingSubject}
-            onSuccessfullyDone={() => { mutate(); setEdittingSubject(null); }}
+            onSuccessfullyDone={() => {
+              mutate();
+              setEdittingSubject(null);
+            }}
           />
         )}
       </FormSheet>

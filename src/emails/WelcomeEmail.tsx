@@ -10,7 +10,7 @@ import {
   button,
   hr,
   footer,
-  footerLink
+  footerLink,
 } from './ResetPasswordEmail';
 
 interface WelcomeEmailProps {
@@ -22,16 +22,11 @@ export const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
     <Head />
     <Body style={main}>
       <Container style={container}>
-        <Img
-          src="https://sparkednext.app/email-logo.png"
-          width="48"
-          height="48"
-          alt="Sparked"
-          style={logo}
-        />
+        <Img src="https://sparkednext.app/email-logo.png" width="48" height="48" alt="Sparked" style={logo} />
         <Text style={heading}>Welcome to Sparked, {name}!</Text>
         <Text style={paragraph}>
-          We&apos;re excited to have you on board. Sparked is your personal learning companion that helps you discover, organize, and track your learning journey.
+          We&apos;re excited to have you on board. Sparked is your personal learning companion that helps you discover,
+          organize, and track your learning journey.
         </Text>
         <Section style={buttonContainer}>
           <Link style={button} href={process.env.BASE_URL}>
@@ -39,7 +34,8 @@ export const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
           </Link>
         </Section>
         <Text style={paragraph}>
-          If you have any questions or for some reasons you require admin access, feel free to reply to this email. We&apos;re always here to help!
+          If you have any questions or for some reasons you require admin access, feel free to reply to this email.
+          We&apos;re always here to help!
         </Text>
         <Hr style={hr} />
         <Text style={footer}>

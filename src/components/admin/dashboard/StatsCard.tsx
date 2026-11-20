@@ -52,9 +52,7 @@ export function StatsCard({
             <Icon className="h-6 w-6 text-white" />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium text-muted-foreground">
-              {i18next.t(name)}
-            </p>
+            <p className="truncate text-sm font-medium text-muted-foreground">{i18next.t(name)}</p>
             <p className="mt-1 text-2xl font-bold text-foreground">
               {value}
               {isPercentage && <span>%</span>}
@@ -62,17 +60,13 @@ export function StatsCard({
             {percentageTrend && (
               <Badge
                 className={cn(
-              'mt-1.5 gap-1 border-0 text-xs',
-              percentageTrend === 'up'
+                  'mt-1.5 gap-1 border-0 text-xs',
+                  percentageTrend === 'up'
                     ? 'bg-green-100 text-green-700 dark:bg-emerald-400/15 dark:text-emerald-300'
                     : 'bg-red-100 text-red-700 dark:bg-rose-400/15 dark:text-rose-300',
                 )}
               >
-                {percentageTrend === 'up' ? (
-                  <TrendingUp className="h-3 w-3" />
-                ) : (
-                  <TrendingDown className="h-3 w-3" />
-                )}
+                {percentageTrend === 'up' ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
                 {percentageTrend}
               </Badge>
             )}

@@ -13,12 +13,18 @@ import EditTopicView from './edit-topic-view';
 import i18next from 'i18next';
 
 const TopicsListView: React.FC = () => {
-  const { selectedTopicIds, setSelectedTopicIds, onSearchQueryChange, deleteTopics, searchQuery } =
-    useTopic();
+  const { selectedTopicIds, setSelectedTopicIds, onSearchQueryChange, deleteTopics, searchQuery } = useTopic();
   const [creatingTopic, setCreatingTopic] = useState(false);
   const [edittingTopic, setEdittingTopic] = useState<T_TopicFields | null>(null);
 
-  const { items: topics, isLoading, mutate, loadMore, hasMore, error } = useAdminListViewData(
+  const {
+    items: topics,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(
     API_LINKS.FETCH_TOPICS,
     'topics',
     transformRawTopic,
@@ -38,7 +44,11 @@ const TopicsListView: React.FC = () => {
       </div>
 
       <DataTable<T_TopicFields>
-        deleteItems={async () => { const r = await deleteTopics(); mutate(); return r; }}
+        deleteItems={async () => {
+          const r = await deleteTopics();
+          mutate();
+          return r;
+        }}
         rowSelection={rowSelection}
         items={topics || []}
         isLoading={isLoading}
@@ -51,25 +61,23 @@ const TopicsListView: React.FC = () => {
         error={error}
       />
 
-      <FormSheet
-        open={creatingTopic}
-        onClose={() => setCreatingTopic(false)}
-        title={`Create ${i18next.t('topics')}`}
-      >
+      <FormSheet open={creatingTopic} onClose={() => setCreatingTopic(false)} title={`Create ${i18next.t('topics')}`}>
         <CreateTopicView
-          onSuccessfullyDone={() => { mutate(); setCreatingTopic(false); }}
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingTopic(false);
+          }}
         />
       </FormSheet>
 
-      <FormSheet
-        open={!!edittingTopic}
-        onClose={() => setEdittingTopic(null)}
-        title={`Edit ${i18next.t('topics')}`}
-      >
+      <FormSheet open={!!edittingTopic} onClose={() => setEdittingTopic(null)} title={`Edit ${i18next.t('topics')}`}>
         {edittingTopic && (
           <EditTopicView
             topic={edittingTopic}
-            onSuccessfullyDone={() => { mutate(); setEdittingTopic(null); }}
+            onSuccessfullyDone={() => {
+              mutate();
+              setEdittingTopic(null);
+            }}
           />
         )}
       </FormSheet>

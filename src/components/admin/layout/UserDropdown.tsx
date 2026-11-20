@@ -44,9 +44,7 @@ export function UserDropdown() {
           <>
             <div className="px-2 py-1.5">
               <p className="text-sm font-medium">{fullName}</p>
-              {user?.email && (
-                <p className="text-xs text-muted-foreground">{user.email}</p>
-              )}
+              {user?.email && <p className="text-xs text-muted-foreground">{user.email}</p>}
             </div>
             <DropdownMenuSeparator />
           </>

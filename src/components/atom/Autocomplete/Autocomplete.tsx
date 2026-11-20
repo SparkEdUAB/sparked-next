@@ -40,7 +40,7 @@ const Autocomplete = <T extends ItemType>({
   url,
   handleSelect,
   moduleName,
-  defaultValue = "",
+  defaultValue = '',
   required,
   disabled,
 }: Props<T>) => {
@@ -86,7 +86,7 @@ const Autocomplete = <T extends ItemType>({
         required={required}
         disabled={disabled}
       />
-      {autoCompleted && (query || moduleName === "userRoles") && !disabled && (
+      {autoCompleted && (query || moduleName === 'userRoles') && !disabled && (
         <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto dark:bg-gray-800 dark:border-gray-600">
           {data?.[moduleName]?.length ? (
             data?.[moduleName]?.map((subject: any) => (

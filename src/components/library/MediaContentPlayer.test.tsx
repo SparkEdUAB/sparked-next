@@ -15,7 +15,9 @@ vi.mock('./RelatedMediaContentList', () => ({
   RelatedMediaContentList: ({ relatedMediaContent, onSelect }: any) => (
     <div>
       {relatedMediaContent?.map((item: any) => (
-        <button key={item._id} onClick={() => onSelect(item)}>{item.name}</button>
+        <button key={item._id} onClick={() => onSelect(item)}>
+          {item.name}
+        </button>
       ))}
     </div>
   ),
@@ -50,7 +52,9 @@ describe('MediaContentPlayer', () => {
     let finishSecond!: (value: { mediaContent: typeof second }) => void;
     fetcherMock.mockImplementation((url: string) =>
       url.includes('mediaContentId=2')
-        ? new Promise((resolve) => { finishSecond = resolve; })
+        ? new Promise((resolve) => {
+            finishSecond = resolve;
+          })
         : Promise.resolve({ mediaContent: third }),
     );
     fetchRelatedMock.mockResolvedValue([]);

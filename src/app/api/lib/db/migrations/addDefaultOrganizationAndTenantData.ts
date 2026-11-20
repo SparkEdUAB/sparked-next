@@ -1,9 +1,5 @@
 import { dbCollections } from '../collections';
-import {
-  DEFAULT_ORGANIZATION_SLUG,
-  ensureDefaultOrganization,
-  slugifyOrganizationName,
-} from '../../organization';
+import { DEFAULT_ORGANIZATION_SLUG, ensureDefaultOrganization, slugifyOrganizationName } from '../../organization';
 import { Db, Document, ObjectId, WithId } from 'mongodb';
 
 const TENANT_SCOPED_COLLECTIONS = [
@@ -50,12 +46,10 @@ async function normalizeInstitutions(db: Db, defaultOrganizationId: ObjectId) {
     let suffix = 1;
 
     while (
-      (
-        await institutions.findOne({
-          _id: { $ne: institution._id },
-          slug,
-        })
-      ) !== null
+      (await institutions.findOne({
+        _id: { $ne: institution._id },
+        slug,
+      })) !== null
     ) {
       suffix += 1;
       slug = `${slugBase}-${suffix}`;
@@ -146,8 +140,7 @@ async function deriveOrganizationId(db: Db, doc: WithId<Document>, defaultOrgani
       },
     );
 
-    const relatedOrganizationId =
-      asObjectId(relatedDoc?.organization_id) || asObjectId(relatedDoc?.institution_id);
+    const relatedOrganizationId = asObjectId(relatedDoc?.organization_id) || asObjectId(relatedDoc?.institution_id);
 
     if (relatedOrganizationId) return relatedOrganizationId;
   }

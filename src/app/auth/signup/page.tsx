@@ -11,4 +11,4 @@ const SignupPage: React.FC = () => {
   return <Signup />;
 };
 
-export default  withAuthorization(SignupPage, { requireGuest: true });
+export default withAuthorization(SignupPage, { requireGuest: true });

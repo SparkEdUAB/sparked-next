@@ -40,12 +40,15 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
     }
 
     // Make sure we're passing the phone number to the editUser function
-    editUser({
-      ...result,
-      _id: user._id,
-      role: role?.name || user.role,
-      phoneNumber: result.phoneNumber // Explicitly include phoneNumber
-    }, onSuccessfullyDone);
+    editUser(
+      {
+        ...result,
+        _id: user._id,
+        role: role?.name || user.role,
+        phoneNumber: result.phoneNumber, // Explicitly include phoneNumber
+      },
+      onSuccessfullyDone,
+    );
   };
 
   return (
@@ -77,24 +80,14 @@ const EditUserView = ({ user, onSuccessfullyDone }: { user: T_UserFields; onSucc
           required
         />
 
-        <FormInput
-          disabled={isLoading}
-          name="phoneNumber"
-          label="Phone Number"
-          defaultValue={user.phoneNumber}
-        />
+        <FormInput disabled={isLoading} name="phoneNumber" label="Phone Number" defaultValue={user.phoneNumber} />
 
         {user.isStudent && (
           <div className="mt-4 border-t pt-4">
             {user.institutionType === 'general' && (
               <>
                 <div className="mb-3">
-                  <FormInput
-                    disabled={true}
-                    name="schoolName"
-                    defaultValue={user.schoolName}
-                    label='School Name'
-                  />
+                  <FormInput disabled={true} name="schoolName" defaultValue={user.schoolName} label="School Name" />
                 </div>
 
                 <div className="mb-3">

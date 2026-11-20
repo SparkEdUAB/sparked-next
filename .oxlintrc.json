@@ -1,13 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "import",
-    "typescript",
-    "unicorn",
-    "react",
-    "nextjs",
-    "jsx-a11y"
-  ],
+  "plugins": ["import", "typescript", "unicorn", "react", "nextjs", "jsx-a11y"],
   "env": {
     "browser": true,
     "node": true
@@ -24,10 +17,7 @@
     "no-console": [
       "error",
       {
-        "allow": [
-          "warn",
-          "error"
-        ]
+        "allow": ["warn", "error"]
       }
     ],
     "no-unused-vars": "off",
@@ -44,11 +34,7 @@
   },
   "overrides": [
     {
-      "files": [
-        "*.test.ts",
-        "*.test.tsx",
-        "*.spec.ts"
-      ],
+      "files": ["*.test.ts", "*.test.tsx", "*.spec.ts"],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off"
       }

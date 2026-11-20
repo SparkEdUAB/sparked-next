@@ -31,12 +31,7 @@ export default async function fetchPrograms_(request: Request, session?: Session
       });
     }
 
-    const query = await buildScopedQuery(
-      db,
-      session,
-      {},
-      { includeLegacyUnscopedForDefault: true },
-    );
+    const query = await buildScopedQuery(db, session, {}, { includeLegacyUnscopedForDefault: true });
 
     const programs = await db
       .collection(dbCollections.programs.name)

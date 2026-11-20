@@ -22,9 +22,7 @@ const AdminHeader: FC<{ menuItems: T_MenuItemLink }> = ({ menuItems }) => {
       <BreadcrumbList>
         {breadcrumbItems.map((item, index) => (
           <BreadcrumbItem key={item.link}>
-            {index === 0 && (
-              <MdOutlineAdminPanelSettings className="h-4 w-4 mr-1 inline-block" aria-hidden="true" />
-            )}
+            {index === 0 && <MdOutlineAdminPanelSettings className="h-4 w-4 mr-1 inline-block" aria-hidden="true" />}
             <BreadcrumbLink href={item.link}>{item.label}</BreadcrumbLink>
             {index < breadcrumbItems.length - 1 && <BreadcrumbSeparator />}
           </BreadcrumbItem>

@@ -13,18 +13,18 @@ import EditUnitView from './edit-unit-view';
 import i18next from 'i18next';
 
 const UnitListView: React.FC = () => {
-  const { selectedUnitIds, setSelectedProgramIds, searchQuery, onSearchQueryChange, deleteUnits } =
-    useUnit();
+  const { selectedUnitIds, setSelectedProgramIds, searchQuery, onSearchQueryChange, deleteUnits } = useUnit();
   const [creatingUnit, setCreatingUnit] = useState(false);
   const [edittingUnit, setEdittingUnit] = useState<T_UnitFields | null>(null);
 
-  const { items: units, isLoading, mutate, loadMore, hasMore, error } = useAdminListViewData(
-    API_LINKS.FETCH_UNITS,
-    'units',
-    transformRawUnit,
-    API_LINKS.FIND_UNITS_BY_NAME,
-    searchQuery,
-  );
+  const {
+    items: units,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(API_LINKS.FETCH_UNITS, 'units', transformRawUnit, API_LINKS.FIND_UNITS_BY_NAME, searchQuery);
 
   const rowSelection = {
     selectedRowKeys: selectedUnitIds,
@@ -38,7 +38,11 @@ const UnitListView: React.FC = () => {
       </div>
 
       <DataTable<T_UnitFields>
-        deleteItems={async () => { const r = await deleteUnits(); mutate(); return r; }}
+        deleteItems={async () => {
+          const r = await deleteUnits();
+          mutate();
+          return r;
+        }}
         rowSelection={rowSelection}
         items={units}
         isLoading={isLoading}
@@ -51,25 +55,23 @@ const UnitListView: React.FC = () => {
         error={error}
       />
 
-      <FormSheet
-        open={creatingUnit}
-        onClose={() => setCreatingUnit(false)}
-        title={`Create ${i18next.t('units')}`}
-      >
+      <FormSheet open={creatingUnit} onClose={() => setCreatingUnit(false)} title={`Create ${i18next.t('units')}`}>
         <CreateUnitView
-          onSuccessfullyDone={() => { mutate(); setCreatingUnit(false); }}
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingUnit(false);
+          }}
         />
       </FormSheet>
 
-      <FormSheet
-        open={!!edittingUnit}
-        onClose={() => setEdittingUnit(null)}
-        title={`Edit ${i18next.t('units')}`}
-      >
+      <FormSheet open={!!edittingUnit} onClose={() => setEdittingUnit(null)} title={`Edit ${i18next.t('units')}`}>
         {edittingUnit && (
           <EditUnitView
             unit={edittingUnit}
-            onSuccessfullyDone={() => { mutate(); setEdittingUnit(null); }}
+            onSuccessfullyDone={() => {
+              mutate();
+              setEdittingUnit(null);
+            }}
           />
         )}
       </FormSheet>

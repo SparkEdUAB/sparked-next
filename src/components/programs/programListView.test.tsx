@@ -28,14 +28,33 @@ vi.mock('@components/admin/data-table/DataTable', () => ({
   DataTable: ({ createNew, editItem }: any) => (
     <div data-testid="data-table">
       <button onClick={createNew}>New</button>
-      <button onClick={() => editItem({ _id: 'p1', name: 'P', description: '', schoolId: '', schoolName: '', index: 0, key: 'p1', created_at: '' })}>Edit</button>
+      <button
+        onClick={() =>
+          editItem({
+            _id: 'p1',
+            name: 'P',
+            description: '',
+            schoolId: '',
+            schoolName: '',
+            index: 0,
+            key: 'p1',
+            created_at: '',
+          })
+        }
+      >
+        Edit
+      </button>
     </div>
   ),
 }));
 
 vi.mock('@components/admin/form/FormSheet', () => ({
   FormSheet: ({ open, title, children }: any) =>
-    open ? <div data-testid="form-sheet" data-title={title}>{children}</div> : null,
+    open ? (
+      <div data-testid="form-sheet" data-title={title}>
+        {children}
+      </div>
+    ) : null,
 }));
 
 vi.mock('./createProgramView', () => ({

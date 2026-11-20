@@ -27,7 +27,9 @@ export const ShowAllOrNoItems = ({
           All
         </Link>
       ) : (
-        <span className={cn(styles.item, 'flex items-center px-3 py-2 text-sm rounded-lg text-gray-400 dark:text-gray-500')}>
+        <span
+          className={cn(styles.item, 'flex items-center px-3 py-2 text-sm rounded-lg text-gray-400 dark:text-gray-500')}
+        >
           No {ItemName}
         </span>
       )}

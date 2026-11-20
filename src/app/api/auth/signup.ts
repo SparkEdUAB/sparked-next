@@ -40,8 +40,7 @@ export default async function signup_(request: Request) {
     grade,
     institutionId,
     organizationId,
-  } =
-    schema.parse(formBody);
+  } = schema.parse(formBody);
 
   try {
     const db = await dbClient();
@@ -71,7 +70,10 @@ export default async function signup_(request: Request) {
     }
 
     const activeOrganizations = await listActiveOrganizations(db);
-    const requestedOrganizationId = organizationId || institutionId || (activeOrganizations.length === 1 ? activeOrganizations[0]?._id.toString() : undefined);
+    const requestedOrganizationId =
+      organizationId ||
+      institutionId ||
+      (activeOrganizations.length === 1 ? activeOrganizations[0]?._id.toString() : undefined);
 
     if (!requestedOrganizationId && activeOrganizations.length > 1) {
       return new Response(
