@@ -89,7 +89,7 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
       return;
     }
 
-    const selectedInstitution = publicInstitutions.find(inst => inst._id === value);
+    const selectedInstitution = publicInstitutions.find((inst) => inst._id === value);
     onInstitutionSelect(value, selectedInstitution?.name);
   };
 
@@ -129,9 +129,9 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
   };
 
   const handleNewInstitutionChange = (field: string, value: string) => {
-    setNewInstitutionData(prev => ({
+    setNewInstitutionData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -139,7 +139,9 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
     <div className="space-y-4">
       <div>
         <div className="mb-1.5 block">
-          <Label htmlFor="institution-search" className="text-gray-700 dark:text-gray-300">{i18next.t('search_institution')}</Label>
+          <Label htmlFor="institution-search" className="text-gray-700 dark:text-gray-300">
+            {i18next.t('search_institution')}
+          </Label>
         </div>
         <div className="relative">
           <HiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -175,14 +177,16 @@ const InstitutionSelector: React.FC<InstitutionSelectorProps> = ({
             <option value="">
               {isFetchingInstitutions
                 ? i18next.t('loading_institutions')
-                : (isOptional ? i18next.t('select_institution_optional') : i18next.t('select_institution'))
-              }
+                : isOptional
+                  ? i18next.t('select_institution_optional')
+                  : i18next.t('select_institution')}
             </option>
-            {!isFetchingInstitutions && activeInstitutions.map((institution) => (
-              <option key={institution._id} value={institution._id}>
-                {institution.name} ({institution.type})
-              </option>
-            ))}
+            {!isFetchingInstitutions &&
+              activeInstitutions.map((institution) => (
+                <option key={institution._id} value={institution._id}>
+                  {institution.name} ({institution.type})
+                </option>
+              ))}
             {!isFetchingInstitutions && (
               <option value="create_new" className="font-semibold text-blue-600">
                 + {i18next.t('create_new_institution')}

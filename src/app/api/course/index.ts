@@ -43,7 +43,7 @@ export default async function fetchCourses_(request: any, session?: Session) {
 
     if (isWithMetaData) {
       courses = await db
-          .collection(dbCollections.courses.name)
+        .collection(dbCollections.courses.name)
         .aggregate(p_fetchCoursesWithMetaData({ query, project }))
         .toArray();
     } else {
@@ -129,7 +129,7 @@ export async function fetchCourseById_(request: any, session?: Session) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -176,7 +176,7 @@ export async function deleteCourse_(request: Request) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,
@@ -249,7 +249,7 @@ export async function findCourseByName_(request: any, session?: Session) {
     return new Response(JSON.stringify(response), {
       status: HttpStatusCode.Ok,
     });
-  } catch  {
+  } catch {
     const resp = {
       isError: true,
       code: SPARKED_PROCESS_CODES.UNKNOWN_ERROR,

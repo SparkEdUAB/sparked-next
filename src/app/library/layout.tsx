@@ -7,7 +7,7 @@ import useUnit from '@hooks/useUnit';
 import useSubject from '@hooks/useSubject';
 import useGrade from '@hooks/useGrade';
 import useTopic from '@hooks/use-topic';
-import {withAuthorization} from "@hocs/withAuthorization"
+import { withAuthorization } from '@hocs/withAuthorization';
 
 function LibraryLayoutWrapper({ children }: { children: ReactNode }) {
   const { fetchUnitsBySubjectId, units, setUnits, isLoading: isUnitsLoading } = useUnit();

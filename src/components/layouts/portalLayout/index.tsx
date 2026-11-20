@@ -1,4 +1,5 @@
 'use client';
+/* eslint-disable @next/next/no-html-link-for-pages -- placeholder nav links; switching to next/link would change navigation behavior */
 
 import { ReactNode, FC } from 'react';
 import AppLogo from '@components/logo';
@@ -11,11 +12,23 @@ const PortalLayout: FC<{ children: ReactNode }> = ({ children }) => {
           <AppLogo />
         </a>
         <ul className="flex flex-wrap items-center gap-4 text-sm font-medium">
-          <li><a href="/navbars" className="text-blue-700 dark:text-blue-400">Home</a></li>
-          <li><a href="/navbars">About</a></li>
-          <li><a href="/navbars">Services</a></li>
-          <li><a href="/navbars">Pricing</a></li>
-          <li><a href="/navbars">Contact</a></li>
+          <li>
+            <a href="/navbars" className="text-blue-700 dark:text-blue-400">
+              Home
+            </a>
+          </li>
+          <li>
+            <a href="/navbars">About</a>
+          </li>
+          <li>
+            <a href="/navbars">Services</a>
+          </li>
+          <li>
+            <a href="/navbars">Pricing</a>
+          </li>
+          <li>
+            <a href="/navbars">Contact</a>
+          </li>
         </ul>
       </nav>
       {children}

@@ -17,7 +17,8 @@ const HeroSection = () => {
               A library for the whole school.
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-[#42687c] dark:text-sky-100/80 sm:text-xl">
-              Keep books, videos, and lessons together. Teachers can share what they need, and students can find it whenever they are ready to learn.
+              Keep books, videos, and lessons together. Teachers can share what they need, and students can find it
+              whenever they are ready to learn.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
               <Link
@@ -55,21 +56,28 @@ const HeroSection = () => {
                 Make good resources easier to find.
               </h2>
               <p className="mt-5 max-w-md text-lg leading-relaxed text-slate-600 dark:text-slate-300">
-                SparkEd gives learning materials a clear place in your school, so they stay useful beyond a single lesson.
+                SparkEd gives learning materials a clear place in your school, so they stay useful beyond a single
+                lesson.
               </p>
             </div>
             <div className="border-t border-[#c7dce5] dark:border-gray-700">
               <div className="grid gap-3 border-b border-[#c7dce5] py-6 dark:border-gray-700 sm:grid-cols-[12rem_1fr] sm:gap-8">
                 <h3 className="text-lg font-semibold text-[#176782] dark:text-sky-200">Keep things organized</h3>
-                <p className="leading-relaxed text-slate-600 dark:text-slate-300">Browse resources by grade, subject, unit, and topic.</p>
+                <p className="leading-relaxed text-slate-600 dark:text-slate-300">
+                  Browse resources by grade, subject, unit, and topic.
+                </p>
               </div>
               <div className="grid gap-3 border-b border-[#c7dce5] py-6 dark:border-gray-700 sm:grid-cols-[12rem_1fr] sm:gap-8">
                 <h3 className="text-lg font-semibold text-[#176782] dark:text-sky-200">Use different formats</h3>
-                <p className="leading-relaxed text-slate-600 dark:text-slate-300">Bring PDFs, videos, and web resources into the same library.</p>
+                <p className="leading-relaxed text-slate-600 dark:text-slate-300">
+                  Bring PDFs, videos, and web resources into the same library.
+                </p>
               </div>
               <div className="grid gap-3 border-b border-[#c7dce5] py-6 dark:border-gray-700 sm:grid-cols-[12rem_1fr] sm:gap-8">
                 <h3 className="text-lg font-semibold text-[#176782] dark:text-sky-200">Learn beyond class</h3>
-                <p className="leading-relaxed text-slate-600 dark:text-slate-300">Students can return to the materials they need from wherever they study.</p>
+                <p className="leading-relaxed text-slate-600 dark:text-slate-300">
+                  Students can return to the materials they need from wherever they study.
+                </p>
               </div>
             </div>
           </div>
@@ -92,7 +100,8 @@ const HeroSection = () => {
               Made for the way schools teach.
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-slate-600 dark:text-slate-300">
-              Teachers can put a lesson in students&apos; hands without sending files from one place to another. One organized library makes it easier to pick up where class left off.
+              Teachers can put a lesson in students&apos; hands without sending files from one place to another. One
+              organized library makes it easier to pick up where class left off.
             </p>
             <Link
               href={libraryHref}
@@ -111,7 +120,8 @@ const HeroSection = () => {
               Learning doesn&apos;t end at the classroom door.
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-slate-600 dark:text-slate-300">
-              Whether students are working together at school or studying later on their own, the same materials are ready when they need them.
+              Whether students are working together at school or studying later on their own, the same materials are
+              ready when they need them.
             </p>
           </div>
           <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-[#c7dce5]">

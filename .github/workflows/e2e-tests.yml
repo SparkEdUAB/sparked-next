@@ -20,21 +20,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 9.15.4
-          run_install: false
+          bun-version-file: package.json
 
       - name: Set up Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-          cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: bun ci
 
       - name: Set up environment variables
         run: |
@@ -42,10 +39,10 @@ jobs:
           echo "MONGODB_DB=sparked-next" >> .env
 
       - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+        run: bunx playwright install --with-deps
 
       - name: Run Playwright Tests
-        run: pnpm exec playwright test
+        run: bunx playwright test
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}

@@ -194,10 +194,7 @@ export async function findSchoolsByName_(request: Request, session?: Session) {
       { includeLegacyUnscopedForDefault: true },
     );
 
-    const schools = await db
-      .collection(dbCollections.schools.name)
-      .find(query, { limit, skip })
-      .toArray();
+    const schools = await db.collection(dbCollections.schools.name).find(query, { limit, skip }).toArray();
 
     const response = {
       isError: false,

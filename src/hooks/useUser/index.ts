@@ -363,7 +363,7 @@ export default function useUser() {
           i18next.t('users_assigned_to_institution', {
             count: result.modifiedCount,
             defaultValue: `${result.modifiedCount} user(s) assigned successfully`,
-          })
+          }),
         );
         return true;
       } catch (error) {
@@ -374,7 +374,7 @@ export default function useUser() {
         setLoaderStatus(false);
       }
     },
-    [message]
+    [message],
   );
 
   return {

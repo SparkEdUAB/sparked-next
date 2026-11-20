@@ -166,8 +166,7 @@ export async function resolveOrganizationContext(
       },
     );
 
-    organization =
-      (await findOrganizationById(db, user?.organization_id || user?.institution_id || null)) || null;
+    organization = (await findOrganizationById(db, user?.organization_id || user?.institution_id || null)) || null;
   }
 
   const resolvedOrganization = organization || defaultOrganization;
@@ -202,15 +201,16 @@ export async function buildScopedQuery<T extends Document>(
     return baseQuery;
   }
 
-  const organizationFilter = options.includeLegacyUnscopedForDefault && context.isDefaultOrganization
-    ? ({
-        $or: [
-          { organization_id: context.organizationObjectId },
-          { organization_id: { $exists: false } },
-          { organization_id: null },
-        ],
-      } as unknown as Filter<T>)
-    : ({ organization_id: context.organizationObjectId } as unknown as Filter<T>);
+  const organizationFilter =
+    options.includeLegacyUnscopedForDefault && context.isDefaultOrganization
+      ? ({
+          $or: [
+            { organization_id: context.organizationObjectId },
+            { organization_id: { $exists: false } },
+            { organization_id: null },
+          ],
+        } as unknown as Filter<T>)
+      : ({ organization_id: context.organizationObjectId } as unknown as Filter<T>);
 
   return {
     $and: [baseQuery, organizationFilter],

@@ -76,11 +76,7 @@ const CourseListView: React.FC = () => {
         />
       </FormSheet>
 
-      <FormSheet
-        open={!!edittingCourse}
-        onClose={() => setEdittingCourse(null)}
-        title={`Edit ${i18next.t('courses')}`}
-      >
+      <FormSheet open={!!edittingCourse} onClose={() => setEdittingCourse(null)} title={`Edit ${i18next.t('courses')}`}>
         {edittingCourse && (
           <EditCourseView
             course={edittingCourse}

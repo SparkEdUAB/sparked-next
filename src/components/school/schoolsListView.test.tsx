@@ -34,7 +34,11 @@ vi.mock('@components/admin/data-table/DataTable', () => ({
 
 vi.mock('@components/admin/form/FormSheet', () => ({
   FormSheet: ({ open, title, children }: any) =>
-    open ? <div data-testid="form-sheet" data-title={title}>{children}</div> : null,
+    open ? (
+      <div data-testid="form-sheet" data-title={title}>
+        {children}
+      </div>
+    ) : null,
 }));
 
 vi.mock('./createSchoolView', () => ({

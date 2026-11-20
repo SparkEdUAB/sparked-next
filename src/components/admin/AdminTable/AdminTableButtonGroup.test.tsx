@@ -5,9 +5,15 @@ import React from 'react';
 
 vi.mock('flowbite-react', () => {
   const Button = ({ children, onClick, disabled, ...props }: any) => (
-    <button onClick={onClick} disabled={disabled} {...props}>{children}</button>
+    <button onClick={onClick} disabled={disabled} {...props}>
+      {children}
+    </button>
   );
-  Button.Group = ({ children, ...props }: any) => <div data-testid="button-group" {...props}>{children}</div>;
+  Button.Group = ({ children, ...props }: any) => (
+    <div data-testid="button-group" {...props}>
+      {children}
+    </div>
+  );
   return { Button };
 });
 

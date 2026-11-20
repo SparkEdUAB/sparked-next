@@ -49,12 +49,7 @@ const CreateUnitView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
       <AdminPageTitle title={i18next.t('create_unit')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <FormInput
-          disabled={isLoading}
-          name={UNIT_FORM_FIELDS.name.key}
-          label={UNIT_FORM_FIELDS.name.label}
-          required
-        />
+        <FormInput disabled={isLoading} name={UNIT_FORM_FIELDS.name.key} label={UNIT_FORM_FIELDS.name.label} required />
 
         <FormInput
           disabled={isLoading}

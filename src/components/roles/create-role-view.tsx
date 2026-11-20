@@ -52,12 +52,7 @@ const CreateRoleView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
       <AdminPageTitle title={i18next.t('create_role')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <FormInput
-          disabled={uploading}
-          name={ROLE_FORM_FIELDS.name.key}
-          label={ROLE_FORM_FIELDS.name.label}
-          required
-        />
+        <FormInput disabled={uploading} name={ROLE_FORM_FIELDS.name.key} label={ROLE_FORM_FIELDS.name.label} required />
 
         <FormInput
           disabled={uploading}

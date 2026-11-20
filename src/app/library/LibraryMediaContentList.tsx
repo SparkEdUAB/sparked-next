@@ -13,9 +13,8 @@ export default function LibraryMediaContentList({
 }) {
   const filters = useSearchFilters();
 
-  const { error, hasMore, loadMore, mediaContent } = useLibraryInfiniteScroll(
-    initialMediaContent,
-    (offset) => fetchMedia(offset, filters),
+  const { error, hasMore, loadMore, mediaContent } = useLibraryInfiniteScroll(initialMediaContent, (offset) =>
+    fetchMedia(offset, filters),
   );
 
   return <LibraryInfiniteScrollList mediaContent={mediaContent} loadMore={loadMore} hasMore={hasMore} error={error} />;

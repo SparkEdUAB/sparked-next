@@ -12,7 +12,9 @@ vi.mock('@/components/ui/table', () => ({
 }));
 vi.mock('@/components/ui/button', () => ({
   Button: ({ children, onClick, disabled, ...props }: any) => (
-    <button onClick={onClick} disabled={disabled} {...props}>{children}</button>
+    <button onClick={onClick} disabled={disabled} {...props}>
+      {children}
+    </button>
   ),
 }));
 vi.mock('@/components/ui/input', () => ({
@@ -22,11 +24,7 @@ vi.mock('@/components/ui/input', () => ({
 }));
 vi.mock('@/components/ui/checkbox', () => ({
   Checkbox: ({ checked, onCheckedChange }: any) => (
-    <input
-      type="checkbox"
-      checked={checked}
-      onChange={(e) => onCheckedChange(e.target.checked)}
-    />
+    <input type="checkbox" checked={checked} onChange={(e) => onCheckedChange(e.target.checked)} />
   ),
 }));
 vi.mock('@/components/ui/tooltip', () => ({
@@ -37,9 +35,7 @@ vi.mock('@/components/ui/tooltip', () => ({
 }));
 vi.mock('@components/admin/AdminTable/DeletionWarningModal', () => ({
   DeletionWarningModal: ({ showDeletionWarning, numberOfElements }: any) =>
-    showDeletionWarning ? (
-      <div data-testid="deletion-modal">Delete {numberOfElements}</div>
-    ) : null,
+    showDeletionWarning ? <div data-testid="deletion-modal">Delete {numberOfElements}</div> : null,
 }));
 vi.mock('@hooks/use-config', () => ({
   default: () => ({ configs: null, getDisabledConfigItems: () => [] }),
@@ -49,18 +45,20 @@ vi.mock('./DataTableSkeleton', () => ({
 }));
 vi.mock('./DataTableEmptyState', () => ({
   DataTableEmptyState: ({ onCreateNew }: any) => (
-    <button onClick={onCreateNew} data-testid="empty-state">empty</button>
+    <button onClick={onCreateNew} data-testid="empty-state">
+      empty
+    </button>
   ),
 }));
 vi.mock('./DataTableLoadMore', () => ({
   DataTableLoadMore: ({ loadMore }: any) => (
-    <button onClick={loadMore} data-testid="load-more">load more</button>
+    <button onClick={loadMore} data-testid="load-more">
+      load more
+    </button>
   ),
 }));
 
-const COLUMNS = [
-  { title: 'Name', dataIndex: 'name' as const, key: 'name' },
-];
+const COLUMNS = [{ title: 'Name', dataIndex: 'name' as const, key: 'name' }];
 
 const ITEMS = [
   { _id: '1', key: '1', name: 'Alpha' },

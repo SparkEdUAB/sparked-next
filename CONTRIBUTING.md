@@ -60,13 +60,21 @@ Then create a Pull Request from here, we will take a look at it and merge it as 
 
 ### Testing
 
-`pnpm test`
+`bun run test` (runs Vitest; not `bun test`, which is Bun's own test runner)
 
 ### linting
 
-`pnpm lint`
+`bun run lint`
 
-Before you make commit, make sure that the linting are passing, check with the eslintrc.yml to check the rules.
+Before you make commit, make sure that the linting are passing, check `.oxlintrc.json` for the rules.
+
+### Formatting and type checking
+
+`bun run format` (uses `bun fmt`, configured in `bunfig.toml`)
+
+`bun run type-check`
+
+The project uses Node `22.14.0` as the runtime and Bun `1.4.5` as the package manager. Install dependencies with `bun install`.
 
 ### Report bugs using Github's issues
 

@@ -13,12 +13,18 @@ import CreateGradeView from './createGradeView';
 import i18next from 'i18next';
 
 const GradeListView: React.FC = () => {
-  const { selectedGradeIds, setSelectedGradeIds, onSearchQueryChange, deleteGrade, searchQuery } =
-    useGrade();
+  const { selectedGradeIds, setSelectedGradeIds, onSearchQueryChange, deleteGrade, searchQuery } = useGrade();
   const [creatingGrade, setCreatingGrade] = useState(false);
   const [edittingGrade, setEdittingGrade] = useState<T_GradeFields | null>(null);
 
-  const { items: grades, isLoading, mutate, loadMore, hasMore, error } = useAdminListViewData(
+  const {
+    items: grades,
+    isLoading,
+    mutate,
+    loadMore,
+    hasMore,
+    error,
+  } = useAdminListViewData(
     API_LINKS.FETCH_GRADES,
     'grades',
     transformRawGrade,
@@ -38,7 +44,11 @@ const GradeListView: React.FC = () => {
       </div>
 
       <DataTable<T_GradeFields>
-        deleteItems={async () => { const r = await deleteGrade(); mutate(); return r; }}
+        deleteItems={async () => {
+          const r = await deleteGrade();
+          mutate();
+          return r;
+        }}
         rowSelection={rowSelection}
         items={grades}
         isLoading={isLoading}
@@ -51,25 +61,23 @@ const GradeListView: React.FC = () => {
         error={error}
       />
 
-      <FormSheet
-        open={creatingGrade}
-        onClose={() => setCreatingGrade(false)}
-        title={`Create ${i18next.t('grades')}`}
-      >
+      <FormSheet open={creatingGrade} onClose={() => setCreatingGrade(false)} title={`Create ${i18next.t('grades')}`}>
         <CreateGradeView
-          onSuccessfullyDone={() => { mutate(); setCreatingGrade(false); }}
+          onSuccessfullyDone={() => {
+            mutate();
+            setCreatingGrade(false);
+          }}
         />
       </FormSheet>
 
-      <FormSheet
-        open={!!edittingGrade}
-        onClose={() => setEdittingGrade(null)}
-        title={`Edit ${i18next.t('grades')}`}
-      >
+      <FormSheet open={!!edittingGrade} onClose={() => setEdittingGrade(null)} title={`Edit ${i18next.t('grades')}`}>
         {edittingGrade && (
           <EditGradeView
             grade={edittingGrade}
-            onSuccessfullyDone={() => { mutate(); setEdittingGrade(null); }}
+            onSuccessfullyDone={() => {
+              mutate();
+              setEdittingGrade(null);
+            }}
           />
         )}
       </FormSheet>

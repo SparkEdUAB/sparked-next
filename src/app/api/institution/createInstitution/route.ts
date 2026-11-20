@@ -8,19 +8,19 @@ import { slugifyOrganizationName } from '../../lib/organization';
 
 export async function POST(request: NextRequest) {
   const schema = z.object({
-    name: z.string().min(1, "Name is required"),
-    description: z.string().default(""),
+    name: z.string().min(1, 'Name is required'),
+    description: z.string().default(''),
     type: z.enum(['school', 'college', 'university', 'organization']),
-    website: z.string().default(""),
-    address: z.string().default(""),
-    contact_email: z.string().default(""),
-    contact_phone: z.string().default(""),
+    website: z.string().default(''),
+    address: z.string().default(''),
+    contact_email: z.string().default(''),
+    contact_phone: z.string().default(''),
     is_verified: z.boolean().default(false),
   });
 
   try {
     const formBody = await request.json();
-    const { name, description, type, website, address, contact_email, contact_phone, is_verified } = 
+    const { name, description, type, website, address, contact_email, contact_phone, is_verified } =
       schema.parse(formBody);
 
     const db = await dbClient();
@@ -67,9 +67,7 @@ export async function POST(request: NextRequest) {
       created_by_id: null, // TODO: Get from session when auth is available
     };
 
-    const result = await db
-      .collection(dbCollections.institutions.name)
-      .insertOne(institutionDoc);
+    const result = await db.collection(dbCollections.institutions.name).insertOne(institutionDoc);
 
     const response = {
       isError: false,

@@ -1,29 +1,43 @@
 {
-    "$schema": "./node_modules/oxlint/configuration_schema.json",
-    "plugins": ["import", "typescript", "unicorn"],
-    "env": {
-      "browser": true
-    },
-    "globals": {
-      "foo": "readonly"
-    },
-    "settings": {},
-    "rules": {
-      "eqeqeq": "error",
-      "import/no-cycle": "error",
-      "react/self-closing-comp": [
-        "error",
-        {
-          "html": false
-        }
-      ]
-    },
-    "overrides": [
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["import", "typescript", "unicorn", "react", "nextjs", "jsx-a11y"],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "rules": {
+    "eqeqeq": "error",
+    "import/no-cycle": "error",
+    "react/self-closing-comp": [
+      "error",
       {
-        "files": ["*.test.ts", "*.spec.ts"],
-        "rules": {
-          "@typescript-eslint/no-explicit-any": "off"
-        }
+        "html": false
       }
-    ]
-  }
+    ],
+    "no-console": [
+      "error",
+      {
+        "allow": ["warn", "error"]
+      }
+    ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "react/set-state-in-effect": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/no-noninteractive-element-interactions": "off",
+    "jsx-a11y/prefer-tag-over-role": "off",
+    "jsx-a11y/media-has-caption": "off",
+    "jsx-a11y/heading-has-content": "off",
+    "jsx-a11y/anchor-has-content": "off"
+  },
+  "overrides": [
+    {
+      "files": ["*.test.ts", "*.test.tsx", "*.spec.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ]
+}

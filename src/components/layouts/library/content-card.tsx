@@ -45,7 +45,7 @@ const ContentDetailsCardView = ({
             sizes="(max-width: 639px) 100vw, (max-width: 767px) 50vw, (max-width: 1023px) 33vw, (max-width: 1279px) 25vw, (max-width: 1535px) 20vw, 17vw"
             loading={priority ? 'eager' : 'lazy'}
           />
-           <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded-bl-xl">
+          <div className="absolute top-0 right-0 bg-black bg-opacity-50 text-white px-2 py-1 text-xs rounded-bl-xl">
             {mediaType}
           </div>
         </div>

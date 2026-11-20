@@ -1,0 +1,5 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "packages": { "node": "22.14.0" },
+  "deploy": { "startCommand": "node node_modules/next/dist/bin/next start" }
+}

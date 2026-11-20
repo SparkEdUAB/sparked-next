@@ -32,7 +32,9 @@ export default async function fetchCounts_(_request?: Request, session?: Session
     const mediaContent = await db.collection(dbCollections.media_content.name).countDocuments(unitQuery);
     const searches = await db.collection(dbCollections.searches.name).countDocuments(unitQuery);
     const institutions = await db.collection(dbCollections.institutions.name).countDocuments(institutionQuery);
-    const verifiedInstitutions = await db.collection(dbCollections.institutions.name).countDocuments({ is_verified: true });
+    const verifiedInstitutions = await db
+      .collection(dbCollections.institutions.name)
+      .countDocuments({ is_verified: true });
     const unassignedUsers = await db.collection(dbCollections.users.name).countDocuments({
       $and: [
         userQuery,

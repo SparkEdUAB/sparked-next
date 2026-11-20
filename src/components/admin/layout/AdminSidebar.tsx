@@ -49,9 +49,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     label: 'Media',
-    items: [
-      { label: 'Media Content', href: '/admin/media-content', icon: AiOutlineContainer },
-    ],
+    items: [{ label: 'Media Content', href: '/admin/media-content', icon: AiOutlineContainer }],
   },
   {
     label: 'System',
@@ -59,13 +57,7 @@ const NAV_GROUPS: NavGroup[] = [
   },
 ];
 
-export function AdminSidebar({
-  collapsed,
-  toggleSidebar,
-}: {
-  collapsed: boolean;
-  toggleSidebar: () => void;
-}) {
+export function AdminSidebar({ collapsed, toggleSidebar }: { collapsed: boolean; toggleSidebar: () => void }) {
   const pathname = usePathname();
 
   const isActive = (href: string) => {
@@ -141,11 +133,7 @@ export function AdminSidebar({
 
       {/* Mobile overlay */}
       {!collapsed && (
-        <div
-          className="fixed inset-0 z-10 bg-black/50 md:hidden"
-          onClick={toggleSidebar}
-          aria-hidden="true"
-        />
+        <div className="fixed inset-0 z-10 bg-black/50 md:hidden" onClick={toggleSidebar} aria-hidden="true" />
       )}
     </>
   );

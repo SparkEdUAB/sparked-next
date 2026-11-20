@@ -4,17 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
-    "type-check": "tsc --noEmit",
-    "build": "tsc --noEmit && next build",
+    "type-check": "bun check --no-script",
+    "build": "next build",
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "npx oxlint --fix",
-    "pm2": "pm2 start pnpm --name \"sparked-next\" -- start"
+    "format": "bun fmt --no-script",
+    "format:check": "bun fmt --no-script --check",
+    "lint": "oxlint --deny-warnings",
+    "lint:fix": "oxlint --fix",
+    "prepare": "git config core.hooksPath .githooks || true",
+    "pm2": "pm2 start node_modules/next/dist/bin/next --name sparked-next --interpreter node -- start"
   },
   "engines": {
-    "node": ">=22.14.0 <23",
-    "pnpm": ">=9 <10"
+    "node": ">=22.14.0 <23"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.0.0",
@@ -39,8 +42,6 @@
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "eslint": "8.57.1",
-    "eslint-config-next": "^16.2.1",
     "i18next": "^25.4.2",
     "i18next-resources-to-backend": "^1.2.1",
     "jose": "^6.1.0",
@@ -82,24 +83,20 @@
     "@types/bcryptjs": "^3.0.0",
     "@types/formidable": "^3.4.5",
     "@types/jsonwebtoken": "^9.0.6",
-    "@typescript-eslint/eslint-plugin": "^8.8.1",
-    "@typescript-eslint/parser": "^8.6.0",
     "@vitejs/plugin-react": "^6.0.1",
     "autoprefixer": "^10.4.15",
-    "eslint-config-prettier": "^9.1.0",
     "jsdom": "^25.0.0",
-    "lint-staged": "^15.0.0",
-    "oxlint": "^0.16.0",
+    "oxlint": "1.94.0",
     "postcss": "^8.4.28",
     "tailwindcss": "^3.3.3",
     "ts-node": "^10.9.2",
     "vite": "^8.1.6",
     "vitest": "^4.1.12"
   },
-  "resolutions": {
+  "overrides": {
     "undici": "^6.29.1",
     "brace-expansion@<2": "^1.1.21",
-    "brace-expansion@>=4 <6": "^5.0.12",
+    "brace-expansion@>=4": "^5.0.12",
     "js-yaml@>=4 <5": "^4.3.2",
     "source-map-js": "^1.2.2",
     "@vitest/mocker@4": "^4.1.12",
@@ -110,5 +107,5 @@
     "minimatch@10": "^11.0.1",
     "@react-email/render": "^2.3.1"
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "bun@1.4.5"
 }

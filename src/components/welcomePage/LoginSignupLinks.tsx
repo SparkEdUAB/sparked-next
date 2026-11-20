@@ -3,7 +3,10 @@ import Link from 'next/link';
 export function LoginSignupLinks() {
   return (
     <>
-      <Link href="/auth/login" className="text-sm font-semibold text-[#236f91] hover:text-[#174f6b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3] dark:text-sky-200">
+      <Link
+        href="/auth/login"
+        className="text-sm font-semibold text-[#236f91] hover:text-[#174f6b] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#287fa3] dark:text-sky-200"
+      >
         Log in
       </Link>
       <Link

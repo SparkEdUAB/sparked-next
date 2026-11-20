@@ -1,18 +1,16 @@
-
-
 export enum UploadProcessSteps {
-    SelectDependencies,
-    SelectFiles,
-    EditResources
+  SelectDependencies,
+  SelectFiles,
+  EditResources,
 }
 
 export type ResourceData = {
-    file: File;
-    name: string;
-    description: string;
+  file: File;
+  name: string;
+  description: string;
 };
 
 export type UploadProgress = {
-    successful: number;
-    outOf: number;
+  successful: number;
+  outOf: number;
 };

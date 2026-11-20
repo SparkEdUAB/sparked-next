@@ -9,7 +9,7 @@ You can check out the deployed version below using one the following links.
 Production: [sparkednext.app](https://sparkednext.app )  
 Staging: [sparked-app.onrender.com](https://sparked-app.onrender.com/)
 
-**Note**: This project is pinned to Node `22.14.0` and `pnpm` `9.x`.
+**Note**: This project is pinned to Node `22.14.0` (the runtime) and Bun `1.4.5` (package manager, formatter and script runner).
 
 # For Contributors
 
@@ -19,7 +19,8 @@ The project uses the following stack
 
 - **Nextjs** as the overall framework
 - **React** as the User Interface library
-- **eslint** to lint files
+- **oxlint** to lint files (`.oxlintrc.json`)
+- **bun fmt** to format files (`bunfig.toml`)
 - **MongoDB** as a noSql Database
 - **TailwindCSS** for styling
 
@@ -32,11 +33,11 @@ Clone the repo
 
 Install dependencies
 
-`corepack enable && pnpm install`
+`bun install`
 
 Run the application
 
-`pnpm dev`
+`bun run dev`
 
 # Using Docker
 
@@ -67,9 +68,19 @@ Before pushing anything to your fork, always
 
 ### linting
 
-`pnpm lint`
+`bun run lint`
 
-Before you make commit, make sure that lint is passing, check with the eslintrc.yml to check the rules.
+Before you make commit, make sure that lint is passing, check `.oxlintrc.json` for the rules.
+
+### Formatting and type checking
+
+`bun run format`
+
+`bun run type-check`
+
+### Testing
+
+`bun run test` (runs Vitest; not `bun test`, which is Bun's own test runner)
 
 ### Issues
 

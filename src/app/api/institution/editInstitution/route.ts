@@ -22,7 +22,7 @@ export async function PUT(request: NextRequest) {
   });
 
   const formBody = await request.json();
-  const { institutionId, name, description, type, website, address, contact_email, contact_phone, is_verified } = 
+  const { institutionId, name, description, type, website, address, contact_email, contact_phone, is_verified } =
     schema.parse(formBody);
 
   try {
@@ -55,12 +55,10 @@ export async function PUT(request: NextRequest) {
     }
 
     // Check for name conflicts (excluding current institution)
-    const nameConflict = await db
-      .collection(dbCollections.institutions.name)
-      .findOne({ 
-        name: { $regex: `^${name}$`, $options: 'i' },
-        _id: { $ne: new BSON.ObjectId(institutionId) }
-      });
+    const nameConflict = await db.collection(dbCollections.institutions.name).findOne({
+      name: { $regex: `^${name}$`, $options: 'i' },
+      _id: { $ne: new BSON.ObjectId(institutionId) },
+    });
 
     if (nameConflict) {
       const response = {
@@ -89,10 +87,7 @@ export async function PUT(request: NextRequest) {
 
     await db
       .collection(dbCollections.institutions.name)
-      .updateOne(
-        { _id: new BSON.ObjectId(institutionId) },
-        { $set: updateDoc }
-      );
+      .updateOne({ _id: new BSON.ObjectId(institutionId) }, { $set: updateDoc });
 
     const response = {
       isError: false,

@@ -95,7 +95,10 @@ export function MediaViewer({ mediaContent }: { mediaContent: T_RawMediaContentF
 
     if (fileUrl.startsWith(unavailableMediaOrigin)) {
       return (
-        <div role="status" className="flex min-h-[400px] flex-col items-center justify-center rounded-lg bg-gray-100 px-6 text-center dark:bg-gray-700">
+        <div
+          role="status"
+          className="flex min-h-[400px] flex-col items-center justify-center rounded-lg bg-gray-100 px-6 text-center dark:bg-gray-700"
+        >
           <h2 className="text-xl font-semibold">Media temporarily unavailable</h2>
           <p className="mt-3 max-w-lg text-gray-600 dark:text-gray-300">
             We’re working to restore access to this file. Please try again later.

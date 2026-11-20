@@ -40,8 +40,8 @@ const ResetPassword = () => {
 
     if (await handleResetPassword(token, newPassword)) {
       setSuccess(true);
-      return
-    };
+      return;
+    }
   };
 
   return (
@@ -52,15 +52,11 @@ const ResetPassword = () => {
         </Link>
         <div className="w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
           <div className="p-8 space-y-4">
-            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">
-              Reset Password
-            </h1>
+            <h1 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-2">Reset Password</h1>
 
             {success ? (
               <div className="text-center space-y-4">
-                <p className="text-gray-600 dark:text-gray-300">
-                  Your password has been successfully reset.
-                </p>
+                <p className="text-gray-600 dark:text-gray-300">Your password has been successfully reset.</p>
                 <Link
                   href="/auth/login"
                   className="inline-block px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -72,7 +68,9 @@ const ResetPassword = () => {
               <form className="space-y-4" onSubmit={handleSubmit}>
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">New Password</Label>
+                    <Label htmlFor="password" className="text-gray-700 dark:text-gray-300">
+                      New Password
+                    </Label>
                   </div>
                   <div className="relative">
                     <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -100,7 +98,9 @@ const ResetPassword = () => {
                 </div>
                 <div>
                   <div className="mb-1.5 block">
-                    <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300">Confirm Password</Label>
+                    <Label htmlFor="confirmPassword" className="text-gray-700 dark:text-gray-300">
+                      Confirm Password
+                    </Label>
                   </div>
                   <div className="relative">
                     <AiOutlineLock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />

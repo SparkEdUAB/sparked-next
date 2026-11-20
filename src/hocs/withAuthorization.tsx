@@ -27,8 +27,6 @@ type ExtendedSession = {
   };
 };
 
-
-
 export function withAuthorization<P extends object>(
   WrappedComponent: ComponentType<P>,
   { requireAdmin = false, requireGuest = false }: Options = {},

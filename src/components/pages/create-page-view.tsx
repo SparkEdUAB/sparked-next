@@ -44,12 +44,7 @@ const CreatePageView = ({ onSuccessfullyDone }: { onSuccessfullyDone?: () => voi
       <AdminPageTitle title={i18next.t('create_page')} />
 
       <form className="flex flex-col gap-4 max-w-xl" onSubmit={handleSubmit}>
-        <FormInput
-          disabled={uploading}
-          name={PAGE_FORM_FIELDS.name.key}
-          label={PAGE_FORM_FIELDS.name.label}
-          required
-        />
+        <FormInput disabled={uploading} name={PAGE_FORM_FIELDS.name.key} label={PAGE_FORM_FIELDS.name.label} required />
 
         <FormInput
           disabled={uploading}

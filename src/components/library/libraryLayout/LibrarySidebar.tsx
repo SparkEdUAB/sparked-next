@@ -122,12 +122,7 @@ export function LibrarySidebar({
           {/* Grades */}
           <CollapsibleSection label="Grades">
             {!isGradesLoading && (
-              <ShowAllOrNoItems
-                ItemName={'Grades'}
-                items={grades}
-                filterItemId={filteredGradeId}
-                url={`/library`}
-              />
+              <ShowAllOrNoItems ItemName={'Grades'} items={grades} filterItemId={filteredGradeId} url={`/library`} />
             )}
 
             {isGradesLoading ? (

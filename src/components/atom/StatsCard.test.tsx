@@ -3,7 +3,11 @@ import { render, screen } from '@testing-library/react';
 import { DashbordUsageCard } from './StatsCard';
 
 vi.mock('flowbite-react', () => ({
-  Card: ({ children, ...props }: any) => <div data-testid="card" {...props}>{children}</div>,
+  Card: ({ children, ...props }: any) => (
+    <div data-testid="card" {...props}>
+      {children}
+    </div>
+  ),
 }));
 
 vi.mock('@components/layouts/adminLayout/links', () => ({

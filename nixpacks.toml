@@ -1,11 +1,11 @@
 [phases.setup]
-nixPkgs = ["nodejs_22", "pnpm"]
+nixPkgs = ["nodejs_22"]
 
 [phases.install]
-cmds = ["pnpm install --frozen-lockfile"]
+cmds = ["npm install -g bun@1.4.5", "bun ci"]
 
 [phases.build]
-cmds = ["pnpm build"]
+cmds = ["bun run build"]
 
 [start]
-cmd = "pnpm start"
+cmd = "node node_modules/next/dist/bin/next start"

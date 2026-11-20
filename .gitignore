@@ -42,3 +42,4 @@ mongodb-realm
 public/uploads/*
 test-results
 .gstack/
+.pnpm-store

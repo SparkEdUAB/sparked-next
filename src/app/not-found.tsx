@@ -148,9 +148,7 @@ export default function NotFound() {
           fill="#cacaca"
         />
       </svg>
-      <h1 className={`mt-6 mb-2 text-2xl font-bold text-[#3f3d56] dark:text-gray-400`}>
-        Nothing was found here
-      </h1>
+      <h1 className={`mt-6 mb-2 text-2xl font-bold text-[#3f3d56] dark:text-gray-400`}>Nothing was found here</h1>
       <p className="opacity-70">
         You may go back to the{' '}
         <Link href="/" className="font-semibold text-sky-500 dark:text-sky-500 hover:underline">
