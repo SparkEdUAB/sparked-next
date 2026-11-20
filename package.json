@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
     "type-check": "bun check --no-script",
-    "build": "bun check --no-script && next build",
+    "build": "next build",
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
