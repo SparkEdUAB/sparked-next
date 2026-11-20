@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "./src",
-    "target": "es5",
+    "target": "ES2017",
     "lib": [
       "dom",
       "dom.iterable",
@@ -16,6 +15,9 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "types": [
+      "node"
+    ],
     "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
@@ -28,31 +30,58 @@
         "./src/*"
       ],
       "@/lib/*": [
-        "lib/*"
+        "./src/lib/*"
       ],
       "@/components/*": [
-        "components/*"
+        "./src/components/*"
       ],
       "@components/*": [
-        "components/*"
+        "./src/components/*"
       ],
       "@hooks/*": [
-        "hooks/*"
+        "./src/hooks/*"
       ],
       "@hocs/*": [
-        "hocs/*"
+        "./src/hocs/*"
       ],
       "@stores/*": [
-        "stores/*"
+        "./src/stores/*"
       ],
       "@state/*": [
-        "state/*"
+        "./src/state/*"
       ],
       "@app/api*": [
-        "app/api*"
+        "./src/app/api*"
       ],
       "@app/api/lib*": [
-        "app/api/lib*"
+        "./src/app/api/lib*"
+      ],
+      "app/*": [
+        "./src/app/*"
+      ],
+      "emails/*": [
+        "./src/emails/*"
+      ],
+      "fetchers/*": [
+        "./src/fetchers/*"
+      ],
+      "providers/*": [
+        "./src/providers/*"
+      ],
+      "routes": [
+        "./src/routes"
+      ],
+      "stores/*": [
+        "./src/stores/*"
+      ],
+      "types": [
+        "./src/types"
+      ],
+      "types/*": [
+        "./src/types/*"
+      ],
+      "utils/*": [
+        "./src/utils/*"
       ]
     }
   },

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS=\"--max-old-space-size=4096\" next dev",
-    "type-check": "tsc --noEmit",
-    "build": "tsc --noEmit && next build",
+    "type-check": "bun check --no-script",
+    "build": "bun check --no-script && next build",
     "start": "next start",
     "test": "vitest run",
     "test:watch": "vitest",
