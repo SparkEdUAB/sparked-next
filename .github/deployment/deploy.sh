@@ -19,7 +19,7 @@ bun run build
 
 # (Re)start the app with PM2 on the Node runtime
 pm2 delete sparked-next >/dev/null 2>&1 || true
-pm2 start node_modules/next/dist/bin/next --name sparked-next --interpreter node -- start
+MALLOC_ARENA_MAX=2 pm2 start node_modules/next/dist/bin/next --name sparked-next --interpreter node -- start
 
 # Save the PM2 process list
 pm2 save

@@ -33,6 +33,8 @@ COPY --from=base /app/public ./public
 COPY --from=base /app/node_modules ./node_modules
 
 ENV NODE_ENV=production
+# Fewer glibc malloc arenas: stops sharp/libvips buffers fragmenting RSS
+ENV MALLOC_ARENA_MAX=2
 
 EXPOSE 3000
 
