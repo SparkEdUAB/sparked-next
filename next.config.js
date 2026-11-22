@@ -1,6 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   env: {},
+  experimental: {
+    // Keep sharp/libvips memory bounded on the 0.5 vCPU / 512MB container:
+    // one libvips worker thread and no libvips operation cache (Next already
+    // caches optimized images on disk). Output bytes are unchanged.
+    imgOptConcurrency: 1,
+    imgOptOperationCache: false,
+  },
   turbopack: {
     root: __dirname,
     resolveAlias: {
