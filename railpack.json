@@ -1,5 +1,8 @@
 {
   "$schema": "https://schema.railpack.com",
   "packages": { "node": "22.14.0" },
-  "deploy": { "startCommand": "node node_modules/next/dist/bin/next start" }
+  "deploy": {
+    "startCommand": "node node_modules/next/dist/bin/next start",
+    "variables": { "MALLOC_ARENA_MAX": "2" }
+  }
 }
