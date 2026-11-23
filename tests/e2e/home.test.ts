@@ -6,51 +6,69 @@ test.describe('Home Page', () => {
   });
 
   test('should display the header section with all elements', async ({ page }) => {
-    const loginButton = page.getByText('Log in');
-    await expect(loginButton).toBeVisible();
-    await expect(loginButton).toBeEnabled();
+    const header = page.locator('header');
+    await expect(header).toBeVisible();
+
+    const nav = header.getByRole('navigation', { name: 'Main navigation' });
+    await expect(nav.getByRole('link', { name: 'Library' })).toHaveAttribute('href', '/library');
+    await expect(nav.getByRole('link', { name: 'Why SparkEd' })).toHaveAttribute('href', '#why-sparked');
+    await expect(nav.getByRole('link', { name: 'For schools' })).toHaveAttribute('href', '#for-schools');
+
+    const loginLink = header.getByRole('link', { name: 'Log in' });
+    await expect(loginLink).toBeVisible();
+    await expect(loginLink).toHaveAttribute('href', '/auth/login');
+
+    const signupLink = header.getByRole('link', { name: 'Sign up' });
+    await expect(signupLink).toBeVisible();
+    await expect(signupLink).toHaveAttribute('href', '/auth/signup');
   });
 
   test('should display the hero section with dynamic content', async ({ page }) => {
-    await expect(page.getByText('Your digital library')).toBeVisible();
-    await expect(page.getByText('Easily manage your school educational materials')).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: 'A library for the whole school.' })).toBeVisible();
+    await expect(page.getByText('Keep books, videos, and lessons together.')).toBeVisible();
 
-    await expect(page.getByText('Digital Content Hub')).toBeVisible();
-    await expect(page.getByText('Collaborative Learning')).toBeVisible();
-    await expect(page.getByText('Course Management')).toBeVisible();
-    await expect(page.getByText('24/7 Access')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Make good resources easier to find.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Keep things organized' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Use different formats' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Learn beyond class' })).toBeVisible();
+
+    await expect(page.getByRole('heading', { name: 'Made for the way schools teach.' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: "Learning doesn't end at the classroom door." })).toBeVisible();
   });
 
   test('should have working navigation and theme toggle', async ({ page }) => {
-    const libraryLink = page.getByText('Get Started');
-    await libraryLink.click();
-    await expect(libraryLink).toBeEnabled();
+    // Signed-out visitors are sent to login from the primary CTA.
+    await page.getByRole('link', { name: 'Get started' }).click();
+    await expect(page).toHaveURL('/auth/login');
 
-    const logoLink = page.locator('a[href="/"]');
-    await logoLink.click();
+    await page.goto('/');
+    await page.locator('header a[href="/"]').click();
     await expect(page).toHaveURL('/');
 
     const themeToggle = page.getByRole('button', { name: 'Toggle theme' });
     await expect(themeToggle).toBeVisible();
-    await themeToggle.click();
-    await expect(page.locator('html')).toHaveClass(/dark/);
+    // Retry the click in case it lands before hydration attaches the handler.
+    await expect(async () => {
+      await themeToggle.click();
+      await expect(page.locator('html')).toHaveClass(/dark/, { timeout: 1000 });
+    }).toPass();
   });
 
   test('should display the footer section with all elements', async ({ page }) => {
     const footer = page.locator('footer');
     await expect(footer).toBeVisible();
 
-    await expect(page.getByText('Follow us')).toBeVisible();
-    await expect(page.getByText('Legal')).toBeVisible();
+    const nav = footer.getByRole('navigation', { name: 'Footer navigation' });
+    await expect(nav.getByRole('link', { name: 'Library' })).toHaveAttribute('href', '/library');
 
-    const githubLink = page.getByText('Github');
+    const githubLink = nav.getByRole('link', { name: 'GitHub' });
     await expect(githubLink).toBeVisible();
     await expect(githubLink).toHaveAttribute('href', 'https://github.com/sparkeduab/sparked-next');
 
-    const privacyLink = page.getByText('Privacy Policy');
-    await expect(privacyLink).toBeVisible();
+    const statusLink = nav.getByRole('link', { name: 'System status' });
+    await expect(statusLink).toBeVisible();
+    await expect(statusLink).toHaveAttribute('href', 'https://sparked.instatus.com/');
 
-    // Check copyright text
-    await expect(page.getByText(/© 2025.*SparkEd™.*All Rights Reserved/)).toBeVisible();
+    await expect(footer.getByText(/© \d{4} SparkEd\. All rights reserved\./)).toBeVisible();
   });
 });
