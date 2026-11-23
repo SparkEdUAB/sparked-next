@@ -40,7 +40,7 @@ jobs:
             bun ci
             bun run build
             pm2 delete sparked-next >/dev/null 2>&1 || true
-            pm2 start node_modules/next/dist/bin/next --name sparked-next --interpreter node -- start
+            MALLOC_ARENA_MAX=2 pm2 start node_modules/next/dist/bin/next --name sparked-next --interpreter node -- start
             pm2 save
 
             echo "Deployment completed successfully!"

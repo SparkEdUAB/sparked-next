@@ -9,3 +9,6 @@ cmds = ["bun run build"]
 
 [start]
 cmd = "node node_modules/next/dist/bin/next start"
+
+[variables]
+MALLOC_ARENA_MAX = "2"
