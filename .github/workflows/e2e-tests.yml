@@ -16,6 +16,22 @@ jobs:
       matrix:
         node-version: ['22.14.0']
 
+    # Throwaway MongoDB so e2e doesn't depend on an external cluster.
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      MONGODB_URI: mongodb://localhost:27017
+      MONGODB_DB: sparked-next-ci
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -33,21 +49,14 @@ jobs:
       - name: Install dependencies
         run: bun ci
 
-      - name: Set up environment variables
-        run: |
-          echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env
-          echo "MONGODB_DB=sparked-next" >> .env
-
       - name: Install Playwright Browsers
         run: bunx playwright install --with-deps
 
       - name: Run Playwright Tests
         run: bunx playwright test
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           EMAIL_SERVER: ${{ secrets.EMAIL_SERVER }}
-          MONGODB_DB: ${{ secrets.MONGODB_DB }}
           NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
           REALM_APP_ID: ${{ secrets.REALM_APP_ID }}
