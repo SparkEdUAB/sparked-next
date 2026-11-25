@@ -42,7 +42,7 @@
     "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "i18next": "^25.4.2",
+    "i18next": "^27.0.0",
     "i18next-resources-to-backend": "^1.2.1",
     "jose": "^6.1.0",
     "jsonwebtoken": "^9.0.2",
